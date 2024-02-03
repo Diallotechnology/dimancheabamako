@@ -48,21 +48,6 @@
     <!-- End Header/Navigation -->
 </template>
 
-<script>
+<script setup>
 import { Link } from "@inertiajs/vue3";
-
-export default {
-    components: {
-        Link,
-    },
-    methods: {
-        isUrl(...urls) {
-            let currentUrl = this.$page.url.substr(1);
-            if (urls[0] === "") {
-                return currentUrl === "";
-            }
-            return urls.filter((url) => currentUrl.startsWith(url)).length;
-        },
-    },
-};
 </script>

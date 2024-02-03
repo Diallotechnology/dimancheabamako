@@ -18,6 +18,7 @@ return new class extends Migration
             $table->string('nom');
             $table->integer('prix');
             $table->integer('poids');
+            $table->integer('promo')->default(0);
             $table->longText('description');
             $table->string('video')->nullable();
             $table->timestamps();
