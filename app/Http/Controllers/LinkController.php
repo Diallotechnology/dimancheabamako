@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use Inertia\Inertia;
+
 class LinkController extends Controller
 {
     /**
@@ -9,7 +11,8 @@ class LinkController extends Controller
      */
     public function home()
     {
-        return inertia('Home');
+
+        return Inertia::render('Home');
     }
 
     public function contact()

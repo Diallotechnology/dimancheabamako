@@ -1,13 +1,1 @@
 @import "/public/assets/css/main.css";
-/*import vendors*/
-@import "/public/assets/css/vendors/normalize.css";
-@import "/public/assets/css/vendors/bootstrap.min.css";
-@import "/public/assets/css/vendors/fontawesome-all.min.css";
-@import "/public/assets/css/vendors/Evara-font.css";
-/*import plugins*/
-@import "/public/assets/css/plugins/jquery-ui.css";
-@import "/public/assets/css/plugins/magnific-popup.css";
-@import "/public/assets/css/plugins/animate.css";
-@import "/public/assets/css/plugins/select2.min.css";
-@import "/public/assets/css/plugins/slick.css";
-@import "/public/assets/css/plugins/perfect-scrollbar.css";
