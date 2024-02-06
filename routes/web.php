@@ -21,7 +21,6 @@ Route::prefix('admin')->group(function () {
     //         'phpVersion' => PHP_VERSION,
     //     ]);
     // });
-
     Route::resource('user', UserController::class)->except('index', 'create');
     Route::resource('order', OrderController::class)->except('index', 'create');
     Route::resource('product', ProductController::class)->except('index', 'create');
@@ -45,7 +44,6 @@ Route::prefix('admin')->group(function () {
 
 Route::controller(LinkController::class)->group(function () {
     Route::get('/', 'home')->name('home');
-
 });
-// Route::inertia('/', 'Home');
+Route::inertia('contact', 'Contact')->name('contact');
 require __DIR__.'/auth.php';

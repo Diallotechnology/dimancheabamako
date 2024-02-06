@@ -17,7 +17,7 @@ class Product extends Model
      *
      * @var array
      */
-    protected $fillable = [''];
+    protected $fillable = ['categorie_id'];
 
     /**
      * Get the categorie that owns the Product

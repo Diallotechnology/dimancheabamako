@@ -24,19 +24,8 @@ trait DeleteAction
     //     ]);
     // }
 
-    public function supp(Model $delete): JsonResponse
+    public function supp(Model $delete)
     {
-        $delete->delete();
-
-        return response()->json([
-            'success' => true,
-            'message' => $delete ? class_basename($delete).' supprimer avec success ' : class_basename($delete).' non trouvé',
-        ]);
-    }
-
-    public function supp_auth(Model $delete): JsonResponse
-    {
-        $this->authorize('delete', $delete);
         $delete->delete();
 
         return response()->json([

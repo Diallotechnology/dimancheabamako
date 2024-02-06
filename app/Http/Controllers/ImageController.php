@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Helper\DeleteAction;
 use App\Models\Image;
 use Illuminate\Http\Request;
+use Inertia\Inertia;
 
 class ImageController extends Controller
 {
@@ -31,7 +32,7 @@ class ImageController extends Controller
      */
     public function edit(Image $image)
     {
-        //
+        return Inertia::render('Admin/Image/Update', compact('image'));
     }
 
     /**
@@ -39,7 +40,7 @@ class ImageController extends Controller
      */
     public function update(Request $request, Image $image)
     {
-        //
+
     }
 
     /**
@@ -47,6 +48,8 @@ class ImageController extends Controller
      */
     public function destroy(Image $image)
     {
-        //
+        $this->file_delete($image);
+
+        return $this->supp($image);
     }
 }

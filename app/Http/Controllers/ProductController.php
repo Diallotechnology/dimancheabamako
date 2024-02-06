@@ -6,6 +6,7 @@ use App\Helper\DeleteAction;
 use App\Http\Requests\StoreProductRequest;
 use App\Http\Requests\UpdateProductRequest;
 use App\Models\Product;
+use Inertia\Inertia;
 
 class ProductController extends Controller
 {
@@ -24,7 +25,9 @@ class ProductController extends Controller
      */
     public function store(StoreProductRequest $request)
     {
-        //
+        Product::create($request->validated());
+
+        return back();
     }
 
     /**
@@ -32,7 +35,7 @@ class ProductController extends Controller
      */
     public function show(Product $product)
     {
-        //
+        return Inertia::render('Admin/Product/Update', compact('product'));
     }
 
     /**
@@ -40,7 +43,7 @@ class ProductController extends Controller
      */
     public function edit(Product $product)
     {
-        //
+        return Inertia::render('Admin/Product/Update', compact('product'));
     }
 
     /**
@@ -48,7 +51,9 @@ class ProductController extends Controller
      */
     public function update(UpdateProductRequest $request, Product $product)
     {
-        //
+        $product->update($request->validated());
+
+        return back();
     }
 
     /**
@@ -56,6 +61,6 @@ class ProductController extends Controller
      */
     public function destroy(Product $product)
     {
-        //
+        return $this->supp($product);
     }
 }

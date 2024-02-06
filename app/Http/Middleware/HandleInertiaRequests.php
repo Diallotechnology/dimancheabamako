@@ -12,18 +12,19 @@ class HandleInertiaRequests extends Middleware
      *
      * @var string
      */
-    protected $rootView = 'app';
-
     public function rootView(Request $request)
     {
-        if (request()->is('admin/*') or request()->is('admin')) {
+        if (request()->is('admin/*')) {
+
             return 'admin';
         } else {
             return 'app';
         }
 
-        return parent::rootView($request);
+        // return parent::rootView($request);
     }
+
+    // protected $rootView = 'app';
 
     /**
      * Determine the current asset version.
@@ -45,6 +46,12 @@ class HandleInertiaRequests extends Middleware
             'auth' => [
                 'user' => $request->user(),
             ],
+            'flash' => function () use ($request) {
+                return [
+                    'success' => $request->session()->get('success'),
+                    'error' => $request->session()->get('error'),
+                ];
+            },
         ];
     }
 }

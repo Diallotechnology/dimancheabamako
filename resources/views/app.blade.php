@@ -13,8 +13,10 @@
     <!-- Favicon -->
     <link rel="shortcut icon" type="image/x-icon" href="assets/imgs/theme/favicon.svg">
     <title>Furni</title>
-    {{-- @routes --}}
-    @vite(['resources/css/app.css'])
+    {{--
+    <link href="{{ asset('assets/css/main.css') }}" rel="stylesheet" type="text/css" /> --}}
+    @routes
+    @vite(['resources/css/app.css','resources/js/app.js', "resources/js/Pages/{$page['component']}.vue"])
     @inertiaHead
 </head>
 

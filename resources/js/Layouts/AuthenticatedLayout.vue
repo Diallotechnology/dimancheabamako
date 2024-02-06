@@ -1,14 +1,12 @@
 <script setup>
-import { ref } from "vue";
 import ApplicationLogo from "@/Components/ApplicationLogo.vue";
 import Nav from "@/Layouts/Nav.vue";
 import { Link } from "@inertiajs/vue3";
-
-// const showingNavigationDropdown = ref(false);
 </script>
 
 <template>
     <div class="screen-overlay"></div>
+
     <aside class="navbar-aside" id="offcanvas_aside">
         <div class="aside-top">
             <Link class="brand-wrap" :href="route('dashboard')">
@@ -53,7 +51,7 @@ import { Link } from "@inertiajs/vue3";
                         >
                             <img
                                 class="img-xs rounded-circle"
-                                v-bind:src="'admin/assets/imgs/people/avatar2.jpg'"
+                                v-bind:src="'/admin/assets/imgs/people/avatar2.jpg'"
                                 alt="User"
                         /></a>
                         <div
@@ -66,10 +64,14 @@ import { Link } from "@inertiajs/vue3";
                             >
 
                             <div class="dropdown-divider"></div>
-                            <a class="dropdown-item text-danger" href="#"
+                            <Link
+                                class="dropdown-item text-danger"
+                                :href="route('logout')"
+                                method="post"
+                                as="button"
                                 ><i class="material-icons md-exit_to_app"></i
-                                >Deconnexion</a
-                            >
+                                >Deconnexion
+                            </Link>
                         </div>
                     </li>
                 </ul>

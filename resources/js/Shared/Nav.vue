@@ -10,12 +10,6 @@
                                     <i class="fi-rs-smartphone"></i>
                                     <a href="#">(+01) - 2345 - 6789</a>
                                 </li>
-                                <li>
-                                    <i class="fi-rs-marker"></i
-                                    ><a href="page-contact.html"
-                                        >Our location</a
-                                    >
-                                </li>
                             </ul>
                         </div>
                     </div>
@@ -69,7 +63,7 @@
                                 <li>
                                     <i class="fi-rs-user"></i
                                     ><a href="page-login-register.html"
-                                        >Log In / Sign Up</a
+                                        >Se connecter</a
                                     >
                                 </li>
                             </ul>
@@ -82,30 +76,17 @@
             <div class="container">
                 <div class="header-wrap">
                     <div class="logo logo-width-1">
-                        <a href="index.html"
+                        <Link :href="route('home')"
                             ><img
                                 v-bind:src="'assets/imgs/theme/logo.svg'"
                                 alt="logo"
-                        /></a>
+                        /></Link>
                     </div>
-                    <div class="header-right">
-                        <div class="search-style-2">
-                            <form action="#">
-                                <select class="select-active">
-                                    <option>All Categories</option>
-                                    <option>Women's</option>
-                                    <option>Men's</option>
-                                </select>
-                                <input
-                                    type="text"
-                                    placeholder="Search for items..."
-                                />
-                            </form>
-                        </div>
+                    <div class="header-right justify-content-end">
                         <div class="header-action-right">
                             <div class="header-action-2">
                                 <div class="header-action-icon-2">
-                                    <a href="shop-wishlist.html">
+                                    <a href="">
                                         <img
                                             class="svgInject"
                                             alt="Evara"
@@ -115,10 +96,7 @@
                                     </a>
                                 </div>
                                 <div class="header-action-icon-2">
-                                    <a
-                                        class="mini-cart-icon"
-                                        href="shop-cart.html"
-                                    >
+                                    <a class="mini-cart-icon" href="">
                                         <img
                                             alt="Evara"
                                             v-bind:src="'assets/imgs/theme/icons/icon-cart.svg'"
@@ -191,48 +169,31 @@
             <div class="container">
                 <div class="header-wrap header-space-between position-relative">
                     <div class="logo logo-width-1 d-block d-lg-none">
-                        <a href="index.html"
+                        <Link :href="route('home')"
                             ><img
                                 v-bind:src="'assets/imgs/theme/logo.svg'"
                                 alt="logo"
-                        /></a>
+                        /></Link>
                     </div>
                     <div class="header-nav d-none d-lg-flex">
-                        <div class="main-categori-wrap d-none d-lg-block">
-                            <a class="categori-button-active" href="#">
-                                <span class="fi-rs-apps"></span> Browse
-                                Categories
-                            </a>
-                            <div
-                                class="categori-dropdown-wrap categori-dropdown-active-large"
-                            >
-                                <ul>
-                                    <li>
-                                        <a href="shop-grid-right.html"
-                                            ><i
-                                                class="evara-font-teddy-bear"
-                                            ></i
-                                            >Mother & Kids</a
-                                        >
-                                    </li>
-                                </ul>
-                                <div class="more_categories">Show more...</div>
-                            </div>
-                        </div>
                         <div
                             class="main-menu main-menu-padding-1 main-menu-lh-2 d-none d-lg-block"
                         >
                             <nav>
                                 <ul>
                                     <li>
-                                        <a href="page-about.html">Home</a>
+                                        <Link :href="route('home')"
+                                            >Accueil</Link
+                                        >
                                     </li>
                                     <li>
-                                        <a href="page-about.html">About</a>
+                                        <Link :href="route('home')">About</Link>
                                     </li>
 
                                     <li>
-                                        <a href="page-contact.html">Contact</a>
+                                        <Link :href="route('contact')"
+                                            >Contact</Link
+                                        >
                                     </li>
                                 </ul>
                             </nav>

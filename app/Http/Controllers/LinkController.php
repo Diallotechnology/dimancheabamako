@@ -11,12 +11,11 @@ class LinkController extends Controller
      */
     public function home()
     {
-
         return Inertia::render('Home');
     }
 
     public function contact()
     {
-        return inertia('Contact');
+        return Inertia::render('Contact');
     }
 }

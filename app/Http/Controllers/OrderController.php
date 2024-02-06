@@ -6,6 +6,7 @@ use App\Helper\DeleteAction;
 use App\Http\Requests\StoreOrderRequest;
 use App\Http\Requests\UpdateOrderRequest;
 use App\Models\Order;
+use Inertia\Inertia;
 
 class OrderController extends Controller
 {
@@ -32,7 +33,7 @@ class OrderController extends Controller
      */
     public function edit(Order $order)
     {
-        //
+        return Inertia::render('Admin/Order/Update', compact('order'));
     }
 
     /**
@@ -40,7 +41,9 @@ class OrderController extends Controller
      */
     public function update(UpdateOrderRequest $request, Order $order)
     {
-        //
+        $order->update($request->validated());
+
+        return back();
     }
 
     /**
@@ -48,6 +51,6 @@ class OrderController extends Controller
      */
     public function destroy(Order $order)
     {
-        //
+        return $this->supp($order);
     }
 }

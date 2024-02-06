@@ -18,8 +18,7 @@ return new class extends Migration
             $table->string('postal');
             $table->string('ville');
             $table->string('pays');
-            $table->string('contact');
-            $table->string('etat')->default('');
+            $table->string('etat')->default('Valider');
             $table->timestamps();
         });
     }

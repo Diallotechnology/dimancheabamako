@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Helper\DeleteAction;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Inertia\Inertia;
 
 class UserController extends Controller
 {
@@ -31,7 +32,7 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
-        //
+
     }
 
     /**
@@ -39,7 +40,7 @@ class UserController extends Controller
      */
     public function show(User $user)
     {
-        //
+        return Inertia::render('Admin/User/Show', compact('user'));
     }
 
     /**
@@ -47,7 +48,7 @@ class UserController extends Controller
      */
     public function edit(User $user)
     {
-        //
+        return Inertia::render('Admin/User/Update', compact('user'));
     }
 
     /**
@@ -55,7 +56,9 @@ class UserController extends Controller
      */
     public function update(Request $request, User $user)
     {
-        //
+        $user->update($request->validated());
+
+        return back();
     }
 
     /**
@@ -63,6 +66,6 @@ class UserController extends Controller
      */
     public function destroy(User $user)
     {
-        //
+        return $this->supp($user);
     }
 }
