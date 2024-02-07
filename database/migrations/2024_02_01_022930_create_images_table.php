@@ -15,7 +15,6 @@ return new class extends Migration
             $table->id();
             $table->foreignId('product_id')->constrained()->cascadeOnUpdate()->cascadeOnDelete();
             $table->string('chemin');
-            $table->string('extension');
             $table->timestamps();
         });
     }

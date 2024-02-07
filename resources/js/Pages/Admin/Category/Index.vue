@@ -9,6 +9,7 @@ import Input from "@/Components/Input.vue";
 import notify from "@/notifications";
 import { ref, watch } from "vue";
 
+import debounce from "lodash.debounce";
 const props = defineProps({
     rows: {
         type: Object,
@@ -21,14 +22,16 @@ const props = defineProps({
 });
 
 let search = ref(props.filter.search);
-
-watch(search, (value) => {
-    router.get(
-        "/admin/category",
-        { search: value },
-        { preserveState: true, replace: true }
-    );
-});
+watch(
+    search,
+    debounce((value) => {
+        router.get(
+            "/admin/category",
+            { search: value },
+            { preserveState: true, replace: true }
+        );
+    }, 600)
+);
 const form = useForm({
     nom: "",
 });
@@ -37,10 +40,10 @@ const submit = () => {
     form.post(route("category.store"), {
         onSuccess: () => {
             form.reset();
-            notify("Categorie ajouter avec success !");
+            notify("Categorie ajouter avec success !", true);
         },
         onError: () => {
-            notify("", "fail");
+            notify(false);
         },
     });
 };
@@ -117,6 +120,7 @@ const submit = () => {
                 <Input
                     input_type="text"
                     place="le nom de la category"
+                    label="Nom"
                     v-model="form.nom"
                     :message="form.errors.nom"
                     required

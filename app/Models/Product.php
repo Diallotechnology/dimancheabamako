@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Support\Facades\Storage;
 
 class Product extends Model
 {
@@ -17,7 +18,7 @@ class Product extends Model
      *
      * @var array
      */
-    protected $fillable = ['categorie_id'];
+    protected $fillable = ['categorie_id', 'reference', 'nom', 'color', 'taille', 'description', 'poids', 'video', 'prix', 'cover', 'stock'];
 
     /**
      * Get the categorie that owns the Product
@@ -33,6 +34,11 @@ class Product extends Model
     public function orders(): BelongsToMany
     {
         return $this->belongsToMany(Order::class)->withPivot('quantity', 'montant');
+    }
+
+    public function getCoverAttribute($image)
+    {
+        return Storage::url($image);
     }
 
     /**

@@ -19,6 +19,7 @@ const props = defineProps({
                     <slot />
                 </table>
             </div>
+            <Pagination :pagination="rows" />
         </div>
     </div>
 </template>

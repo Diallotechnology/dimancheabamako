@@ -7,7 +7,12 @@
                     <span class="text">Dashboard</span>
                 </Link>
             </NavLink>
-
+            <NavLink :active="route().current('category')">
+                <Link class="menu-link" :href="route('category')">
+                    <i class="icon material-icons md-store"></i>
+                    <span class="text">Categorie</span>
+                </Link>
+            </NavLink>
             <NavLink :active="route().current('product')">
                 <Link class="menu-link" :href="route('product')">
                     <i class="icon material-icons md-shopping_bag"></i>
@@ -19,13 +24,6 @@
                 <Link class="menu-link" :href="route('order')">
                     <i class="icon material-icons md-shopping_cart"></i>
                     <span class="text">Ventes</span>
-                </Link>
-            </NavLink>
-
-            <NavLink :active="route().current('category')">
-                <Link class="menu-link" :href="route('category')">
-                    <i class="icon material-icons md-store"></i>
-                    <span class="text">Categorie</span>
                 </Link>
             </NavLink>
             <NavLink :active="route().current('user')">

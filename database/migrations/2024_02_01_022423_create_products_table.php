@@ -14,9 +14,13 @@ return new class extends Migration
         Schema::create('products', function (Blueprint $table) {
             $table->id();
             $table->foreignId('categorie_id')->constrained()->cascadeOnUpdate()->cascadeOnDelete();
+            $table->string('reference')->unique();
             $table->string('nom');
             $table->integer('prix');
-            $table->integer('poids');
+            $table->string('poids');
+            $table->integer('stock')->default(1);
+            $table->string('color');
+            $table->string('taille');
             $table->longText('description');
             $table->string('video')->nullable();
             $table->string('cover');

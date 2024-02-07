@@ -2,7 +2,7 @@
 import { onMounted, ref } from "vue";
 
 const model = defineModel({
-    type: String,
+    type: [String, Number],
     required: true,
 });
 
@@ -20,7 +20,7 @@ const props = defineProps({
 
     label: {
         type: String,
-        required: false,
+        required: true,
         default: "",
     },
     message: {
@@ -39,11 +39,7 @@ defineExpose({ focus: () => input.value.focus() });
 
 <template>
     <div class="mb-4">
-        <label
-            for="{{ model }}"
-            v-if="props.label ? props.label : model"
-            class="form-label"
-        ></label>
+        <label class="text-uppercase form-label"> {{ props.label }}</label>
         <input
             type="{{ input_type }}"
             :placeholder="`Entrez ${props.place}`"

@@ -25,7 +25,13 @@ class ProductController extends Controller
      */
     public function store(StoreProductRequest $request)
     {
-        Product::create($request->validated());
+        $data = $request->validated();
+        if ($request->hasFile('cover')) {
+            $filename = $request->cover->hashName();
+            $chemin = $request->cover->storeAs('product/image', $filename, 'public');
+            $data['cover'] = $chemin;
+        }
+        Product::create($data);
 
         return back();
     }

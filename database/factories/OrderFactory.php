@@ -17,7 +17,12 @@ class OrderFactory extends Factory
     public function definition(): array
     {
         return [
-            //
+            'client_id' => rand(1, 10),
+            'reference' => uniqid(),
+            'adresse' => fake()->streetAddress(),
+            'postal' => fake()->postcode(),
+            'ville' => fake()->city(),
+            'pays' => fake()->country(),
         ];
     }
 }
