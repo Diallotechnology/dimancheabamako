@@ -1,18 +1,17 @@
 <script setup>
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 import Input from "@/Components/Input.vue";
-import { Head, useForm, Link } from "@inertiajs/vue3";
+import { router, useForm, Link } from "@inertiajs/vue3";
 import notify from "@/notifications";
 
 const props = defineProps({
     category: {
         type: Object,
+        required: true,
         default: () => ({}),
     },
 });
-// console.log(category);
 const form = useForm({
-    id: props.category.id,
     nom: props.category.nom,
 });
 
@@ -20,10 +19,10 @@ const submit = () => {
     form.patch(route("category.update", props.category.id), {
         onSuccess: () => {
             form.nom = props.category.nom;
-            notify("category mise à jour avec success !", "ok");
+            notify("category mise à jour avec success !", true);
         },
         onError: () => {
-            notify("", "fail");
+            notify(false);
         },
     });
 };
@@ -36,12 +35,11 @@ const submit = () => {
                 <form @submit.prevent="submit">
                     <Input
                         input_type="text"
+                        label="Nom"
                         place="le nom de la category"
                         v-model="form.nom"
                         :message="form.errors.nom"
                         required
-                        autofocus
-                        autocomplete="nom"
                     />
                     <div class="modal-footer">
                         <Link

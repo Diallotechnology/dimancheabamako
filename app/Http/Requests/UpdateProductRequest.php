@@ -2,7 +2,9 @@
 
 namespace App\Http\Requests;
 
+use App\Models\Product;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class UpdateProductRequest extends FormRequest
 {
@@ -11,7 +13,7 @@ class UpdateProductRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -22,7 +24,19 @@ class UpdateProductRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'categorie_id' => 'nullable|exists:categories,id',
+            'reference' => 'required|unique:products,reference,except,reference',
+            // 'reference' => ['required', 'string', Rule::unique(Product::class)->ignore($this->id)],
+            'nom' => 'required|string',
+            'color' => 'required|string',
+            'taille' => 'required|string',
+            'description' => 'required',
+            'poids' => 'required|string',
+            'video' => 'nullable|file',
+            'cover' => 'nullable|file',
+            'image' => 'nullable|array',
+            'prix' => 'required|integer',
+            'stock' => 'required|integer',
         ];
     }
 }

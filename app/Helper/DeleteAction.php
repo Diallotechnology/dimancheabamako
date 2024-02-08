@@ -7,9 +7,7 @@ namespace App\Helper;
 use App\Models\Image;
 use App\Models\Journal;
 use Exception;
-use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\File;
 
@@ -47,14 +45,12 @@ trait DeleteAction
     public function file_uplode($request, Model $model): void
     {
         try {
-            $type = '';
-            $path = 'image';
+            $path = 'product/image';
 
-            foreach ($request->file('files') as $key => $file) {
+            foreach ($request->file('image') as $key => $file) {
                 $filename = $file->hashName();
                 $chemin = $file->storeAs($path, $filename, 'public');
                 Image::create([
-                    'extension' => $file->extension(),
                     'product_id' => $model->id,
                     'chemin' => $chemin,
                 ]);
@@ -63,43 +59,5 @@ trait DeleteAction
         } catch (\Throwable $th) {
             new Exception('file uplode error');
         }
-    }
-
-    public function Restore(Model $delete): JsonResponse
-    {
-        $this->authorize('restore', $delete);
-        $delete->restore();
-
-        return response()->json([
-            'success' => true,
-            'message' => $delete ? class_basename($delete).' restaure avec success ' : class_basename($delete).' non trouvé',
-        ]);
-    }
-
-    public function Remove(Model $delete)
-    {
-        $this->authorize('forceDelete', $delete);
-        $delete->forceDelete();
-
-        return response()->json([
-            'success' => true,
-            'message' => $delete ? class_basename($delete).' definitivement supprimer avec success ' : class_basename($delete).' non trouvé',
-        ]);
-    }
-
-    public function All_restore(Builder $delete)
-    {
-        $delete->restore();
-        // toastr()->success('Tous les elements ont été restaure avec success!');
-
-        return back();
-    }
-
-    public function All_remove(Builder $delete)
-    {
-        $delete->forceDelete();
-        // toastr()->success('Tous les elements ont été definitivement supprimé avec success!');
-
-        return back();
     }
 }

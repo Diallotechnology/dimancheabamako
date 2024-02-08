@@ -18,7 +18,6 @@ const props = defineProps({
     },
 });
 const remove = (url) => {
-    console.log(url);
     Swal.fire({
         title: "supprimer ?",
         text: "Etes vous sur de vouloir supprimer cet element!",

@@ -29,9 +29,10 @@ class StoreProductRequest extends FormRequest
             'taille' => 'required|string',
             'description' => 'required',
             'poids' => 'required|string',
-            'video' => 'nullable|string',
+            'video' => 'nullable|file',
             'prix' => 'required|integer',
-            'cover' => 'nullable|file',
+            'cover' => 'required|file',
+            'image' => 'required|array',
             'stock' => 'required|integer',
         ];
     }

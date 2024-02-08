@@ -11,6 +11,13 @@ class Client extends Model
     use DateFormat;
 
     /**
+     * The attributes that are mass assignable.
+     *
+     * @var array
+     */
+    protected $fillable = ['nom', 'prenom', 'email', 'contact'];
+
+    /**
      * Get all of the orders for the Client
      */
     public function orders(): HasMany

@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\ClientController;
 use App\Http\Controllers\LinkController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\ProductController;
@@ -21,6 +22,7 @@ Route::prefix('admin')->group(function () {
     //         'phpVersion' => PHP_VERSION,
     //     ]);
     // });
+    Route::resource('client', ClientController::class)->except('index', 'create');
     Route::resource('user', UserController::class)->except('index', 'create');
     Route::resource('order', OrderController::class)->except('index', 'create');
     Route::resource('product', ProductController::class)->except('index', 'create');
@@ -33,6 +35,7 @@ Route::prefix('admin')->group(function () {
         Route::get('product', 'product')->name('product');
         Route::get('category', 'category')->name('category');
         Route::get('user', 'user')->name('user');
+        Route::get('client', 'client')->name('client');
     });
 
     Route::middleware('auth')->group(function () {

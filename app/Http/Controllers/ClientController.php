@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Helper\DeleteAction;
 use App\Http\Requests\StoreClientRequest;
-use App\Http\Requests\UpdateClientRequest;
 use App\Models\Client;
 use Inertia\Inertia;
 
@@ -41,7 +40,7 @@ class ClientController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateClientRequest $request, Client $client)
+    public function update(StoreClientRequest $request, Client $client)
     {
         $client->update($request->validated());
 

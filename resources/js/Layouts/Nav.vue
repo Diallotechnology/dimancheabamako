@@ -10,7 +10,7 @@
             <NavLink :active="route().current('category')">
                 <Link class="menu-link" :href="route('category')">
                     <i class="icon material-icons md-store"></i>
-                    <span class="text">Categorie</span>
+                    <span class="text">Categories</span>
                 </Link>
             </NavLink>
             <NavLink :active="route().current('product')">
@@ -24,6 +24,12 @@
                 <Link class="menu-link" :href="route('order')">
                     <i class="icon material-icons md-shopping_cart"></i>
                     <span class="text">Ventes</span>
+                </Link>
+            </NavLink>
+            <NavLink :active="route().current('client')">
+                <Link class="menu-link" :href="route('client')">
+                    <i class="icon material-icons md-person"></i>
+                    <span class="text">Clients</span>
                 </Link>
             </NavLink>
             <NavLink :active="route().current('user')">

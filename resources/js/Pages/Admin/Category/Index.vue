@@ -81,7 +81,7 @@ const submit = () => {
                             <input
                                 v-model="search"
                                 type="text"
-                                placeholder="Search..."
+                                placeholder="Recherche..."
                                 class="form-control"
                             />
                         </div>
@@ -124,8 +124,6 @@ const submit = () => {
                     v-model="form.nom"
                     :message="form.errors.nom"
                     required
-                    autofocus
-                    autocomplete="nom"
                 />
                 <div class="modal-footer">
                     <button

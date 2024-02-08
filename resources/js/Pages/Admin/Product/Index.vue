@@ -14,14 +14,17 @@ import debounce from "lodash.debounce";
 
 const props = defineProps({
     rows: {
+        required: true,
         type: Object,
         default: () => ({}),
     },
     category: {
+        required: true,
         type: Object,
         default: () => ({}),
     },
     filter: {
+        required: true,
         type: Object,
         default: () => ({}),
     },
@@ -51,6 +54,8 @@ const form = useForm({
     prix: "",
     stock: 1,
     cover: "",
+    image: [],
+    video: null,
 });
 
 const submit = () => {
@@ -175,7 +180,6 @@ const submit = () => {
                             v-model="form.nom"
                             :message="form.errors.nom"
                             required
-                            autofocus
                         />
                     </div>
                     <div class="col-md-6">
@@ -186,23 +190,23 @@ const submit = () => {
                             v-model="form.reference"
                             :message="form.errors.reference"
                             required
-                            autofocus
                         />
                     </div>
-
-                    <Select
-                        v-model="form.categorie_id"
-                        :message="form.errors.categorie_id"
-                        label="categorie"
-                    >
-                        <option
-                            v-for="row in category"
-                            :key="row.id"
-                            :value="row.id"
+                    <div class="col-md-6">
+                        <Select
+                            v-model="form.categorie_id"
+                            :message="form.errors.categorie_id"
+                            label="categorie"
                         >
-                            {{ row.nom }}
-                        </option>
-                    </Select>
+                            <option
+                                v-for="row in category"
+                                :key="row.id"
+                                :value="row.id"
+                            >
+                                {{ row.nom }}
+                            </option>
+                        </Select>
+                    </div>
                     <div class="col-md-6">
                         <Input
                             input_type="text"
@@ -211,7 +215,6 @@ const submit = () => {
                             v-model="form.color"
                             :message="form.errors.color"
                             required
-                            autofocus
                         />
                     </div>
                     <div class="col-md-6">
@@ -222,7 +225,6 @@ const submit = () => {
                             v-model="form.taille"
                             :message="form.errors.taille"
                             required
-                            autofocus
                         />
                     </div>
                     <div class="col-md-6">
@@ -233,7 +235,6 @@ const submit = () => {
                             v-model="form.poids"
                             :message="form.errors.poids"
                             required
-                            autofocus
                         />
                     </div>
                     <div class="col-md-6">
@@ -244,22 +245,73 @@ const submit = () => {
                             v-model="form.prix"
                             :message="form.errors.prix"
                             required
-                            autofocus
                         />
                     </div>
-
-                    <div class="mb-4">
-                        <label class="text-uppercase form-label">Cover</label>
-                        <input
-                            class="form-control"
-                            name="cover"
-                            @input="form.cover = $event.target.files[0]"
-                            type="file"
+                    <div class="col-md-6">
+                        <Input
+                            input_type="number"
+                            label="stock"
+                            place="le stock du produit"
+                            v-model="form.stock"
+                            :message="form.errors.stock"
+                            required
                         />
-                        <div v-show="form.errors.cover">
-                            <p class="text-sm text-danger">
-                                {{ form.errors.cover }}
-                            </p>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="mb-4">
+                            <label class="text-uppercase form-label"
+                                >Cover (600X600)</label
+                            >
+                            <input
+                                class="form-control"
+                                name="cover"
+                                @input="form.cover = $event.target.files[0]"
+                                type="file"
+                                required
+                            />
+                            <div v-show="form.errors.cover">
+                                <p class="text-sm text-danger">
+                                    {{ form.errors.cover }}
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="mb-4">
+                            <label class="text-uppercase form-label"
+                                >Images du produit</label
+                            >
+                            <input
+                                class="form-control"
+                                name="image"
+                                multiple
+                                @input="form.image = $event.target.files"
+                                type="file"
+                                required
+                            />
+                            <div v-show="form.errors.image">
+                                <p class="text-sm text-danger">
+                                    {{ form.errors.image }}
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="mb-4">
+                            <label class="text-uppercase form-label"
+                                >Video Faculatif</label
+                            >
+                            <input
+                                class="form-control"
+                                name="video"
+                                @input="form.video = $event.target.files[0]"
+                                type="file"
+                            />
+                            <div v-show="form.errors.video">
+                                <p class="text-sm text-danger">
+                                    {{ form.errors.video }}
+                                </p>
+                            </div>
                         </div>
                     </div>
                     <TextArea

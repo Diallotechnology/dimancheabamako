@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Helper\DeleteAction;
 use App\Http\Requests\StoreProductRequest;
 use App\Http\Requests\UpdateProductRequest;
+use App\Models\Category;
 use App\Models\Product;
 use Inertia\Inertia;
 
@@ -26,12 +27,22 @@ class ProductController extends Controller
     public function store(StoreProductRequest $request)
     {
         $data = $request->validated();
+
         if ($request->hasFile('cover')) {
             $filename = $request->cover->hashName();
-            $chemin = $request->cover->storeAs('product/image', $filename, 'public');
+            $chemin = $request->cover->storeAs('product/cover', $filename, 'public');
             $data['cover'] = $chemin;
         }
-        Product::create($data);
+        if ($request->hasFile('video')) {
+            $filename = $request->video->hashName();
+            $chemin = $request->video->storeAs('product/video', $filename, 'public');
+            $data['video'] = $chemin;
+        }
+
+        $item = Product::create(data_forget($data, 'image'));
+        if ($request->hasFile('image')) {
+            $this->file_uplode($request, $item);
+        }
 
         return back();
     }
@@ -49,7 +60,9 @@ class ProductController extends Controller
      */
     public function edit(Product $product)
     {
-        return Inertia::render('Admin/Product/Update', compact('product'));
+        $category = Category::all();
+
+        return Inertia::render('Admin/Product/Update', compact('product', 'category'));
     }
 
     /**
@@ -57,7 +70,24 @@ class ProductController extends Controller
      */
     public function update(UpdateProductRequest $request, Product $product)
     {
-        $product->update($request->validated());
+        $data = $request->validated();
+
+        if ($request->hasFile('cover')) {
+            $this->file_delete($product);
+            $filename = $request->cover->hashName();
+            $chemin = $request->cover->storeAs('product/cover', $filename, 'public');
+            $data['cover'] = $chemin;
+        }
+        if ($request->hasFile('video')) {
+            $this->file_delete($product);
+            $filename = $request->video->hashName();
+            $chemin = $request->video->storeAs('product/video', $filename, 'public');
+            $data['video'] = $chemin;
+        }
+        if ($request->hasFile('image')) {
+            $this->file_uplode($request, $product);
+        }
+        $product->update(data_forget($data, 'image'));
 
         return back();
     }
@@ -67,6 +97,8 @@ class ProductController extends Controller
      */
     public function destroy(Product $product)
     {
+        $this->file_delete($product);
+
         return $this->supp($product);
     }
 }

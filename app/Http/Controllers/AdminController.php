@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Category;
+use App\Models\Client;
 use App\Models\Product;
 use Illuminate\Support\Facades\Request;
 use Inertia\Inertia;
@@ -23,7 +24,6 @@ class AdminController extends Controller
         })->latest('id')->paginate(10)->withQueryString();
         $filter = Request::only('search', 'cat');
         $category = Category::all();
-        // dd($rows);
 
         return Inertia::render('Admin/Product/Index', compact('rows', 'filter', 'category'));
     }
@@ -42,6 +42,19 @@ class AdminController extends Controller
         $filter = Request::only('search');
 
         return Inertia::render('Admin/Category/Index', compact('rows', 'filter'));
+    }
+
+    public function client()
+    {
+        $rows = Client::when(Request::input('search'), function ($query, $search) {
+            $query->where('nom', 'like', '%'.$search.'%')
+                ->orwhere('prenom', 'like', '%'.$search.'%')
+                ->orwhere('email', 'like', '%'.$search.'%')
+                ->orwhere('contact', 'like', '%'.$search.'%');
+        })->latest('id')->paginate(10)->withQueryString();
+        $filter = Request::only('search');
+
+        return Inertia::render('Admin/Client/Index', compact('rows', 'filter'));
     }
 
     public function image()
