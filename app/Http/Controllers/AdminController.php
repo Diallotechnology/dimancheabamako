@@ -14,12 +14,14 @@ class AdminController extends Controller
 {
     public function dashboard()
     {
-        $revenu = Order::withSum('products as totaux', 'order_product.montant')->get('totaux')->sum('totaux');
+        $query = Order::withSum('products as totaux', 'order_product.montant');
+        $revenu = $query->get('totaux')->sum('totaux');
         $order = Order::count();
         $product = Product::count();
         $categorie = Category::count();
+        $lastorder = $query->take(10)->latest('id')->get();
 
-        return Inertia::render('Admin/Dashboard', compact('order', 'product', 'revenu', 'categorie'));
+        return Inertia::render('Admin/Dashboard', compact('order', 'product', 'revenu', 'categorie', 'lastorder'));
     }
 
     public function product()

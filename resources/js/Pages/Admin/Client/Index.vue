@@ -58,7 +58,7 @@ const submit = () => {
     <AuthenticatedLayout>
         <div class="content-header">
             <div>
-                <h2 class="content-title card-title">Listes des client</h2>
+                <h2 class="content-title card-title">Listes des clients</h2>
             </div>
             <div>
                 <a

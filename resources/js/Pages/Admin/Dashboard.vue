@@ -1,5 +1,7 @@
 <script setup>
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
+import Table from "@/Components/Table.vue";
+import ButtonShow from "@/Components/ButtonShow.vue";
 import { Head } from "@inertiajs/vue3";
 const props = defineProps({
     order: {
@@ -17,6 +19,10 @@ const props = defineProps({
     categorie: {
         type: Number,
         default: () => 0,
+    },
+    lastorder: {
+        type: Object,
+        default: () => ({}),
     },
 });
 let Price_format = new Intl.NumberFormat("fr-FR", {
@@ -108,6 +114,61 @@ let Price_format = new Intl.NumberFormat("fr-FR", {
                         </div>
                     </article>
                 </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <header class="card-header">
+                    <h4 class="card-title">Ventes récente</h4>
+                </header>
+                <Table>
+                    <thead>
+                        <tr>
+                            <th>#ID</th>
+                            <th scope="col">Reference</th>
+                            <th scope="col">Client</th>
+                            <th scope="col">Adresse</th>
+                            <th scope="col">Postal</th>
+                            <th scope="col">Pays</th>
+                            <th scope="col">Ville</th>
+                            <th scope="col">Payment</th>
+                            <th scope="col">Total</th>
+                            <th scope="col">Etat</th>
+                            <th scope="col">Date</th>
+                            <th scope="col">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr v-for="row in lastorder" :key="row.id">
+                            <td>{{ row.id }}</td>
+                            <td class="fw-bold">{{ row.reference }}</td>
+                            <td>
+                                {{ row.client.prenom }} {{ row.client.nom }}
+                                <br />
+                                {{ row.client.email }}
+                            </td>
+
+                            <td>{{ row.adresse }}</td>
+                            <td>{{ row.postal }}</td>
+                            <td>{{ row.pays }}</td>
+                            <td>{{ row.ville }}</td>
+                            <td>
+                                <i
+                                    class="material-icons md-payment font-xxl text-muted mr-5"
+                                ></i>
+                                {{ row.payment }}
+                            </td>
+                            <td>{{ row.totaux }}</td>
+                            <td>{{ row.etat }}</td>
+                            <td>{{ row.created_at }}</td>
+                            <td>
+                                <ButtonShow
+                                    :href="route('order.show', row.id)"
+                                />
+                            </td>
+                        </tr>
+                    </tbody>
+                </Table>
             </div>
         </div>
     </AuthenticatedLayout>

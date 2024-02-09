@@ -1,5 +1,5 @@
 <template>
-    <Link :href="href" class="btn btn-sm font-sm rounded btn-brand mx-1">
+    <Link :href="href" class="btn btn-sm font-sm rounded btn-brand m-1">
         <i class="material-icons md-edit"></i>
     </Link>
 </template>

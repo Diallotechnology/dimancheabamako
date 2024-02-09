@@ -113,7 +113,7 @@ watch(
                         <th>#ID</th>
                         <th scope="col">Reference</th>
                         <th scope="col">Client</th>
-                        <th scope="col">Email</th>
+
                         <th scope="col">Adresse</th>
                         <th scope="col">Postal</th>
                         <th scope="col">Pays</th>
@@ -129,8 +129,17 @@ watch(
                     <tr v-for="row in rows.data" :key="row.id">
                         <td>{{ row.id }}</td>
                         <td class="fw-bold">{{ row.reference }}</td>
-                        <td>{{ row.client.prenom }} {{ row.client.nom }}</td>
-                        <td>{{ row.client.email }}</td>
+                        {{
+                            row.client.prenom
+                        }}
+                        {{
+                            row.client.nom
+                        }}
+                        <br />
+                        {{
+                            row.client.email
+                        }}
+
                         <td>{{ row.adresse }}</td>
                         <td>{{ row.postal }}</td>
                         <td>{{ row.pays }}</td>
@@ -145,8 +154,8 @@ watch(
                         <td>{{ row.etat }}</td>
                         <td>{{ row.created_at }}</td>
                         <td>
-                            <ButtonEdit :href="route('order.edit', row.id)" />
                             <ButtonShow :href="route('order.show', row.id)" />
+                            <ButtonEdit :href="route('order.edit', row.id)" />
                             <ButtonDelete
                                 :url="route('order.destroy', row.id)"
                             />
