@@ -1,7 +1,14 @@
-<script setup>
+<script>
 import ApplicationLogo from "@/Components/ApplicationLogo.vue";
 import Nav from "@/Layouts/Nav.vue";
 import { Link } from "@inertiajs/vue3";
+export default {
+    components: {
+        ApplicationLogo,
+        Link,
+        Nav,
+    },
+};
 </script>
 
 <template>

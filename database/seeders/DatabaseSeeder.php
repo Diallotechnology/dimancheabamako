@@ -18,15 +18,14 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
+        User::factory()->create(['email' => 'admin@gmail.com', 'role' => true]);
         User::factory(30)->create();
         Category::factory(20)->create();
         Client::factory(20)->create();
         Product::factory(20)->hasImages(3)->create();
-        Order::factory(20)->create();
-
-        // \App\Models\User::factory()->create([
-        //     'name' => 'Test User',
-        //     'email' => 'test@example.com',
-        // ]);
+        Order::factory(20)->hasAttached(
+            Product::factory(20)->count(4),
+            ['montant' => rand(50000, 100000), 'quantity' => rand(1, 10)]
+        )->create();
     }
 }

@@ -56,72 +56,68 @@ const submit = () => {
     <Head title="Categorie" />
 
     <AuthenticatedLayout>
-        <section class="content-main">
-            <div class="content-header">
-                <div>
-                    <h2 class="content-title card-title">Listes des client</h2>
-                </div>
-                <div>
-                    <a
-                        href="#"
-                        class="btn btn-primary btn-sm rounded"
-                        type="button"
-                        data-bs-toggle="modal"
-                        data-bs-target="#exampleModal"
-                    >
-                        <i class="material-icons md-plus md-18"></i>
+        <div class="content-header">
+            <div>
+                <h2 class="content-title card-title">Listes des client</h2>
+            </div>
+            <div>
+                <a
+                    href="#"
+                    class="btn btn-primary btn-sm rounded"
+                    type="button"
+                    data-bs-toggle="modal"
+                    data-bs-target="#exampleModal"
+                >
+                    <i class="material-icons md-plus md-18"></i>
 
-                        Nouveau</a
-                    >
-                </div>
+                    Nouveau</a
+                >
             </div>
-            <div class="card mb-4">
-                <header class="card-header">
-                    <div class="row gx-3">
-                        <div class="col-lg-4 col-md-6 me-auto">
-                            <input
-                                v-model="search"
-                                type="text"
-                                placeholder="Recherche..."
-                                class="form-control"
-                            />
-                        </div>
+        </div>
+        <div class="card mb-4">
+            <header class="card-header">
+                <div class="row gx-3">
+                    <div class="col-lg-4 col-md-6 me-auto">
+                        <input
+                            v-model="search"
+                            type="text"
+                            placeholder="Recherche..."
+                            class="form-control"
+                        />
                     </div>
-                </header>
-                <Table :rows="rows">
-                    <thead>
-                        <tr>
-                            <th>#ID</th>
-                            <th scope="col">prenom</th>
-                            <th scope="col">Nom</th>
-                            <th scope="col">email</th>
-                            <th scope="col">contact</th>
-                            <th scope="col">Date</th>
-                            <th scope="col">Action</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr v-for="row in rows.data" :key="row.id">
-                            <td>{{ row.id }}</td>
-                            <td>{{ row.prenom }}</td>
-                            <td>{{ row.nom }}</td>
-                            <td>{{ row.email }}</td>
-                            <td>{{ row.contact }}</td>
-                            <td>{{ row.created_at }}</td>
-                            <td>
-                                <ButtonEdit
-                                    :href="route('client.edit', row.id)"
-                                />
-                                <ButtonDelete
-                                    :url="route('client.destroy', row.id)"
-                                />
-                            </td>
-                        </tr>
-                    </tbody>
-                </Table>
-            </div>
-            <!-- card end// -->
-        </section>
+                </div>
+            </header>
+            <Table :rows="rows">
+                <thead>
+                    <tr>
+                        <th>#ID</th>
+                        <th scope="col">prenom</th>
+                        <th scope="col">Nom</th>
+                        <th scope="col">email</th>
+                        <th scope="col">contact</th>
+                        <th scope="col">Date</th>
+                        <th scope="col">Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr v-for="row in rows.data" :key="row.id">
+                        <td>{{ row.id }}</td>
+                        <td>{{ row.prenom }}</td>
+                        <td>{{ row.nom }}</td>
+                        <td>{{ row.email }}</td>
+                        <td>{{ row.contact }}</td>
+                        <td>{{ row.created_at }}</td>
+                        <td>
+                            <ButtonEdit :href="route('client.edit', row.id)" />
+                            <ButtonDelete
+                                :url="route('client.destroy', row.id)"
+                            />
+                        </td>
+                    </tr>
+                </tbody>
+            </Table>
+        </div>
+        <!-- card end// -->
         <Modal name="Formulaire de nouveaux client">
             <form @submit.prevent="submit">
                 <Input

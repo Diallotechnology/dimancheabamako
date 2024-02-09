@@ -3,8 +3,9 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
-class UpdateOrderRequest extends FormRequest
+class UpdateUserRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -22,12 +23,9 @@ class UpdateOrderRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'etat' => 'required|string',
-            'payment' => 'required|string',
-            'adresse' => 'required|string',
-            'postal' => 'required|string',
-            'ville' => 'required|string',
-            'pays' => 'required|string',
+            'name' => ['required', 'string'],
+            'role' => ['nullable'],
+            'email' => ['required', 'string', 'email', 'max:255', Rule::unique('users', 'email')->ignore($this->user->id)],
         ];
     }
 }

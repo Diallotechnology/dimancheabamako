@@ -18,7 +18,14 @@ class Order extends Model
      *
      * @var array
      */
-    protected $fillable = [''];
+    protected $fillable = ['payment', 'client_id', 'reference', 'adresse', 'postal', 'ville', 'pays', 'etat'];
+
+    /**
+     * The relationships that should always be loaded.
+     *
+     * @var array
+     */
+    protected $with = ['client'];
 
     /**
      * The products that belong to the Order

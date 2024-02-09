@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Enum\OrderEnum;
 use App\Helper\DeleteAction;
 use App\Http\Requests\StoreOrderRequest;
 use App\Http\Requests\UpdateOrderRequest;
@@ -25,7 +26,11 @@ class OrderController extends Controller
      */
     public function show(Order $order)
     {
-        //
+        $order->load('client', 'products')->loadSum('products as totaux', 'order_product.montant');
+
+        $state = OrderEnum::cases();
+
+        return Inertia::render('Admin/Order/Show', compact('order', 'state'));
     }
 
     /**

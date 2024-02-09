@@ -15,7 +15,7 @@ const props = defineProps({
     <div class="card">
         <div class="card-body">
             <div class="table-responsive">
-                <table id="" class="table table-hover">
+                <table class="table table-hover align-middle table-nowrap mb-0">
                     <slot />
                 </table>
             </div>

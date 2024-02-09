@@ -23,6 +23,7 @@ class OrderFactory extends Factory
             'postal' => fake()->postcode(),
             'ville' => fake()->city(),
             'pays' => fake()->country(),
+            'payment' => fake()->randomElement(['Mastercard', 'Visa', 'Paypal']),
         ];
     }
 }
