@@ -25,7 +25,7 @@ class Order extends Model
      *
      * @var array
      */
-    protected $with = ['client'];
+    protected $with = ['client', 'products'];
 
     /**
      * The products that belong to the Order

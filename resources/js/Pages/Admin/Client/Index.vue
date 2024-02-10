@@ -3,6 +3,7 @@ import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 import { Head, router, useForm } from "@inertiajs/vue3";
 import ButtonEdit from "@/Components/ButtonEdit.vue";
 import ButtonDelete from "@/Components/ButtonDelete.vue";
+import ButtonShow from "@/Components/ButtonShow.vue";
 import Table from "@/Components/Table.vue";
 import Modal from "@/Components/Modal.vue";
 import Input from "@/Components/Input.vue";
@@ -108,6 +109,7 @@ const submit = () => {
                         <td>{{ row.contact }}</td>
                         <td>{{ row.created_at }}</td>
                         <td>
+                            <ButtonShow :href="route('client.show', row.id)" />
                             <ButtonEdit :href="route('client.edit', row.id)" />
                             <ButtonDelete
                                 :url="route('client.destroy', row.id)"

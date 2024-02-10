@@ -51,9 +51,6 @@ const props = defineProps({
                         <div class="text">
                             <h6 class="mb-1 card-title">Total Revenue</h6>
                             <span>{{ Price_format.format(revenu) }}</span>
-                            <span class="text-sm">
-                                Shipping fees are not included
-                            </span>
                         </div>
                     </article>
                 </div>
@@ -70,9 +67,6 @@ const props = defineProps({
                         <div class="text">
                             <h6 class="mb-1 card-title">Total Ventes</h6>
                             <span>{{ order }}</span>
-                            <span class="text-sm">
-                                Excluding orders in transit
-                            </span>
                         </div>
                     </article>
                 </div>
@@ -89,7 +83,6 @@ const props = defineProps({
                         <div class="text">
                             <h6 class="mb-1 card-title">Total Produits</h6>
                             <span>{{ product }}</span>
-                            <span class="text-sm"> In 19 Categories </span>
                         </div>
                     </article>
                 </div>
@@ -105,9 +98,6 @@ const props = defineProps({
                         <div class="text">
                             <h6 class="mb-1 card-title">Total Categories</h6>
                             <span>{{ categorie }}</span>
-                            <span class="text-sm">
-                                Based in your local time.
-                            </span>
                         </div>
                     </article>
                 </div>
