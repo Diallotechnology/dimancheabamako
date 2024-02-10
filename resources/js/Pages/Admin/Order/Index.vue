@@ -5,9 +5,8 @@ import ButtonEdit from "@/Components/ButtonEdit.vue";
 import ButtonDelete from "@/Components/ButtonDelete.vue";
 import Table from "@/Components/Table.vue";
 import Input from "@/Components/Input.vue";
-import notify from "@/notifications";
+import { Price_format } from "@/notifications";
 import { ref, watch } from "vue";
-
 import debounce from "lodash.debounce";
 import ButtonShow from "@/Components/ButtonShow.vue";
 
@@ -150,7 +149,7 @@ watch(
                             ></i>
                             {{ row.payment }}
                         </td>
-                        <td>{{ row.totaux }}</td>
+                        <td>{{ Price_format.format(row.totaux) }}</td>
                         <td>{{ row.etat }}</td>
                         <td>{{ row.created_at }}</td>
                         <td>

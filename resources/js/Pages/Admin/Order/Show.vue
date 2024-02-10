@@ -1,11 +1,8 @@
 <script setup>
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 import { Head, useForm } from "@inertiajs/vue3";
-import notify from "@/notifications";
-let Price_format = new Intl.NumberFormat("fr-FR", {
-    style: "currency",
-    currency: "XOF",
-});
+import notify, { Price_format } from "@/notifications";
+
 const props = defineProps({
     order: {
         type: Object,

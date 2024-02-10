@@ -3,6 +3,7 @@ import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 import Table from "@/Components/Table.vue";
 import ButtonShow from "@/Components/ButtonShow.vue";
 import { Head } from "@inertiajs/vue3";
+import { Price_format } from "@/notifications";
 const props = defineProps({
     order: {
         type: Number,
@@ -24,10 +25,6 @@ const props = defineProps({
         type: Object,
         default: () => ({}),
     },
-});
-let Price_format = new Intl.NumberFormat("fr-FR", {
-    style: "currency",
-    currency: "XOF",
 });
 </script>
 
@@ -158,7 +155,7 @@ let Price_format = new Intl.NumberFormat("fr-FR", {
                                 ></i>
                                 {{ row.payment }}
                             </td>
-                            <td>{{ row.totaux }}</td>
+                            <td>{{ Price_format.format(row.totaux) }}</td>
                             <td>{{ row.etat }}</td>
                             <td>{{ row.created_at }}</td>
                             <td>

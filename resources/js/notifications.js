@@ -8,7 +8,7 @@ const notify = (message = "", type) => {
         toast.error("la validation a echoué verifiez vos informations!");
     }
 };
-let Price_format = new Intl.NumberFormat("fr-FR", {
+export let Price_format = new Intl.NumberFormat("fr-FR", {
     style: "currency",
     currency: "XOF",
 });

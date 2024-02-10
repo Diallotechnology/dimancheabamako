@@ -1,16 +1,15 @@
 <script setup>
-import Checkbox from "@/Components/Checkbox.vue";
 import GuestLayout from "@/Layouts/GuestLayout.vue";
 import InputError from "@/Components/InputError.vue";
 import InputLabel from "@/Components/InputLabel.vue";
 import PrimaryButton from "@/Components/PrimaryButton.vue";
 import TextInput from "@/Components/TextInput.vue";
 import { Head, Link, useForm } from "@inertiajs/vue3";
-import notify from "@/notifications";
 
-defineProps({
-    canResetPassword: {
-        type: Boolean,
+const props = defineProps({
+    email: {
+        type: String,
+        required: true,
     },
     status: {
         type: String,
@@ -18,14 +17,14 @@ defineProps({
 });
 
 const form = useForm({
-    email: "",
+    email: props.email,
     password: "",
-    remember: false,
+    password_confirmation: "",
 });
 
 const submit = () => {
-    form.post(route("login"), {
-        onFinish: () => form.reset("password"),
+    form.post(route("change_password"), {
+        onFinish: () => form.reset(),
         onSuccess: () => {
             form.reset();
         },
@@ -38,41 +37,38 @@ const submit = () => {
 
 <template>
     <GuestLayout>
-        <Head title="Connexion" />
+        <Head title="ChangePassword" />
 
         <section class="content-main mt-80 mb-80">
             <div class="card mx-auto card-login">
                 <div class="card-body">
                     <h4 class="card-title mb-4 h2">Se connecter</h4>
+                    <h4 class="mb-2">Changement de Mot de Passe Requis 🔒</h4>
+                    <h6>
+                        NB: Utilisez au moins huit (8) caractères, mélangez
+                        majuscules, minuscules, chiffres et caractères spéciaux.
+                    </h6>
                     <div
                         v-if="status"
-                        class="mb-4 font-medium text-sm text-success"
+                        class="mb-4 font-medium text-sm text-green-600"
                     >
                         {{ status }}
                     </div>
 
                     <form @submit.prevent="submit">
-                        <div>
-                            <InputLabel for="email" value="Email" />
-
-                            <TextInput
-                                id="email"
-                                type="email"
-                                class="mt-1 block w-full"
-                                v-model="form.email"
-                                required
-                                autofocus
-                                autocomplete="username"
-                            />
-
-                            <InputError
-                                class="mt-2"
-                                :message="form.errors.email"
-                            />
-                        </div>
+                        <TextInput
+                            type="hidden"
+                            class="mt-1 block w-full"
+                            v-model="form.email"
+                            required
+                            autofocus
+                        />
 
                         <div class="mt-4">
-                            <InputLabel for="password" value="Password" />
+                            <InputLabel
+                                for="password"
+                                value="Nouveau mot de passe"
+                            />
 
                             <TextInput
                                 id="password"
@@ -80,7 +76,7 @@ const submit = () => {
                                 class="mt-1 block w-full"
                                 v-model="form.password"
                                 required
-                                autocomplete="current-password"
+                                autocomplete="new-password"
                             />
 
                             <InputError
@@ -88,21 +84,29 @@ const submit = () => {
                                 :message="form.errors.password"
                             />
                         </div>
-                        <div class="mb-3">
-                            <Link
-                                v-if="canResetPassword"
-                                :href="route('password.request')"
-                                class="float-end font-sm text-muted"
-                            >
-                                Mot de passe oublié ?
-                            </Link>
-                            <Checkbox
-                                name="remember"
-                                v-model:checked="form.remember"
+
+                        <div class="mt-4">
+                            <InputLabel
+                                for="password_confirmation"
+                                value="Confirmé le mot de passe"
+                            />
+
+                            <TextInput
+                                id="password_confirmation"
+                                type="password"
+                                class="mt-1 block w-full"
+                                v-model="form.password_confirmation"
+                                required
+                                autocomplete="new-password"
+                            />
+
+                            <InputError
+                                class="mt-2"
+                                :message="form.errors.password_confirmation"
                             />
                         </div>
                         <!-- form-group form-check .// -->
-                        <div class="mb-4">
+                        <div class="my-4">
                             <PrimaryButton
                                 :class="{ 'opacity-25': form.processing }"
                                 :disabled="form.processing"
