@@ -2,6 +2,7 @@
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 import ButtonEdit from "@/Components/ButtonEdit.vue";
 import ButtonDelete from "@/Components/ButtonDelete.vue";
+import ButtonShow from "@/Components/ButtonShow.vue";
 import Modal from "@/Components/Modal.vue";
 import Input from "@/Components/Input.vue";
 import TextArea from "@/Components/TextArea.vue";
@@ -34,15 +35,21 @@ let search = ref(props.filter.search);
 let cat = ref(props.filter.cat);
 watch(
     search,
-    debounce((value, cat) => {
+    debounce((value) => {
         router.get(
             "/admin/product",
             { search: value },
-            { cat: cat },
             { preserveState: true, replace: true }
         );
     }, 600)
 );
+const SelectFilter = () => {
+    router.get(
+        "/admin/product",
+        { cat: cat.value },
+        { preserveState: true, replace: true }
+    );
+};
 const form = useForm({
     categorie_id: "",
     reference: "",
@@ -106,22 +113,19 @@ const submit = () => {
                         />
                     </div>
                     <div class="col-lg-2 col-6 col-md-3">
-                        <select class="form-select select-nice" v-model="cat">
+                        <select
+                            class="form-select"
+                            v-model="cat"
+                            @change="SelectFilter"
+                        >
                             <option selected>Tier par category</option>
                             <option
                                 v-for="row in category"
                                 :key="row.id"
-                                :value="row.nom"
+                                :value="row.id"
                             >
                                 {{ row.nom }}
                             </option>
-                        </select>
-                    </div>
-                    <div class="col-lg-2 col-6 col-md-3">
-                        <select class="form-select">
-                            <option>Latest added</option>
-                            <option>Cheap first</option>
-                            <option>Most viewed</option>
                         </select>
                     </div>
                 </div>
@@ -152,6 +156,9 @@ const submit = () => {
                                     {{ row.prix }}
                                 </div>
                                 <!-- price.// -->
+                                <ButtonShow
+                                    :href="route('product.show', row.id)"
+                                />
                                 <ButtonEdit
                                     :href="route('product.edit', row.id)"
                                 />

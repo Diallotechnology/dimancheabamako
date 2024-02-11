@@ -61,9 +61,9 @@
                                     </ul>
                                 </li>
                                 <li>
-                                    <i class="fi-rs-user"></i
-                                    ><a href="page-login-register.html"
-                                        >Se connecter</a
+                                    <i class="fi-rs-user"></i>
+                                    <Link :href="route('login')"
+                                        >Se connecter</Link
                                     >
                                 </li>
                             </ul>
@@ -187,7 +187,9 @@
                                         >
                                     </li>
                                     <li>
-                                        <Link :href="route('home')">About</Link>
+                                        <Link :href="route('shop')"
+                                            >Produit</Link
+                                        >
                                     </li>
 
                                     <li>
@@ -202,7 +204,7 @@
                     <div class="hotline d-none d-lg-block">
                         <p>
                             <i class="fi-rs-headset"></i
-                            ><span>Hotline</span> 1900 - 888
+                            ><span>Info Line</span> 1900 - 888
                         </p>
                     </div>
                     <p class="mobile-promotion">

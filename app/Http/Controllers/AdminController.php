@@ -31,6 +31,7 @@ class AdminController extends Controller
         })->when(Request::input('cat'), function ($query, $cat) {
             $query->where('categorie_id', $cat);
         })->latest('id')->paginate(10)->withQueryString();
+        // dd($rows);
         $filter = Request::only('search', 'cat');
         $category = Category::all();
 

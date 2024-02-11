@@ -47,6 +47,7 @@ Route::prefix('admin')->group(function () {
 
 Route::controller(LinkController::class)->group(function () {
     Route::get('/', 'home')->name('home');
+    Route::get('shop', 'shop')->name('shop');
 });
 Route::inertia('contact', 'Contact')->name('contact');
 require __DIR__.'/auth.php';

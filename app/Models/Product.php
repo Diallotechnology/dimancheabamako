@@ -21,6 +21,13 @@ class Product extends Model
     protected $fillable = ['categorie_id', 'reference', 'nom', 'color', 'taille', 'description', 'poids', 'video', 'prix', 'cover', 'stock'];
 
     /**
+     * The relationships that should always be loaded.
+     *
+     * @var array
+     */
+    protected $with = ['categorie'];
+
+    /**
      * Get the categorie that owns the Product
      */
     public function categorie(): BelongsTo

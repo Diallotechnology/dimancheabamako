@@ -52,7 +52,9 @@ class ProductController extends Controller
      */
     public function show(Product $product)
     {
-        return Inertia::render('Admin/Product/Update', compact('product'));
+        $product->load('images', 'orders');
+
+        return Inertia::render('Admin/Product/Show', compact('product'));
     }
 
     /**
