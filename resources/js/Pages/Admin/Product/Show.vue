@@ -58,10 +58,10 @@ const props = defineProps({
                             </a>
                             <div class="info-wrap">
                                 <ButtonEdit
-                                    :href="route('product.edit', row.id)"
+                                    :href="route('image.edit', row.id)"
                                 />
                                 <ButtonDelete
-                                    :url="route('product.destroy', row.id)"
+                                    :url="route('image.destroy', row.id)"
                                 />
                             </div>
                         </div>

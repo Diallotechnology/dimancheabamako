@@ -40,7 +40,16 @@ class ImageController extends Controller
      */
     public function update(Request $request, Image $image)
     {
+        $data = $request->validate(['chemin' => 'required|file']);
+        if ($request->hasFile('chemin')) {
+            $this->file_delete($image);
+            $filename = $request->chemin->hashName();
+            $chemin = $request->chemin->storeAs('product/image', $filename, 'public');
+            $data['chemin'] = $chemin;
+            $image->update($data);
+        }
 
+        return back();
     }
 
     /**

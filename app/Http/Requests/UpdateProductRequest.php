@@ -25,15 +25,14 @@ class UpdateProductRequest extends FormRequest
     {
         return [
             'categorie_id' => 'nullable|exists:categories,id',
-            'reference' => 'required|unique:products,reference,except,reference',
-            // 'reference' => ['required', 'string', Rule::unique(Product::class)->ignore($this->id)],
+            'reference' => ['required', 'string', Rule::unique(Product::class)->ignore($this->product->id)],
             'nom' => 'required|string',
             'color' => 'required|string',
             'taille' => 'required|string',
             'description' => 'required',
             'poids' => 'required|string',
-            'video' => 'nullable|file',
-            'cover' => 'nullable|file',
+            // 'video' => 'nullable',
+            // 'cover' => 'nullable',
             'image' => 'nullable|array',
             'prix' => 'required|integer',
             'stock' => 'required|integer',

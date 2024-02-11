@@ -1,7 +1,7 @@
 <script setup>
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 import Input from "@/Components/Input.vue";
-import { useForm, Link, router } from "@inertiajs/vue3";
+import { useForm, Link } from "@inertiajs/vue3";
 import TextArea from "@/Components/TextArea.vue";
 import Select from "@/Components/Select.vue";
 import notify from "@/notifications";
@@ -28,14 +28,15 @@ const form = useForm({
     poids: props.product.poids,
     prix: props.product.prix,
     stock: props.product.stock,
-    cover: "",
+    cover: null,
     image: [],
     video: null,
+    _method: "PUT",
 });
 
 const submit = () => {
-    form.patch(route("product.update", props.product.id), {
-        // forceFormData: true,
+    form.post(route("product.update", props.product.id), {
+        forceFormData: true,
         onSuccess: () => {
             form.categorie_id = props.product.categorie_id;
             form.reference = props.product.reference;

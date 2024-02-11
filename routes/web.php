@@ -3,6 +3,7 @@
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\ClientController;
+use App\Http\Controllers\ImageController;
 use App\Http\Controllers\LinkController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\ProductController;
@@ -27,7 +28,7 @@ Route::prefix('admin')->group(function () {
     Route::resource('order', OrderController::class)->except('index', 'create');
     Route::resource('product', ProductController::class)->except('index', 'create');
     Route::resource('category', CategoryController::class)->except('index', 'create', 'show');
-    Route::resource('image', CategoryController::class)->except('index', 'create', 'show');
+    Route::resource('image', ImageController::class)->except('index', 'create', 'show', 'store');
 
     Route::controller(AdminController::class)->group(function () {
         Route::get('dashboard', 'dashboard')->name('dashboard');
