@@ -14,19 +14,33 @@ class LinkController extends Controller
      */
     public function home()
     {
-        return Inertia::render('Home');
+        $product = Product::take(4)->get();
+
+        return Inertia::render('Home', \compact('product'));
     }
 
     public function shop()
     {
-        $rows = Product::with('categorie')->when(Request::input('search'), function ($query, $search) {
-            $query->where('nom', 'like', '%'.$search.'%')->orwhere('color', 'like', '%'.$search.'%');
-        })->when(Request::input('cat'), function ($query, $cat) {
-            $query->where('categorie_id', $cat);
-        })->latest('id')->paginate(15)->withQueryString();
+        $rows =
+            Product::when(Request::input('search'), function ($query, $search) {
+                $query->where('nom', 'like', '%'.$search.'%')->orwhere('color', 'like', '%'.$search.'%');
+            })->when(Request::input('cat'), function ($query, $cat) {
+                $query->where('categorie_id', $cat);
+            })->latest('id')->paginate(15)->withQueryString();
+
+        // dd($rows);
         $filter = Request::only('search', 'cat');
         $category = Category::all();
 
-        return Inertia::render('Contact', \compact('category', 'filter'));
+        return Inertia::render('Shop/Index', \compact('category', 'filter', 'rows'));
+    }
+
+    public function shopshow(Product $product)
+    {
+        $product->load('images');
+        $rows = Product::where('categorie_id', $product->id)->take(4)->get();
+        $category = Category::all();
+
+        return Inertia::render('Shop/Show', compact('product', 'rows', 'category'));
     }
 }

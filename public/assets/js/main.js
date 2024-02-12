@@ -8,6 +8,7 @@
         });
         $("#onloadModal").modal("show");
     });
+
     /*-----------------
         Menu Stick
     -----------------*/
@@ -27,12 +28,12 @@
     });
 
     /*------ ScrollUp -------- */
-    $.scrollUp({
-        scrollText: '<i class="fi-rs-arrow-up"></i>',
-        easingType: "linear",
-        scrollSpeed: 900,
-        animation: "fade",
-    });
+    // $.scrollUp({
+    //     scrollText: '<i class="fi-rs-arrow-up"></i>',
+    //     easingType: "linear",
+    //     scrollSpeed: 900,
+    //     animation: "fade",
+    // });
 
     /*------ Wow Active ----*/
     new WOW().init();
@@ -62,20 +63,21 @@
     }
 
     /*------ Hero slider 1 ----*/
-    $(".hero-slider-1").slick({
-        slidesToShow: 1,
-        slidesToScroll: 1,
-        fade: true,
-        loop: true,
-        dots: true,
-        arrows: true,
-        prevArrow:
-            '<span class="slider-btn slider-prev"><i class="fi-rs-angle-left"></i></span>',
-        nextArrow:
-            '<span class="slider-btn slider-next"><i class="fi-rs-angle-right"></i></span>',
-        appendArrows: ".hero-slider-1-arrow",
-        autoplay: true,
-    });
+
+    // $(".hero-slider-1").slick({
+    //     slidesToShow: 1,
+    //     slidesToScroll: 1,
+    //     fade: true,
+    //     loop: true,
+    //     dots: true,
+    //     arrows: true,
+    //     prevArrow:
+    //         '<span class="slider-btn slider-prev"><i class="fi-rs-angle-left"></i></span>',
+    //     nextArrow:
+    //         '<span class="slider-btn slider-next"><i class="fi-rs-angle-right"></i></span>',
+    //     appendArrows: ".hero-slider-1-arrow",
+    //     autoplay: true,
+    // });
 
     /*Carausel 6 columns*/
     $(".carausel-6-columns").each(function (key, item) {
@@ -586,31 +588,31 @@
     sidebarSearch();
 
     /*====== Sidebar menu Active ======*/
-    function mobileHeaderActive() {
-        var navbarTrigger = $(".burger-icon"),
-            endTrigger = $(".mobile-menu-close"),
-            container = $(".mobile-header-active"),
-            wrapper4 = $("body");
+    // function mobileHeaderActive() {
+    //     var navbarTrigger = $(".burger-icon"),
+    //         endTrigger = $(".mobile-menu-close"),
+    //         container = $(".mobile-header-active"),
+    //         wrapper4 = $("body");
 
-        wrapper4.prepend('<div class="body-overlay-1"></div>');
+    //     wrapper4.prepend('<div class="body-overlay-1"></div>');
 
-        navbarTrigger.on("click", function (e) {
-            e.preventDefault();
-            container.addClass("sidebar-visible");
-            wrapper4.addClass("mobile-menu-active");
-        });
+    //     navbarTrigger.on("click", function (e) {
+    //         e.preventDefault();
+    //         container.addClass("sidebar-visible");
+    //         wrapper4.addClass("mobile-menu-active");
+    //     });
 
-        endTrigger.on("click", function () {
-            container.removeClass("sidebar-visible");
-            wrapper4.removeClass("mobile-menu-active");
-        });
+    //     endTrigger.on("click", function () {
+    //         container.removeClass("sidebar-visible");
+    //         wrapper4.removeClass("mobile-menu-active");
+    //     });
 
-        $(".body-overlay-1").on("click", function () {
-            container.removeClass("sidebar-visible");
-            wrapper4.removeClass("mobile-menu-active");
-        });
-    }
-    mobileHeaderActive();
+    //     $(".body-overlay-1").on("click", function () {
+    //         container.removeClass("sidebar-visible");
+    //         wrapper4.removeClass("mobile-menu-active");
+    //     });
+    // }
+    // mobileHeaderActive();
 
     /*---------------------
         Mobile menu active
@@ -696,11 +698,11 @@
     });
 
     /*--- VSticker ----*/
-    // $('#news-flash').vTicker({
+    // $("#news-flash").vTicker({
     //     speed: 500,
     //     pause: 3000,
-    //     animation: 'fade',
+    //     animation: "fade",
     //     mousePause: false,
-    //     showItems: 1
+    //     showItems: 1,
     // });
 })(jQuery);

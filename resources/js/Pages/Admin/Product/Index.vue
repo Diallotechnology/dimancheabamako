@@ -7,9 +7,9 @@ import Modal from "@/Components/Modal.vue";
 import Input from "@/Components/Input.vue";
 import TextArea from "@/Components/TextArea.vue";
 import Select from "@/Components/Select.vue";
-import notify from "@/notifications";
+import notify, { Price_format } from "@/notifications";
 import Pagination from "@/Components/Pagination.vue";
-import { ref, watch } from "vue";
+import { ref, watch, onMounted, reactive } from "vue";
 import { Head, router, useForm } from "@inertiajs/vue3";
 import debounce from "lodash.debounce";
 
@@ -33,16 +33,21 @@ const props = defineProps({
 
 let search = ref(props.filter.search);
 let cat = ref(props.filter.cat);
-watch(
-    search,
-    debounce((value) => {
+
+const filters = reactive({
+    search: props.filter.search,
+    cat: props.filter.cat,
+});
+
+watch(filters, (value) => {
+    setTimeout(() => {
         router.get(
             "/admin/product",
-            { search: value },
+            { filters: value },
             { preserveState: true, replace: true }
         );
-    }, 600)
-);
+    }, 600);
+});
 const SelectFilter = () => {
     router.get(
         "/admin/product",
@@ -107,7 +112,7 @@ const submit = () => {
                     <div class="col-lg-4 col-md-6 me-auto">
                         <input
                             type="text"
-                            v-model="search"
+                            v-model="filters.search"
                             placeholder="Recherche..."
                             class="form-control"
                         />
@@ -115,7 +120,7 @@ const submit = () => {
                     <div class="col-lg-2 col-6 col-md-3">
                         <select
                             class="form-select"
-                            v-model="cat"
+                            v-model="filters.cat"
                             @change="SelectFilter"
                         >
                             <option selected>Tier par category</option>
@@ -153,7 +158,7 @@ const submit = () => {
                                 <p class="title">Poids {{ row.poids }}</p>
                                 <p class="title">Stock {{ row.stock }}</p>
                                 <div class="price mb-2">
-                                    {{ row.prix }}
+                                    {{ Price_format.format(row.prix) }}
                                 </div>
                                 <!-- price.// -->
                                 <ButtonShow

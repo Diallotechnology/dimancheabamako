@@ -159,5 +159,33 @@
 
 <script setup>
 import Nav from "@/Shared/Nav.vue";
-// import Logo from "../Shared/Logo.vue";
+import { onMounted } from "vue";
+onMounted(() => {
+    /*====== Sidebar menu Active ======*/
+    function mobileHeaderActive() {
+        var navbarTrigger = $(".burger-icon"),
+            endTrigger = $(".mobile-menu-close"),
+            container = $(".mobile-header-active"),
+            wrapper4 = $("body");
+
+        wrapper4.prepend('<div class="body-overlay-1"></div>');
+
+        navbarTrigger.on("click", function (e) {
+            e.preventDefault();
+            container.addClass("sidebar-visible");
+            wrapper4.addClass("mobile-menu-active");
+        });
+
+        endTrigger.on("click", function () {
+            container.removeClass("sidebar-visible");
+            wrapper4.removeClass("mobile-menu-active");
+        });
+
+        $(".body-overlay-1").on("click", function () {
+            container.removeClass("sidebar-visible");
+            wrapper4.removeClass("mobile-menu-active");
+        });
+    }
+    mobileHeaderActive();
+});
 </script>

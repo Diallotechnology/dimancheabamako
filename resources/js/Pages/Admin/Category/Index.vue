@@ -10,6 +10,15 @@ import notify from "@/notifications";
 import { ref, watch } from "vue";
 
 import debounce from "lodash.debounce";
+
+// debounce((value) => {
+//     router.get(
+//         "/admin/category",
+//         { search: value },
+//         { preserveState: true, replace: true }
+//     );
+// }, 600)
+
 const props = defineProps({
     rows: {
         type: Object,
@@ -22,16 +31,15 @@ const props = defineProps({
 });
 
 let search = ref(props.filter.search);
-watch(
-    search,
-    debounce((value) => {
+watch(search, (value) => {
+    setTimeout(() => {
         router.get(
             "/admin/category",
             { search: value },
             { preserveState: true, replace: true }
         );
-    }, 600)
-);
+    }, 600);
+});
 const form = useForm({
     nom: "",
 });

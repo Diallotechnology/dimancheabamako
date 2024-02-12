@@ -1,13 +1,13 @@
 <?php
 
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\CartController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\ClientController;
 use App\Http\Controllers\ImageController;
 use App\Http\Controllers\LinkController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\ProductController;
-use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\UserController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
@@ -15,14 +15,6 @@ use Inertia\Inertia;
 
 Route::prefix('admin')->group(function () {
 
-    // Route::get('/', function () {
-    //     return Inertia::render('Welcome', [
-    //         'canLogin' => Route::has('login'),
-    //         'canRegister' => Route::has('register'),
-    //         'laravelVersion' => Application::VERSION,
-    //         'phpVersion' => PHP_VERSION,
-    //     ]);
-    // });
     Route::resource('client', ClientController::class)->except('index', 'create');
     Route::resource('user', UserController::class)->except('index', 'create');
     Route::resource('order', OrderController::class)->except('index', 'create');
@@ -38,17 +30,22 @@ Route::prefix('admin')->group(function () {
         Route::get('user', 'user')->name('user');
         Route::get('client', 'client')->name('client');
     });
-
-    Route::middleware('auth')->group(function () {
-        Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
-        Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
-        Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
-    });
 });
 
+Route::get('welcome', function () {
+    return view('welcome');
+    // return Inertia::render('Welcome', [
+    //     'canLogin' => Route::has('login'),
+    //     'canRegister' => Route::has('register'),
+    //     'laravelVersion' => Application::VERSION,
+    //     'phpVersion' => PHP_VERSION,
+    // ]);
+});
+Route::resource('cart', CartController::class)->except('index', 'create');
 Route::controller(LinkController::class)->group(function () {
     Route::get('/', 'home')->name('home');
     Route::get('shop', 'shop')->name('shop');
+    Route::get('shop/{product}', 'shopshow')->name('shop.show');
 });
 Route::inertia('contact', 'Contact')->name('contact');
 require __DIR__.'/auth.php';

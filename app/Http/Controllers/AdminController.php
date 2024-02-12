@@ -7,6 +7,7 @@ use App\Models\Client;
 use App\Models\Order;
 use App\Models\Product;
 use App\Models\User;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Request;
 use Inertia\Inertia;
 
@@ -26,14 +27,16 @@ class AdminController extends Controller
 
     public function product()
     {
-        $rows = Product::with('categorie')->when(Request::input('search'), function ($query, $search) {
+        $rows = Product::when(Request::input('filters.search'), function ($query, $search) {
+
             $query->where('nom', 'like', '%'.$search.'%')->orwhere('color', 'like', '%'.$search.'%');
-        })->when(Request::input('cat'), function ($query, $cat) {
+        })->when(Request::input('filters.cat'), function ($query, $cat) {
             $query->where('categorie_id', $cat);
         })->latest('id')->paginate(10)->withQueryString();
-        // dd($rows);
-        $filter = Request::only('search', 'cat');
+        $filter = Request::only('filters.search', 'filters.cat');
         $category = Category::all();
+
+        Log::debug(request()->input('filters.search'));
 
         return Inertia::render('Admin/Product/Index', compact('rows', 'filter', 'category'));
     }

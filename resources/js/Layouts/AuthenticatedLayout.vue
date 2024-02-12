@@ -18,7 +18,7 @@ export default {
         <div class="aside-top">
             <Link class="brand-wrap" :href="route('dashboard')">
                 <img
-                    v-bind:src="'assets/imgs/theme/logo.svg'"
+                    v-bind:src="'/assets/imgs/theme/logo.svg'"
                     class="logo"
                     alt="Logo"
                 />

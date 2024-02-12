@@ -32,7 +32,6 @@ const remove = (url) => {
             axios
                 .delete(url)
                 .then((response) => {
-                    console.log(response);
                     if (response.data.success) {
                         Swal.fire({
                             title: "Supprimé!",
