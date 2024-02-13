@@ -2,7 +2,8 @@
 import Layout from "@/Shared/Layout.vue";
 import Pagination from "@/Components/Pagination.vue";
 import notify, { Price_format } from "@/notifications";
-import { Link, router } from "@inertiajs/vue3";
+import { Link, router, useForm } from "@inertiajs/vue3";
+import { onMounted } from "vue";
 const props = defineProps({
     rows: {
         type: Object,
@@ -20,19 +21,69 @@ const props = defineProps({
     //     default: () => ({}),
     // },
 });
+
 const AddToCard = (id) => {
-    axios
-        .post("cart")
-        .then((response) => {
-            if (response.data.success) {
-                router.reload();
-            }
-        })
-        .catch(function (error) {
-            // handle error
-        });
-    console.log();
+    const form = useForm({
+        id: id,
+    });
+    form.get(route("cart.store", form.id), {
+        onSuccess: () => {
+            form.reset();
+            notify("Categorie ajouter avec success !", true);
+        },
+        onError: () => {
+            notify(false);
+        },
+    });
+    // axios
+    //     .get(url)
+    //     .then((response) => {
+    // if (response.data.success) {
+    //     router.reload();
+    // }
+    //     console.log(response);
+    // })
+    // .catch(function (error) {
+    //     // handle error
+    //     console.log(error);
+    // });
 };
+onMounted(() => {
+    if ($(".sort-by-product-area").length) {
+        var $body = $("body"),
+            $cartWrap = $(".sort-by-product-area"),
+            $cartContent = $cartWrap.find(".sort-by-dropdown");
+        $cartWrap.on("click", ".sort-by-product-wrap", function (e) {
+            e.preventDefault();
+            var $this = $(this);
+            if (!$this.parent().hasClass("show")) {
+                $this
+                    .siblings(".sort-by-dropdown")
+                    .addClass("show")
+                    .parent()
+                    .addClass("show");
+            } else {
+                $this
+                    .siblings(".sort-by-dropdown")
+                    .removeClass("show")
+                    .parent()
+                    .removeClass("show");
+            }
+        });
+        /*Close When Click Outside*/
+        $body.on("click", function (e) {
+            var $target = e.target;
+            if (
+                !$($target).is(".sort-by-product-area") &&
+                !$($target).parents().is(".sort-by-product-area") &&
+                $cartWrap.hasClass("show")
+            ) {
+                $cartWrap.removeClass("show");
+                $cartContent.removeClass("show");
+            }
+        });
+    }
+});
 </script>
 <template>
     <Layout>
@@ -161,16 +212,10 @@ const AddToCard = (id) => {
                                             <i class="fi-rs-eye"></i
                                         ></Link>
                                         <a
-                                            aria-label="Ajouter au panier"
+                                            aria-label="Acheté"
                                             class="action-btn hover-up"
                                             href=""
                                             ><i class="fi-rs-heart"></i
-                                        ></a>
-                                        <a
-                                            aria-label="Compare"
-                                            class="action-btn hover-up"
-                                            href=""
-                                            ><i class="fi-rs-shuffle"></i
                                         ></a>
                                     </div>
                                     <div
@@ -180,9 +225,6 @@ const AddToCard = (id) => {
                                     </div>
                                 </div>
                                 <div class="product-content-wrap">
-                                    <div class="product-category">
-                                        #{{ item.reference }}
-                                    </div>
                                     <h2>
                                         <Link
                                             :href="route('shop.show', item.id)"
@@ -205,16 +247,18 @@ const AddToCard = (id) => {
 
                                     <div class="product-action-1 show">
                                         <Link
-                                            role="button"
+                                            type="button"
                                             aria-label="Buy now"
                                             class="action-btn"
+                                            method="get"
                                             href=""
-                                            @click="AddToCard(item.id)"
-                                            ><i
+                                            @click.prevent="AddToCard(item.id)"
+                                        >
+                                            <i
                                                 class="fi-rs-shopping-bag-add"
                                             ></i
-                                            >Acheté</Link
-                                        >
+                                            >Acheté
+                                        </Link>
                                     </div>
                                 </div>
                             </div>

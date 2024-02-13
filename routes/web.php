@@ -41,7 +41,8 @@ Route::get('welcome', function () {
     //     'phpVersion' => PHP_VERSION,
     // ]);
 });
-Route::resource('cart', CartController::class)->except('index', 'create');
+// Route::resource('cart', CartController::class)->except('index', 'create', 'store');
+Route::get('cartt/{id}', [CartController::class, 'store'])->name('cart.store');
 Route::controller(LinkController::class)->group(function () {
     Route::get('/', 'home')->name('home');
     Route::get('shop', 'shop')->name('shop');

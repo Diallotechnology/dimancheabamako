@@ -388,40 +388,40 @@
     /*-------------------------------
         Sort by active
     -----------------------------------*/
-    if ($(".sort-by-product-area").length) {
-        var $body = $("body"),
-            $cartWrap = $(".sort-by-product-area"),
-            $cartContent = $cartWrap.find(".sort-by-dropdown");
-        $cartWrap.on("click", ".sort-by-product-wrap", function (e) {
-            e.preventDefault();
-            var $this = $(this);
-            if (!$this.parent().hasClass("show")) {
-                $this
-                    .siblings(".sort-by-dropdown")
-                    .addClass("show")
-                    .parent()
-                    .addClass("show");
-            } else {
-                $this
-                    .siblings(".sort-by-dropdown")
-                    .removeClass("show")
-                    .parent()
-                    .removeClass("show");
-            }
-        });
-        /*Close When Click Outside*/
-        $body.on("click", function (e) {
-            var $target = e.target;
-            if (
-                !$($target).is(".sort-by-product-area") &&
-                !$($target).parents().is(".sort-by-product-area") &&
-                $cartWrap.hasClass("show")
-            ) {
-                $cartWrap.removeClass("show");
-                $cartContent.removeClass("show");
-            }
-        });
-    }
+    // if ($(".sort-by-product-area").length) {
+    //     var $body = $("body"),
+    //         $cartWrap = $(".sort-by-product-area"),
+    //         $cartContent = $cartWrap.find(".sort-by-dropdown");
+    //     $cartWrap.on("click", ".sort-by-product-wrap", function (e) {
+    //         e.preventDefault();
+    //         var $this = $(this);
+    //         if (!$this.parent().hasClass("show")) {
+    //             $this
+    //                 .siblings(".sort-by-dropdown")
+    //                 .addClass("show")
+    //                 .parent()
+    //                 .addClass("show");
+    //         } else {
+    //             $this
+    //                 .siblings(".sort-by-dropdown")
+    //                 .removeClass("show")
+    //                 .parent()
+    //                 .removeClass("show");
+    //         }
+    //     });
+    //     /*Close When Click Outside*/
+    //     $body.on("click", function (e) {
+    //         var $target = e.target;
+    //         if (
+    //             !$($target).is(".sort-by-product-area") &&
+    //             !$($target).parents().is(".sort-by-product-area") &&
+    //             $cartWrap.hasClass("show")
+    //         ) {
+    //             $cartWrap.removeClass("show");
+    //             $cartContent.removeClass("show");
+    //         }
+    //     });
+    // }
 
     /*-----------------------
         Shop filter active
@@ -673,29 +673,29 @@
     });
 
     /*--- Mobile demo active ----*/
-    var demo = $(".tm-demo-options-wrapper");
-    $(".view-demo-btn-active").on("click", function (e) {
-        e.preventDefault();
-        demo.toggleClass("demo-open");
-    });
+    // var demo = $(".tm-demo-options-wrapper");
+    // $(".view-demo-btn-active").on("click", function (e) {
+    //     e.preventDefault();
+    //     demo.toggleClass("demo-open");
+    // });
 
     /*-----More Menu Open----*/
-    $(".more_slide_open").slideUp();
-    $(".more_categories").on("click", function () {
-        $(this).toggleClass("show");
-        $(".more_slide_open").slideToggle();
-    });
+    // $(".more_slide_open").slideUp();
+    // $(".more_categories").on("click", function () {
+    //     $(this).toggleClass("show");
+    //     $(".more_slide_open").slideToggle();
+    // });
 
-    $(".modal").on("shown.bs.modal", function (e) {
-        $(".product-image-slider").slick("setPosition");
-        $(".slider-nav-thumbnails").slick("setPosition");
-        $(".product-image-slider .slick-active img").elevateZoom({
-            zoomType: "inner",
-            cursor: "crosshair",
-            zoomWindowFadeIn: 500,
-            zoomWindowFadeOut: 750,
-        });
-    });
+    // $(".modal").on("shown.bs.modal", function (e) {
+    //     $(".product-image-slider").slick("setPosition");
+    //     $(".slider-nav-thumbnails").slick("setPosition");
+    //     $(".product-image-slider .slick-active img").elevateZoom({
+    //         zoomType: "inner",
+    //         cursor: "crosshair",
+    //         zoomWindowFadeIn: 500,
+    //         zoomWindowFadeOut: 750,
+    //     });
+    // });
 
     /*--- VSticker ----*/
     // $("#news-flash").vTicker({

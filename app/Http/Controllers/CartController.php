@@ -31,31 +31,31 @@ class CartController extends Controller
     public function store(Request $request)
     {
         \dd($request->all());
-        $productId = 1;
-        $userId = Auth::user()->id;
-        $productSelected = Product::findOrFail($productId);
+        // $productId = 1;
+        // $userId = Auth::user()->id;
+        // $productSelected = Product::findOrFail($productId);
 
-        $productAdded = [
-            'id' => $productSelected->id,
-            'name' => $productSelected->nom,
-            'price' => $productSelected->prix_vente,
-            'quantity' => $productSelected->qte_min,
-            'attributes' => [],
-            'associatedModel' => $productSelected,
-        ];
+        // $productAdded = [
+        //     'id' => $productSelected->id,
+        //     'name' => $productSelected->nom,
+        //     'price' => $productSelected->prix_vente,
+        //     'quantity' => $productSelected->qte_min,
+        //     'attributes' => [],
+        //     'associatedModel' => $productSelected,
+        // ];
 
-        $cartNotEmpty = ! CartFacade::session($userId)->isEmpty();
+        // $cartNotEmpty = ! CartFacade::session($userId)->isEmpty();
 
-        if ($cartNotEmpty && CartFacade::session($userId)->getContent()->containsStrict('id', $productId)) {
-            return $this->alert('warning', 'Produit existe deja dans le panier!');
-        }
+        // if ($cartNotEmpty && CartFacade::session($userId)->getContent()->containsStrict('id', $productId)) {
+        //     return $this->alert('warning', 'Produit existe deja dans le panier!');
+        // }
 
-        CartFacade::session($userId)->add($productAdded);
-        if ($cartNotEmpty) {
-            $this->alert('success', 'Produit ajouter au panier avec success!');
-        }
+        // CartFacade::session($userId)->add($productAdded);
+        // if ($cartNotEmpty) {
+        //     $this->alert('success', 'Produit ajouter au panier avec success!');
+        // }
 
-        return $this->alert('success', 'Produit ajouter au panier avec success!');
+        // return $this->alert('success', 'Produit ajouter au panier avec success!');
     }
 
     /**

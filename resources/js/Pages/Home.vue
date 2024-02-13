@@ -11,8 +11,6 @@ const props = defineProps({
     },
 });
 
-console.log("in the home file,", $);
-
 onMounted(() => {
     $(".hero-slider-1").slick({
         slidesToShow: 1,
