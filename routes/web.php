@@ -9,9 +9,7 @@ use App\Http\Controllers\LinkController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\UserController;
-use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
-use Inertia\Inertia;
 
 Route::prefix('admin')->group(function () {
 
@@ -32,21 +30,14 @@ Route::prefix('admin')->group(function () {
     });
 });
 
-Route::get('welcome', function () {
-    return view('welcome');
-    // return Inertia::render('Welcome', [
-    //     'canLogin' => Route::has('login'),
-    //     'canRegister' => Route::has('register'),
-    //     'laravelVersion' => Application::VERSION,
-    //     'phpVersion' => PHP_VERSION,
-    // ]);
-});
 // Route::resource('cart', CartController::class)->except('index', 'create', 'store');
 Route::get('cartt/{id}', [CartController::class, 'store'])->name('cart.store');
 Route::controller(LinkController::class)->group(function () {
     Route::get('/', 'home')->name('home');
     Route::get('shop', 'shop')->name('shop');
+    Route::get('livraison', 'livraison')->name('livraison');
     Route::get('shop/{product}', 'shopshow')->name('shop.show');
 });
 Route::inertia('contact', 'Contact')->name('contact');
+Route::inertia('about', 'about')->name('about');
 require __DIR__.'/auth.php';

@@ -86,16 +86,6 @@
                         <div class="header-action-right">
                             <div class="header-action-2">
                                 <div class="header-action-icon-2">
-                                    <a href="">
-                                        <img
-                                            class="svgInject"
-                                            alt="Evara"
-                                            v-bind:src="'assets/imgs/theme/icons/icon-heart.svg'"
-                                        />
-                                        <span class="pro-count blue">4</span>
-                                    </a>
-                                </div>
-                                <div class="header-action-icon-2">
                                     <a class="mini-cart-icon" href="">
                                         <img
                                             alt="Evara"
@@ -171,7 +161,7 @@
                     <div class="logo logo-width-1 d-block d-lg-none">
                         <Link :href="route('home')"
                             ><img
-                                v-bind:src="'assets/imgs/theme/logo.svg'"
+                                v-bind:src="'/assets/imgs/theme/logo.svg'"
                                 alt="logo"
                         /></Link>
                     </div>
@@ -196,8 +186,13 @@
                                         >
                                     </li>
                                     <li>
-                                        <Link :href="route('contact')"
+                                        <Link :href="route('about')"
                                             >A propos</Link
+                                        >
+                                    </li>
+                                    <li>
+                                        <Link :href="route('livraison')"
+                                            >Livraison</Link
                                         >
                                     </li>
                                     <li>

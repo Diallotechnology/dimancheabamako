@@ -19,6 +19,11 @@ class LinkController extends Controller
         return Inertia::render('Home', \compact('product'));
     }
 
+    public function livraison()
+    {
+        return Inertia::render('Livraison');
+    }
+
     public function shop()
     {
         $rows =
@@ -27,8 +32,6 @@ class LinkController extends Controller
             })->when(Request::input('cat'), function ($query, $cat) {
                 $query->where('categorie_id', $cat);
             })->latest('id')->paginate(15)->withQueryString();
-
-        // dd($rows);
         $filter = Request::only('search', 'cat');
         $category = Category::all();
 
