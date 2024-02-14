@@ -21,6 +21,7 @@ return new class extends Migration
             $table->string('ville');
             $table->string('payment');
             $table->string('pays');
+            $table->string('commentaire')->nullable();
             $table->string('etat')->default(OrderEnum::SAVE);
             $table->timestamps();
         });

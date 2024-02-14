@@ -1,7 +1,7 @@
 .menu-aside{
 	list-style:none;
 	margin:$spacer;padding:0;
-	
+
 	a{ display:block;  text-decoration:none; }
 
 	.menu-item{
@@ -17,13 +17,13 @@
 	}
 
 	.menu-link{
-		padding:10px; 
+		padding:10px;
 		font-weight: 500;
 		font-size: 13px;
-		color:$color-menu; 
-		border-radius:$border-radius-lg; 
+		color:$color-menu;
+		border-radius:$border-radius-lg;
 		position:relative;
-		
+
 	}
 
 	.menu-link:hover{
@@ -32,16 +32,16 @@
 
 	.submenu{
 		margin-left:44px;  display:none; margin-top: 10px;
-		a{ 
-			color:$gray-600; 
+		a{
+			color:$gray-600;
 			padding:5px 0 5px 15px;
 			transition-duration: 0.3s;
 			position: relative;
 			margin-left: 5px;
-			&:hover{ 
+			&:hover{
 				color:$black;
 				transition-duration: 0.3s;
-			}	
+			}
 			&:before {
 				content: "";
 				width: 5px;
@@ -60,9 +60,9 @@
 
 	// arrow triangle
 	.menu-item.has-submenu > .menu-link:after{
-		display: inline-block; 
+		display: inline-block;
 		position:absolute;
-		right: 10px; 
+		right: 10px;
 		top:10px;
 		margin-top:.6em;
 	    vertical-align:middle;
@@ -86,8 +86,8 @@
 .pagination-area {
 	.page-item {
 		margin: 0 5px;
-		&:first-child {	
-			margin-left: 0;		
+		&:first-child {
+			margin-left: 0;
 			.page-link {
 				border-top-left-radius: 50%;
 				border-bottom-left-radius: 50%;
@@ -105,8 +105,8 @@
 				background: $brand;
 			}
 		}
-		
-	
+
+
 		.page-link {
 			border: 0;
 			padding: 0 10px;
@@ -140,5 +140,5 @@
 
 .nav-pills .nav-link.active, .nav-pills .show > .nav-link {
 	color: $brand;
-	background-color:$primary-light;
+	background-color:#e900dd;
 }

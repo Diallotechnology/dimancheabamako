@@ -183,9 +183,8 @@
                                 <ul>
                                     <li>
                                         <Link
-                                            :class="{
-                                                active: route().current('home'),
-                                            }"
+                                        class="route().current('home') ? 'active'"
+
                                             :href="route('home')"
                                             >Accueil</Link
                                         >
@@ -201,7 +200,7 @@
                                         >
                                     </li>
                                     <li>
-                                        <Link :href="route('contact')"
+                                        <Link  :href="route('contact')"
                                             >Contact</Link
                                         >
                                     </li>

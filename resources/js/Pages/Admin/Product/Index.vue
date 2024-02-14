@@ -62,6 +62,7 @@ const form = useForm({
     color: "",
     taille: "",
     description: "",
+    resume: "",
     poids: "",
     prix: "",
     stock: 1,
@@ -119,7 +120,7 @@ const submit = () => {
                     </div>
                     <div class="col-lg-2 col-6 col-md-3">
                         <select
-                            class="form-select"
+                            class="form-select select-nice"
                             v-model="filters.cat"
                             @change="SelectFilter"
                         >
@@ -226,7 +227,6 @@ const submit = () => {
                             label="Couleur"
                             v-model="form.color"
                             :message="form.errors.color"
-                            required
                         />
                     </div>
                     <div class="col-md-6">
@@ -236,7 +236,6 @@ const submit = () => {
                             label="taille"
                             v-model="form.taille"
                             :message="form.errors.taille"
-                            required
                         />
                     </div>
                     <div class="col-md-6">
@@ -326,6 +325,13 @@ const submit = () => {
                             </div>
                         </div>
                     </div>
+                    <TextArea
+                        place="la description courte du produit"
+                        label="description courte"
+                        v-model="form.resume"
+                        :message="form.errors.resume"
+                        required
+                    />
                     <TextArea
                         place="la description du produit"
                         label="description"

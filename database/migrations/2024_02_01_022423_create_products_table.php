@@ -19,8 +19,9 @@ return new class extends Migration
             $table->integer('prix');
             $table->string('poids');
             $table->integer('stock')->default(1);
-            $table->string('color');
-            $table->string('taille');
+            $table->string('color')->nullable();
+            $table->string('taille')->nullable();
+            $table->longText('resume');
             $table->longText('description');
             $table->string('video')->nullable();
             $table->string('cover');

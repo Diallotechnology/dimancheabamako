@@ -7,6 +7,5 @@ import { Link } from "@inertiajs/vue3";
     <Link href="/">
         <ApplicationLogo class="" />
     </Link>
-
     <slot />
 </template>

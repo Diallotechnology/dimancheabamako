@@ -25,7 +25,8 @@ class ProductFactory extends Factory
             'stock' => rand(15, 50),
             'color' => $this->faker->colorName(),
             'taille' => rand(1, 5),
-            'description' => $this->faker->paragraph(),
+            'resume' => $this->faker->paragraph(),
+            'description' => $this->faker->paragraph(3),
             'cover' => $this->faker->imageUrl(),
         ];
     }

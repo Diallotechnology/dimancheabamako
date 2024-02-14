@@ -132,7 +132,8 @@ const props = defineProps({
                             <td>
                                 {{ row.client.prenom }} {{ row.client.nom }}
                                 <br />
-                                {{ row.client.email }}
+                                {{ row.client.email }} <br />
+                                {{ row.client.contact }}
                             </td>
 
                             <td>{{ row.adresse }}</td>

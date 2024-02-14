@@ -237,12 +237,7 @@ onMounted(() => {
                                                     >Taille:
                                                     {{ product.taille }}
                                                 </li>
-                                                <li class="mb-10">
-                                                    <i
-                                                        class="fi-rs-crown mr-5"
-                                                    ></i
-                                                    >Poids: {{ product.poids }}
-                                                </li>
+
                                                 <li>
                                                     En stock:<span
                                                         class="in-stock text-success ml-5"

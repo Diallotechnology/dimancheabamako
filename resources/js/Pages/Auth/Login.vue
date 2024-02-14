@@ -39,7 +39,6 @@ const submit = () => {
 <template>
     <GuestLayout>
         <Head title="Connexion" />
-
         <section class="content-main mt-80 mb-80">
             <div class="card mx-auto card-login">
                 <div class="card-body">

@@ -26,8 +26,6 @@
     <script src="{{ asset('admin/assets/js/vendors/select2.min.js') }}"></script>
     <script src="{{ asset('admin/assets/js/vendors/perfect-scrollbar.js') }}"></script>
     <script src="{{ asset('admin/assets/js/vendors/jquery.fullscreen.min.js') }}"></script>
-    <!-- Main Script -->
-    <script src="{{ asset('admin/assets/js/main.js') }}" type="text/javascript"></script>
 </body>
 
 </html>

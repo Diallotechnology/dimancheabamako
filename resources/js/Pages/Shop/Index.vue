@@ -241,8 +241,6 @@ onMounted(() => {
                                         Categorie: {{ item.categorie.nom }}
                                         <br />
                                         Taille: {{ item.taille }} <br />
-                                        Couleur: {{ item.color }} <br />
-                                        Poids: {{ item.poids }} <br />
                                     </p>
 
                                     <div class="product-action-1 show">

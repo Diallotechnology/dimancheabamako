@@ -322,7 +322,7 @@ table .form-check {
 }
 
 .text-brand {
-    color: #088178 !important;
+    color: #e900dd !important;
 }
 
 .bg-primary {
@@ -330,7 +330,7 @@ table .form-check {
 }
 
 .text-primary {
-    color: #088178 !important;
+    color: #e900dd !important;
 }
 
 .bg-primary-light {
@@ -490,7 +490,7 @@ table .form-check {
 }
 
 a {
-    color: #088178;
+    color: #e900dd;
 }
 
 body {
@@ -622,15 +622,15 @@ b {
 }
 
 .menu-aside .menu-item.active .icon {
-    color: #088178;
+    color: #e900dd;
 }
 
 .menu-aside .menu-item.active .menu-link {
-    background-color: rgba(8, 129, 120, 0.2);
+    background-color: #81087c33;
 }
 
 .menu-aside .menu-item.active .submenu a.active {
-    color: #088178 !important;
+    color: #e900dd !important;
 }
 
 .menu-aside .menu-link {
@@ -732,7 +732,7 @@ b {
 .pagination-area .page-item.active .page-link,
 .pagination-area .page-item:hover .page-link {
     color: #fff;
-    background: #088178;
+    background: #e900dd;
 }
 
 .pagination-area .page-item .page-link {
@@ -770,7 +770,7 @@ b {
 
 .nav-pills .nav-link.active,
 .nav-pills .show > .nav-link {
-    color: #088178;
+    color: #e900dd;
     background-color: rgba(8, 129, 120, 0.2);
 }
 
@@ -780,7 +780,7 @@ b {
     padding: 10px 40px;
     color: #ffffff;
     border: none;
-    background-color: #088178;
+    background-color: #e900dd;
     border-radius: 4px;
 }
 
@@ -812,7 +812,7 @@ b {
 .btn.btn-md {
     padding: 0.5rem 0.95rem;
     font-weight: 500;
-    background-color: #088178;
+    background-color: #e900dd;
     color: #ffffff;
 }
 
@@ -821,7 +821,7 @@ b {
 }
 
 .btn.btn-xs {
-    background-color: #088178;
+    background-color: #e900dd;
     color: #ffffff;
     border: none;
     font-size: 11px;
@@ -904,7 +904,7 @@ b {
 }
 
 .btn-light:hover {
-    background-color: #088178;
+    background-color: #e900dd;
     color: #fff !important;
 }
 
@@ -937,7 +937,7 @@ b {
 }
 
 .btn-brand {
-    background-color: #088178;
+    background-color: #e900dd;
     border: 0;
     color: #fff;
 }
@@ -1014,7 +1014,7 @@ textarea.form-control {
 }
 
 .searchform button:hover {
-    background-color: #088178;
+    background-color: #e900dd;
 }
 
 .searchform button:hover i {
@@ -1028,8 +1028,8 @@ textarea.form-control {
 }
 
 .form-check-input:checked {
-    background-color: #088178;
-    border-color: #088178;
+    background-color: #e900dd;
+    border-color: #e900dd;
 }
 
 /*Nice select*/
@@ -1417,7 +1417,7 @@ textarea.form-control {
 }
 
 .progress-bar {
-    background-color: #088178;
+    background-color: #e900dd;
 }
 
 .new-member-list {
@@ -1448,7 +1448,7 @@ textarea.form-control {
 }
 
 .verti-timeline .event-list.active .event-timeline-dot {
-    color: #088178;
+    color: #e900dd;
 }
 
 .verti-timeline .event-list:last-child {
@@ -1500,7 +1500,7 @@ textarea.form-control {
 
 .badge.bg-primary[href]:focus,
 .badge.bg-primary[href]:hover {
-    background-color: #088178 !important;
+    background-color: #e900dd !important;
 }
 
 .badge.bg-light {
@@ -1513,13 +1513,13 @@ textarea.form-control {
 }
 
 .badge-soft-primary {
-    color: #088178;
+    color: #e900dd;
     background-color: rgba(85, 230, 150, 0.18);
 }
 
 .badge-soft-primary[href]:focus,
 .badge-soft-primary[href]:hover {
-    color: #088178;
+    color: #e900dd;
     text-decoration: none;
     background-color: rgba(85, 230, 150, 0.18);
 }
@@ -1916,12 +1916,12 @@ textarea.form-control {
 
 .order-tracking .steps .step.completed .step-icon-wrap::before,
 .order-tracking .steps .step.completed .step-icon-wrap::after {
-    background-color: #088178;
+    background-color: #e900dd;
 }
 
 .order-tracking .steps .step.completed .step-icon {
-    border-color: #088178;
-    background-color: #088178;
+    border-color: #e900dd;
+    background-color: #e900dd;
     color: #fff;
 }
 
@@ -2188,7 +2188,7 @@ a[class*="card"] {
 }
 
 a[class*="card"]:hover .title {
-    color: #088178;
+    color: #e900dd;
 }
 
 /* ITEM LIST */
@@ -2239,7 +2239,7 @@ a[class*="card"]:hover .title {
 }
 
 .itemside a.title:hover {
-    color: #088178;
+    color: #e900dd;
 }
 
 a.itemside {
@@ -2293,7 +2293,7 @@ a.itemside:hover .title {
 }
 
 .card-product-grid a.title:hover {
-    color: #088178;
+    color: #e900dd;
 }
 
 .card-product-grid:hover {
@@ -2438,7 +2438,7 @@ ul.row-sm {
     width: 7px;
     border-radius: 100%;
     height: 7px;
-    background: #088178;
+    background: #e900dd;
 }
 
 .list-check {
@@ -2475,7 +2475,7 @@ ul.row-sm {
 
 .list-normal li:before {
     content: "\2022";
-    color: #088178;
+    color: #e900dd;
     display: inline-block;
     width: 1em;
     margin-left: -1em;
@@ -2496,7 +2496,7 @@ ul.row-sm {
 }
 
 .list-menu a:hover {
-    color: #088178;
+    color: #e900dd;
 }
 
 .cols-two {
@@ -4140,7 +4140,7 @@ body.offcanvas-active {
     line-height: 17px;
     display: block;
     padding: 0;
-    background-color: #088178;
+    background-color: #e900dd;
 }
 
 .main-header .nav-item.dropdown {
@@ -4149,7 +4149,7 @@ body.offcanvas-active {
 
 .main-header .nav-link:hover {
     background-color: transparent;
-    color: #088178;
+    color: #e900dd;
 }
 
 .main-header .col-search {
@@ -4177,7 +4177,7 @@ body.offcanvas-active {
 }
 
 .nav-item img.rounded-circle:hover {
-    border-color: #088178;
+    border-color: #e900dd;
 }
 
 .content-header {

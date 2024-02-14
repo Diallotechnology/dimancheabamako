@@ -138,6 +138,10 @@ watch(
                         {{
                             row.client.email
                         }}
+                        <br />
+                        {{
+                            row.client.contact
+                        }}
 
                         <td>{{ row.adresse }}</td>
                         <td>{{ row.postal }}</td>
