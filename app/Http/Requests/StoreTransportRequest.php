@@ -11,7 +11,7 @@ class StoreTransportRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -22,7 +22,12 @@ class StoreTransportRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'zone_id' => 'required|exists:zones,id',
+            'pays' => 'required|exists:pays,id',
+            'nom' => 'required|string',
+            'temps' => 'required|string',
+            'poids' => 'required|string',
+            'montant' => 'required|integer',
         ];
     }
 }

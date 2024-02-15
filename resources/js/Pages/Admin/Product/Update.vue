@@ -109,7 +109,6 @@ const submit = () => {
                                 label="Couleur"
                                 v-model="form.color"
                                 :message="form.errors.color"
-                                required
                             />
                         </div>
                         <div class="col-md-6">
@@ -119,7 +118,6 @@ const submit = () => {
                                 label="taille"
                                 v-model="form.taille"
                                 :message="form.errors.taille"
-                                required
                             />
                         </div>
                         <div class="col-md-6">
