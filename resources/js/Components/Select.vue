@@ -2,7 +2,7 @@
 import { onMounted, ref } from "vue";
 
 const model = defineModel({
-    type: [String, Number],
+    type: [String, Number, Array],
     required: true,
 });
 
@@ -21,7 +21,7 @@ const props = defineProps({
 <template>
     <div class="mb-4">
         <label class="text-uppercase form-label">{{ props.label }}</label>
-        <select class="form-select select-nice" v-model="model">
+        <select class="form-select" v-model="model">
             <option>Selectionner</option>
             <slot />
         </select>

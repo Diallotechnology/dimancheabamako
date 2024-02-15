@@ -2,12 +2,16 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Promotion;
+use App\Helper\DeleteAction;
 use App\Http\Requests\StorePromotionRequest;
 use App\Http\Requests\UpdatePromotionRequest;
+use App\Models\Promotion;
+use Inertia\Inertia;
 
 class PromotionController extends Controller
 {
+    use DeleteAction;
+
     /**
      * Display a listing of the resource.
      */
@@ -29,7 +33,10 @@ class PromotionController extends Controller
      */
     public function store(StorePromotionRequest $request)
     {
-        //
+        $item = Promotion::create($request->validated());
+        $item->products()->attach($request->product_id);
+
+        return back();
     }
 
     /**
@@ -37,7 +44,7 @@ class PromotionController extends Controller
      */
     public function show(Promotion $promotion)
     {
-        //
+        return Inertia::render('Admin/Promotion/Show', compact('promotion'));
     }
 
     /**
@@ -45,7 +52,7 @@ class PromotionController extends Controller
      */
     public function edit(Promotion $promotion)
     {
-        //
+        return Inertia::render('Admin/Promotion/Update', compact('promotion'));
     }
 
     /**
@@ -53,7 +60,10 @@ class PromotionController extends Controller
      */
     public function update(UpdatePromotionRequest $request, Promotion $promotion)
     {
-        //
+        $promotion->update($request->validated());
+        $promotion->products()->sync($request->product_id);
+
+        return back();
     }
 
     /**
@@ -61,6 +71,6 @@ class PromotionController extends Controller
      */
     public function destroy(Promotion $promotion)
     {
-        //
+        return $this->supp($promotion);
     }
 }

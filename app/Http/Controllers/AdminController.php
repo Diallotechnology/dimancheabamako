@@ -5,8 +5,12 @@ namespace App\Http\Controllers;
 use App\Models\Category;
 use App\Models\Client;
 use App\Models\Order;
+use App\Models\Pays;
 use App\Models\Product;
+use App\Models\Promotion;
+use App\Models\Transport;
 use App\Models\User;
+use App\Models\Zone;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Request;
 use Inertia\Inertia;
@@ -87,9 +91,50 @@ class AdminController extends Controller
         return Inertia::render('Admin/Client/Index', compact('rows', 'filter'));
     }
 
-    public function image()
+    public function promotion()
     {
-        return Inertia::render('Dashboard');
+        $rows = Promotion::when(Request::input('search'), function ($query, $search) {
+            $query->where('nom', 'like', '%'.$search.'%');
+        })->latest('id')->paginate(10)->withQueryString();
+        $category = Category::all();
+        $product = Product::all();
+        $filter = Request::only('search');
+
+        return Inertia::render('Admin/Promotion/Index', \compact('category', 'product', 'filter', 'rows'));
+    }
+
+    public function zone()
+    {
+        $rows = Zone::when(Request::input('search'), function ($query, $search) {
+            $query->where('nom', 'like', '%'.$search.'%');
+        })->latest('id')->paginate(10)->withQueryString();
+        $filter = Request::only('search');
+        $countries = countries();
+
+        return Inertia::render('Admin/Zone/Index', \compact('filter', 'rows', 'countries'));
+    }
+
+    public function pays()
+    {
+        $rows = Pays::when(Request::input('search'), function ($query, $search) {
+            $query->where('nom', 'like', '%'.$search.'%');
+        })->latest('id')->paginate(10)->withQueryString();
+        $filter = Request::only('search');
+        $zone = Zone::all();
+
+        return Inertia::render('Admin/Pays/Index', compact('filter', 'rows', 'zone'));
+    }
+
+    public function transport()
+    {
+        $rows = Transport::when(Request::input('search'), function ($query, $search) {
+            $query->where('nom', 'like', '%'.$search.'%');
+        })->latest('id')->paginate(10)->withQueryString();
+        $filter = Request::only('search');
+        $zone = Zone::all();
+        $pays = Pays::all();
+
+        return Inertia::render('Admin/Transport/Index', compact('filter', 'rows', 'pays', 'zone'));
     }
 
     public function user()

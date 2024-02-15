@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class StorePromotionRequest extends FormRequest
+class UpdateZoneRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -23,9 +23,6 @@ class StorePromotionRequest extends FormRequest
     {
         return [
             'nom' => 'required|string',
-            'debut' => 'required|date',
-            'fin' => 'required|date',
-            'product_id' => 'required|array|exists:products,id',
         ];
     }
 }

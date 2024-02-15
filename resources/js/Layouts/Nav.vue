@@ -19,6 +19,12 @@
                     <span class="text">Produits</span>
                 </Link>
             </NavLink>
+            <NavLink :active="route().current('promotion')">
+                <Link class="menu-link" :href="route('promotion')">
+                    <i class="icon material-icons md-monetization_on"></i>
+                    <span class="text">Promotion</span>
+                </Link>
+            </NavLink>
 
             <NavLink :active="route().current('order')">
                 <Link class="menu-link" :href="route('order')">
@@ -30,6 +36,24 @@
                 <Link class="menu-link" :href="route('client')">
                     <i class="icon material-icons md-person"></i>
                     <span class="text">Clients</span>
+                </Link>
+            </NavLink>
+            <NavLink :active="route().current('zone')">
+                <Link class="menu-link" :href="route('zone')">
+                    <i class="icon material-icons md-map"></i>
+                    <span class="text">Zone</span>
+                </Link>
+            </NavLink>
+            <NavLink :active="route().current('pays')">
+                <Link class="menu-link" :href="route('pays')">
+                    <i class="icon material-icons md-flag"></i>
+                    <span class="text">Pays</span>
+                </Link>
+            </NavLink>
+            <NavLink :active="route().current('transport')">
+                <Link class="menu-link" :href="route('transport')">
+                    <i class="icon material-icons md-transit_enterexit"></i>
+                    <span class="text">Transporteur et Livraison</span>
                 </Link>
             </NavLink>
             <NavLink :active="route().current('user')">

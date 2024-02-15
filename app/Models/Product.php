@@ -36,6 +36,14 @@ class Product extends Model
     }
 
     /**
+     * The promotions that belong to the Product
+     */
+    public function promotions(): BelongsToMany
+    {
+        return $this->belongsToMany(Promotion::class);
+    }
+
+    /**
      * The orders that belong to the Product
      */
     public function orders(): BelongsToMany

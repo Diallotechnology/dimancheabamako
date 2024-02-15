@@ -8,7 +8,10 @@ use App\Http\Controllers\ImageController;
 use App\Http\Controllers\LinkController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\ProductController;
+use App\Http\Controllers\PromotionController;
+use App\Http\Controllers\TransportController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\ZoneController;
 use Illuminate\Support\Facades\Route;
 
 Route::prefix('admin')->group(function () {
@@ -19,6 +22,10 @@ Route::prefix('admin')->group(function () {
     Route::resource('product', ProductController::class)->except('index', 'create');
     Route::resource('category', CategoryController::class)->except('index', 'create', 'show');
     Route::resource('image', ImageController::class)->except('index', 'create', 'show', 'store');
+    Route::resource('promotion', PromotionController::class)->except('index', 'create');
+    Route::resource('zone', ZoneController::class)->except('index', 'create');
+    Route::resource('pays', ZoneController::class)->except('index', 'create');
+    Route::resource('transport', TransportController::class)->except('index', 'create');
 
     Route::controller(AdminController::class)->group(function () {
         Route::get('dashboard', 'dashboard')->name('dashboard');
@@ -27,6 +34,10 @@ Route::prefix('admin')->group(function () {
         Route::get('category', 'category')->name('category');
         Route::get('user', 'user')->name('user');
         Route::get('client', 'client')->name('client');
+        Route::get('promotion', 'promotion')->name('promotion');
+        Route::get('zone', 'zone')->name('zone');
+        Route::get('pays', 'pays')->name('pays');
+        Route::get('transport', 'transport')->name('transport');
     });
 });
 
