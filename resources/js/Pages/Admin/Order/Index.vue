@@ -7,7 +7,6 @@ import Table from "@/Components/Table.vue";
 import Input from "@/Components/Input.vue";
 import { Price_format } from "@/notifications";
 import { ref, watch } from "vue";
-import debounce from "lodash.debounce";
 import ButtonShow from "@/Components/ButtonShow.vue";
 
 const props = defineProps({
@@ -29,16 +28,15 @@ let search = ref(props.filter.search);
 let etat = ref(props.filter.etat);
 let date = ref(props.filter.date);
 let client_id = ref(props.filter.client_id);
-watch(
-    search,
-    debounce((value) => {
+watch(search, (value) => {
+    setTimeout(() => {
         router.get(
             "/admin/order",
             { search: value },
             { preserveState: true, replace: true }
         );
-    }, 600)
-);
+    }, 600);
+});
 </script>
 
 <template>

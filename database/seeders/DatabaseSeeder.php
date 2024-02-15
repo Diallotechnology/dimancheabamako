@@ -21,9 +21,9 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
         User::factory()->create(['email' => 'admin@gmail.com', 'role' => true]);
-        Zone::factory()->create(['nom' => 'Afrique']);
-        Zone::factory()->create(['nom' => 'Europe']);
-        Zone::factory()->create(['nom' => 'Asie']);
+        Zone::factory()->hasPays(5)->create(['nom' => 'Afrique']);
+        Zone::factory()->hasPays(5)->create(['nom' => 'Europe']);
+        Zone::factory()->hasPays(5)->create(['nom' => 'Asie']);
         User::factory(30)->create();
         Category::factory(20)->create();
         Client::factory(20)->create();

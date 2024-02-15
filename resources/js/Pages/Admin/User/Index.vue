@@ -9,8 +9,6 @@ import Input from "@/Components/Input.vue";
 import Select from "@/Components/Select.vue";
 import notify from "@/notifications";
 import { ref, watch } from "vue";
-
-import debounce from "lodash.debounce";
 const props = defineProps({
     rows: {
         type: Object,
@@ -23,16 +21,26 @@ const props = defineProps({
 });
 
 let search = ref(props.filter.search);
-watch(
-    search,
-    debounce((value) => {
+// watch(
+//     search,
+//     debounce((value) => {
+//         router.get(
+//             "/admin/user",
+//             { search: value },
+//             { preserveState: true, replace: true }
+//         );
+//     }, 600)
+// );
+
+watch(search, (value) => {
+    setTimeout(() => {
         router.get(
-            "/admin/user",
+            "/admin/category",
             { search: value },
             { preserveState: true, replace: true }
         );
-    }, 600)
-);
+    }, 600);
+});
 const form = useForm({
     name: "",
     email: "",

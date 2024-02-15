@@ -9,9 +9,8 @@ import TextArea from "@/Components/TextArea.vue";
 import Select from "@/Components/Select.vue";
 import notify, { Price_format } from "@/notifications";
 import Pagination from "@/Components/Pagination.vue";
-import { ref, watch, onMounted, reactive } from "vue";
+import { ref, watch, reactive } from "vue";
 import { Head, router, useForm } from "@inertiajs/vue3";
-import debounce from "lodash.debounce";
 
 const props = defineProps({
     rows: {

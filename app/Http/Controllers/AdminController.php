@@ -110,6 +110,7 @@ class AdminController extends Controller
         })->latest('id')->paginate(10)->withQueryString();
         $filter = Request::only('search');
         $countries = countries();
+        dd($rows);
 
         return Inertia::render('Admin/Zone/Index', \compact('filter', 'rows', 'countries'));
     }

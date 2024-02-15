@@ -7,6 +7,7 @@ use App\Http\Controllers\ClientController;
 use App\Http\Controllers\ImageController;
 use App\Http\Controllers\LinkController;
 use App\Http\Controllers\OrderController;
+use App\Http\Controllers\PaysController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\PromotionController;
 use App\Http\Controllers\TransportController;
@@ -24,7 +25,7 @@ Route::prefix('admin')->group(function () {
     Route::resource('image', ImageController::class)->except('index', 'create', 'show', 'store');
     Route::resource('promotion', PromotionController::class)->except('index', 'create');
     Route::resource('zone', ZoneController::class)->except('index', 'create');
-    Route::resource('pays', ZoneController::class)->except('index', 'create');
+    Route::resource('pays', PaysController::class)->except('index', 'create');
     Route::resource('transport', TransportController::class)->except('index', 'create');
 
     Route::controller(AdminController::class)->group(function () {

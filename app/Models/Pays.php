@@ -15,7 +15,7 @@ class Pays extends Model
      *
      * @var array
      */
-    protected $with = ['zone_id', 'nom'];
+    protected $with = ['zone'];
 
     /**
      * The attributes that are mass assignable.

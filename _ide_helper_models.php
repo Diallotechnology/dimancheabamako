@@ -11,3 +11,307 @@
  */
 
 
+namespace App\Models{
+/**
+ * App\Models\Category
+ *
+ * @property int $id
+ * @property string $nom
+ * @property int $promo
+ * @property string $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Product> $products
+ * @property-read int|null $products_count
+ * @method static \Database\Factories\CategoryFactory factory($count = null, $state = [])
+ * @method static \Illuminate\Database\Eloquent\Builder|Category newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|Category newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|Category query()
+ * @method static \Illuminate\Database\Eloquent\Builder|Category whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Category whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Category whereNom($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Category wherePromo($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Category whereUpdatedAt($value)
+ */
+	class Category extends \Eloquent {}
+}
+
+namespace App\Models{
+/**
+ * App\Models\Client
+ *
+ * @property int $id
+ * @property string $prenom
+ * @property string $nom
+ * @property string $contact
+ * @property string $email
+ * @property string $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Order> $orders
+ * @property-read int|null $orders_count
+ * @method static \Database\Factories\ClientFactory factory($count = null, $state = [])
+ * @method static \Illuminate\Database\Eloquent\Builder|Client newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|Client newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|Client query()
+ * @method static \Illuminate\Database\Eloquent\Builder|Client whereContact($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Client whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Client whereEmail($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Client whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Client whereNom($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Client wherePrenom($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Client whereUpdatedAt($value)
+ */
+	class Client extends \Eloquent {}
+}
+
+namespace App\Models{
+/**
+ * App\Models\Image
+ *
+ * @property int $id
+ * @property int $product_id
+ * @property string $chemin
+ * @property string $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property-read \App\Models\Product $product
+ * @method static \Database\Factories\ImageFactory factory($count = null, $state = [])
+ * @method static \Illuminate\Database\Eloquent\Builder|Image newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|Image newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|Image query()
+ * @method static \Illuminate\Database\Eloquent\Builder|Image whereChemin($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Image whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Image whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Image whereProductId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Image whereUpdatedAt($value)
+ */
+	class Image extends \Eloquent {}
+}
+
+namespace App\Models{
+/**
+ * App\Models\Order
+ *
+ * @property int $id
+ * @property int $client_id
+ * @property string|null $reference
+ * @property string $adresse
+ * @property string $postal
+ * @property string $ville
+ * @property string $payment
+ * @property string $pays
+ * @property string|null $commentaire
+ * @property string $etat
+ * @property string $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property-read \App\Models\Client $client
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Product> $products
+ * @property-read int|null $products_count
+ * @method static \Database\Factories\OrderFactory factory($count = null, $state = [])
+ * @method static \Illuminate\Database\Eloquent\Builder|Order newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|Order newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|Order query()
+ * @method static \Illuminate\Database\Eloquent\Builder|Order whereAdresse($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Order whereClientId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Order whereCommentaire($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Order whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Order whereEtat($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Order whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Order wherePayment($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Order wherePays($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Order wherePostal($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Order whereReference($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Order whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Order whereVille($value)
+ */
+	class Order extends \Eloquent {}
+}
+
+namespace App\Models{
+/**
+ * App\Models\Pays
+ *
+ * @property int $id
+ * @property int $zone_id
+ * @property string $nom
+ * @property string $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property-read \App\Models\Zone $zone
+ * @method static \Database\Factories\PaysFactory factory($count = null, $state = [])
+ * @method static \Illuminate\Database\Eloquent\Builder|Pays newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|Pays newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|Pays query()
+ * @method static \Illuminate\Database\Eloquent\Builder|Pays whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Pays whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Pays whereNom($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Pays whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Pays whereZoneId($value)
+ */
+	class Pays extends \Eloquent {}
+}
+
+namespace App\Models{
+/**
+ * App\Models\Product
+ *
+ * @property int $id
+ * @property int $categorie_id
+ * @property string $reference
+ * @property string $nom
+ * @property int $prix
+ * @property string $poids
+ * @property int $stock
+ * @property string|null $color
+ * @property string|null $taille
+ * @property string $resume
+ * @property string $description
+ * @property string|null $video
+ * @property string $cover
+ * @property string $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property-read \App\Models\Category $categorie
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Image> $images
+ * @property-read int|null $images_count
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Order> $orders
+ * @property-read int|null $orders_count
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Promotion> $promotions
+ * @property-read int|null $promotions_count
+ * @method static \Database\Factories\ProductFactory factory($count = null, $state = [])
+ * @method static \Illuminate\Database\Eloquent\Builder|Product newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|Product newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|Product query()
+ * @method static \Illuminate\Database\Eloquent\Builder|Product whereCategorieId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Product whereColor($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Product whereCover($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Product whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Product whereDescription($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Product whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Product whereNom($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Product wherePoids($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Product wherePrix($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Product whereReference($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Product whereResume($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Product whereStock($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Product whereTaille($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Product whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Product whereVideo($value)
+ */
+	class Product extends \Eloquent {}
+}
+
+namespace App\Models{
+/**
+ * App\Models\Promotion
+ *
+ * @property int $id
+ * @property string $nom
+ * @property string $debut
+ * @property string $fin
+ * @property string $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Product> $products
+ * @property-read int|null $products_count
+ * @method static \Database\Factories\PromotionFactory factory($count = null, $state = [])
+ * @method static \Illuminate\Database\Eloquent\Builder|Promotion newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|Promotion newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|Promotion query()
+ * @method static \Illuminate\Database\Eloquent\Builder|Promotion whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Promotion whereDebut($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Promotion whereFin($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Promotion whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Promotion whereNom($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Promotion whereUpdatedAt($value)
+ */
+	class Promotion extends \Eloquent {}
+}
+
+namespace App\Models{
+/**
+ * App\Models\Transport
+ *
+ * @property int $id
+ * @property string $nom
+ * @property int $zone_id
+ * @property int $pays_id
+ * @property string $temps
+ * @property string $poids
+ * @property int $montant
+ * @property string $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property-read \App\Models\Pays $pays
+ * @property-read \App\Models\Zone $zone
+ * @method static \Database\Factories\TransportFactory factory($count = null, $state = [])
+ * @method static \Illuminate\Database\Eloquent\Builder|Transport newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|Transport newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|Transport query()
+ * @method static \Illuminate\Database\Eloquent\Builder|Transport whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Transport whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Transport whereMontant($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Transport whereNom($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Transport wherePaysId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Transport wherePoids($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Transport whereTemps($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Transport whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Transport whereZoneId($value)
+ */
+	class Transport extends \Eloquent {}
+}
+
+namespace App\Models{
+/**
+ * App\Models\User
+ *
+ * @property int $id
+ * @property string $name
+ * @property string $email
+ * @property \Illuminate\Support\Carbon|null $email_verified_at
+ * @property mixed $password
+ * @property int $change_password
+ * @property int $role
+ * @property int $etat
+ * @property string|null $remember_token
+ * @property string $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property-read \Illuminate\Notifications\DatabaseNotificationCollection<int, \Illuminate\Notifications\DatabaseNotification> $notifications
+ * @property-read int|null $notifications_count
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \Laravel\Sanctum\PersonalAccessToken> $tokens
+ * @property-read int|null $tokens_count
+ * @method static \Database\Factories\UserFactory factory($count = null, $state = [])
+ * @method static \Illuminate\Database\Eloquent\Builder|User newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|User newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|User query()
+ * @method static \Illuminate\Database\Eloquent\Builder|User whereChangePassword($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|User whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|User whereEmail($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|User whereEmailVerifiedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|User whereEtat($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|User whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|User whereName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|User wherePassword($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|User whereRememberToken($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|User whereRole($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|User whereUpdatedAt($value)
+ */
+	class User extends \Eloquent {}
+}
+
+namespace App\Models{
+/**
+ * App\Models\Zone
+ *
+ * @property int $id
+ * @property string $nom
+ * @property string $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Pays> $pays
+ * @property-read int|null $pays_count
+ * @method static \Database\Factories\ZoneFactory factory($count = null, $state = [])
+ * @method static \Illuminate\Database\Eloquent\Builder|Zone newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|Zone newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|Zone query()
+ * @method static \Illuminate\Database\Eloquent\Builder|Zone whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Zone whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Zone whereNom($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Zone whereUpdatedAt($value)
+ */
+	class Zone extends \Eloquent {}
+}
+

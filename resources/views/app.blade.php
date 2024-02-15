@@ -14,10 +14,10 @@
     <link rel="shortcut icon" type="image/x-icon" href="assets/imgs/theme/favicon.svg">
     <title>DAB</title>
 
-    {{--
-    <link href="{{ asset('assets/css/main.css') }}" rel="stylesheet" /> --}}
+
+    <link href="{{ asset('assets/css/main.css') }}" rel="stylesheet" />
     @routes
-    @vite(['resources/js/app.css', 'resources/js/app.js', "resources/js/Pages/{$page['component']}.vue"])
+    @vite(['resources/js/app.js', "resources/js/Pages/{$page['component']}.vue"])
     @inertiaHead
 </head>
 

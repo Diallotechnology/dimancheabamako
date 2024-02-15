@@ -32,7 +32,7 @@ let search = ref(props.filter.search);
 watch(search, (value) => {
     setTimeout(() => {
         router.get(
-            "/admin/promotion",
+            "/admin/transport",
             { search: value },
             { preserveState: true, replace: true }
         );
