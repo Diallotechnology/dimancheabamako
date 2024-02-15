@@ -25,6 +25,7 @@ const form = useForm({
     color: props.product.color,
     taille: props.product.taille,
     description: props.product.description,
+    resume: props.product.resume,
     poids: props.product.poids,
     prix: props.product.prix,
     stock: props.product.stock,
@@ -44,6 +45,7 @@ const submit = () => {
             form.color = props.product.color;
             form.taille = props.product.taille;
             form.description = props.product.description;
+            form.resume = props.product.resume;
             form.poids = props.product.poids;
             form.prix = props.product.prix;
             form.stock = props.product.stock;
@@ -205,6 +207,13 @@ const submit = () => {
                                 </div>
                             </div>
                         </div>
+                        <TextArea
+                            place="la description courte du produit"
+                            label="description courte"
+                            v-model="form.resume"
+                            :message="form.errors.resume"
+                            required
+                        />
                         <TextArea
                             place="la description du produit"
                             label="description"
