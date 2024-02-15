@@ -14,8 +14,15 @@
     <link rel="shortcut icon" type="image/x-icon" href="assets/imgs/theme/favicon.svg">
     <title>DAB</title>
 
-    <link href="{{ asset('assets/css/main.css') }}" rel="stylesheet" />
+    {{--
+    <link href="{{ asset('assets/css/main.css') }}" rel="stylesheet" /> --}}
     @routes
+    @vite(['resources/js/app.css', 'resources/js/app.js', "resources/js/Pages/{$page['component']}.vue"])
+    @inertiaHead
+</head>
+
+<body>
+    @inertia
     <script src="{{ asset('assets/js/vendor/jquery-3.6.0.min.js')}}"></script>
     <script src="{{ asset('assets/js/vendor/modernizr-3.6.0.min.js')}}"></script>
     <script src="{{ asset('assets/js/vendor/jquery-migrate-3.3.0.min.js')}}"></script>
@@ -34,14 +41,6 @@
     <script src="{{ asset('assets/js/plugins/scrollup.js') }}"></script>
     <script src="{{ asset('assets/js/plugins/jquery.theia.sticky.js')}}"></script>
     <script src="{{ asset('assets/js/plugins/jquery.elevatezoom.js')}}"></script>
-    <script src="{{ asset('assets/js/main.js') }}"></script>
-    <script src="{{ asset('assets/js/shop.js') }}"></script>
-    @vite(['resources/js/app.js', "resources/js/Pages/{$page['component']}.vue"])
-    @inertiaHead
-</head>
-
-<body>
-    @inertia
 </body>
 
 </html>
