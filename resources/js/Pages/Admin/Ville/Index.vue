@@ -13,15 +13,7 @@ const props = defineProps({
         type: Object,
         default: () => ({}),
     },
-    countries: {
-        type: Object,
-        default: () => ({}),
-    },
-    zone: {
-        type: Object,
-        default: () => ({}),
-    },
-    ville: {
+    pays: {
         type: Object,
         default: () => ({}),
     },
@@ -35,7 +27,7 @@ let search = ref(props.filter.search);
 watch(search, (value) => {
     setTimeout(() => {
         router.get(
-            "/admin/country",
+            "/admin/ville",
             { search: value },
             { preserveState: true, replace: true }
         );
@@ -43,15 +35,14 @@ watch(search, (value) => {
 });
 const form = useForm({
     nom: "",
-    zone_id: "",
-    city: [],
+    country_id: "",
 });
 
 const submit = () => {
-    form.post(route("country.store"), {
+    form.post(route("ville.store"), {
         onSuccess: () => {
             form.reset();
-            notify("pays ajouter avec success !", true);
+            notify("ville ajouter avec success !", true);
         },
         onError: () => {
             notify(false);
@@ -66,7 +57,7 @@ const submit = () => {
     <AuthenticatedLayout>
         <div class="content-header">
             <div>
-                <h2 class="content-title card-title">Listes des pays</h2>
+                <h2 class="content-title card-title">Listes des villes</h2>
             </div>
             <div>
                 <a
@@ -100,7 +91,7 @@ const submit = () => {
                     <tr>
                         <th>#ID</th>
                         <th scope="col">Nom</th>
-                        <th scope="col">Zone</th>
+                        <th scope="col">pays</th>
                         <th scope="col">Date</th>
                         <th scope="col">Action</th>
                     </tr>
@@ -109,57 +100,39 @@ const submit = () => {
                     <tr v-for="row in rows.data" :key="row.id">
                         <td>{{ row.id }}</td>
                         <td>{{ row.nom }}</td>
-                        <td>{{ row.zone.nom }}</td>
+                        <td>{{ row.country.nom }}</td>
                         <td>{{ row.created_at }}</td>
                         <td>
-                            <ButtonEdit :href="route('country.edit', row.id)" />
+                            <ButtonEdit :href="route('ville.edit', row.id)" />
                             <ButtonDelete
-                                :url="route('country.destroy', row.id)"
+                                :url="route('ville.destroy', row.id)"
                             />
                         </td>
                     </tr>
                 </tbody>
             </Table>
         </div>
-        <!-- card end// -->
-        <Modal name="Formulaire de nouveau pays">
+
+        <Modal name="Formulaire de nouvelle ville">
             <form @submit.prevent="submit">
-                <Select
+                <Input
+                    input_type="text"
+                    place="le nom de la ville"
+                    label="nom"
                     v-model="form.nom"
                     :message="form.errors.nom"
-                    label="Nom du pays"
-                >
-                    <option
-                        v-for="row in countries"
-                        :key="row"
-                        :value="row.official_name"
-                    >
-                        {{ row.official_name }}
-                    </option>
-                </Select>
+                    required
+                />
 
                 <Select
-                    v-model="form.zone_id"
-                    :message="form.errors.zone_id"
-                    label="Zone"
+                    v-model="form.country_id"
+                    :message="form.errors.country_id"
+                    label="Pays"
                 >
-                    <option v-for="row in zone" :key="row" :value="row.id">
+                    <option v-for="row in pays" :key="row" :value="row.id">
                         {{ row.nom }}
                     </option>
                 </Select>
-                <div class="mb-4">
-                    <label class="text-uppercase form-label">Ville</label>
-                    <select multiple v-model="form.city" class="form-select">
-                        <option v-for="row in ville" :key="row" :value="row.id">
-                            {{ row.nom }}
-                        </option>
-                        <div v-show="form.errors.city">
-                            <p class="text-sm text-danger">
-                                {{ form.errors.city }}
-                            </p>
-                        </div>
-                    </select>
-                </div>
 
                 <div class="modal-footer">
                     <button

@@ -10,11 +10,6 @@ const props = defineProps({
         required: false,
         default: "",
     },
-
-    data: {
-        type: Object,
-        default: () => ({}),
-    },
     tag: {
         type: Boolean,
         default: false,
@@ -28,11 +23,9 @@ const props = defineProps({
 <template>
     <div class="mb-4">
         <label class="text-uppercase form-label">{{ props.label }}</label>
-        <VueSelect
-            v-model="model"
-            :options="props.data"
-            placeholder="Selectionner"
-        />
+        <select class="form-select" v-model="model" id="">
+            <slot />
+        </select>
         <div v-show="props.message">
             <p class="text-sm text-danger">
                 {{ props.message }}

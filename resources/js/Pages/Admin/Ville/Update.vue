@@ -1,25 +1,31 @@
 <script setup>
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
-import Input from "@/Components/Input.vue";
 import { useForm, Link } from "@inertiajs/vue3";
 import notify from "@/notifications";
 
 const props = defineProps({
-    zone: {
+    ville: {
+        type: Object,
+        required: true,
+        default: () => ({}),
+    },
+    country: {
         type: Object,
         required: true,
         default: () => ({}),
     },
 });
 const form = useForm({
-    nom: props.zone.nom,
+    nom: props.ville.nom,
+    country_id: props.ville.country_id,
 });
 
 const submit = () => {
-    form.patch(route("zone.update", props.zone.id), {
+    form.patch(route("ville.update", props.ville.id), {
         onSuccess: () => {
-            form.nom = props.zone.nom;
-            notify("zone mise à jour avec success !", true);
+            form.nom = props.ville.nom;
+            form.zone_id = props.ville.zone_id;
+            notify("pays mise à jour avec success !", true);
         },
         onError: () => {
             notify(false);
@@ -35,15 +41,28 @@ const submit = () => {
                 <form @submit.prevent="submit">
                     <Input
                         input_type="text"
-                        place="le nom de la zone"
-                        label="Nom"
+                        place="le nom de la ville"
+                        label="nom"
                         v-model="form.nom"
                         :message="form.errors.nom"
                         required
                     />
+                    <Select
+                        v-model="form.country_id"
+                        :message="form.errors.country_id"
+                        label="Zone"
+                    >
+                        <option
+                            v-for="row in country"
+                            :key="row.id"
+                            :value="row.id"
+                        >
+                            {{ row.nom }}
+                        </option>
+                    </Select>
                     <div class="modal-footer">
                         <Link
-                            :href="route('zone')"
+                            :href="route('ville')"
                             class="btn btn-danger rounded"
                             data-bs-dismiss="modal"
                         >

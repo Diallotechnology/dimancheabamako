@@ -3,13 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Helper\DeleteAction;
-use App\Http\Requests\StoreZoneRequest;
-use App\Http\Requests\UpdateZoneRequest;
+use App\Http\Requests\StoreVilleRequest;
 use App\Models\Country;
-use App\Models\Zone;
+use App\Models\Ville;
 use Inertia\Inertia;
 
-class ZoneController extends Controller
+class VilleController extends Controller
 {
     use DeleteAction;
 
@@ -32,14 +31,9 @@ class ZoneController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StoreZoneRequest $request)
+    public function store(StoreVilleRequest $request)
     {
-        $item = Zone::create($request->validated());
-        $data = [];
-        foreach ($request->pays as $value) {
-            $data[] = new Country(['nom' => $value]);
-        }
-        $item->countries()->saveMany($data);
+        Ville::create($request->validated());
 
         return back();
     }
@@ -47,7 +41,7 @@ class ZoneController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Zone $zone)
+    public function show(Ville $ville)
     {
         //
     }
@@ -55,17 +49,19 @@ class ZoneController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Zone $zone)
+    public function edit(Ville $ville)
     {
-        return Inertia::render('Admin/Zone/Update', compact('zone'));
+        $country = Country::all();
+
+        return Inertia::render('Admin/Ville/Update', compact('ville', 'country'));
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateZoneRequest $request, Zone $zone)
+    public function update(StoreVilleRequest $request, Ville $ville)
     {
-        $zone->update($request->validated());
+        $ville->update($request->validated());
 
         return back();
     }
@@ -73,8 +69,8 @@ class ZoneController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Zone $zone)
+    public function destroy(Ville $ville)
     {
-        return $this->supp($zone);
+        return $this->supp($ville);
     }
 }

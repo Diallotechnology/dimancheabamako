@@ -4,14 +4,14 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class UpdateShippingZoneRequest extends FormRequest
+class StoreCountryRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -22,7 +22,9 @@ class UpdateShippingZoneRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'nom' => 'required|string',
+            'zone_id' => 'required|exists:zones,id',
+            'city' => 'required|array',
         ];
     }
 }

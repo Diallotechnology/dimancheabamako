@@ -4,16 +4,15 @@ namespace App\Http\Controllers;
 
 use App\Models\Category;
 use App\Models\Client;
+use App\Models\Country;
 use App\Models\Order;
 use App\Models\Pays;
 use App\Models\Product;
 use App\Models\Promotion;
-use App\Models\ShippingPays;
-use App\Models\ShippingZone;
 use App\Models\Transport;
 use App\Models\User;
+use App\Models\Ville;
 use App\Models\Zone;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Request;
 use Inertia\Inertia;
 
@@ -41,8 +40,6 @@ class AdminController extends Controller
         })->latest('id')->paginate(10)->withQueryString();
         $filter = Request::only('filters.search', 'filters.cat');
         $category = Category::all();
-
-        Log::debug(request()->input('filters.search'));
 
         return Inertia::render('Admin/Product/Index', compact('rows', 'filter', 'category'));
     }
@@ -103,34 +100,40 @@ class AdminController extends Controller
         return Inertia::render('Admin/Promotion/Index', \compact('filter', 'rows'));
     }
 
-    public function shippingzone()
+    public function zone()
     {
-        $rows = ShippingZone::when(Request::input('search'), function ($query, $search) {
+        $rows = Zone::with('countries')->when(Request::input('search'), function ($query, $search) {
             $query->where('nom', 'like', '%'.$search.'%');
-        })->latest('id')->paginate(10)->withQueryString();
+        })->latest('id')->paginate(10);
         $filter = Request::only('search');
-        $countries = countries();
-        // dd($rows);
+        $pays = countries();
 
-        return Inertia::render('Admin/Zone/Index', \compact('filter', 'rows', 'countries'));
+        return Inertia::render('Admin/Zone/Index', compact('filter', 'rows', 'pays'));
     }
 
-    public function shippingpays()
+    public function country()
     {
-        $rows = ShippingPays::when(Request::input('search'), function ($query, $search) {
+        $rows = Country::with('zone')->when(Request::input('search'), function ($query, $search) {
             $query->where('nom', 'like', '%'.$search.'%');
-        })->latest('id')->paginate(10)->withQueryString();
+        })->latest('id')->paginate(10);
         $filter = Request::only('search');
-        $zone = ShippingZone::all();
-        // ->map(function ($row) {
-        //     return [
-        //         'label' => "$row->nom",
-        //         'value' => "$row->id",
-        //     ];
-        // });
-        dd($rows);
+        $countries = countries();
+        $zone = Zone::all();
+        $ville = Ville::all();
 
-        return Inertia::render('Admin/Pays/Index', compact('filter', 'rows', 'zone'));
+        return Inertia::render('Admin/Pays/Index', compact('filter', 'rows', 'zone', 'countries', 'ville'));
+    }
+
+    public function ville()
+    {
+        $rows = Ville::with('country')->when(Request::input('search'), function ($query, $search) {
+            $query->where('nom', 'like', '%'.$search.'%');
+        })->latest('id')->paginate(10);
+        $filter = Request::only('search');
+
+        $pays = Country::all();
+
+        return Inertia::render('Admin/Ville/Index', compact('filter', 'rows', 'pays'));
     }
 
     public function transport()

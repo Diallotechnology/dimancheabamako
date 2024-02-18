@@ -5,8 +5,6 @@ import ButtonEdit from "@/Components/ButtonEdit.vue";
 import ButtonDelete from "@/Components/ButtonDelete.vue";
 import Table from "@/Components/Table.vue";
 import Modal from "@/Components/Modal.vue";
-import Select from "@/Components/Select.vue";
-import Input from "@/Components/Input.vue";
 import notify from "@/notifications";
 import { ref, watch } from "vue";
 
@@ -15,7 +13,7 @@ const props = defineProps({
         type: Object,
         default: () => ({}),
     },
-    countries: {
+    pays: {
         type: Object,
         default: () => ({}),
     },
@@ -29,7 +27,7 @@ let search = ref(props.filter.search);
 watch(search, (value) => {
     setTimeout(() => {
         router.get(
-            "/admin/shippingzone",
+            "/admin/zone",
             { search: value },
             { preserveState: true, replace: true }
         );
@@ -41,7 +39,7 @@ const form = useForm({
 });
 
 const submit = () => {
-    form.post(route("shippingzone.store"), {
+    form.post(route("zone.store"), {
         onSuccess: () => {
             form.reset();
             notify("zone ajouter avec success !", true);
@@ -103,17 +101,15 @@ const submit = () => {
                         <td>{{ row.id }}</td>
                         <td>{{ row.nom }}</td>
                         <td>
-                            <p v-for="item in row.ShippingPays" :key="item.id">
+                            <p v-for="item in row.countries" :key="item.id">
                                 {{ item.nom }}
                             </p>
                         </td>
                         <td>{{ row.created_at }}</td>
                         <td>
-                            <ButtonEdit
-                                :href="route('shippingzone.edit', row.id)"
-                            />
+                            <ButtonEdit :href="route('zone.edit', row.id)" />
                             <ButtonDelete
-                                :url="route('shippingzone.destroy', row.id)"
+                                :url="route('zone.destroy', row.id)"
                             />
                         </td>
                     </tr>
@@ -140,7 +136,7 @@ const submit = () => {
                         required
                     >
                         <option
-                            v-for="row in countries"
+                            v-for="row in pays"
                             :key="row"
                             :value="row.official_name"
                         >

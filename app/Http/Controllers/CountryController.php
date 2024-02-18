@@ -3,13 +3,14 @@
 namespace App\Http\Controllers;
 
 use App\Helper\DeleteAction;
-use App\Http\Requests\StoreZoneRequest;
-use App\Http\Requests\UpdateZoneRequest;
+use App\Http\Requests\StoreCountryRequest;
+use App\Http\Requests\UpdateCountryRequest;
 use App\Models\Country;
+use App\Models\Ville;
 use App\Models\Zone;
 use Inertia\Inertia;
 
-class ZoneController extends Controller
+class CountryController extends Controller
 {
     use DeleteAction;
 
@@ -32,14 +33,14 @@ class ZoneController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StoreZoneRequest $request)
+    public function store(StoreCountryRequest $request)
     {
-        $item = Zone::create($request->validated());
+        $item = Country::create($request->validated());
         $data = [];
-        foreach ($request->pays as $value) {
-            $data[] = new Country(['nom' => $value]);
+        foreach ($request->city as $value) {
+            $data[] = new Ville(['nom' => $value]);
         }
-        $item->countries()->saveMany($data);
+        $item->villes()->saveMany($data);
 
         return back();
     }
@@ -47,7 +48,7 @@ class ZoneController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Zone $zone)
+    public function show(Country $country)
     {
         //
     }
@@ -55,17 +56,20 @@ class ZoneController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Zone $zone)
+    public function edit(Country $country)
     {
-        return Inertia::render('Admin/Zone/Update', compact('zone'));
+        $zone = Zone::all();
+        $pays = countries();
+
+        return Inertia::render('Admin/Pays/Update', compact('zone', 'country', 'pays'));
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateZoneRequest $request, Zone $zone)
+    public function update(UpdateCountryRequest $request, Country $country)
     {
-        $zone->update($request->validated());
+        $country->update($request->validated());
 
         return back();
     }
@@ -73,8 +77,8 @@ class ZoneController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Zone $zone)
+    public function destroy(Country $country)
     {
-        return $this->supp($zone);
+        return $this->supp($country);
     }
 }

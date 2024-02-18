@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
-class ShippingPays extends Model
+class Country extends Model
 {
     use DateFormat;
 
@@ -16,18 +16,18 @@ class ShippingPays extends Model
      *
      * @var array
      */
-    protected $fillable = ['nom', 'shipping_zone_id'];
+    protected $fillable = ['nom', 'zone_id'];
 
     /**
-     * Get the shippingzone that owns the ShippingPays
+     * Get the zone that owns the Country
      */
-    public function ShippingZone(): BelongsTo
+    public function zone(): BelongsTo
     {
-        return $this->belongsTo(ShippingZone::class);
+        return $this->belongsTo(Zone::class);
     }
 
     /**
-     * Get all of the villes for the ShippingPays
+     * Get all of the villes for the Country
      */
     public function villes(): HasMany
     {

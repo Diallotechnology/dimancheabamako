@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class StoreShippingPaysRequest extends FormRequest
+class UpdateCountryRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -22,8 +22,8 @@ class StoreShippingPaysRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'nom' => 'required|date',
-            'zone_id' => 'required|exists:shipping_zones,id',
+            'nom' => 'required|string',
+            'zone_id' => 'required|exists:zones,id',
         ];
     }
 }

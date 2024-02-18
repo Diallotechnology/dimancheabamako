@@ -9,6 +9,11 @@ const props = defineProps({
         required: true,
         default: () => ({}),
     },
+    country: {
+        type: Object,
+        required: true,
+        default: () => ({}),
+    },
     pays: {
         type: Object,
         required: true,
@@ -16,15 +21,15 @@ const props = defineProps({
     },
 });
 const form = useForm({
-    nom: props.pays.nom,
-    zone_id: props.pays.zone_id,
+    nom: props.country.nom,
+    zone_id: props.country.zone_id,
 });
 
 const submit = () => {
-    form.patch(route("pays.update", props.pays.id), {
+    form.patch(route("country.update", props.country.id), {
         onSuccess: () => {
-            form.nom = props.pays.nom;
-            form.zone_id = props.pays.zone_id;
+            form.nom = props.country.nom;
+            form.zone_id = props.country.zone_id;
             notify("pays mise à jour avec success !", true);
         },
         onError: () => {
@@ -45,7 +50,7 @@ const submit = () => {
                         label="Nom du pays"
                     >
                         <option
-                            v-for="row in countries"
+                            v-for="row in pays"
                             :key="row"
                             :value="row.official_name"
                         >
@@ -57,7 +62,7 @@ const submit = () => {
                         :message="form.errors.zone_id"
                         label="Zone"
                     >
-                        <option v-for="row in zone" :key="row" :value="row.nom">
+                        <option v-for="row in zone" :key="row" :value="row.id">
                             {{ row.nom }}
                         </option>
                     </Select>

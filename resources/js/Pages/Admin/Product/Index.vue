@@ -199,7 +199,7 @@ const favori = (url) => {
                                     <i
                                         :class="[
                                             !row.favoris
-                                                ? 'material-icons md-favorite_border'
+                                                ? 'material-icons md-favorite_border text-light'
                                                 : 'material-icons md-favorite text-light',
                                         ]"
                                     ></i>
