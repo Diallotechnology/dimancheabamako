@@ -64,6 +64,7 @@ const form = useForm({
     resume: "",
     poids: "",
     prix: "",
+    favoris: 0,
     stock: 1,
     cover: "",
     image: [],
@@ -81,6 +82,18 @@ const submit = () => {
             notify(false);
         },
     });
+};
+const favori = (url) => {
+    console.log(url);
+    axios
+        .get(url)
+        .then((response) => {
+            notify("Produit ajouter comme favori avec success !", true);
+            router.reload();
+        })
+        .catch(function (error) {
+            console.log(error);
+        });
 };
 </script>
 
@@ -157,6 +170,7 @@ const submit = () => {
                                 <p class="title">Taille {{ row.taille }}</p>
                                 <p class="title">Poids {{ row.poids }}</p>
                                 <p class="title">Stock {{ row.stock }}</p>
+                                <p class="title">favori {{ row.favoris }}</p>
                                 <div class="price mb-2">
                                     {{ Price_format.format(row.prix) }}
                                 </div>
@@ -170,6 +184,27 @@ const submit = () => {
                                 <ButtonDelete
                                     :url="route('product.destroy', row.id)"
                                 />
+                                <button
+                                    type="button"
+                                    @click.prevent="
+                                        favori(
+                                            route('product.favoris', [
+                                                row.id,
+                                                !row.favoris ? 1 : 0,
+                                            ])
+                                        )
+                                    "
+                                    class="btn btn-sm btn-success font-sm rounded mx-1"
+                                >
+                                    <i
+                                        :class="[
+                                            !row.favoris
+                                                ? 'material-icons md-favorite_border'
+                                                : 'material-icons md-favorite text-light',
+                                        ]"
+                                    ></i>
+                                    <!-- Edit -->
+                                </button>
                             </div>
                         </div>
                         <!-- card-product  end// -->
@@ -205,11 +240,8 @@ const submit = () => {
                         />
                     </div>
                     <div class="col-md-6">
-                        <Select
-                            v-model="form.categorie_id"
-                            :message="form.errors.categorie_id"
-                            label="categorie"
-                        >
+                        <label for="">categorie</label>
+                        <select class="form-select" v-model="form.categorie_id">
                             <option
                                 v-for="row in category"
                                 :key="row.id"
@@ -217,7 +249,7 @@ const submit = () => {
                             >
                                 {{ row.nom }}
                             </option>
-                        </Select>
+                        </select>
                     </div>
                     <div class="col-md-6">
                         <Input
@@ -256,6 +288,13 @@ const submit = () => {
                             :message="form.errors.prix"
                             required
                         />
+                    </div>
+                    <div class="col-md-6">
+                        <label for="">Favoris</label>
+                        <select v-model="form.favoris" class="form-select">
+                            <option value="1">OUI</option>
+                            <option value="0">NON</option>
+                        </select>
                     </div>
                     <div class="col-md-6">
                         <Input

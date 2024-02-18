@@ -29,6 +29,7 @@ class StoreProductRequest extends FormRequest
             'taille' => 'nullable|string',
             'description' => 'required',
             'resume' => 'required',
+            'favoris' => 'required|boolean',
             'poids' => 'required|string',
             'video' => 'nullable|file',
             'prix' => 'required|integer',

@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Helper\DeleteAction;
 use App\Http\Requests\StorePromotionRequest;
 use App\Http\Requests\UpdatePromotionRequest;
+use App\Models\Category;
+use App\Models\Product;
 use App\Models\Promotion;
 use Inertia\Inertia;
 
@@ -25,7 +27,21 @@ class PromotionController extends Controller
      */
     public function create()
     {
-        //
+        $query = Category::all();
+        $product = Product::all()->map(function ($row) {
+            return [
+                'label' => 'Ref '.$row->reference.' '.$row->nom,
+                'value' => "$row->id",
+            ];
+        });
+        $category = Category::all()->map(function ($row) {
+            return [
+                'label' => "$row->nom",
+                'value' => "$row->id",
+            ];
+        });
+
+        return Inertia::render('Admin/Promotion/Create', compact('category', 'product'));
     }
 
     /**
@@ -34,6 +50,10 @@ class PromotionController extends Controller
     public function store(StorePromotionRequest $request)
     {
         $item = Promotion::create($request->validated());
+        if ($request->categorie_id) {
+            $product = Product::whereCategorieId($request->categorie_id);
+            $item->products()->attach($product->id);
+        }
         $item->products()->attach($request->product_id);
 
         return back();

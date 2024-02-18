@@ -18,7 +18,7 @@ class Product extends Model
      *
      * @var array
      */
-    protected $fillable = ['categorie_id', 'reference', 'nom', 'color', 'taille', 'description', 'resume', 'poids', 'video', 'prix', 'cover', 'stock'];
+    protected $fillable = ['categorie_id', 'reference', 'nom', 'color', 'taille', 'description', 'resume', 'poids', 'video', 'prix', 'cover', 'stock', 'favoris'];
 
     /**
      * The relationships that should always be loaded.

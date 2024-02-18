@@ -8,6 +8,13 @@ const notify = (message = "", type) => {
         toast.error("la validation a echoué verifiez vos informations!");
     }
 };
+export let cartnotify = (message = "", type) => {
+    if (type) {
+        toast.success(message);
+    } else {
+        toast.error(message);
+    }
+};
 export let Price_format = new Intl.NumberFormat("fr-FR", {
     style: "currency",
     currency: "XOF",

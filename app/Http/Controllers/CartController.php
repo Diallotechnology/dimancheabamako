@@ -3,9 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Models\Product;
+use App\Models\ShippingPays;
+use App\Models\ShippingZone;
 use Darryldecode\Cart\Facades\CartFacade;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
+use Inertia\Inertia;
 
 class CartController extends Controller
 {
@@ -14,48 +16,73 @@ class CartController extends Controller
      */
     public function index()
     {
-        //
+        $items = CartFacade::session(1)->getContent()->sortBy('name');
+        // get total qte
+        $TotalQuantity = CartFacade::session(1)->getTotalQuantity();
+        // get total price
+        $Total = CartFacade::session(1)->getTotal();
+
+        $zoneshipping = ShippingZone::with('shippingpays')->get()->map(function ($row) {
+            return [
+                'label' => "$row->nom",
+                'value' => "$row->id",
+            ];
+        });
+
+        return Inertia::render('Panier', compact('items', 'TotalQuantity', 'Total', 'zoneshipping'));
     }
 
     /**
      * Show the form for creating a new resource.
      */
-    public function create()
+    public function GetCount()
     {
-        //
+        return CartFacade::session(1)->getContent()->count();
+    }
+
+    public function GetCountry($id)
+    {
+        return ShippingPays::where('shipping_zone_id', $id)->get();
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(Product $product)
     {
-        \dd($request->all());
-        // $productId = 1;
-        // $userId = Auth::user()->id;
-        // $productSelected = Product::findOrFail($productId);
+        $productSelected = $product;
+        $userId = 1;
 
-        // $productAdded = [
-        //     'id' => $productSelected->id,
-        //     'name' => $productSelected->nom,
-        //     'price' => $productSelected->prix_vente,
-        //     'quantity' => $productSelected->qte_min,
-        //     'attributes' => [],
-        //     'associatedModel' => $productSelected,
-        // ];
+        $productAdded = [
+            'id' => $productSelected->id,
+            'name' => $productSelected->nom,
+            'price' => $productSelected->prix,
+            'quantity' => 1,
+            'attributes' => [],
+            'associatedModel' => $productSelected,
+        ];
 
-        // $cartNotEmpty = ! CartFacade::session($userId)->isEmpty();
+        $cartNotEmpty = ! CartFacade::session($userId)->isEmpty();
 
-        // if ($cartNotEmpty && CartFacade::session($userId)->getContent()->containsStrict('id', $productId)) {
-        //     return $this->alert('warning', 'Produit existe deja dans le panier!');
-        // }
+        if ($cartNotEmpty && CartFacade::session($userId)->getContent()->containsStrict('id', $productSelected->id)) {
+            return response()->json([
+                'message' => 'Produit existe deja dans le panier!',
+                'type' => false,
+            ]);
+        }
 
-        // CartFacade::session($userId)->add($productAdded);
-        // if ($cartNotEmpty) {
-        //     $this->alert('success', 'Produit ajouter au panier avec success!');
-        // }
+        CartFacade::session($userId)->add($productAdded);
+        if ($cartNotEmpty) {
+            return response()->json([
+                'message' => 'Produit ajouter au panier avec success!',
+                'type' => true,
+            ]);
+        }
 
-        // return $this->alert('success', 'Produit ajouter au panier avec success!');
+        return response()->json([
+            'message' => 'Produit ajouter au panier avec success!',
+            'type' => true,
+        ]);
     }
 
     /**

@@ -4364,7 +4364,7 @@ table .product-thumbnail img {
     .product-cart-wrap
     .product-content-wrap
     .product-action-1
-    a.action-btn {
+    button.action-btn {
     border: none;
     width: auto;
     border-radius: 50px;

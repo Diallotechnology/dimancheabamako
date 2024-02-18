@@ -16,9 +16,9 @@ class ProductController extends Controller
     /**
      * Show the form for creating a new resource.
      */
-    public function create()
+    public function favoris(Product $product, $data)
     {
-        //
+        return $product->update(['favoris' => $data]);
     }
 
     /**

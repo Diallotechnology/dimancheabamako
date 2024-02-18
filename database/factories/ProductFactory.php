@@ -24,6 +24,7 @@ class ProductFactory extends Factory
             'poids' => rand(100, 500),
             'stock' => rand(15, 50),
             'color' => $this->faker->colorName(),
+            'favoris' => $this->faker->boolean(50),
             'taille' => rand(1, 5),
             'resume' => $this->faker->paragraph(),
             'description' => $this->faker->paragraph(3),

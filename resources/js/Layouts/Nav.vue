@@ -38,8 +38,8 @@
                     <span class="text">Clients</span>
                 </Link>
             </NavLink>
-            <NavLink :active="route().current('zone')">
-                <Link class="menu-link" :href="route('zone')">
+            <NavLink :active="route().current('shippingzone')">
+                <Link class="menu-link" :href="route('shippingzone')">
                     <i class="icon material-icons md-map"></i>
                     <span class="text">Zone</span>
                 </Link>

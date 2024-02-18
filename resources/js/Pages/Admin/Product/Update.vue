@@ -29,6 +29,7 @@ const form = useForm({
     poids: props.product.poids,
     prix: props.product.prix,
     stock: props.product.stock,
+    favoris: props.product.favoris,
     cover: null,
     image: [],
     video: null,
@@ -49,6 +50,7 @@ const submit = () => {
             form.poids = props.product.poids;
             form.prix = props.product.prix;
             form.stock = props.product.stock;
+            form.favoris = props.product.favoris;
             form.cover = props.product.cover;
             form.image = props.product.image;
             form.video = props.product.video;
@@ -88,7 +90,9 @@ const submit = () => {
                             />
                         </div>
                         <div class="col-md-6">
-                            <Select
+                            <label for="">categorie</label>
+                            <select
+                                class="form-select"
                                 v-model="form.categorie_id"
                                 :message="form.errors.categorie_id"
                                 label="categorie"
@@ -100,7 +104,14 @@ const submit = () => {
                                 >
                                     {{ row.nom }}
                                 </option>
-                            </Select>
+                            </select>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="">Favoris</label>
+                            <select v-model="form.favoris" class="form-select">
+                                <option value="1">OUI</option>
+                                <option value="0">NON</option>
+                            </select>
                         </div>
                         <div class="col-md-6">
                             <Input

@@ -11,6 +11,13 @@ class Promotion extends Model
     use DateFormat;
 
     /**
+     * The attributes that are mass assignable.
+     *
+     * @var array
+     */
+    protected $fillable = ['reduction', 'nom', 'debut', 'fin'];
+
+    /**
      * The products that belong to the Promotion
      */
     public function products(): BelongsToMany

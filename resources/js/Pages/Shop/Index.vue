@@ -1,8 +1,8 @@
 <script setup>
 import Layout from "@/Shared/Layout.vue";
 import Pagination from "@/Components/Pagination.vue";
-import notify, { Price_format } from "@/notifications";
-import { Link, router, useForm } from "@inertiajs/vue3";
+import { Price_format, cartnotify } from "@/notifications";
+import { Link, router } from "@inertiajs/vue3";
 import { onMounted } from "vue";
 const props = defineProps({
     rows: {
@@ -10,43 +10,24 @@ const props = defineProps({
         required: true,
         default: () => ({}),
     },
-    category: {
+    categorie: {
         type: Object,
         required: true,
         default: () => ({}),
     },
-    // productId: {
-    //     type: Number,
-    //     required: true,
-    //     default: () => ({}),
-    // },
 });
-
-const AddToCard = (id) => {
-    const form = useForm({
-        id: id,
-    });
-    form.get(route("cart.store", form.id), {
-        onSuccess: () => {
-            form.reset();
-            notify("Categorie ajouter avec success !", true);
-        },
-        onError: () => {
-            notify(false);
-        },
-    });
-    // axios
-    //     .get(url)
-    //     .then((response) => {
-    // if (response.data.success) {
-    //     router.reload();
-    // }
-    //     console.log(response);
-    // })
-    // .catch(function (error) {
-    //     // handle error
-    //     console.log(error);
-    // });
+const AddToCard = (url) => {
+    console.log(url);
+    axios
+        .get(url)
+        .then((response) => {
+            cartnotify(response.data.message, response.data.type);
+            console.log(response.data);
+        })
+        .catch(function (error) {
+            // handle error
+            console.log(error);
+        });
 };
 onMounted(() => {
     if ($(".sort-by-product-area").length) {
@@ -211,12 +192,6 @@ onMounted(() => {
                                         >
                                             <i class="fi-rs-eye"></i
                                         ></Link>
-                                        <a
-                                            aria-label="Acheté"
-                                            class="action-btn hover-up"
-                                            href=""
-                                            ><i class="fi-rs-heart"></i
-                                        ></a>
                                     </div>
                                     <div
                                         class="product-badges product-badges-position product-badges-mrg"
@@ -244,19 +219,21 @@ onMounted(() => {
                                     </p>
 
                                     <div class="product-action-1 show">
-                                        <Link
+                                        <button
                                             type="button"
                                             aria-label="Buy now"
                                             class="action-btn"
-                                            method="get"
-                                            href=""
-                                            @click.prevent="AddToCard(item.id)"
+                                            @click.prevent="
+                                                AddToCard(
+                                                    route('cart.store', item.id)
+                                                )
+                                            "
                                         >
                                             <i
                                                 class="fi-rs-shopping-bag-add"
                                             ></i
                                             >Acheté
-                                        </Link>
+                                        </button>
                                     </div>
                                 </div>
                             </div>
@@ -272,8 +249,10 @@ onMounted(() => {
                                 Categorie
                             </h5>
                             <ul class="categories">
-                                <li v-for="item in category" :key="item">
-                                    <Link href="">{{ item.nom }}</Link>
+                                <li v-for="item in categorie" :key="item">
+                                    <Link :href="route('shop', item.id)">{{
+                                        item.nom
+                                    }}</Link>
                                 </li>
                             </ul>
                         </div>
@@ -392,103 +371,6 @@ onMounted(() => {
                                         >
                                     </div>
                                 </div>
-                            </div>
-                            <a
-                                href="shop-grid-right.html"
-                                class="btn btn-sm btn-default"
-                                ><i class="fi-rs-filter mr-5"></i> Fillter</a
-                            >
-                        </div>
-                        <!-- Product sidebar Widget -->
-                        <div
-                            class="sidebar-widget product-sidebar mb-30 p-30 bg-grey border-radius-10"
-                        >
-                            <div
-                                class="widget-header position-relative mb-20 pb-10"
-                            >
-                                <h5 class="widget-title mb-10">New products</h5>
-                                <div class="bt-1 border-color-1"></div>
-                            </div>
-                            <div class="single-post clearfix">
-                                <div class="image">
-                                    <img
-                                        src="assets/imgs/shop/thumbnail-3.jpg"
-                                        alt="#"
-                                    />
-                                </div>
-                                <div class="content pt-10">
-                                    <h5>
-                                        <a href="shop-product-detail.html"
-                                            >Chen Cardigan</a
-                                        >
-                                    </h5>
-                                    <p class="price mb-0 mt-5">$99.50</p>
-                                    <div class="product-rate">
-                                        <div
-                                            class="product-rating"
-                                            style="width: 90%"
-                                        ></div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="single-post clearfix">
-                                <div class="image">
-                                    <img
-                                        src="assets/imgs/shop/thumbnail-4.jpg"
-                                        alt="#"
-                                    />
-                                </div>
-                                <div class="content pt-10">
-                                    <h6>
-                                        <a href="shop-product-detail.html"
-                                            >Chen Sweater</a
-                                        >
-                                    </h6>
-                                    <p class="price mb-0 mt-5">$89.50</p>
-                                    <div class="product-rate">
-                                        <div
-                                            class="product-rating"
-                                            style="width: 80%"
-                                        ></div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="single-post clearfix">
-                                <div class="image">
-                                    <img
-                                        src="assets/imgs/shop/thumbnail-5.jpg"
-                                        alt="#"
-                                    />
-                                </div>
-                                <div class="content pt-10">
-                                    <h6>
-                                        <a href="shop-product-detail.html"
-                                            >Colorful Jacket</a
-                                        >
-                                    </h6>
-                                    <p class="price mb-0 mt-5">$25</p>
-                                    <div class="product-rate">
-                                        <div
-                                            class="product-rating"
-                                            style="width: 60%"
-                                        ></div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div
-                            class="banner-img wow fadeIn mb-45 animated d-lg-block d-none"
-                        >
-                            <img
-                                src="assets/imgs/banner/banner-11.jpg"
-                                alt=""
-                            />
-                            <div class="banner-text">
-                                <span>Women Zone</span>
-                                <h4>Save 17% on <br />Office Dress</h4>
-                                <a href="shop-grid-right.html"
-                                    >Shop Now <i class="fi-rs-arrow-right"></i
-                                ></a>
                             </div>
                         </div>
                     </div>

@@ -5,12 +5,11 @@ namespace App\Http\Controllers;
 use App\Helper\DeleteAction;
 use App\Http\Requests\StoreZoneRequest;
 use App\Http\Requests\UpdateZoneRequest;
-use App\Models\Pays;
+use App\Models\ShippingPays;
 use App\Models\ShippingZone;
-use App\Models\Zone;
 use Inertia\Inertia;
 
-class ZoneController extends Controller
+class ShippingZoneController extends Controller
 {
     use DeleteAction;
 
@@ -22,9 +21,9 @@ class ZoneController extends Controller
         $item = ShippingZone::create($request->validated());
         $data = [];
         foreach ($request->pays as $value) {
-            $data[] = new Pays(['nom' => $value]);
+            $data[] = new ShippingPays(['nom' => $value]);
         }
-        $item->pays()->saveMany($data);
+        $item->ShippingPays()->saveMany($data);
 
         return back();
     }
@@ -42,6 +41,7 @@ class ZoneController extends Controller
      */
     public function edit(ShippingZone $zone)
     {
+        dd($zone);
 
         return Inertia::render('Admin/Zone/Update', compact('zone'));
     }
@@ -49,7 +49,7 @@ class ZoneController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateZoneRequest $request, Zone $zone)
+    public function update(UpdateZoneRequest $request, ShippingZone $zone)
     {
         $zone->update($request->validated());
 

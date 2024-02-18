@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Helper\DeleteAction;
 use App\Http\Requests\StorePaysRequest;
-use App\Http\Requests\UpdatePaysRequest;
 use App\Models\Pays;
 use App\Models\Zone;
 use Inertia\Inertia;
@@ -44,7 +43,7 @@ class PaysController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdatePaysRequest $request, Pays $pays)
+    public function update(StorePaysRequest $request, Pays $pays)
     {
         $pays->update($request->validated());
 

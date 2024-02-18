@@ -16,7 +16,7 @@ const form = useForm({
 });
 
 const submit = () => {
-    form.patch(route("zone.update", props.zone.id), {
+    form.patch(route("shippingzone.update", props.zone.id), {
         onSuccess: () => {
             form.nom = props.zone.nom;
             notify("zone mise à jour avec success !", true);
@@ -43,7 +43,7 @@ const submit = () => {
                     />
                     <div class="modal-footer">
                         <Link
-                            :href="route('zone')"
+                            :href="route('shippingzone')"
                             class="btn btn-danger rounded"
                             data-bs-dismiss="modal"
                         >

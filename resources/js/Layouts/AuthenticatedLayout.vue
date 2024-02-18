@@ -83,12 +83,6 @@ onMounted(() => {
     <main class="main-wrap">
         <header class="main-header navbar justify-content-end">
             <div class="col-nav">
-                <button
-                    class="btn btn-icon btn-mobile me-auto"
-                    data-trigger="#offcanvas_aside"
-                >
-                    <i class="material-icons md-apps"></i>
-                </button>
                 <ul class="nav">
                     <li class="nav-item">
                         <a href="#" class="requestfullscreen nav-link btn-icon"

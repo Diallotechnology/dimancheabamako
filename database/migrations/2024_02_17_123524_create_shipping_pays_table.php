@@ -11,9 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('pays', function (Blueprint $table) {
+        Schema::create('shipping_pays', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('zone_id')->constrained()->cascadeOnUpdate()->cascadeOnDelete();
+            $table->foreignId('shipping_zone_id')->constrained()->cascadeOnUpdate()->cascadeOnDelete();
             $table->string('nom');
             $table->timestamps();
         });
@@ -24,6 +24,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('pays');
+        Schema::dropIfExists('shipping_pays');
     }
 };

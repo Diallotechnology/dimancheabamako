@@ -29,7 +29,7 @@ let search = ref(props.filter.search);
 watch(search, (value) => {
     setTimeout(() => {
         router.get(
-            "/admin/zone",
+            "/admin/shippingzone",
             { search: value },
             { preserveState: true, replace: true }
         );
@@ -41,7 +41,7 @@ const form = useForm({
 });
 
 const submit = () => {
-    form.post(route("zone.store"), {
+    form.post(route("shippingzone.store"), {
         onSuccess: () => {
             form.reset();
             notify("zone ajouter avec success !", true);
@@ -103,17 +103,17 @@ const submit = () => {
                         <td>{{ row.id }}</td>
                         <td>{{ row.nom }}</td>
                         <td>
-                            <p v-for="item in row.pays" :key="item.id">
+                            <p v-for="item in row.ShippingPays" :key="item.id">
                                 {{ item.nom }}
                             </p>
                         </td>
                         <td>{{ row.created_at }}</td>
                         <td>
                             <ButtonEdit
-                                :href="route('zone.edit', row.zone.id)"
+                                :href="route('shippingzone.edit', row.id)"
                             />
                             <ButtonDelete
-                                :url="route('zone.destroy', row.id)"
+                                :url="route('shippingzone.destroy', row.id)"
                             />
                         </td>
                     </tr>

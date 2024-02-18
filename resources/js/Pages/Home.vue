@@ -9,6 +9,11 @@ const props = defineProps({
         required: true,
         default: () => ({}),
     },
+    latest: {
+        type: Object,
+        required: true,
+        default: () => ({}),
+    },
 });
 
 onMounted(() => {
@@ -254,7 +259,7 @@ onMounted(() => {
                             </button>
                         </li>
                     </ul>
-                    <a :href="route('shop')" class="view-more d-none d-md-flex"
+                    <a href="" class="view-more d-none d-md-flex"
                         >Voir tout<i class="fi-rs-angle-double-small-right"></i
                     ></a>
                 </div>
@@ -269,7 +274,7 @@ onMounted(() => {
                         <div class="row product-grid-4">
                             <div
                                 class="col-lg-3 col-md-4 col-12 col-sm-6"
-                                v-for="item in product"
+                                v-for="item in latest"
                                 :key="item"
                             >
                                 <div class="product-cart-wrap mb-30">
@@ -374,28 +379,36 @@ onMounted(() => {
                         aria-labelledby="tab-three"
                     >
                         <div class="row product-grid-4">
-                            <div class="col-lg-3 col-md-4 col-12 col-sm-6">
+                            <div
+                                class="col-lg-3 col-md-4 col-12 col-sm-6"
+                                v-for="item in product"
+                                :key="item"
+                            >
                                 <div class="product-cart-wrap mb-30">
                                     <div class="product-img-action-wrap">
                                         <div
                                             class="product-img product-img-zoom"
                                         >
-                                            <a href="shop-product-right.html">
+                                            <Link
+                                                :href="
+                                                    route('shop.show', item.id)
+                                                "
+                                            >
                                                 <img
                                                     class="default-img"
-                                                    src="assets/imgs/shop/product-2-1.jpg"
+                                                    src="assets/imgs/shop/product-2-2.jpg"
                                                     alt=""
                                                 />
                                                 <img
                                                     class="hover-img"
-                                                    src="assets/imgs/shop/product-2-2.jpg"
+                                                    src="assets/imgs/shop/product-3-2.jpg"
                                                     alt=""
                                                 />
-                                            </a>
+                                            </Link>
                                         </div>
                                         <div class="product-action-1">
                                             <a
-                                                aria-label="Quick view"
+                                                aria-label="Voir"
                                                 class="action-btn hover-up"
                                                 data-bs-toggle="modal"
                                                 data-bs-target="#quickViewModal"
@@ -407,12 +420,6 @@ onMounted(() => {
                                                 href="shop-wishlist.html"
                                                 ><i class="fi-rs-heart"></i
                                             ></a>
-                                            <a
-                                                aria-label="Compare"
-                                                class="action-btn hover-up"
-                                                href="shop-compare.html"
-                                                ><i class="fi-rs-shuffle"></i
-                                            ></a>
                                         </div>
                                         <div
                                             class="product-badges product-badges-position product-badges-mrg"
@@ -422,29 +429,42 @@ onMounted(() => {
                                     </div>
                                     <div class="product-content-wrap">
                                         <div class="product-category">
-                                            <a href="shop-grid-right.html"
-                                                >Music</a
+                                            <Link
+                                                :href="
+                                                    route('shop.show', item.id)
+                                                "
                                             >
+                                                Categorie:
+                                                {{ item.categorie.nom }}
+                                            </Link>
                                         </div>
                                         <h2>
-                                            <a href="shop-product-right.html"
-                                                >Donec ut nisl rutrum</a
+                                            <Link
+                                                :href="
+                                                    route('shop.show', item.id)
+                                                "
                                             >
+                                                {{ item.nom }}
+                                            </Link>
                                         </h2>
-                                        <div class="rating-result" title="90%">
-                                            <span>
-                                                <span>90%</span>
-                                            </span>
-                                        </div>
+                                        <span>Couleur {{ item.color }}</span>
+                                        <br />
+                                        <span>Taille {{ item.taille }}</span>
                                         <div class="product-price">
-                                            <span>$238.85 </span>
+                                            <span>
+                                                {{
+                                                    Price_format.format(
+                                                        item.prix
+                                                    )
+                                                }}
+                                            </span>
                                             <span class="old-price"
                                                 >$245.8</span
                                             >
                                         </div>
                                         <div class="product-action-1 show">
                                             <a
-                                                aria-label="Add To Cart"
+                                                aria-label="Acheté"
                                                 class="action-btn hover-up"
                                                 href="shop-cart.html"
                                                 ><i

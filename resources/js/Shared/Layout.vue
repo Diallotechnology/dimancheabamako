@@ -11,9 +11,9 @@
                     <div class="col-lg-4 col-md-6">
                         <div class="widget-about font-md mb-md-5 mb-lg-0">
                             <div class="logo logo-width-1 wow fadeIn animated">
-                                <a href="index.html"
+                                <a href=""
                                     ><img
-                                        v-bind:src="'assets/imgs/theme/logo.svg'"
+                                        v-bind:src="'/assets/imgs/theme/logo.svg'"
                                         alt="logo"
                                 /></a>
                             </div>
@@ -43,27 +43,27 @@
                             >
                                 <a href="#"
                                     ><img
-                                        v-bind:src="'assets/imgs/theme/icons/icon-facebook.svg'"
+                                        v-bind:src="'/assets/imgs/theme/icons/icon-facebook.svg'"
                                         alt=""
                                 /></a>
                                 <a href="#"
                                     ><img
-                                        v-bind:src="'assets/imgs/theme/icons/icon-twitter.svg'"
+                                        v-bind:src="'/assets/imgs/theme/icons/icon-twitter.svg'"
                                         alt=""
                                 /></a>
                                 <a href="#"
                                     ><img
-                                        v-bind:src="'assets/imgs/theme/icons/icon-instagram.svg'"
+                                        v-bind:src="'/assets/imgs/theme/icons/icon-instagram.svg'"
                                         alt=""
                                 /></a>
                                 <a href="#"
                                     ><img
-                                        v-bind:src="'assets/imgs/theme/icons/icon-pinterest.svg'"
+                                        v-bind:src="'/assets/imgs/theme/icons/icon-pinterest.svg'"
                                         alt=""
                                 /></a>
                                 <a href="#"
                                     ><img
-                                        v-bind:src="'assets/imgs/theme/icons/icon-youtube.svg'"
+                                        v-bind:src="'/assets/imgs/theme/icons/icon-youtube.svg'"
                                         alt=""
                                 /></a>
                             </div>
@@ -100,31 +100,13 @@
                             Install App
                         </h5>
                         <div class="row">
-                            <div class="col-md-8 col-lg-12">
-                                <p class="wow fadeIn animated">
-                                    From App Store or Google Play
-                                </p>
-                                <div class="download-app wow fadeIn animated">
-                                    <a href="#" class="hover-up mb-sm-4 mb-lg-0"
-                                        ><img
-                                            class="active"
-                                            v-bind:src="'assets/imgs/theme/app-store.jpg'"
-                                            alt=""
-                                    /></a>
-                                    <a href="#" class="hover-up"
-                                        ><img
-                                            v-bind:src="'assets/imgs/theme/google-play.jpg'"
-                                            alt=""
-                                    /></a>
-                                </div>
-                            </div>
                             <div class="col-md-4 col-lg-12 mt-md-3 mt-lg-0">
                                 <p class="mb-20 wow fadeIn animated">
                                     Secured Payment Gateways
                                 </p>
                                 <img
                                     class="wow fadeIn animated"
-                                    v-bind:src="'assets/imgs/theme/payment-method.png'"
+                                    v-bind:src="'/assets/imgs/theme/payment-method.png'"
                                     alt=""
                                 />
                             </div>
@@ -146,10 +128,7 @@
                 </div>
                 <div class="col-lg-6">
                     <p class="text-lg-end text-start font-sm text-muted mb-0">
-                        Designed by
-                        <a href="http://alithemes.com" target="_blank"
-                            >Alithemes.com</a
-                        >. All rights reserved
+                        All rights reserved
                     </p>
                 </div>
             </div>

@@ -37,7 +37,7 @@ watch(search, (value) => {
 });
 const form = useForm({
     nom: "",
-    zone_id: "",
+    shipping_zone_id: "",
 });
 
 const submit = () => {
@@ -101,13 +101,11 @@ const submit = () => {
                 <tbody>
                     <tr v-for="row in rows.data" :key="row.id">
                         <td>{{ row.id }}</td>
+                        <td>{{ row.shippingzone.nom }}</td>
                         <td>{{ row.nom }}</td>
-                        <td>{{ row.zone.nom }}</td>
                         <td>{{ row.created_at }}</td>
                         <td>
-                            <ButtonEdit
-                                :href="route('pays.edit', row.zone.id)"
-                            />
+                            <ButtonEdit :href="route('pays.edit', row.id)" />
                             <ButtonDelete
                                 :url="route('pays.destroy', row.id)"
                             />
@@ -119,7 +117,7 @@ const submit = () => {
         <!-- card end// -->
         <Modal name="Formulaire de nouveau pays">
             <form @submit.prevent="submit">
-                <Select
+                <!-- <Select
                     v-model="form.nom"
                     :message="form.errors.nom"
                     label="Nom du pays"
@@ -131,16 +129,19 @@ const submit = () => {
                     >
                         {{ row.official_name }}
                     </option>
-                </Select>
+                </Select> -->
+                <!-- <Select
+                    label="Nom"
+                    v-model="form.nom"
+                    :data="zone"
+                    :message="form.errors.nom"
+                />
                 <Select
-                    v-model="form.zone_id"
-                    :message="form.errors.zone_id"
                     label="Zone"
-                >
-                    <option v-for="row in zone" :key="row" :value="row.nom">
-                        {{ row.nom }}
-                    </option>
-                </Select>
+                    v-model="form.shipping_zone_id"
+                    :data="zone"
+                    :message="form.errors.shipping_zone_id"
+                /> -->
 
                 <div class="modal-footer">
                     <button

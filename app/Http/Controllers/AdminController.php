@@ -8,6 +8,8 @@ use App\Models\Order;
 use App\Models\Pays;
 use App\Models\Product;
 use App\Models\Promotion;
+use App\Models\ShippingPays;
+use App\Models\ShippingZone;
 use App\Models\Transport;
 use App\Models\User;
 use App\Models\Zone;
@@ -96,32 +98,37 @@ class AdminController extends Controller
         $rows = Promotion::when(Request::input('search'), function ($query, $search) {
             $query->where('nom', 'like', '%'.$search.'%');
         })->latest('id')->paginate(10)->withQueryString();
-        $category = Category::all();
-        $product = Product::all();
         $filter = Request::only('search');
 
-        return Inertia::render('Admin/Promotion/Index', \compact('category', 'product', 'filter', 'rows'));
+        return Inertia::render('Admin/Promotion/Index', \compact('filter', 'rows'));
     }
 
-    public function zone()
+    public function shippingzone()
     {
-        $rows = Zone::when(Request::input('search'), function ($query, $search) {
+        $rows = ShippingZone::when(Request::input('search'), function ($query, $search) {
             $query->where('nom', 'like', '%'.$search.'%');
         })->latest('id')->paginate(10)->withQueryString();
         $filter = Request::only('search');
         $countries = countries();
-        dd($rows);
+        // dd($rows);
 
         return Inertia::render('Admin/Zone/Index', \compact('filter', 'rows', 'countries'));
     }
 
-    public function pays()
+    public function shippingpays()
     {
-        $rows = Pays::when(Request::input('search'), function ($query, $search) {
+        $rows = ShippingPays::when(Request::input('search'), function ($query, $search) {
             $query->where('nom', 'like', '%'.$search.'%');
         })->latest('id')->paginate(10)->withQueryString();
         $filter = Request::only('search');
-        $zone = Zone::all();
+        $zone = ShippingZone::all();
+        // ->map(function ($row) {
+        //     return [
+        //         'label' => "$row->nom",
+        //         'value' => "$row->id",
+        //     ];
+        // });
+        dd($rows);
 
         return Inertia::render('Admin/Pays/Index', compact('filter', 'rows', 'zone'));
     }

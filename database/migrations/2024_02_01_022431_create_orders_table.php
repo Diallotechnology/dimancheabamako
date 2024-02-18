@@ -17,7 +17,7 @@ return new class extends Migration
             $table->foreignId('client_id')->constrained()->cascadeOnUpdate()->cascadeOnDelete();
             $table->string('reference')->nullable()->unique();
             $table->string('adresse');
-            $table->string('postal');
+            $table->string('postal')->nullable();
             $table->string('ville');
             $table->string('payment');
             $table->string('pays');

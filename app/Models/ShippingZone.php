@@ -6,7 +6,7 @@ use App\Helper\DateFormat;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
-class Zone extends Model
+class ShippingZone extends Model
 {
     use DateFormat;
 
@@ -22,13 +22,13 @@ class Zone extends Model
      *
      * @var array
      */
-    protected $with = ['pays'];
+    protected $with = ['ShippingPays'];
 
     /**
-     * Get all of the pays for the Zone
+     * Get all of the pays for the ShippingZone
      */
-    public function pays(): HasMany
+    public function ShippingPays(): HasMany
     {
-        return $this->hasMany(Pays::class);
+        return $this->hasMany(ShippingPays::class);
     }
 }

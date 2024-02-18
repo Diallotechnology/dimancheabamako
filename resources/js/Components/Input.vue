@@ -38,15 +38,15 @@ defineExpose({ focus: () => input.value.focus() });
 </script>
 
 <template>
-    <div class="mb-4">
+    <div class="mb-3">
         <label class="text-uppercase form-label"> {{ props.label }}</label>
         <input
             type="{{ input_type }}"
             :placeholder="`Entrez ${props.place}`"
             class="form-control"
-            id="{{ model }}"
             v-model="model"
             ref="input"
+            autocomplete="off"
         />
         <div v-show="props.message">
             <p class="text-sm text-danger">

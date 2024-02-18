@@ -1,3 +1,39 @@
+<script setup>
+import { Link } from "@inertiajs/vue3";
+import { computed, onMounted, ref } from "vue";
+
+const props = defineProps({
+    active: {
+        type: Boolean,
+    },
+});
+const classes = computed(() =>
+    props.active ? "menu-item active" : "menu-item"
+);
+const rows = ref([]);
+const Count = ref(0);
+onMounted(() => {
+    axios
+        .get("/getcategory")
+        .then((response) => {
+            rows.value = response.data;
+        })
+        .catch(function (error) {
+            // handle error
+            console.log(error.response);
+        });
+
+    axios
+        .get("/count")
+        .then(async (response) => {
+            Count.value = await response.data;
+        })
+        .catch(function (error) {
+            // handle error
+            console.log(error.response);
+        });
+});
+</script>
 <template>
     <header class="header-area header-style-1 header-height-2">
         <div class="header-top header-top-ptb-1 d-none d-lg-block">
@@ -53,7 +89,7 @@
                                         <li>
                                             <a href="#"
                                                 ><img
-                                                    v-bind:src="'assets/imgs/theme/flag-fr.png'"
+                                                    v-bind:src="'/assets/imgs/theme/flag-fr.png'"
                                                     alt=""
                                                 />Français</a
                                             >
@@ -78,7 +114,7 @@
                     <div class="logo logo-width-1">
                         <Link :href="route('home')"
                             ><img
-                                v-bind:src="'assets/imgs/theme/logo.svg'"
+                                v-bind:src="'/assets/imgs/theme/logo.svg'"
                                 alt="logo"
                         /></Link>
                     </div>
@@ -86,68 +122,18 @@
                         <div class="header-action-right">
                             <div class="header-action-2">
                                 <div class="header-action-icon-2">
-                                    <a class="mini-cart-icon" href="">
+                                    <Link
+                                        class="mini-cart-icon"
+                                        :href="route('cart.index')"
+                                    >
                                         <img
                                             alt="Evara"
-                                            v-bind:src="'assets/imgs/theme/icons/icon-cart.svg'"
+                                            v-bind:src="'/assets/imgs/theme/icons/icon-cart.svg'"
                                         />
-                                        <span class="pro-count blue">2</span>
-                                    </a>
-                                    <div
-                                        class="cart-dropdown-wrap cart-dropdown-hm2"
-                                    >
-                                        <ul>
-                                            <li>
-                                                <div class="shopping-cart-img">
-                                                    <a
-                                                        href="shop-product-right.html"
-                                                        ><img
-                                                            alt="Evara"
-                                                            v-bind:src="'assets/imgs/shop/thumbnail-3.jpg'"
-                                                    /></a>
-                                                </div>
-                                                <div
-                                                    class="shopping-cart-title"
-                                                >
-                                                    <h4>
-                                                        <a
-                                                            href="shop-product-right.html"
-                                                            >Daisy Casual Bag</a
-                                                        >
-                                                    </h4>
-                                                    <h4>
-                                                        <span>1 × </span>$800.00
-                                                    </h4>
-                                                </div>
-                                                <div
-                                                    class="shopping-cart-delete"
-                                                >
-                                                    <a href="#"
-                                                        ><i
-                                                            class="fi-rs-cross-small"
-                                                        ></i
-                                                    ></a>
-                                                </div>
-                                            </li>
-                                        </ul>
-                                        <div class="shopping-cart-footer">
-                                            <div class="shopping-cart-total">
-                                                <h4>
-                                                    Total <span>$4000.00</span>
-                                                </h4>
-                                            </div>
-                                            <div class="shopping-cart-button">
-                                                <a
-                                                    href="shop-cart.html"
-                                                    class="outline"
-                                                    >View cart</a
-                                                >
-                                                <a href="shop-checkout.html"
-                                                    >Checkout</a
-                                                >
-                                            </div>
-                                        </div>
-                                    </div>
+                                        <span class="pro-count blue">
+                                            {{ Count }}</span
+                                        >
+                                    </Link>
                                 </div>
                             </div>
                         </div>
@@ -181,9 +167,23 @@
                                         >
                                     </li>
                                     <li>
-                                        <Link :href="route('shop')"
-                                            >Produit</Link
-                                        >
+                                        <a href=""
+                                            >Categorie
+                                            <i class="fi-rs-angle-down"></i
+                                        ></a>
+                                        <ul class="sub-menu">
+                                            <li
+                                                v-for="row in rows"
+                                                :key="row.id"
+                                            >
+                                                <Link
+                                                    :href="
+                                                        route('shop', row.id)
+                                                    "
+                                                    >{{ row.nom }}</Link
+                                                >
+                                            </li>
+                                        </ul>
                                     </li>
                                     <li>
                                         <Link :href="route('about')"
@@ -229,7 +229,7 @@
                                 <a class="mini-cart-icon" href="shop-cart.html">
                                     <img
                                         alt="Evara"
-                                        v-bind:src="'assets/imgs/theme/icons/icon-cart.svg'"
+                                        v-bind:src="'/assets/imgs/theme/icons/icon-cart.svg'"
                                     />
                                     <span class="pro-count white">2</span>
                                 </a>
@@ -271,7 +271,7 @@
                                                     href="shop-product-right.html"
                                                     ><img
                                                         alt="Evara"
-                                                        v-bind:src="'assets/imgs/shop/thumbnail-4.jpg'"
+                                                        v-bind:src="'/assets/imgs/shop/thumbnail-4.jpg'"
                                                 /></a>
                                             </div>
                                             <div class="shopping-cart-title">
@@ -328,7 +328,7 @@
                 <div class="mobile-header-logo">
                     <a href="index.html"
                         ><img
-                            v-bind:src="'assets/imgs/theme/logo.svg'"
+                            v-bind:src="'/assets/imgs/theme/logo.svg'"
                             alt="logo"
                     /></a>
                 </div>
@@ -404,27 +404,27 @@
                     <h5 class="mb-15 text-grey-4">Follow Us</h5>
                     <a href="#"
                         ><img
-                            v-bind:src="'assets/imgs/theme/icons/icon-facebook.svg'"
+                            v-bind:src="'/assets/imgs/theme/icons/icon-facebook.svg'"
                             alt=""
                     /></a>
                     <a href="#"
                         ><img
-                            v-bind:src="'assets/imgs/theme/icons/icon-twitter.svg'"
+                            v-bind:src="'/assets/imgs/theme/icons/icon-twitter.svg'"
                             alt=""
                     /></a>
                     <a href="#"
                         ><img
-                            v-bind:src="'assets/imgs/theme/icons/icon-instagram.svg'"
+                            v-bind:src="'/assets/imgs/theme/icons/icon-instagram.svg'"
                             alt=""
                     /></a>
                     <a href="#"
                         ><img
-                            v-bind:src="'assets/imgs/theme/icons/icon-pinterest.svg'"
+                            v-bind:src="'/assets/imgs/theme/icons/icon-pinterest.svg'"
                             alt=""
                     /></a>
                     <a href="#"
                         ><img
-                            v-bind:src="'assets/imgs/theme/icons/icon-youtube.svg'"
+                            v-bind:src="'/assets/imgs/theme/icons/icon-youtube.svg'"
                             alt=""
                     /></a>
                 </div>
@@ -432,18 +432,3 @@
         </div>
     </div>
 </template>
-
-<script setup>
-import { Link } from "@inertiajs/vue3";
-import { computed } from "vue";
-
-const props = defineProps({
-    active: {
-        type: Boolean,
-    },
-});
-
-const classes = computed(() =>
-    props.active ? "menu-item active" : "menu-item"
-);
-</script>

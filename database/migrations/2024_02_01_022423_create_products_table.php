@@ -17,6 +17,7 @@ return new class extends Migration
             $table->string('reference')->unique();
             $table->string('nom');
             $table->integer('prix');
+            $table->boolean('favoris');
             $table->string('poids');
             $table->integer('stock')->default(1);
             $table->string('color')->nullable();
