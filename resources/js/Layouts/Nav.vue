@@ -57,13 +57,6 @@
                 </Link>
             </NavLink>
 
-            <NavLink :active="route().current('ville')">
-                <Link class="menu-link" :href="route('ville')">
-                    <i class="icon material-icons md-flag"></i>
-                    <span class="text">Ville</span>
-                </Link>
-            </NavLink>
-
             <NavLink :active="route().current('transport')">
                 <Link class="menu-link" :href="route('transport')">
                     <i class="icon material-icons md-transit_enterexit"></i>

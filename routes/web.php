@@ -10,11 +10,8 @@ use App\Http\Controllers\LinkController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\PromotionController;
-use App\Http\Controllers\ShippingPaysController;
-use App\Http\Controllers\ShippingZoneController;
 use App\Http\Controllers\TransportController;
 use App\Http\Controllers\UserController;
-use App\Http\Controllers\VilleController;
 use App\Http\Controllers\ZoneController;
 use Illuminate\Support\Facades\Route;
 
@@ -28,12 +25,9 @@ Route::prefix('admin')->middleware('auth')->group(function () {
     Route::resource('category', CategoryController::class)->except('index', 'create', 'show');
     Route::resource('image', ImageController::class)->except('index', 'create', 'show', 'store');
     Route::resource('promotion', PromotionController::class)->except('index');
-    // Route::resource('shippingzone', ShippingZoneController::class)->except('index', 'create');
-    // Route::resource('shippingpays', ShippingPaysController::class)->except('index', 'create');
     Route::resource('transport', TransportController::class)->except('index', 'create');
     Route::resource('zone', ZoneController::class)->except('index', 'create');
     Route::resource('country', CountryController::class)->except('index', 'create');
-    Route::resource('ville', VilleController::class)->except('index', 'create');
 
     Route::controller(AdminController::class)->group(function () {
         Route::get('dashboard', 'dashboard')->name('dashboard');
@@ -45,7 +39,6 @@ Route::prefix('admin')->middleware('auth')->group(function () {
         Route::get('promotion', 'promotion')->name('promotion');
         Route::get('zone', 'zone')->name('zone');
         Route::get('country', 'country')->name('pays');
-        Route::get('ville', 'ville')->name('ville');
         Route::get('transport', 'transport')->name('transport');
     });
 });
@@ -53,7 +46,7 @@ Route::prefix('admin')->middleware('auth')->group(function () {
 Route::controller(CartController::class)->group(function () {
     Route::get('panier', 'index')->name('cart.index');
     Route::get('count', 'GetCount')->name('cart.count');
-    Route::get('country/{id}', 'GetCountry')->name('cart.country');
+    Route::get('country', 'GetCountry')->name('cart.country');
     Route::get('cart/{product}', 'store')->name('cart.store');
 });
 Route::controller(LinkController::class)->group(function () {

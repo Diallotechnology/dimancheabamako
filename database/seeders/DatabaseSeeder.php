@@ -10,7 +10,6 @@ use App\Models\Order;
 use App\Models\Product;
 use App\Models\Transport;
 use App\Models\User;
-use App\Models\Ville;
 use App\Models\Zone;
 use Illuminate\Database\Seeder;
 
@@ -25,7 +24,6 @@ class DatabaseSeeder extends Seeder
         Zone::factory()->hasCountries(5)->create(['nom' => 'Afrique']);
         Zone::factory()->hasCountries(5)->create(['nom' => 'Europe']);
         Zone::factory()->hasCountries(5)->create(['nom' => 'Asie']);
-        Ville::factory(5)->create();
         User::factory(30)->create();
         Category::factory(20)->create();
         Client::factory(20)->create();

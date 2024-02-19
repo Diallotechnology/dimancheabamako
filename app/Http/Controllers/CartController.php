@@ -2,9 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Country;
 use App\Models\Product;
-use App\Models\ShippingPays;
-use App\Models\ShippingZone;
 use Darryldecode\Cart\Facades\CartFacade;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -22,14 +21,7 @@ class CartController extends Controller
         // get total price
         $Total = CartFacade::session(1)->getTotal();
 
-        $zoneshipping = ShippingZone::with('shippingpays')->get()->map(function ($row) {
-            return [
-                'label' => "$row->nom",
-                'value' => "$row->id",
-            ];
-        });
-
-        return Inertia::render('Panier', compact('items', 'TotalQuantity', 'Total', 'zoneshipping'));
+        return Inertia::render('Panier', compact('items', 'TotalQuantity', 'Total'));
     }
 
     /**
@@ -40,9 +32,9 @@ class CartController extends Controller
         return CartFacade::session(1)->getContent()->count();
     }
 
-    public function GetCountry($id)
+    public function GetCountry()
     {
-        return ShippingPays::where('shipping_zone_id', $id)->get();
+        return Country::all();
     }
 
     /**

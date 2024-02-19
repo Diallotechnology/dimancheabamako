@@ -10,11 +10,6 @@ const props = defineProps({
         required: true,
         default: () => ({}),
     },
-    zoneshipping: {
-        type: Object,
-        required: true,
-        default: () => ({}),
-    },
     TotalQuantity: {
         type: Number,
         required: true,
@@ -33,7 +28,6 @@ const form = useForm({
     email: "",
     contact: "",
     shipping: "",
-    zone: "",
     pays: "",
     ville: "",
     adresse: "",
@@ -45,7 +39,7 @@ const countrie = ref([]);
 const getPays = () => {
     console.log(form.shipping);
     axios
-        .get(route("cart.country", form.zone))
+        .get(route("cart.country"))
         .then((response) => {
             countrie.value = response.data;
         })
@@ -193,30 +187,7 @@ const submit = () => {
                                 :data="zone"
                                 :message="form.errors.shipping"
                             /> -->
-                            <div class="mb-4">
-                                <label class="text-uppercase form-label"
-                                    >Zone de livraison</label
-                                >
-                                <select
-                                    class="form-select"
-                                    v-model="form.zone"
-                                    @change="getPays()"
-                                >
-                                    <option
-                                        v-for="item in zoneshipping"
-                                        :key="item.value"
-                                        :value="item.value"
-                                    >
-                                        {{ item.label }}
-                                    </option>
-                                </select>
 
-                                <div v-show="form.errors.zone">
-                                    <p class="text-sm text-danger">
-                                        {{ form.errors.zone }}
-                                    </p>
-                                </div>
-                            </div>
                             <div class="mb-4">
                                 <label class="text-uppercase form-label"
                                     >Pays de livraison</label
