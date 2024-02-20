@@ -20,8 +20,9 @@ class CartController extends Controller
         $TotalQuantity = CartFacade::session(1)->getTotalQuantity();
         // get total price
         $Total = CartFacade::session(1)->getTotal();
+        $pays = Country::all();
 
-        return Inertia::render('Panier', compact('items', 'TotalQuantity', 'Total'));
+        return Inertia::render('Panier', compact('items', 'TotalQuantity', 'Total', 'pays'));
     }
 
     /**

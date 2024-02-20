@@ -8,6 +8,17 @@ const notify = (message = "", type) => {
         toast.error("la validation a echoué verifiez vos informations!");
     }
 };
+export const AddToCard = (url) => {
+    axios
+        .get(url)
+        .then((response) => {
+            cartnotify(response.data.message, response.data.type);
+        })
+        .catch(function (error) {
+            // handle error
+            console.log(error);
+        });
+};
 export let cartnotify = (message = "", type) => {
     if (type) {
         toast.success(message);
@@ -18,6 +29,11 @@ export let cartnotify = (message = "", type) => {
 export let Price_format = new Intl.NumberFormat("fr-FR", {
     style: "currency",
     currency: "XOF",
+});
+
+export let Price_euro = new Intl.NumberFormat("fr-FR", {
+    style: "currency",
+    currency: "EUR",
 });
 
 export default notify;

@@ -27,10 +27,10 @@ class Country extends Model
     }
 
     /**
-     * Get all of the villes for the Country
+     * Get all of the shippings for the Country
      */
-    public function villes(): HasMany
+    public function shippings(): HasMany
     {
-        return $this->hasMany(Ville::class);
+        return $this->hasMany(Shipping::class);
     }
 }

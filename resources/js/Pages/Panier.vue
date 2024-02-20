@@ -1,11 +1,15 @@
 <script setup>
 import Layout from "@/Shared/Layout.vue";
-import { Price_format } from "@/notifications";
+import notify, { Price_euro } from "@/helper";
 import { Head, router, useForm } from "@inertiajs/vue3";
-import notify from "@/notifications";
 import { ref } from "vue";
 const props = defineProps({
     items: {
+        type: Object,
+        required: true,
+        default: () => ({}),
+    },
+    pays: {
         type: Object,
         required: true,
         default: () => ({}),
@@ -35,19 +39,18 @@ const form = useForm({
     payment: "",
     commentaire: "",
 });
-const countrie = ref([]);
-const getPays = () => {
-    console.log(form.shipping);
-    axios
-        .get(route("cart.country"))
-        .then((response) => {
-            countrie.value = response.data;
-        })
-        .catch(function (error) {
-            // handle error
-            console.log(error.response);
-        });
-};
+// const countrie = ref([]);
+// const getPays = () => {
+//     axios
+//         .get(route("cart.country"))
+//         .then((response) => {
+//             countrie.value = response.data;
+//         })
+//         .catch(function (error) {
+//             // handle error
+//             console.log(error.response);
+//         });
+// };
 const submit = () => {
     form.post(route("category.store"), {
         onSuccess: () => {
@@ -181,20 +184,30 @@ const submit = () => {
                                 :message="form.errors.contact"
                                 required
                             />
-                            <!-- <Select
-                                label="Zone"
-                                v-model="form.shipping"
-                                :data="zone"
-                                :message="form.errors.shipping"
-                            /> -->
+                            <Input
+                                input_type="text"
+                                place="votre ville"
+                                label="Ville"
+                                v-model="form.ville"
+                                :message="form.errors.ville"
+                                required
+                            />
 
+                            <Input
+                                input_type="text"
+                                place="votre adresse"
+                                label="Adresse"
+                                v-model="form.adresse"
+                                :message="form.errors.adresse"
+                                required
+                            />
                             <div class="mb-4">
                                 <label class="text-uppercase form-label"
                                     >Pays de livraison</label
                                 >
                                 <select class="form-select" v-model="form.pays">
                                     <option
-                                        v-for="item in countrie"
+                                        v-for="item in pays"
                                         :key="item.id"
                                         :value="item.id"
                                     >
@@ -243,104 +256,7 @@ const submit = () => {
                                     autocomplete="off"
                                 />
                             </div>
-                            <div class="ship_detail">
-                                <div class="form-group">
-                                    <div class="chek-form">
-                                        <div class="custome-checkbox">
-                                            <input
-                                                class="form-check-input"
-                                                type="checkbox"
-                                                name="checkbox"
-                                                id="differentaddress"
-                                            />
-                                            <label
-                                                class="form-check-label label_info"
-                                                data-bs-toggle="collapse"
-                                                data-target="#collapseAddress"
-                                                href="#collapseAddress"
-                                                aria-controls="collapseAddress"
-                                                for="differentaddress"
-                                                ><span
-                                                    >Ship to a different
-                                                    address?</span
-                                                ></label
-                                            >
-                                        </div>
-                                    </div>
-                                </div>
-                                <div
-                                    id="collapseAddress"
-                                    class="different_address collapse in"
-                                >
-                                    <div class="form-group">
-                                        <input
-                                            type="text"
-                                            required=""
-                                            name="fname"
-                                            placeholder="First name *"
-                                        />
-                                    </div>
-                                    <div class="form-group">
-                                        <input
-                                            type="text"
-                                            required=""
-                                            name="lname"
-                                            placeholder="Last name *"
-                                        />
-                                    </div>
-                                    <div class="form-group">
-                                        <input
-                                            required=""
-                                            type="text"
-                                            name="cname"
-                                            placeholder="Company Name"
-                                        />
-                                    </div>
-                                    <div class="form-group">
-                                        <div class="custom_select"></div>
-                                    </div>
-                                    <div class="form-group">
-                                        <input
-                                            type="text"
-                                            name="billing_address"
-                                            required=""
-                                            placeholder="Address *"
-                                        />
-                                    </div>
-                                    <div class="form-group">
-                                        <input
-                                            type="text"
-                                            name="billing_address2"
-                                            required=""
-                                            placeholder="Address line2"
-                                        />
-                                    </div>
-                                    <div class="form-group">
-                                        <input
-                                            required=""
-                                            type="text"
-                                            name="city"
-                                            placeholder="City / Town *"
-                                        />
-                                    </div>
-                                    <div class="form-group">
-                                        <input
-                                            required=""
-                                            type="text"
-                                            name="state"
-                                            placeholder="State / County *"
-                                        />
-                                    </div>
-                                    <div class="form-group">
-                                        <input
-                                            required=""
-                                            type="text"
-                                            name="zipcode"
-                                            placeholder="Postcode / ZIP *"
-                                        />
-                                    </div>
-                                </div>
-                            </div>
+
                             <div class="mb-20">
                                 <h5>Additional information</h5>
                             </div>
@@ -379,9 +295,7 @@ const submit = () => {
                                             >
                                         </td>
                                         <td>
-                                            {{
-                                                Price_format.format(item.price)
-                                            }}
+                                            {{ Price_euro.format(item.price) }}
                                         </td>
                                     </tr>
 
@@ -401,7 +315,7 @@ const submit = () => {
                                                 class="font-xl text-brand fw-900"
                                             >
                                                 {{
-                                                    Price_format.format(Total)
+                                                    Price_euro.format(Total)
                                                 }}</span
                                             >
                                         </td>
@@ -444,35 +358,7 @@ const submit = () => {
                                         </p>
                                     </div>
                                 </div>
-                                <div class="custome-radio">
-                                    <input
-                                        class="form-check-input"
-                                        required=""
-                                        type="radio"
-                                        name="payment_option"
-                                        id="exampleRadios4"
-                                        checked=""
-                                    />
-                                    <label
-                                        class="form-check-label"
-                                        for="exampleRadios4"
-                                        data-bs-toggle="collapse"
-                                        data-target="#checkPayment"
-                                        aria-controls="checkPayment"
-                                        >Check Payment</label
-                                    >
-                                    <div
-                                        class="form-group collapse in"
-                                        id="checkPayment"
-                                    >
-                                        <p class="text-muted mt-5">
-                                            Please send your cheque to Store
-                                            Name, Store Street, Store Town,
-                                            Store State / County, Store
-                                            Postcode.
-                                        </p>
-                                    </div>
-                                </div>
+
                                 <div class="custome-radio">
                                     <input
                                         class="form-check-input"

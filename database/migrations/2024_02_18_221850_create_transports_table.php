@@ -14,11 +14,6 @@ return new class extends Migration
         Schema::create('transports', function (Blueprint $table) {
             $table->id();
             $table->string('nom');
-            // $table->foreignId('zone_id')->constrained()->cascadeOnUpdate()->cascadeOnDelete();
-            // $table->foreignId('pays_id')->constrained()->cascadeOnUpdate()->cascadeOnDelete();
-            $table->string('temps');
-            $table->string('poids');
-            $table->integer('montant');
             $table->timestamps();
         });
     }

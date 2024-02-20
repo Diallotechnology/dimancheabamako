@@ -15,10 +15,10 @@ class LinkController extends Controller
     public function home()
     {
         $query = Product::query();
-        $product = $query->take(4)->latest()->get();
-        $latest = $query->where('favoris', 1)->get();
+        $latest = $query->take(4)->latest()->get();
+        $popular = $query->where('favoris', 1)->get();
 
-        return Inertia::render('Home', \compact('product', 'latest'));
+        return Inertia::render('Home', \compact('popular', 'latest'));
     }
 
     public function livraison()
@@ -48,7 +48,7 @@ class LinkController extends Controller
     public function shopshow(Product $product)
     {
         $product->load('images');
-        $rows = Product::where('categorie_id', $product->id)->take(4)->get();
+        $rows = Product::where('categorie_id', $product->categorie_id)->take(4)->get();
         $category = Category::all();
 
         return Inertia::render('Shop/Show', compact('product', 'rows', 'category'));

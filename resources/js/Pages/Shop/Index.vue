@@ -1,7 +1,7 @@
 <script setup>
 import Layout from "@/Shared/Layout.vue";
 import Pagination from "@/Components/Pagination.vue";
-import { Price_format, cartnotify } from "@/notifications";
+import { Price_euro, AddToCard } from "@/helper";
 import { Link, router } from "@inertiajs/vue3";
 import { onMounted } from "vue";
 const props = defineProps({
@@ -16,19 +16,6 @@ const props = defineProps({
         default: () => ({}),
     },
 });
-const AddToCard = (url) => {
-    console.log(url);
-    axios
-        .get(url)
-        .then((response) => {
-            cartnotify(response.data.message, response.data.type);
-            console.log(response.data);
-        })
-        .catch(function (error) {
-            // handle error
-            console.log(error);
-        });
-};
 onMounted(() => {
     if ($(".sort-by-product-area").length) {
         var $body = $("body"),
@@ -208,7 +195,7 @@ onMounted(() => {
                                     </h2>
                                     <div class="product-price">
                                         <span>
-                                            {{ Price_format.format(item.prix) }}
+                                            {{ Price_euro.format(item.prix) }}
                                         </span>
                                         <span class="old-price">$245.8</span>
                                     </div>
@@ -221,7 +208,7 @@ onMounted(() => {
                                     <div class="product-action-1 show">
                                         <button
                                             type="button"
-                                            aria-label="Buy now"
+                                            aria-label="Acheté"
                                             class="action-btn"
                                             @click.prevent="
                                                 AddToCard(
@@ -231,8 +218,8 @@ onMounted(() => {
                                         >
                                             <i
                                                 class="fi-rs-shopping-bag-add"
-                                            ></i
-                                            >Acheté
+                                            ></i>
+                                            Acheté
                                         </button>
                                     </div>
                                 </div>
@@ -256,126 +243,10 @@ onMounted(() => {
                                 </li>
                             </ul>
                         </div>
-                        <!-- Fillter By Price -->
-                        <div class="sidebar-widget price_range range mb-30">
-                            <div
-                                class="widget-header position-relative mb-20 pb-10"
-                            >
-                                <h5 class="widget-title mb-10">
-                                    Fill by price
-                                </h5>
-                                <div class="bt-1 border-color-1"></div>
-                            </div>
-                            <div class="price-filter">
-                                <div class="price-filter-inner">
-                                    <div id="slider-range"></div>
-                                    <div class="price_slider_amount">
-                                        <div class="label-input">
-                                            <span>Range:</span
-                                            ><input
-                                                type="text"
-                                                id="amount"
-                                                name="price"
-                                                placeholder="Add Your Price"
-                                            />
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="list-group">
-                                <div class="list-group-item mb-10 mt-10">
-                                    <label class="fw-900">Color</label>
-                                    <div class="custome-checkbox">
-                                        <input
-                                            class="form-check-input"
-                                            type="checkbox"
-                                            name="checkbox"
-                                            id="exampleCheckbox1"
-                                            value=""
-                                        />
-                                        <label
-                                            class="form-check-label"
-                                            for="exampleCheckbox1"
-                                            ><span>Red (56)</span></label
-                                        >
-                                        <br />
-                                        <input
-                                            class="form-check-input"
-                                            type="checkbox"
-                                            name="checkbox"
-                                            id="exampleCheckbox2"
-                                            value=""
-                                        />
-                                        <label
-                                            class="form-check-label"
-                                            for="exampleCheckbox2"
-                                            ><span>Green (78)</span></label
-                                        >
-                                        <br />
-                                        <input
-                                            class="form-check-input"
-                                            type="checkbox"
-                                            name="checkbox"
-                                            id="exampleCheckbox3"
-                                            value=""
-                                        />
-                                        <label
-                                            class="form-check-label"
-                                            for="exampleCheckbox3"
-                                            ><span>Blue (54)</span></label
-                                        >
-                                    </div>
-                                    <label class="fw-900 mt-15"
-                                        >Item Condition</label
-                                    >
-                                    <div class="custome-checkbox">
-                                        <input
-                                            class="form-check-input"
-                                            type="checkbox"
-                                            name="checkbox"
-                                            id="exampleCheckbox11"
-                                            value=""
-                                        />
-                                        <label
-                                            class="form-check-label"
-                                            for="exampleCheckbox11"
-                                            ><span>New (1506)</span></label
-                                        >
-                                        <br />
-                                        <input
-                                            class="form-check-input"
-                                            type="checkbox"
-                                            name="checkbox"
-                                            id="exampleCheckbox21"
-                                            value=""
-                                        />
-                                        <label
-                                            class="form-check-label"
-                                            for="exampleCheckbox21"
-                                            ><span
-                                                >Refurbished (27)</span
-                                            ></label
-                                        >
-                                        <br />
-                                        <input
-                                            class="form-check-input"
-                                            type="checkbox"
-                                            name="checkbox"
-                                            id="exampleCheckbox31"
-                                            value=""
-                                        />
-                                        <label
-                                            class="form-check-label"
-                                            for="exampleCheckbox31"
-                                            ><span>Used (45)</span></label
-                                        >
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
                     </div>
                 </div>
             </div>
         </section>
     </Layout>
 </template>
+@/helper

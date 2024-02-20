@@ -4,7 +4,7 @@ namespace App\Models;
 
 use App\Helper\DateFormat;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Transport extends Model
 {
@@ -15,21 +15,13 @@ class Transport extends Model
      *
      * @var array
      */
-    protected $fillable = ['pays_id', 'zone_id', 'nom', 'montant', 'temps', 'poids'];
+    protected $fillable = ['nom'];
 
     /**
-     * Get the pays that owns the Transport
+     * Get all of the shippings for the Transport
      */
-    public function pays(): BelongsTo
+    public function shippings(): HasMany
     {
-        return $this->belongsTo(Pays::class);
-    }
-
-    /**
-     * Get the zone that owns the Transport
-     */
-    public function zone(): BelongsTo
-    {
-        return $this->belongsTo(Zone::class);
+        return $this->hasMany(Shipping::class);
     }
 }

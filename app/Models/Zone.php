@@ -24,4 +24,12 @@ class Zone extends Model
     {
         return $this->hasMany(Country::class);
     }
+
+    /**
+     * Get all of the transports for the Zone
+     */
+    public function transports(): HasMany
+    {
+        return $this->hasMany(Transport::class);
+    }
 }

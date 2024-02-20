@@ -48,10 +48,10 @@ const form = useForm({
 });
 
 const submit = () => {
-    form.post(route("country.store"), {
+    form.post(route("shipping.store"), {
         onSuccess: () => {
             form.reset();
-            notify("pays ajouter avec success !", true);
+            notify("livraison ajouter avec success !", true);
         },
         onError: () => {
             notify(false);
@@ -66,7 +66,7 @@ const submit = () => {
     <AuthenticatedLayout>
         <div class="content-header">
             <div>
-                <h2 class="content-title card-title">Listes des pays</h2>
+                <h2 class="content-title card-title">Listes des livraison</h2>
             </div>
             <div>
                 <a
@@ -112,9 +112,11 @@ const submit = () => {
                         <td>{{ row.zone.nom }}</td>
                         <td>{{ row.created_at }}</td>
                         <td>
-                            <ButtonEdit :href="route('country.edit', row.id)" />
+                            <ButtonEdit
+                                :href="route('shipping.edit', row.id)"
+                            />
                             <ButtonDelete
-                                :url="route('country.destroy', row.id)"
+                                :url="route('shipping.destroy', row.id)"
                             />
                         </td>
                     </tr>
@@ -122,7 +124,7 @@ const submit = () => {
             </Table>
         </div>
         <!-- card end// -->
-        <Modal name="Formulaire de nouveau pays">
+        <Modal name="Formulaire de nouvelle livraison">
             <form @submit.prevent="submit">
                 <Select
                     v-model="form.nom"

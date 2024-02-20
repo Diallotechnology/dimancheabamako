@@ -406,3 +406,4 @@ const favori = (url) => {
         </Modal>
     </AuthenticatedLayout>
 </template>
+@/helper

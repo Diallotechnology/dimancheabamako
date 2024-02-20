@@ -15,3 +15,4 @@ const props = defineProps({
 <template>
     <AuthenticatedLayout> </AuthenticatedLayout>
 </template>
+@/helper

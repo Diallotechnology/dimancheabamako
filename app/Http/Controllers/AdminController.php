@@ -9,9 +9,9 @@ use App\Models\Order;
 use App\Models\Pays;
 use App\Models\Product;
 use App\Models\Promotion;
+use App\Models\Shipping;
 use App\Models\Transport;
 use App\Models\User;
-use App\Models\Ville;
 use App\Models\Zone;
 use Illuminate\Support\Facades\Request;
 use Inertia\Inertia;
@@ -119,14 +119,13 @@ class AdminController extends Controller
         $filter = Request::only('search');
         $countries = countries();
         $zone = Zone::all();
-        $ville = Ville::all();
 
-        return Inertia::render('Admin/Pays/Index', compact('filter', 'rows', 'zone', 'countries', 'ville'));
+        return Inertia::render('Admin/Pays/Index', compact('filter', 'rows', 'zone', 'countries'));
     }
 
-    public function ville()
+    public function shipping()
     {
-        $rows = Ville::with('country')->when(Request::input('search'), function ($query, $search) {
+        $rows = Shipping::when(Request::input('search'), function ($query, $search) {
             $query->where('nom', 'like', '%'.$search.'%');
         })->latest('id')->paginate(10);
         $filter = Request::only('search');

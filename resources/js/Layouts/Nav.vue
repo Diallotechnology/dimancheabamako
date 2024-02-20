@@ -56,6 +56,12 @@
                     <span class="text">Pays</span>
                 </Link>
             </NavLink>
+            <NavLink :active="route().current('shipping')">
+                <Link class="menu-link" :href="route('shipping')">
+                    <i class="icon material-icons md-flag"></i>
+                    <span class="text">Shipping</span>
+                </Link>
+            </NavLink>
 
             <NavLink :active="route().current('transport')">
                 <Link class="menu-link" :href="route('transport')">

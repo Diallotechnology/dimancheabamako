@@ -1,8 +1,9 @@
 <script setup>
 import Layout from "@/Shared/Layout.vue";
 import { Link } from "@inertiajs/vue3";
-import notify, { Price_format } from "@/notifications";
+import { Price_euro, AddToCard } from "@/helper";
 import { onMounted } from "vue";
+import Cart from "@/Shared/Cart.vue";
 const props = defineProps({
     product: {
         type: Object,
@@ -20,6 +21,7 @@ const props = defineProps({
         default: () => ({}),
     },
 });
+
 onMounted(() => {
     /*Product Details*/
     var productDetails = function () {
@@ -201,7 +203,7 @@ onMounted(() => {
                                             >
                                                 <ins
                                                     ><span class="text-brand">{{
-                                                        Price_format.format(
+                                                        Price_euro.format(
                                                             product.prix
                                                         )
                                                     }}</span>
@@ -223,7 +225,7 @@ onMounted(() => {
                                         ></div>
                                         <div class="short-desc mb-30">
                                             <p>
-                                                {{ product.description }}
+                                                {{ product.resume }}
                                             </p>
                                         </div>
                                         <div
@@ -239,16 +241,12 @@ onMounted(() => {
                                                 </li>
 
                                                 <li>
-                                                    En stock:<span
-                                                        class="in-stock text-success ml-5"
-                                                        >8 Exemplaire</span
-                                                    >
-                                                </li>
-                                                <li class="mb-10">
-                                                    <i
-                                                        class="fi-rs-refresh mr-5"
-                                                    ></i>
-                                                    30 Day Return Policy
+                                                    En stock:
+                                                    {{
+                                                        product.stock > 1
+                                                            ? "OUI"
+                                                            : "NON"
+                                                    }}
                                                 </li>
                                             </ul>
                                         </div>
@@ -257,34 +255,21 @@ onMounted(() => {
                                             class="bt-1 border-color-1 mt-30 mb-30"
                                         ></div>
                                         <div class="detail-extralink">
-                                            <div
-                                                class="detail-qty border radius"
-                                            >
-                                                <a href="#" class="qty-down"
-                                                    ><i
-                                                        class="fi-rs-angle-small-down"
-                                                    ></i
-                                                ></a>
-                                                <span class="qty-val">1</span>
-                                                <a href="#" class="qty-up"
-                                                    ><i
-                                                        class="fi-rs-angle-small-up"
-                                                    ></i
-                                                ></a>
-                                            </div>
                                             <div class="product-extra-link2">
                                                 <button
+                                                    @click.prevent="
+                                                        AddToCard(
+                                                            route(
+                                                                'cart.store',
+                                                                item.id
+                                                            )
+                                                        )
+                                                    "
                                                     type="submit"
                                                     class="button button-add-to-cart"
                                                 >
                                                     Acheté
                                                 </button>
-                                                <a
-                                                    aria-label="Add To Wishlist"
-                                                    class="action-btn hover-up"
-                                                    href="shop-wishlist.html"
-                                                    ><i class="fi-rs-heart"></i
-                                                ></a>
                                             </div>
                                         </div>
                                     </div>
@@ -581,95 +566,6 @@ onMounted(() => {
                                                         <!--single-comment -->
                                                     </div>
                                                 </div>
-                                                <div class="col-lg-4">
-                                                    <h4 class="mb-30">
-                                                        Customer reviews
-                                                    </h4>
-                                                    <div class="d-flex mb-30">
-                                                        <div
-                                                            class="product-rate d-inline-block mr-15"
-                                                        >
-                                                            <div
-                                                                class="product-rating"
-                                                                style="
-                                                                    width: 90%;
-                                                                "
-                                                            ></div>
-                                                        </div>
-                                                        <h6>4.8 out of 5</h6>
-                                                    </div>
-                                                    <div class="progress">
-                                                        <span>5 star</span>
-                                                        <div
-                                                            class="progress-bar"
-                                                            role="progressbar"
-                                                            style="width: 50%"
-                                                            aria-valuenow="50"
-                                                            aria-valuemin="0"
-                                                            aria-valuemax="100"
-                                                        >
-                                                            50%
-                                                        </div>
-                                                    </div>
-                                                    <div class="progress">
-                                                        <span>4 star</span>
-                                                        <div
-                                                            class="progress-bar"
-                                                            role="progressbar"
-                                                            style="width: 25%"
-                                                            aria-valuenow="25"
-                                                            aria-valuemin="0"
-                                                            aria-valuemax="100"
-                                                        >
-                                                            25%
-                                                        </div>
-                                                    </div>
-                                                    <div class="progress">
-                                                        <span>3 star</span>
-                                                        <div
-                                                            class="progress-bar"
-                                                            role="progressbar"
-                                                            style="width: 45%"
-                                                            aria-valuenow="45"
-                                                            aria-valuemin="0"
-                                                            aria-valuemax="100"
-                                                        >
-                                                            45%
-                                                        </div>
-                                                    </div>
-                                                    <div class="progress">
-                                                        <span>2 star</span>
-                                                        <div
-                                                            class="progress-bar"
-                                                            role="progressbar"
-                                                            style="width: 65%"
-                                                            aria-valuenow="65"
-                                                            aria-valuemin="0"
-                                                            aria-valuemax="100"
-                                                        >
-                                                            65%
-                                                        </div>
-                                                    </div>
-                                                    <div class="progress mb-30">
-                                                        <span>1 star</span>
-                                                        <div
-                                                            class="progress-bar"
-                                                            role="progressbar"
-                                                            style="width: 85%"
-                                                            aria-valuenow="85"
-                                                            aria-valuemin="0"
-                                                            aria-valuemax="100"
-                                                        >
-                                                            85%
-                                                        </div>
-                                                    </div>
-                                                    <a
-                                                        href="#"
-                                                        class="font-xs text-muted"
-                                                        >How are ratings
-                                                        calculated?</a
-                                                    >
-                                                </div>
                                             </div>
                                         </div>
                                         <!--comment form-->
@@ -759,120 +655,19 @@ onMounted(() => {
                                     </div>
                                 </div>
                             </div>
-                            <div class="row mt-60">
-                                <div class="col-12">
-                                    <h3 class="section-title style-1 mb-30">
-                                        Related products
-                                    </h3>
-                                </div>
-                                <div class="col-12">
-                                    <div class="row related-products">
-                                        <div
-                                            v-for="item in rows"
-                                            :key="item"
-                                            class="col-lg-3 col-md-4 col-12 col-sm-6"
-                                        >
-                                            <div
-                                                class="product-cart-wrap small hover-up"
-                                            >
-                                                <div
-                                                    class="product-img-action-wrap"
-                                                >
-                                                    <div
-                                                        class="product-img product-img-zoom"
-                                                    >
-                                                        <a
-                                                            href="shop-product-right.html"
-                                                            tabindex="0"
-                                                        >
-                                                            <img
-                                                                class="default-img"
-                                                                src="assets/imgs/shop/product-2-1.jpg"
-                                                                alt=""
-                                                            />
-                                                            <img
-                                                                class="hover-img"
-                                                                src="assets/imgs/shop/product-2-2.jpg"
-                                                                alt=""
-                                                            />
-                                                        </a>
-                                                    </div>
-                                                    <div
-                                                        class="product-action-1"
-                                                    >
-                                                        <a
-                                                            aria-label="Quick view"
-                                                            class="action-btn small hover-up"
-                                                            data-bs-toggle="modal"
-                                                            data-bs-target="#quickViewModal
-"
-                                                            ><i
-                                                                class="fi-rs-eye"
-                                                            ></i
-                                                        ></a>
-                                                        <a
-                                                            aria-label="Add To Wishlist"
-                                                            class="action-btn small hover-up"
-                                                            href="shop-wishlist.html"
-                                                            tabindex="0"
-                                                            ><i
-                                                                class="fi-rs-heart"
-                                                            ></i
-                                                        ></a>
-                                                    </div>
-                                                    <div
-                                                        class="product-badges product-badges-position product-badges-mrg"
-                                                    >
-                                                        <span class="hot"
-                                                            >Hot</span
-                                                        >
-                                                    </div>
-                                                </div>
-                                                <div
-                                                    class="product-content-wrap"
-                                                >
-                                                    <h2>
-                                                        <a
-                                                            href="shop-product-right.html"
-                                                            tabindex="0"
-                                                            >Ulstra Bass
-                                                            Headphone</a
-                                                        >
-                                                    </h2>
-                                                    <div
-                                                        class="rating-result"
-                                                        title="90%"
-                                                    >
-                                                        <span> </span>
-                                                    </div>
-                                                    <div class="product-price">
-                                                        <span>$238.85 </span>
-                                                        <span class="old-price"
-                                                            >$245.8</span
-                                                        >
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
                         </div>
                     </div>
-                    <div class="col-lg-3 primary-sidebar sticky-sidebar">
-                        <div class="widget-category mb-30">
-                            <h5
-                                class="section-title style-1 mb-30 wow fadeIn animated"
-                            >
-                                Category
-                            </h5>
-                            <ul class="categories">
-                                <li>
-                                    <a href="shop-grid-right.html"
-                                        >Shoes & Bags</a
-                                    >
-                                </li>
-                            </ul>
+
+                    <div class="col-md-12">
+                        <h3 class="section-title style-1 mb-30">
+                            Related products
+                        </h3>
+                    </div>
+                    <div class="col-md-12">
+                        <div class="row related-products">
+                            <div class="row product-grid-4">
+                                <Cart :items="product" />
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -880,3 +675,4 @@ onMounted(() => {
         </section>
     </Layout>
 </template>
+@/helper
