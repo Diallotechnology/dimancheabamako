@@ -6,9 +6,9 @@ import ButtonDelete from "@/Components/ButtonDelete.vue";
 import Table from "@/Components/Table.vue";
 import Modal from "@/Components/Modal.vue";
 import Input from "@/Components/Input.vue";
-import notify from "@/notifications";
-import { ref, watch } from "vue";
-
+import notify from "@/helper";
+import { ref, watch, onMounted } from "vue";
+import VueMultiselect from "vue-multiselect";
 // debounce((value) => {
 //     router.get(
 //         "/admin/category",
@@ -40,6 +40,7 @@ watch(search, (value) => {
 });
 const form = useForm({
     nom: "",
+    type: "",
 });
 
 const submit = () => {
@@ -53,6 +54,7 @@ const submit = () => {
         },
     });
 };
+const data = [];
 </script>
 
 <template>
@@ -63,6 +65,7 @@ const submit = () => {
             <div>
                 <h2 class="content-title card-title">Listes des categories</h2>
             </div>
+
             <div>
                 <a
                     href="#"
@@ -127,6 +130,8 @@ const submit = () => {
                     :message="form.errors.nom"
                     required
                 />
+                <VueMultiselect v-model="form.type" :options="data" />
+
                 <div class="modal-footer">
                     <button
                         type="button"
@@ -148,4 +153,3 @@ const submit = () => {
         </Modal>
     </AuthenticatedLayout>
 </template>
-@/helper

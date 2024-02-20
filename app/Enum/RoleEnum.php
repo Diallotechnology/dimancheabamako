@@ -8,7 +8,6 @@ enum RoleEnum: string
 {
     // case SUPERADMIN = 'Superadmin';
     case ADMIN = 'Administrateur';
-    case TEACHER = 'Professeur';
-    case STUDENT = 'Etudiant';
-    case PARENT = 'Parent';
+    case SECRTETAIRE = 'Secretaire';
+    case CUSTOMER = 'Client';
 }

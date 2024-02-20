@@ -12,6 +12,7 @@
     <link rel="preconnect" href="https://fonts.bunny.net">
     <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" /> --}}
 
+
     <!-- Scripts -->
     <link href="{{ asset('admin/assets/css/main.css') }}" rel="stylesheet" type="text/css" />
     @routes
@@ -23,7 +24,7 @@
     @inertia
     <script src="{{ asset('admin/assets/js/vendors/jquery-3.6.0.min.js') }}"></script>
     <script src="{{ asset('admin/assets/js/vendors/bootstrap.bundle.min.js') }}"></script>
-    <script src="{{ asset('admin/assets/js/vendors/select2.min.js') }}"></script>
+    {{-- <script src="{{ asset('admin/assets/js/vendors/select2.min.js') }}"></script> --}}
     <script src="{{ asset('admin/assets/js/vendors/perfect-scrollbar.js') }}"></script>
     <script src="{{ asset('admin/assets/js/vendors/jquery.fullscreen.min.js') }}"></script>
 </body>

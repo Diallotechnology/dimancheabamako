@@ -2,24 +2,24 @@
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 import Input from "@/Components/Input.vue";
 import { router, useForm, Link } from "@inertiajs/vue3";
-import notify from "@/notifications";
+import notify from "@/helper";
 
 const props = defineProps({
-    category: {
+    transport: {
         type: Object,
         required: true,
         default: () => ({}),
     },
 });
 const form = useForm({
-    nom: props.category.nom,
+    nom: props.transport.nom,
 });
 
 const submit = () => {
-    form.patch(route("category.update", props.category.id), {
+    form.patch(route("transport.update", props.transport.id), {
         onSuccess: () => {
-            form.nom = props.category.nom;
-            notify("category mise à jour avec success !", true);
+            form.nom = props.transport.nom;
+            notify("transporteur mise à jour avec success !", true);
         },
         onError: () => {
             notify(false);
@@ -36,14 +36,14 @@ const submit = () => {
                     <Input
                         input_type="text"
                         label="Nom"
-                        place="le nom de la category"
+                        place="le nom de la transport"
                         v-model="form.nom"
                         :message="form.errors.nom"
                         required
                     />
                     <div class="modal-footer">
                         <Link
-                            :href="route('category')"
+                            :href="route('transport')"
                             class="btn btn-danger rounded"
                             data-bs-dismiss="modal"
                         >
@@ -63,4 +63,3 @@ const submit = () => {
         </div>
     </AuthenticatedLayout>
 </template>
-@/helper

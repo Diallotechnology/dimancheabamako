@@ -6,10 +6,10 @@ use App\Models\Category;
 use App\Models\Client;
 use App\Models\Country;
 use App\Models\Order;
-use App\Models\Pays;
 use App\Models\Product;
 use App\Models\Promotion;
 use App\Models\Shipping;
+use App\Models\Slide;
 use App\Models\Transport;
 use App\Models\User;
 use App\Models\Zone;
@@ -21,7 +21,8 @@ class AdminController extends Controller
     public function dashboard()
     {
         $query = Order::withSum('products as totaux', 'order_product.montant');
-        $revenu = $query->get('totaux')->sum('totaux');
+        $revenu = $query->whereMonth('created_at', date('m'))->get('totaux')->sum('totaux');
+
         $order = Order::count();
         $product = Product::count();
         $categorie = Category::count();
@@ -75,6 +76,13 @@ class AdminController extends Controller
         $filter = Request::only('search');
 
         return Inertia::render('Admin/Category/Index', compact('rows', 'filter'));
+    }
+
+    public function slide()
+    {
+        $rows = Slide::latest('id')->get();
+
+        return Inertia::render('Admin/Slide/Index', compact('rows'));
     }
 
     public function client()
@@ -131,8 +139,9 @@ class AdminController extends Controller
         $filter = Request::only('search');
 
         $pays = Country::all();
+        $transport = Transport::all();
 
-        return Inertia::render('Admin/Ville/Index', compact('filter', 'rows', 'pays'));
+        return Inertia::render('Admin/Shipping/Index', compact('filter', 'rows', 'pays', 'transport'));
     }
 
     public function transport()
@@ -141,10 +150,8 @@ class AdminController extends Controller
             $query->where('nom', 'like', '%'.$search.'%');
         })->latest('id')->paginate(10)->withQueryString();
         $filter = Request::only('search');
-        $zone = Zone::all();
-        $pays = Pays::all();
 
-        return Inertia::render('Admin/Transport/Index', compact('filter', 'rows', 'pays', 'zone'));
+        return Inertia::render('Admin/Transport/Index', compact('filter', 'rows'));
     }
 
     public function user()

@@ -4,8 +4,7 @@ import { Head, router, useForm } from "@inertiajs/vue3";
 import ButtonEdit from "@/Components/ButtonEdit.vue";
 import ButtonDelete from "@/Components/ButtonDelete.vue";
 import Table from "@/Components/Table.vue";
-import Input from "@/Components/Input.vue";
-import { Price_format } from "@/notifications";
+import { Price_format } from "@/helper";
 import { ref, watch } from "vue";
 import ButtonShow from "@/Components/ButtonShow.vue";
 
@@ -168,4 +167,3 @@ watch(search, (value) => {
         <!-- card end// -->
     </AuthenticatedLayout>
 </template>
-@/helper

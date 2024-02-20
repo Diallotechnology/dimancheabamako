@@ -11,6 +11,7 @@ use App\Http\Controllers\OrderController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\PromotionController;
 use App\Http\Controllers\ShippingController;
+use App\Http\Controllers\SlideController;
 use App\Http\Controllers\TransportController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\ZoneController;
@@ -30,6 +31,7 @@ Route::prefix('admin')->middleware('auth')->group(function () {
     Route::resource('zone', ZoneController::class)->except('index', 'create');
     Route::resource('country', CountryController::class)->except('index', 'create');
     Route::resource('shipping', ShippingController::class)->except('index', 'create');
+    Route::resource('slide', SlideController::class)->except('index', 'create');
 
     Route::controller(AdminController::class)->group(function () {
         Route::get('dashboard', 'dashboard')->name('dashboard');
@@ -43,6 +45,7 @@ Route::prefix('admin')->middleware('auth')->group(function () {
         Route::get('country', 'country')->name('pays');
         Route::get('transport', 'transport')->name('transport');
         Route::get('shipping', 'shipping')->name('shipping');
+        Route::get('slide', 'slide')->name('slide');
     });
 });
 

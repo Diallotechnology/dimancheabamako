@@ -3,7 +3,7 @@ import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 import Table from "@/Components/Table.vue";
 import ButtonShow from "@/Components/ButtonShow.vue";
 import { Head } from "@inertiajs/vue3";
-import { Price_format } from "@/notifications";
+import { Price_format } from "@/helper";
 const props = defineProps({
     order: {
         type: Number,

@@ -1,7 +1,7 @@
 <script setup>
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 import { Head, useForm } from "@inertiajs/vue3";
-import notify, { Price_format } from "@/notifications";
+import notify, { Price_format } from "@/helper";
 
 const props = defineProps({
     order: {
@@ -261,4 +261,3 @@ const submit = () => {
         <!-- card end// -->
     </AuthenticatedLayout>
 </template>
-@/helper

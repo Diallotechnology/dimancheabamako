@@ -5,44 +5,25 @@ import ButtonEdit from "@/Components/ButtonEdit.vue";
 import ButtonDelete from "@/Components/ButtonDelete.vue";
 import Table from "@/Components/Table.vue";
 import Modal from "@/Components/Modal.vue";
+import Input from "@/Components/Input.vue";
 import notify from "@/helper";
-import { ref, watch } from "vue";
 
 const props = defineProps({
     rows: {
         type: Object,
         default: () => ({}),
     },
-    pays: {
-        type: Object,
-        default: () => ({}),
-    },
-    filter: {
-        type: Object,
-        default: () => ({}),
-    },
 });
 
-let search = ref(props.filter.search);
-watch(search, (value) => {
-    setTimeout(() => {
-        router.get(
-            "/admin/zone",
-            { search: value },
-            { preserveState: true, replace: true }
-        );
-    }, 600);
-});
 const form = useForm({
     nom: "",
-    pays: [],
 });
 
 const submit = () => {
-    form.post(route("zone.store"), {
+    form.post(route("slide.store"), {
         onSuccess: () => {
             form.reset();
-            notify("zone ajouter avec success !", true);
+            notify("Slide ajouter avec success !", true);
         },
         onError: () => {
             notify(false);
@@ -52,12 +33,12 @@ const submit = () => {
 </script>
 
 <template>
-    <Head title="Zone" />
+    <Head title="Categorie" />
 
     <AuthenticatedLayout>
         <div class="content-header">
             <div>
-                <h2 class="content-title card-title">Listes des zones</h2>
+                <h2 class="content-title card-title">Listes des slide</h2>
             </div>
             <div>
                 <a
@@ -74,24 +55,11 @@ const submit = () => {
             </div>
         </div>
         <div class="card mb-4">
-            <header class="card-header">
-                <div class="row gx-3">
-                    <div class="col-lg-4 col-md-6 me-auto">
-                        <input
-                            v-model="search"
-                            type="text"
-                            placeholder="Recherche..."
-                            class="form-control"
-                        />
-                    </div>
-                </div>
-            </header>
             <Table :rows="rows">
                 <thead>
                     <tr>
                         <th>#ID</th>
-                        <th scope="col">Zone</th>
-                        <th scope="col">Pays</th>
+                        <th scope="col">Nom</th>
                         <th scope="col">Date</th>
                         <th scope="col">Action</th>
                     </tr>
@@ -100,16 +68,11 @@ const submit = () => {
                     <tr v-for="row in rows.data" :key="row.id">
                         <td>{{ row.id }}</td>
                         <td>{{ row.nom }}</td>
-                        <td>
-                            <p v-for="item in row.countries" :key="item.id">
-                                {{ item.nom }}
-                            </p>
-                        </td>
                         <td>{{ row.created_at }}</td>
                         <td>
-                            <ButtonEdit :href="route('zone.edit', row.id)" />
+                            <ButtonEdit :href="route('slide.edit', row.id)" />
                             <ButtonDelete
-                                :url="route('zone.destroy', row.id)"
+                                :url="route('slide.destroy', row.id)"
                             />
                         </td>
                     </tr>
@@ -117,39 +80,16 @@ const submit = () => {
             </Table>
         </div>
         <!-- card end// -->
-        <Modal name="Formulaire de nouvelle zone">
+        <Modal name="Formulaire de nouvelle slide">
             <form @submit.prevent="submit">
                 <Input
                     input_type="text"
-                    place="le nom de la zone"
+                    place="le nom de la slide"
                     label="Nom"
                     v-model="form.nom"
                     :message="form.errors.nom"
                     required
                 />
-                <div class="mb-3">
-                    <label for="">Pays de livraison</label>
-                    <select
-                        class="form-select"
-                        v-model="form.pays"
-                        multiple
-                        required
-                    >
-                        <option
-                            v-for="row in pays"
-                            :key="row"
-                            :value="row.official_name"
-                        >
-                            {{ row.official_name }}
-                        </option>
-                    </select>
-                    <div v-show="form.errors.pays">
-                        <p class="text-sm text-danger">
-                            {{ form.errors.pays }}
-                        </p>
-                    </div>
-                </div>
-
                 <div class="modal-footer">
                     <button
                         type="button"

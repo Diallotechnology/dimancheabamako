@@ -1,7 +1,7 @@
 <script setup>
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 import { useForm, Link } from "@inertiajs/vue3";
-import notify from "@/notifications";
+import notify from "@/helper";
 
 const props = defineProps({
     zone: {
@@ -88,4 +88,3 @@ const submit = () => {
         </div>
     </AuthenticatedLayout>
 </template>
-@/helper

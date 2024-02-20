@@ -4,7 +4,7 @@ import Input from "@/Components/Input.vue";
 import { useForm, Link } from "@inertiajs/vue3";
 import TextArea from "@/Components/TextArea.vue";
 import Select from "@/Components/Select.vue";
-import notify from "@/notifications";
+import notify from "@/helper";
 
 const props = defineProps({
     category: {
@@ -260,4 +260,3 @@ const submit = () => {
         </div>
     </AuthenticatedLayout>
 </template>
-@/helper

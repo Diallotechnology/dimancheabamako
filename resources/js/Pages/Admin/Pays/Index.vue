@@ -5,7 +5,7 @@ import ButtonEdit from "@/Components/ButtonEdit.vue";
 import ButtonDelete from "@/Components/ButtonDelete.vue";
 import Table from "@/Components/Table.vue";
 import Modal from "@/Components/Modal.vue";
-import notify from "@/notifications";
+import notify from "@/helper";
 import { ref, watch } from "vue";
 
 const props = defineProps({
@@ -182,4 +182,3 @@ const submit = () => {
         </Modal>
     </AuthenticatedLayout>
 </template>
-@/helper

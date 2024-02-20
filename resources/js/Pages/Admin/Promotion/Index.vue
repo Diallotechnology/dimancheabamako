@@ -4,7 +4,6 @@ import { Head, router, Link } from "@inertiajs/vue3";
 import ButtonEdit from "@/Components/ButtonEdit.vue";
 import ButtonDelete from "@/Components/ButtonDelete.vue";
 import Table from "@/Components/Table.vue";
-import Input from "@/Components/Input.vue";
 import { ref, watch } from "vue";
 
 const props = defineProps({

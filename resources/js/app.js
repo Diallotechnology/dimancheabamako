@@ -9,6 +9,8 @@ import { ZiggyVue } from "../../vendor/tightenco/ziggy/dist/vue.m";
 import Select from "@/Components/Select.vue";
 import Input from "@/Components/Input.vue";
 import InputDate from "@/Components/InputDate.vue";
+// import Multiselect from "vue-multiselect";
+// import VueMultiselect from "vue-multiselect";
 
 const appName = import.meta.env.VITE_APP_NAME;
 
@@ -20,13 +22,16 @@ createInertiaApp({
             import.meta.glob("./Pages/**/*.vue")
         ),
     setup({ el, App, props, plugin }) {
-        return createApp({ render: () => h(App, props) })
-            .use(plugin)
-            .use(ZiggyVue)
-            .component("Select", Select)
-            .component("InputDate", InputDate)
-            .component("Input", Input)
-            .mount(el);
+        return (
+            createApp({ render: () => h(App, props) })
+                .use(plugin)
+                .use(ZiggyVue)
+                .component("Select", Select)
+                // .component("VueMultiselect", VueMultiselect)
+                .component("InputDate", InputDate)
+                .component("Input", Input)
+                .mount(el)
+        );
     },
     progress: {
         color: "#4B5563",

@@ -5,20 +5,11 @@ import ButtonEdit from "@/Components/ButtonEdit.vue";
 import ButtonDelete from "@/Components/ButtonDelete.vue";
 import Table from "@/Components/Table.vue";
 import Modal from "@/Components/Modal.vue";
-import Input from "@/Components/Input.vue";
-import notify from "@/notifications";
+import notify from "@/helper";
 import { ref, watch } from "vue";
 
 const props = defineProps({
-    product: {
-        type: Object,
-        default: () => ({}),
-    },
     rows: {
-        type: Object,
-        default: () => ({}),
-    },
-    category: {
         type: Object,
         default: () => ({}),
     },
@@ -43,10 +34,10 @@ const form = useForm({
 });
 
 const submit = () => {
-    form.post(route("promotion.store"), {
+    form.post(route("transport.store"), {
         onSuccess: () => {
             form.reset();
-            notify("Promo ajouter avec success !", true);
+            notify("transporteur ajouter avec success !", true);
         },
         onError: () => {
             notify(false);
@@ -56,12 +47,14 @@ const submit = () => {
 </script>
 
 <template>
-    <Head title="Promotion" />
+    <Head title="transporteur" />
 
     <AuthenticatedLayout>
         <div class="content-header">
             <div>
-                <h2 class="content-title card-title">Listes des promo</h2>
+                <h2 class="content-title card-title">
+                    Listes des transporteurs
+                </h2>
             </div>
             <div>
                 <a
@@ -106,10 +99,10 @@ const submit = () => {
                         <td>{{ row.created_at }}</td>
                         <td>
                             <ButtonEdit
-                                :href="route('category.edit', row.id)"
+                                :href="route('transport.edit', row.id)"
                             />
                             <ButtonDelete
-                                :url="route('category.destroy', row.id)"
+                                :url="route('transport.destroy', row.id)"
                             />
                         </td>
                     </tr>
@@ -121,7 +114,7 @@ const submit = () => {
             <form @submit.prevent="submit">
                 <Input
                     input_type="text"
-                    place="le nom de la category"
+                    place="le nom du transporteur"
                     label="Nom"
                     v-model="form.nom"
                     :message="form.errors.nom"
@@ -148,4 +141,3 @@ const submit = () => {
         </Modal>
     </AuthenticatedLayout>
 </template>
-@/helper

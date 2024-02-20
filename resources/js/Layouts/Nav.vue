@@ -58,7 +58,7 @@
             </NavLink>
             <NavLink :active="route().current('shipping')">
                 <Link class="menu-link" :href="route('shipping')">
-                    <i class="icon material-icons md-flag"></i>
+                    <i class="icon material-icons md-directions_transit"></i>
                     <span class="text">Shipping</span>
                 </Link>
             </NavLink>
@@ -66,7 +66,13 @@
             <NavLink :active="route().current('transport')">
                 <Link class="menu-link" :href="route('transport')">
                     <i class="icon material-icons md-transit_enterexit"></i>
-                    <span class="text">Transporteur et Livraison</span>
+                    <span class="text">Transporteur</span>
+                </Link>
+            </NavLink>
+            <NavLink :active="route().current('slide')">
+                <Link class="menu-link" :href="route('slide')">
+                    <i class="icon material-icons md-image"></i>
+                    <span class="text">Slide</span>
                 </Link>
             </NavLink>
 

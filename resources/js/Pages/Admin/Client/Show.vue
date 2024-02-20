@@ -2,7 +2,7 @@
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 import ButtonShow from "@/Components/ButtonShow.vue";
 import Table from "@/Components/Table.vue";
-import { Price_format } from "@/notifications";
+import { Price_format } from "@/helper";
 
 const props = defineProps({
     client: {
@@ -81,4 +81,3 @@ const props = defineProps({
         <!-- content-main end// -->
     </AuthenticatedLayout>
 </template>
-@/helper

@@ -13,15 +13,11 @@ const props = defineProps({
         type: Object,
         default: () => ({}),
     },
-    countries: {
+    transport: {
         type: Object,
         default: () => ({}),
     },
-    zone: {
-        type: Object,
-        default: () => ({}),
-    },
-    ville: {
+    pays: {
         type: Object,
         default: () => ({}),
     },
@@ -35,7 +31,7 @@ let search = ref(props.filter.search);
 watch(search, (value) => {
     setTimeout(() => {
         router.get(
-            "/admin/country",
+            "/admin/shipping",
             { search: value },
             { preserveState: true, replace: true }
         );
@@ -61,7 +57,7 @@ const submit = () => {
 </script>
 
 <template>
-    <Head title="Pays" />
+    <Head title="shipping" />
 
     <AuthenticatedLayout>
         <div class="content-header">
@@ -109,7 +105,7 @@ const submit = () => {
                     <tr v-for="row in rows.data" :key="row.id">
                         <td>{{ row.id }}</td>
                         <td>{{ row.nom }}</td>
-                        <td>{{ row.zone.nom }}</td>
+                        <td>{{ row.nom }}</td>
                         <td>{{ row.created_at }}</td>
                         <td>
                             <ButtonEdit
