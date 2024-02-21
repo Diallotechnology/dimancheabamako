@@ -8,8 +8,8 @@ const notify = (message = "", type) => {
         toast.error("la validation a echoué verifiez vos informations!");
     }
 };
-export const AddToCard = (url) => {
-    axios
+export const AddToCard = async (url) => {
+    await axios
         .get(url)
         .then((response) => {
             cartnotify(response.data.message, response.data.type);

@@ -6,6 +6,7 @@ use App\Helper\DeleteAction;
 use App\Http\Requests\StoreShippingRequest;
 use App\Http\Requests\UpdateShippingRequest;
 use App\Models\Shipping;
+use App\Models\Transport;
 use Inertia\Inertia;
 
 class ShippingController extends Controller
@@ -51,7 +52,9 @@ class ShippingController extends Controller
      */
     public function edit(Shipping $shipping)
     {
-        return Inertia::render('Admin/Shipping/Update', compact('shipping'));
+        $transport = Transport::all();
+
+        return Inertia::render('Admin/Shipping/Update', compact('shipping', 'transport'));
     }
 
     /**

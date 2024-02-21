@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Helper\DateFormat;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Transport extends Model
@@ -23,5 +24,13 @@ class Transport extends Model
     public function shippings(): HasMany
     {
         return $this->hasMany(Shipping::class);
+    }
+
+    /**
+     * The zones that belong to the Transport
+     */
+    public function zones(): BelongsToMany
+    {
+        return $this->belongsToMany(Zone::class);
     }
 }

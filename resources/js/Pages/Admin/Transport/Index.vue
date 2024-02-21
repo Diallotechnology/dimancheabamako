@@ -13,6 +13,10 @@ const props = defineProps({
         type: Object,
         default: () => ({}),
     },
+    zone: {
+        type: Object,
+        default: () => ({}),
+    },
     filter: {
         type: Object,
         default: () => ({}),
@@ -31,6 +35,7 @@ watch(search, (value) => {
 });
 const form = useForm({
     nom: "",
+    zone_id: [],
 });
 
 const submit = () => {
@@ -88,6 +93,7 @@ const submit = () => {
                     <tr>
                         <th>#ID</th>
                         <th scope="col">Nom</th>
+                        <th scope="col">Zones</th>
                         <th scope="col">Date</th>
                         <th scope="col">Action</th>
                     </tr>
@@ -96,6 +102,11 @@ const submit = () => {
                     <tr v-for="row in rows.data" :key="row.id">
                         <td>{{ row.id }}</td>
                         <td>{{ row.nom }}</td>
+                        <td>
+                            <p v-for="item in row.zones" :key="item.id">
+                                {{ item.nom }}
+                            </p>
+                        </td>
                         <td>{{ row.created_at }}</td>
                         <td>
                             <ButtonEdit
@@ -110,7 +121,7 @@ const submit = () => {
             </Table>
         </div>
         <!-- card end// -->
-        <Modal name="Formulaire de nouvelle categorie">
+        <Modal name="Formulaire de nouveaux transporteur">
             <form @submit.prevent="submit">
                 <Input
                     input_type="text"
@@ -120,6 +131,28 @@ const submit = () => {
                     :message="form.errors.nom"
                     required
                 />
+                <div class="mb-3">
+                    <label for="">zone de livraison</label>
+                    <select
+                        class="form-select"
+                        v-model="form.zone_id"
+                        multiple
+                        required
+                    >
+                        <option
+                            v-for="row in zone"
+                            :key="row.id"
+                            :value="row.id"
+                        >
+                            {{ row.nom }}
+                        </option>
+                    </select>
+                    <div v-show="form.errors.zone_id">
+                        <p class="text-sm text-danger">
+                            {{ form.errors.zone_id }}
+                        </p>
+                    </div>
+                </div>
                 <div class="modal-footer">
                     <button
                         type="button"

@@ -65,6 +65,31 @@ namespace App\Models{
 
 namespace App\Models{
 /**
+ * App\Models\Country
+ *
+ * @property int $id
+ * @property int $zone_id
+ * @property string $nom
+ * @property string $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Shipping> $shippings
+ * @property-read int|null $shippings_count
+ * @property-read \App\Models\Zone $zone
+ * @method static \Database\Factories\CountryFactory factory($count = null, $state = [])
+ * @method static \Illuminate\Database\Eloquent\Builder|Country newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|Country newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|Country query()
+ * @method static \Illuminate\Database\Eloquent\Builder|Country whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Country whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Country whereNom($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Country whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Country whereZoneId($value)
+ */
+	class Country extends \Eloquent {}
+}
+
+namespace App\Models{
+/**
  * App\Models\Image
  *
  * @property int $id
@@ -94,7 +119,7 @@ namespace App\Models{
  * @property int $client_id
  * @property string|null $reference
  * @property string $adresse
- * @property string $postal
+ * @property string|null $postal
  * @property string $ville
  * @property string $payment
  * @property string $pays
@@ -127,29 +152,6 @@ namespace App\Models{
 
 namespace App\Models{
 /**
- * App\Models\Pays
- *
- * @property int $id
- * @property int $zone_id
- * @property string $nom
- * @property string $created_at
- * @property \Illuminate\Support\Carbon|null $updated_at
- * @property-read \App\Models\Zone $zone
- * @method static \Database\Factories\PaysFactory factory($count = null, $state = [])
- * @method static \Illuminate\Database\Eloquent\Builder|Pays newModelQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|Pays newQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|Pays query()
- * @method static \Illuminate\Database\Eloquent\Builder|Pays whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Pays whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Pays whereNom($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Pays whereUpdatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Pays whereZoneId($value)
- */
-	class Pays extends \Eloquent {}
-}
-
-namespace App\Models{
-/**
  * App\Models\Product
  *
  * @property int $id
@@ -157,12 +159,14 @@ namespace App\Models{
  * @property string $reference
  * @property string $nom
  * @property int $prix
+ * @property int $favoris
  * @property string $poids
  * @property int $stock
  * @property string|null $color
  * @property string|null $taille
  * @property string $resume
  * @property string $description
+ * @property string|null $slug
  * @property string|null $video
  * @property string $cover
  * @property string $created_at
@@ -183,12 +187,14 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder|Product whereCover($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Product whereCreatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Product whereDescription($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Product whereFavoris($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Product whereId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Product whereNom($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Product wherePoids($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Product wherePrix($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Product whereReference($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Product whereResume($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Product whereSlug($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Product whereStock($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Product whereTaille($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Product whereUpdatedAt($value)
@@ -203,6 +209,7 @@ namespace App\Models{
  *
  * @property int $id
  * @property string $nom
+ * @property int $reduction
  * @property string $debut
  * @property string $fin
  * @property string $created_at
@@ -218,9 +225,58 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder|Promotion whereFin($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Promotion whereId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Promotion whereNom($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Promotion whereReduction($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Promotion whereUpdatedAt($value)
  */
 	class Promotion extends \Eloquent {}
+}
+
+namespace App\Models{
+/**
+ * App\Models\Shipping
+ *
+ * @property int $id
+ * @property int $transport_id
+ * @property int $country_id
+ * @property string $temps
+ * @property string $poids
+ * @property int $montant
+ * @property string $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property-read \App\Models\Country $country
+ * @property-read \App\Models\Transport $transport
+ * @method static \Database\Factories\ShippingFactory factory($count = null, $state = [])
+ * @method static \Illuminate\Database\Eloquent\Builder|Shipping newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|Shipping newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|Shipping query()
+ * @method static \Illuminate\Database\Eloquent\Builder|Shipping whereCountryId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Shipping whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Shipping whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Shipping whereMontant($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Shipping wherePoids($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Shipping whereTemps($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Shipping whereTransportId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Shipping whereUpdatedAt($value)
+ */
+	class Shipping extends \Eloquent {}
+}
+
+namespace App\Models{
+/**
+ * App\Models\Slide
+ *
+ * @property int $id
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @method static \Database\Factories\SlideFactory factory($count = null, $state = [])
+ * @method static \Illuminate\Database\Eloquent\Builder|Slide newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|Slide newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|Slide query()
+ * @method static \Illuminate\Database\Eloquent\Builder|Slide whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Slide whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Slide whereUpdatedAt($value)
+ */
+	class Slide extends \Eloquent {}
 }
 
 namespace App\Models{
@@ -229,28 +285,20 @@ namespace App\Models{
  *
  * @property int $id
  * @property string $nom
- * @property int $zone_id
- * @property int $pays_id
- * @property string $temps
- * @property string $poids
- * @property int $montant
  * @property string $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
- * @property-read \App\Models\Pays $pays
- * @property-read \App\Models\Zone $zone
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Shipping> $shippings
+ * @property-read int|null $shippings_count
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Zone> $zones
+ * @property-read int|null $zones_count
  * @method static \Database\Factories\TransportFactory factory($count = null, $state = [])
  * @method static \Illuminate\Database\Eloquent\Builder|Transport newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Transport newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Transport query()
  * @method static \Illuminate\Database\Eloquent\Builder|Transport whereCreatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Transport whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Transport whereMontant($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Transport whereNom($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Transport wherePaysId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Transport wherePoids($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Transport whereTemps($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Transport whereUpdatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Transport whereZoneId($value)
  */
 	class Transport extends \Eloquent {}
 }
@@ -301,8 +349,10 @@ namespace App\Models{
  * @property string $nom
  * @property string $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
- * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Pays> $pays
- * @property-read int|null $pays_count
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Country> $countries
+ * @property-read int|null $countries_count
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Transport> $transports
+ * @property-read int|null $transports_count
  * @method static \Database\Factories\ZoneFactory factory($count = null, $state = [])
  * @method static \Illuminate\Database\Eloquent\Builder|Zone newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Zone newQuery()

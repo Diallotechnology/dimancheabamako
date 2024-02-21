@@ -48,7 +48,10 @@ defineProps({
                             class="px-2 page-link"
                             v-html="row.label"
                         ></Link> -->
-    <div class="pagination-area mt-15 mb-50">
+    <div
+        class="pagination-area mt-15 mb-50"
+        v-if="pagination && pagination.length > 0"
+    >
         <nav aria-label="Page navigation example">
             <ul class="pagination justify-content-start">
                 <template v-for="row in pagination.links" :key="row.label">

@@ -4,8 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Helper\DeleteAction;
 use App\Http\Requests\StoreTransportRequest;
-use App\Http\Requests\UpdateTransportRequest;
-use App\Models\Pays;
+use App\Models\Country;
 use App\Models\Transport;
 use App\Models\Zone;
 use Inertia\Inertia;
@@ -14,12 +13,18 @@ class TransportController extends Controller
 {
     use DeleteAction;
 
+    public function get_trans_country(Transport $transport)
+    {
+        return Country::whereIn('zone_id', $transport->zones()->pluck('id'))->get();
+    }
+
     /**
      * Store a newly created resource in storage.
      */
     public function store(StoreTransportRequest $request)
     {
-        Transport::create($request->validated());
+        $item = Transport::create($request->validated());
+        $item->zones()->attach($request->zone_id);
 
         return back();
     }
@@ -37,19 +42,20 @@ class TransportController extends Controller
      */
     public function edit(Transport $transport)
     {
+        $transport->load('zones');
         $zone = Zone::all();
-        $pays = Pays::all();
 
-        return Inertia::render('Admin/Transport/Update', compact('zone', 'pays', 'transport'));
+        return Inertia::render('Admin/Transport/Update', compact('zone', 'transport'));
 
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateTransportRequest $request, Transport $transport)
+    public function update(StoreTransportRequest $request, Transport $transport)
     {
         $transport->update($request->validated());
+        $transport->zones()->sync($request->zone_id);
 
         return back();
     }

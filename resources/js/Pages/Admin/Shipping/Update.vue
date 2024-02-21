@@ -1,36 +1,50 @@
 <script setup>
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 import { useForm, Link } from "@inertiajs/vue3";
-import notify from "@/notifications";
+import notify from "@/helper";
+import { ref } from "vue";
 
 const props = defineProps({
-    zone: {
+    shipping: {
         type: Object,
         required: true,
         default: () => ({}),
     },
-    country: {
-        type: Object,
-        required: true,
-        default: () => ({}),
-    },
-    pays: {
+    transport: {
         type: Object,
         required: true,
         default: () => ({}),
     },
 });
+const pays = ref([]);
+const getpays = async (url) => {
+    await axios
+        .get(url)
+        .then((response) => {
+            pays.value = response.data;
+        })
+        .catch(function (error) {
+            // handle error
+            console.log(error.response);
+        });
+};
 const form = useForm({
-    nom: props.country.nom,
-    zone_id: props.country.zone_id,
+    poids: props.shipping.poids,
+    temps: props.shipping.temps,
+    montant: props.shipping.montant,
+    transport_id: props.shipping.transport_id,
+    country_id: props.shipping.country_id,
 });
 
 const submit = () => {
-    form.patch(route("country.update", props.country.id), {
+    form.patch(route("shipping.update", props.shipping.id), {
         onSuccess: () => {
-            form.nom = props.country.nom;
-            form.zone_id = props.country.zone_id;
-            notify("pays mise à jour avec success !", true);
+            form.poids = props.shipping.poids;
+            form.temps = props.shipping.temps;
+            form.montant = props.shipping.montant;
+            form.transport_id = props.shipping.transport_id;
+            form.country_id = props.shipping.country_id;
+            notify("livraison mise à jour avec success !", true);
         },
         onError: () => {
             notify(false);
@@ -45,27 +59,61 @@ const submit = () => {
             <div class="card-body">
                 <form @submit.prevent="submit">
                     <Select
-                        v-model="form.nom"
-                        :message="form.errors.nom"
+                        v-model="form.transport_id"
+                        :message="form.errors.transport_id"
+                        label="Nom du transporteur"
+                        @change="
+                            getpays(
+                                route('transport.country', form.transport_id)
+                            )
+                        "
+                    >
+                        <option
+                            v-for="row in transport"
+                            :key="row.id"
+                            :value="row.id"
+                        >
+                            {{ row.nom }}
+                        </option>
+                    </Select>
+
+                    <Select
+                        v-model="form.country_id"
+                        :message="form.errors.country_id"
                         label="Nom du pays"
                     >
                         <option
                             v-for="row in pays"
-                            :key="row"
-                            :value="row.official_name"
+                            :key="row.id"
+                            :value="row.id"
                         >
-                            {{ row.official_name }}
-                        </option>
-                    </Select>
-                    <Select
-                        v-model="form.zone_id"
-                        :message="form.errors.zone_id"
-                        label="Zone"
-                    >
-                        <option v-for="row in zone" :key="row" :value="row.id">
                             {{ row.nom }}
                         </option>
                     </Select>
+                    <Input
+                        input_type="text"
+                        place="le temps du transport"
+                        label="Temps"
+                        v-model="form.temps"
+                        :message="form.errors.temps"
+                        required
+                    />
+                    <Input
+                        input_type="text"
+                        place="le poids du transport"
+                        label="Poids"
+                        v-model="form.poids"
+                        :message="form.errors.poids"
+                        required
+                    />
+                    <Input
+                        input_type="number"
+                        place="le prix du transport"
+                        label="montant"
+                        v-model="form.montant"
+                        :message="form.errors.montant"
+                        required
+                    />
                     <div class="modal-footer">
                         <Link
                             :href="route('pays')"
@@ -88,4 +136,3 @@ const submit = () => {
         </div>
     </AuthenticatedLayout>
 </template>
-@/helper

@@ -20,8 +20,16 @@ class Shipping extends Model
     /**
      * Get the pays that owns the Transport
      */
-    public function countrie(): BelongsTo
+    public function country(): BelongsTo
     {
-        return $this->belongsTo(Pays::class);
+        return $this->belongsTo(Country::class);
+    }
+
+    /**
+     * Get the transport that owns the Shipping
+     */
+    public function transport(): BelongsTo
+    {
+        return $this->belongsTo(Transport::class);
     }
 }

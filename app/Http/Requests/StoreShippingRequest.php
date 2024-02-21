@@ -11,7 +11,7 @@ class StoreShippingRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -22,7 +22,11 @@ class StoreShippingRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'transport_id' => 'required|exists:transports,id',
+            'country_id' => 'required|exists:countries,id',
+            'temps' => 'required|string',
+            'poids' => 'required|string',
+            'montant' => 'required|integer',
         ];
     }
 }

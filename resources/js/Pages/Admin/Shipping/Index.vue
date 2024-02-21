@@ -5,8 +5,8 @@ import ButtonEdit from "@/Components/ButtonEdit.vue";
 import ButtonDelete from "@/Components/ButtonDelete.vue";
 import Table from "@/Components/Table.vue";
 import Modal from "@/Components/Modal.vue";
-import notify from "@/notifications";
 import { ref, watch } from "vue";
+import notify, { Price_format } from "@/helper";
 
 const props = defineProps({
     rows: {
@@ -17,16 +17,23 @@ const props = defineProps({
         type: Object,
         default: () => ({}),
     },
-    pays: {
-        type: Object,
-        default: () => ({}),
-    },
     filter: {
         type: Object,
         default: () => ({}),
     },
 });
-
+const pays = ref([]);
+const getpays = async (url) => {
+    await axios
+        .get(url)
+        .then((response) => {
+            pays.value = response.data;
+        })
+        .catch(function (error) {
+            // handle error
+            console.log(error.response);
+        });
+};
 let search = ref(props.filter.search);
 watch(search, (value) => {
     setTimeout(() => {
@@ -38,9 +45,11 @@ watch(search, (value) => {
     }, 600);
 });
 const form = useForm({
-    nom: "",
-    zone_id: "",
-    city: [],
+    poids: "",
+    temps: "",
+    montant: "",
+    transport_id: "",
+    country_id: "",
 });
 
 const submit = () => {
@@ -95,8 +104,11 @@ const submit = () => {
                 <thead>
                     <tr>
                         <th>#ID</th>
-                        <th scope="col">Nom</th>
-                        <th scope="col">Zone</th>
+                        <th scope="col">Transporteur</th>
+                        <th scope="col">Pays</th>
+                        <th scope="col">Temps</th>
+                        <th scope="col">Poids</th>
+                        <th scope="col">Montant</th>
                         <th scope="col">Date</th>
                         <th scope="col">Action</th>
                     </tr>
@@ -104,8 +116,11 @@ const submit = () => {
                 <tbody>
                     <tr v-for="row in rows.data" :key="row.id">
                         <td>{{ row.id }}</td>
-                        <td>{{ row.nom }}</td>
-                        <td>{{ row.nom }}</td>
+                        <td>{{ row.transport.nom }}</td>
+                        <td>{{ row.country.nom }}</td>
+                        <td>{{ row.temps }}</td>
+                        <td>{{ row.poids }}</td>
+                        <td>{{ Price_format.format(row.montant) }}</td>
                         <td>{{ row.created_at }}</td>
                         <td>
                             <ButtonEdit
@@ -123,41 +138,55 @@ const submit = () => {
         <Modal name="Formulaire de nouvelle livraison">
             <form @submit.prevent="submit">
                 <Select
-                    v-model="form.nom"
-                    :message="form.errors.nom"
-                    label="Nom du pays"
+                    v-model="form.transport_id"
+                    :message="form.errors.transport_id"
+                    label="Nom du transporteur"
+                    @change="
+                        getpays(route('transport.country', form.transport_id))
+                    "
                 >
                     <option
-                        v-for="row in countries"
-                        :key="row"
-                        :value="row.official_name"
+                        v-for="row in transport"
+                        :key="row.id"
+                        :value="row.id"
                     >
-                        {{ row.official_name }}
+                        {{ row.nom }}
                     </option>
                 </Select>
 
                 <Select
-                    v-model="form.zone_id"
-                    :message="form.errors.zone_id"
-                    label="Zone"
+                    v-model="form.country_id"
+                    :message="form.errors.country_id"
+                    label="Nom du pays"
                 >
-                    <option v-for="row in zone" :key="row" :value="row.id">
+                    <option v-for="row in pays" :key="row.id" :value="row.id">
                         {{ row.nom }}
                     </option>
                 </Select>
-                <div class="mb-4">
-                    <label class="text-uppercase form-label">Ville</label>
-                    <select multiple v-model="form.city" class="form-select">
-                        <option v-for="row in ville" :key="row" :value="row.id">
-                            {{ row.nom }}
-                        </option>
-                        <div v-show="form.errors.city">
-                            <p class="text-sm text-danger">
-                                {{ form.errors.city }}
-                            </p>
-                        </div>
-                    </select>
-                </div>
+                <Input
+                    input_type="text"
+                    place="le temps du transport"
+                    label="Temps"
+                    v-model="form.temps"
+                    :message="form.errors.temps"
+                    required
+                />
+                <Input
+                    input_type="text"
+                    place="le poids du transport"
+                    label="Poids"
+                    v-model="form.poids"
+                    :message="form.errors.poids"
+                    required
+                />
+                <Input
+                    input_type="number"
+                    place="le prix du transport"
+                    label="montant"
+                    v-model="form.montant"
+                    :message="form.errors.montant"
+                    required
+                />
 
                 <div class="modal-footer">
                     <button

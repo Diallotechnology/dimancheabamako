@@ -18,6 +18,9 @@ const props = defineProps({
                 <table class="table table-hover align-middle table-nowrap mb-0">
                     <slot />
                 </table>
+                <h4 class="text-center my-3" v-if="!rows && !rows.length > 0">
+                    Aucun elements
+                </h4>
             </div>
             <Pagination :pagination="rows" />
         </div>

@@ -31,6 +31,7 @@ Route::prefix('admin')->middleware('auth')->group(function () {
     Route::resource('zone', ZoneController::class)->except('index', 'create');
     Route::resource('country', CountryController::class)->except('index', 'create');
     Route::resource('shipping', ShippingController::class)->except('index', 'create');
+    Route::get('transport/{transport}', [TransportController::class, 'get_trans_country'])->name('transport.country');
     Route::resource('slide', SlideController::class)->except('index', 'create');
 
     Route::controller(AdminController::class)->group(function () {

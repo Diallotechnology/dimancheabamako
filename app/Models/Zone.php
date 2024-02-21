@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Helper\DateFormat;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Zone extends Model
@@ -26,10 +27,10 @@ class Zone extends Model
     }
 
     /**
-     * Get all of the transports for the Zone
+     * The transport that belong to the Zone
      */
-    public function transports(): HasMany
+    public function transports(): BelongsToMany
     {
-        return $this->hasMany(Transport::class);
+        return $this->belongsToMany(Transport::class);
     }
 }
