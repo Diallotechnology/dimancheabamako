@@ -8,4 +8,11 @@ use Illuminate\Database\Eloquent\Model;
 class Slide extends Model
 {
     use HasFactory;
+
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var array
+     */
+    protected $fillable = ['text_one', 'text_two', 'paragraph'];
 }

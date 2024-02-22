@@ -47,6 +47,7 @@ Route::prefix('admin')->middleware('auth')->group(function () {
         Route::get('transport', 'transport')->name('transport');
         Route::get('shipping', 'shipping')->name('shipping');
         Route::get('slide', 'slide')->name('slide');
+        Route::get('maintenance', 'maintenance')->name('maintenance');
     });
 });
 

@@ -2,27 +2,15 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Slide;
+use App\Helper\DeleteAction;
 use App\Http\Requests\StoreSlideRequest;
 use App\Http\Requests\UpdateSlideRequest;
+use App\Models\Slide;
+use Inertia\Inertia;
 
 class SlideController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
-    {
-        //
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
+    use DeleteAction;
 
     /**
      * Store a newly created resource in storage.
@@ -45,7 +33,7 @@ class SlideController extends Controller
      */
     public function edit(Slide $slide)
     {
-        //
+        return Inertia::render('Admin/Slide/Update', compact('slide'));
     }
 
     /**
@@ -53,7 +41,17 @@ class SlideController extends Controller
      */
     public function update(UpdateSlideRequest $request, Slide $slide)
     {
-        //
+        $data = $request->validated();
+
+        if ($request->hasFile('image')) {
+            $this->file_delete($slide);
+            $filename = $request->image->hashName();
+            $chemin = $request->image->storeAs('slide/image', $filename, 'public');
+            $data['image'] = $chemin;
+        }
+        $slide->update($data);
+
+        return back();
     }
 
     /**
@@ -61,6 +59,7 @@ class SlideController extends Controller
      */
     public function destroy(Slide $slide)
     {
-        //
+        return $this->supp($slide);
+        $this->file_delete($slide);
     }
 }

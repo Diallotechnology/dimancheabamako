@@ -266,6 +266,10 @@ namespace App\Models{
  * App\Models\Slide
  *
  * @property int $id
+ * @property string $text_one
+ * @property string $text_two
+ * @property string $paragraph
+ * @property string $image
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @method static \Database\Factories\SlideFactory factory($count = null, $state = [])
@@ -274,6 +278,10 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder|Slide query()
  * @method static \Illuminate\Database\Eloquent\Builder|Slide whereCreatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Slide whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Slide whereImage($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Slide whereParagraph($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Slide whereTextOne($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Slide whereTextTwo($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Slide whereUpdatedAt($value)
  */
 	class Slide extends \Eloquent {}

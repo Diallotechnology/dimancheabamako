@@ -1,25 +1,28 @@
 <script setup>
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
-import Input from "@/Components/Input.vue";
-import { router, useForm, Link } from "@inertiajs/vue3";
+import { useForm, Link } from "@inertiajs/vue3";
 import notify from "@/helper";
 
 const props = defineProps({
-    category: {
+    slide: {
         type: Object,
         required: true,
         default: () => ({}),
     },
 });
 const form = useForm({
-    nom: props.category.nom,
+    text_one: props.slide.text_one,
+    text_two: props.slide.text_two,
+    paragraph: props.slide.paragraph,
+    image: null,
+    _method: "PUT",
 });
 
 const submit = () => {
-    form.patch(route("category.update", props.category.id), {
+    form.patch(route("slide.update", props.slide.id), {
         onSuccess: () => {
-            form.nom = props.category.nom;
-            notify("category mise à jour avec success !", true);
+            form.nom = props.slide.nom;
+            notify("slide mise à jour avec success !", true);
         },
         onError: () => {
             notify(false);
@@ -35,15 +38,49 @@ const submit = () => {
                 <form @submit.prevent="submit">
                     <Input
                         input_type="text"
-                        label="Nom"
-                        place="le nom de la category"
-                        v-model="form.nom"
-                        :message="form.errors.nom"
+                        label="text 1"
+                        place="le text du slide"
+                        v-model="form.text_one"
+                        :message="form.errors.text_one"
                         required
                     />
+                    <Input
+                        input_type="text"
+                        label="text 2"
+                        place="le text du slide"
+                        v-model="form.text_two"
+                        :message="form.errors.text_two"
+                        required
+                    />
+                    <Input
+                        input_type="text"
+                        label="text 3"
+                        place="le text du slide"
+                        v-model="form.paragraph"
+                        :message="form.errors.paragraph"
+                        required
+                    />
+                    <div class="col-md-6">
+                        <div class="mb-4">
+                            <label class="text-uppercase form-label"
+                                >Images du slide</label
+                            >
+                            <input
+                                class="form-control"
+                                name="image"
+                                @input="form.image = $event.target.files"
+                                type="file"
+                            />
+                            <div v-show="form.errors.image">
+                                <p class="text-sm text-danger">
+                                    {{ form.errors.image }}
+                                </p>
+                            </div>
+                        </div>
+                    </div>
                     <div class="modal-footer">
                         <Link
-                            :href="route('category')"
+                            :href="route('slide')"
                             class="btn btn-danger rounded"
                             data-bs-dismiss="modal"
                         >

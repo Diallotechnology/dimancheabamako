@@ -13,6 +13,7 @@ use App\Models\Slide;
 use App\Models\Transport;
 use App\Models\User;
 use App\Models\Zone;
+use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Request;
 use Inertia\Inertia;
 
@@ -152,6 +153,11 @@ class AdminController extends Controller
         $filter = Request::only('search');
 
         return Inertia::render('Admin/Transport/Index', compact('filter', 'rows', 'zone'));
+    }
+
+    public function maintenance()
+    {
+        return Artisan::call('down --with-secret');
     }
 
     public function user()

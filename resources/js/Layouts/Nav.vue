@@ -82,6 +82,12 @@
                     <span class="text">Utilisateurs</span>
                 </Link>
             </NavLink>
+            <NavLink :active="route().current('maintenance')">
+                <Link class="menu-link" :href="route('maintenance')">
+                    <i class="icon material-icons md-settings_applications"></i>
+                    <span class="text">Mode maintenance</span>
+                </Link>
+            </NavLink>
         </ul>
     </nav>
     <!-- <Dropdown>
