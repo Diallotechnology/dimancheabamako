@@ -131,7 +131,7 @@ const favori = (url) => {
                     </div>
                     <div class="col-lg-2 col-6 col-md-3">
                         <select
-                            class="form-select select-nice"
+                            class="form-select"
                             v-model="filters.cat"
                             @change="SelectFilter"
                         >

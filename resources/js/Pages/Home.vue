@@ -1,7 +1,6 @@
 <script setup>
 import { onMounted } from "vue";
 import Layout from "@/Shared/Layout.vue";
-import { Link } from "@inertiajs/vue3";
 import Cart from "@/Shared/Cart.vue";
 const props = defineProps({
     popular: {
@@ -10,6 +9,11 @@ const props = defineProps({
         default: () => ({}),
     },
     latest: {
+        type: Object,
+        required: true,
+        default: () => ({}),
+    },
+    slide: {
         type: Object,
         required: true,
         default: () => ({}),
@@ -37,27 +41,24 @@ onMounted(() => {
     <Layout>
         <section class="home-slider position-relative pt-50">
             <div class="hero-slider-1 dot-style-1 dot-style-1-position-1">
-                <div class="single-hero-slider single-animation-wrap">
+                <div
+                    class="single-hero-slider single-animation-wrap"
+                    v-for="item in slide"
+                    :key="item.id"
+                >
                     <div class="container">
                         <div class="row align-items-center slider-animated-1">
                             <div class="col-lg-5 col-md-6">
                                 <div class="hero-slider-content-2">
-                                    <h4 class="animated">Trade-in offer</h4>
                                     <h2 class="animated fw-900">
-                                        Supper value deals
+                                        {{ item.text_one }}
                                     </h2>
                                     <h1 class="animated fw-900 text-brand">
-                                        On all products
+                                        {{ item.text_two }}
                                     </h1>
                                     <p class="animated">
-                                        Save more with coupons & up to 70% off
+                                        {{ item.paragraph }}
                                     </p>
-                                    <a
-                                        class="animated btn btn-brush btn-brush-3"
-                                        href=""
-                                    >
-                                        Shop Now
-                                    </a>
                                 </div>
                             </div>
                             <div class="col-lg-7 col-md-6">
@@ -66,82 +67,8 @@ onMounted(() => {
                                 >
                                     <img
                                         class="animated slider-1-1"
-                                        v-bind:src="'/assets/imgs/slider/slider-1.png'"
-                                        alt=""
-                                    />
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="single-hero-slider single-animation-wrap">
-                    <div class="container">
-                        <div class="row align-items-center slider-animated-1">
-                            <div class="col-lg-5 col-md-6">
-                                <div class="hero-slider-content-2">
-                                    <h4 class="animated">Hot promotions</h4>
-                                    <h2 class="animated fw-900">
-                                        Fashion Trending
-                                    </h2>
-                                    <h1 class="animated fw-900 text-7">
-                                        Great Collection
-                                    </h1>
-                                    <p class="animated">
-                                        Save more with coupons & up to 20% off
-                                    </p>
-                                    <a
-                                        class="animated btn btn-brush btn-brush-2"
-                                        href=""
-                                    >
-                                        Discover Now
-                                    </a>
-                                </div>
-                            </div>
-                            <div class="col-lg-7 col-md-6">
-                                <div
-                                    class="single-slider-img single-slider-img-1"
-                                >
-                                    <img
-                                        class="animated slider-1-2"
-                                        v-bind:srcsrc="'/assets/imgs/slider/slider-2.png'"
-                                        alt=""
-                                    />
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="single-hero-slider single-animation-wrap">
-                    <div class="container">
-                        <div class="row align-items-center slider-animated-1">
-                            <div class="col-lg-5 col-md-6">
-                                <div class="hero-slider-content-2">
-                                    <h4 class="animated">Upcoming Offer</h4>
-                                    <h2 class="animated fw-900">
-                                        Big Deals From
-                                    </h2>
-                                    <h1 class="animated fw-900 text-8">
-                                        Manufacturer
-                                    </h1>
-                                    <p class="animated">
-                                        Clothing, Shoes, Bags, Wallets...
-                                    </p>
-                                    <a
-                                        class="animated btn btn-brush btn-brush-1"
-                                        href=""
-                                    >
-                                        Shop Now
-                                    </a>
-                                </div>
-                            </div>
-                            <div class="col-lg-7 col-md-6">
-                                <div
-                                    class="single-slider-img single-slider-img-1"
-                                >
-                                    <img
-                                        class="animated slider-1-3"
-                                        v-bind:src="'/assets/imgs/slider/slider-3.png'"
-                                        alt=""
+                                        v-bind:src="item.image"
+                                        alt="slide image"
                                     />
                                 </div>
                             </div>
@@ -272,7 +199,7 @@ onMounted(() => {
                         aria-labelledby="tab-two"
                     >
                         <div class="row product-grid-4">
-                            <Cart :items="popular" />
+                            <Cart :items="popular" :hot="true" />
                         </div>
                         <!--End product-grid-4-->
                     </div>
@@ -284,7 +211,7 @@ onMounted(() => {
                         aria-labelledby="tab-three"
                     >
                         <div class="row product-grid-4">
-                            <Cart :items="latest" />
+                            <Cart :items="latest" :news="true" />
                         </div>
                         <!--End product-grid-4-->
                     </div>

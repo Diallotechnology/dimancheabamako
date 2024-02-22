@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Category;
 use App\Models\Product;
+use App\Models\Slide;
 use Illuminate\Support\Facades\Request;
 use Inertia\Inertia;
 
@@ -17,8 +18,9 @@ class LinkController extends Controller
         $query = Product::query();
         $latest = $query->take(4)->latest()->get();
         $popular = $query->where('favoris', 1)->get();
+        $slide = Slide::all();
 
-        return Inertia::render('Home', \compact('popular', 'latest'));
+        return Inertia::render('Home', \compact('popular', 'latest', 'slide'));
     }
 
     public function livraison()

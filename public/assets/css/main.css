@@ -3603,7 +3603,7 @@ table .product-thumbnail img {
     margin-right: 3px;
     position: relative;
     display: inline-block;
-    border: 1px solid #ffff;
+    border: 1px solid;
     color: white;
 }
 

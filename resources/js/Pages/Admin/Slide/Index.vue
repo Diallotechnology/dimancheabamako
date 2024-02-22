@@ -38,7 +38,7 @@ const submit = () => {
     <AuthenticatedLayout>
         <div class="content-header">
             <div>
-                <h2 class="content-title card-title">Listes des slide</h2>
+                <h2 class="content-title card-title">Listes des slides</h2>
             </div>
             <div>
                 <a
@@ -55,59 +55,28 @@ const submit = () => {
             </div>
         </div>
         <div class="card mb-4">
-            <Table :rows="rows">
-                <thead>
-                    <tr>
-                        <th>#ID</th>
-                        <th scope="col">Nom</th>
-                        <th scope="col">Date</th>
-                        <th scope="col">Action</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr v-for="row in rows.data" :key="row.id">
-                        <td>{{ row.id }}</td>
-                        <td>{{ row.nom }}</td>
-                        <td>{{ row.created_at }}</td>
-                        <td>
-                            <ButtonEdit :href="route('slide.edit', row.id)" />
-                            <ButtonDelete
-                                :url="route('slide.destroy', row.id)"
-                            />
-                        </td>
-                    </tr>
-                </tbody>
-            </Table>
-        </div>
-        <!-- card end// -->
-        <Modal name="Formulaire de nouvelle slide">
-            <form @submit.prevent="submit">
-                <Input
-                    input_type="text"
-                    place="le nom de la slide"
-                    label="Nom"
-                    v-model="form.nom"
-                    :message="form.errors.nom"
-                    required
-                />
-                <div class="modal-footer">
-                    <button
-                        type="button"
-                        class="btn btn-danger rounded"
-                        data-bs-dismiss="modal"
-                    >
-                        Fermer
-                    </button>
-                    <button
-                        :class="{ 'opacity-25': form.processing }"
-                        :disabled="form.processing"
-                        type="submit"
-                        class="btn btn-primary rounded"
-                    >
-                        Valider
-                    </button>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-4" v-for="row in slide" :key="row.id">
+                        <div class="card card-product-grid">
+                            <a href="#" class="img-wrap">
+                                <img src="" alt="Product" />
+                            </a>
+                            <div class="info-wrap">
+                                <ButtonEdit
+                                    :href="route('slide.edit', row.id)"
+                                />
+                                <ButtonDelete
+                                    :url="route('slide.destroy', row.id)"
+                                />
+                            </div>
+                        </div>
+                        <!-- card-product  end// -->
+                    </div>
                 </div>
-            </form>
-        </Modal>
+                <!-- row.// -->
+            </div>
+            <!--  card-body.// -->
+        </div>
     </AuthenticatedLayout>
 </template>

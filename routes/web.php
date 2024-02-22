@@ -65,5 +65,5 @@ Route::controller(LinkController::class)->group(function () {
 });
 
 Route::inertia('contact', 'Contact')->name('contact');
-Route::inertia('about', 'about')->name('about');
+Route::inertia('about', 'About')->name('about');
 require __DIR__.'/auth.php';

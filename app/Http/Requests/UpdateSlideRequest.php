@@ -11,7 +11,7 @@ class UpdateSlideRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -22,7 +22,10 @@ class UpdateSlideRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'text_one' => 'required|string',
+            'text_two' => 'required|string',
+            'paragraph' => 'required|string',
+            'image' => 'nullable',
         ];
     }
 }

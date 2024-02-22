@@ -119,7 +119,7 @@ const submit = () => {
                     />
                     <div class="modal-footer">
                         <Link
-                            :href="route('pays')"
+                            :href="route('shipping')"
                             class="btn btn-danger rounded"
                             data-bs-dismiss="modal"
                         >

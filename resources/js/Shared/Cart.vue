@@ -8,6 +8,14 @@ const props = defineProps({
         required: true,
         default: () => ({}),
     },
+    news: {
+        type: Boolean,
+        default: false,
+    },
+    hot: {
+        type: Boolean,
+        default: false,
+    },
 });
 </script>
 
@@ -43,9 +51,16 @@ const props = defineProps({
                     ></Link>
                 </div>
                 <div
+                    v-if="news == true"
                     class="product-badges product-badges-position product-badges-mrg"
                 >
-                    <span class="new">New</span>
+                    <span class="new">Nouveauté</span>
+                </div>
+                <div
+                    v-if="hot == true"
+                    class="product-badges product-badges-position product-badges-mrg"
+                >
+                    <span class="hot">Hot</span>
                 </div>
             </div>
             <div class="product-content-wrap">
@@ -60,9 +75,9 @@ const props = defineProps({
                         {{ item.nom }}
                     </Link>
                 </h2>
-                <span>Couleur {{ item.color }}</span>
-                <br />
                 <span>Taille {{ item.taille }}</span>
+                <br />
+                <span v-show="item.color">Couleur {{ item.color }}</span>
                 <div class="product-price">
                     <span>
                         {{ Price_euro.format(item.prix) }}
