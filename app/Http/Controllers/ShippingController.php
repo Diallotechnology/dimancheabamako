@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Helper\DeleteAction;
 use App\Http\Requests\StoreShippingRequest;
-use App\Http\Requests\UpdateShippingRequest;
 use App\Models\Shipping;
 use App\Models\Transport;
 use Inertia\Inertia;
@@ -60,7 +59,7 @@ class ShippingController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateShippingRequest $request, Shipping $shipping)
+    public function update(StoreShippingRequest $request, Shipping $shipping)
     {
         $shipping->update($request->validated());
 

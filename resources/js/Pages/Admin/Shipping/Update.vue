@@ -2,7 +2,7 @@
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 import { useForm, Link } from "@inertiajs/vue3";
 import notify from "@/helper";
-import { ref } from "vue";
+import { ref, onMounted } from "vue";
 
 const props = defineProps({
     shipping: {
@@ -28,6 +28,9 @@ const getpays = async (url) => {
             console.log(error.response);
         });
 };
+onMounted(() => {
+    getpays(route("transport.country", props.shipping.transport_id));
+});
 const form = useForm({
     poids: props.shipping.poids,
     temps: props.shipping.temps,
