@@ -8,7 +8,9 @@ use App\Models\Category;
 use App\Models\Client;
 use App\Models\Order;
 use App\Models\Product;
+use App\Models\Shipping;
 use App\Models\Slide;
+use App\Models\Transport;
 use App\Models\User;
 use App\Models\Zone;
 use Illuminate\Database\Seeder;
@@ -42,11 +44,14 @@ class DatabaseSeeder extends Seeder
         Zone::factory()->hasCountries(5)->create(['nom' => 'Afrique']);
         Zone::factory()->hasCountries(5)->create(['nom' => 'Europe']);
         Zone::factory()->hasCountries(5)->create(['nom' => 'Asie']);
+        Transport::factory()->hasZones(2)->create(['nom' => 'DHL']);
+        Transport::factory()->hasZones(2)->create(['nom' => 'FeDEX']);
+        Shipping::factory(20)->create();
         User::factory(30)->create();
         Category::factory(20)->create();
-        Client::factory(20)->create();
-        Product::factory(20)->hasImages(3)->create();
-        Order::factory(20)->hasAttached(
+        Client::factory(30)->create();
+        Product::factory(30)->hasImages(3)->create();
+        Order::factory(30)->hasAttached(
             Product::factory(10)->hasImages(3)->count(4),
             ['montant' => rand(50000, 100000), 'quantity' => rand(1, 10)]
         )->create();

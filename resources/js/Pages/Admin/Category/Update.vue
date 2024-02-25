@@ -1,9 +1,8 @@
 <script setup>
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 import Input from "@/Components/Input.vue";
-import { router, useForm, Link } from "@inertiajs/vue3";
+import { useForm, Link } from "@inertiajs/vue3";
 import notify from "@/helper";
-
 const props = defineProps({
     category: {
         type: Object,
@@ -27,6 +26,7 @@ const submit = () => {
     });
 };
 </script>
+
 <template>
     <AuthenticatedLayout>
         <div class="card">
@@ -41,6 +41,7 @@ const submit = () => {
                         :message="form.errors.nom"
                         required
                     />
+
                     <div class="modal-footer">
                         <Link
                             :href="route('category')"

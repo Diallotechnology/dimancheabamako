@@ -2,6 +2,7 @@
 import { onMounted } from "vue";
 import Layout from "@/Shared/Layout.vue";
 import Cart from "@/Shared/Cart.vue";
+import { Link } from "@inertiajs/vue3";
 const props = defineProps({
     popular: {
         type: Object,
@@ -186,9 +187,11 @@ onMounted(() => {
                             </button>
                         </li>
                     </ul>
-                    <a href="" class="view-more d-none d-md-flex"
+                    <Link
+                        :href="route('shop')"
+                        class="view-more d-none d-md-flex"
                         >Voir tout<i class="fi-rs-angle-double-small-right"></i
-                    ></a>
+                    ></Link>
                 </div>
                 <!--End nav-tabs-->
                 <div class="tab-content wow fadeIn animated" id="myTabContent">

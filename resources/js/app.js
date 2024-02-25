@@ -10,7 +10,6 @@ import Select from "@/Components/Select.vue";
 import Input from "@/Components/Input.vue";
 import InputDate from "@/Components/InputDate.vue";
 // import Multiselect from "vue-multiselect";
-// import VueMultiselect from "vue-multiselect";
 
 const appName = import.meta.env.VITE_APP_NAME;
 
@@ -27,7 +26,7 @@ createInertiaApp({
                 .use(plugin)
                 .use(ZiggyVue)
                 .component("Select", Select)
-                // .component("VueMultiselect", VueMultiselect)
+                // .component("multiselect", Multiselect)
                 .component("InputDate", InputDate)
                 .component("Input", Input)
                 .mount(el)

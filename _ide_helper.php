@@ -17188,6 +17188,35 @@ namespace Illuminate\Support\Facades {
             }
     }
 
+namespace AmrShawky\LaravelCurrency\Facade {
+            /**
+     * 
+     *
+     */        class Currency {
+                    /**
+         * 
+         *
+         * @param \GuzzleHttp\Client|null $client
+         * @return \AmrShawky\CurrencyConversion 
+         * @static 
+         */        public static function convert($client = null)
+        {
+                        /** @var \AmrShawky\CurrencyFactory $instance */
+                        return $instance->convert($client);
+        }
+                    /**
+         * 
+         *
+         * @return \AmrShawky\CurrencyRatesProxy 
+         * @static 
+         */        public static function rates()
+        {
+                        /** @var \AmrShawky\CurrencyFactory $instance */
+                        return $instance->rates();
+        }
+            }
+    }
+
 namespace Darryldecode\Cart\Facades {
             /**
      * 
@@ -21422,6 +21451,7 @@ namespace  {
             class Validator extends \Illuminate\Support\Facades\Validator {}
             class View extends \Illuminate\Support\Facades\View {}
             class Vite extends \Illuminate\Support\Facades\Vite {}
+            class Currency extends \AmrShawky\LaravelCurrency\Facade\Currency {}
             class Cart extends \Darryldecode\Cart\Facades\CartFacade {}
             class Flare extends \Spatie\LaravelIgnition\Facades\Flare {}
     }

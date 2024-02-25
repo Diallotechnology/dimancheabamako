@@ -1,5 +1,8 @@
+import { TinyEmitter } from "tiny-emitter";
+import { ref } from "vue";
 import { toast } from "vue3-toastify";
 import "vue3-toastify/dist/index.css";
+const emiter = TinyEmitter;
 
 const notify = (message = "", type) => {
     if (type) {
@@ -19,6 +22,13 @@ export const AddToCard = async (url) => {
             console.log(error);
         });
 };
+// export const getCount = async () => {
+//     await axios.get("/count").then((res) => {
+//         const c = res.data;
+//     });
+//     return c;
+// };
+
 export let cartnotify = (message = "", type) => {
     if (type) {
         toast.success(message);

@@ -1,8 +1,9 @@
 <script setup>
 import Layout from "@/Shared/Layout.vue";
-import notify, { Price_euro } from "@/helper";
+import notify, { Price_euro, cartnotify } from "@/helper";
 import { Head, router, useForm } from "@inertiajs/vue3";
-import { ref } from "vue";
+import { ref, onMounted } from "vue";
+
 const props = defineProps({
     items: {
         type: Object,
@@ -10,6 +11,11 @@ const props = defineProps({
         default: () => ({}),
     },
     pays: {
+        type: Object,
+        required: true,
+        default: () => ({}),
+    },
+    transport: {
         type: Object,
         required: true,
         default: () => ({}),
@@ -25,13 +31,19 @@ const props = defineProps({
         default: 0,
     },
 });
+const qte = ref({});
+onMounted(() => {
+    for (const produitId in props.items) {
+        qte.value[produitId] = ref(props.items[produitId].quantity);
+    }
+});
 
 const form = useForm({
     prenom: "",
     nom: "",
     email: "",
     contact: "",
-    shipping: "",
+    trans: "",
     pays: "",
     ville: "",
     adresse: "",
@@ -39,18 +51,89 @@ const form = useForm({
     payment: "",
     commentaire: "",
 });
-// const countrie = ref([]);
-// const getPays = () => {
-//     axios
-//         .get(route("cart.country"))
-//         .then((response) => {
-//             countrie.value = response.data;
-//         })
-//         .catch(function (error) {
-//             // handle error
-//             console.log(error.response);
-//         });
-// };
+const shipping = ref();
+const getPays = async () => {
+    await axios
+        .get(route("cart.country"))
+        .then((response) => {
+            countrie.value = response.data;
+        })
+        .catch(function (error) {
+            // handle error
+            console.log(error.response);
+        });
+};
+const getShipping = async () => {
+    // if (form.pays.length && form.trans.length) {
+    try {
+        const response = await axios.get(
+            route("cart.shipping", [form.pays, form.trans])
+        );
+        shipping.value = response.data;
+        console.log(response.data);
+    } catch (error) {
+        console.error(error.response);
+    }
+    // }
+};
+const deleteProduct = async (url) => {
+    console.log(url);
+    await axios
+        .delete(url)
+        .then((response) => {
+            cartnotify(response.data.message, response.data.type);
+            router.reload();
+        })
+        .catch(function (error) {
+            // handle error
+            console.log(error.response);
+        });
+};
+const update = async (produitId) => {
+    await axios
+        .get(route("cart.update", [produitId, qte.value[produitId]]))
+        .then((response) => {
+            if (response.data) {
+                cartnotify(response.data.message, response.data.type);
+            }
+            console.log(response);
+            router.reload();
+        })
+        .catch(function (error) {
+            // handle error
+            console.log(error.response);
+        });
+};
+const increment = async (produitId) => {
+    await axios
+        .get(route("cart.update", [produitId, qte.value[produitId]++]))
+        .then((response) => {
+            if (response.data) {
+                cartnotify(response.data.message, response.data.type);
+            }
+            router.reload();
+        })
+        .catch(function (error) {
+            // handle error
+            console.log(error.response);
+        });
+};
+const decrement = async (produitId) => {
+    console.log(quantity);
+    await axios
+        .get(route("cart.update", [produitId, qte.value[produitId]--]))
+        .then((response) => {
+            if (response.data) {
+                cartnotify(response.data.message, response.data.type);
+            }
+
+            router.reload();
+        })
+        .catch(function (error) {
+            // handle error
+            console.log(error.response);
+        });
+};
 const submit = () => {
     form.post(route("category.store"), {
         onSuccess: () => {
@@ -147,78 +230,233 @@ const submit = () => {
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col-md-3">
+                    <div class="col-md-12">
+                        <div class="mb-20">
+                            <h4>panier</h4>
+                        </div>
+                        <div class="table-responsive order_table text-center">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th>Produit</th>
+                                        <th>Quantité</th>
+                                        <th>Prix unitaire</th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr v-for="item in items" :key="item.id">
+                                        <td class="image product-thumbnail">
+                                            <img
+                                                src="assets/imgs/shop/product-1-1.jpg"
+                                                alt="#"
+                                            />
+                                            <h5>
+                                                {{ item.name }} {{ item.id }}
+                                            </h5>
+                                            <span class="product-qty"
+                                                >st
+                                                {{
+                                                    item.associatedModel.stock
+                                                }}</span
+                                            >
+                                        </td>
+                                        <td
+                                            class="text-center"
+                                            data-title="Stock"
+                                        >
+                                            <div
+                                                class="border radius d-inline-flex"
+                                            >
+                                                <button
+                                                    class="btn btn-small"
+                                                    @click="decrement(item.id)"
+                                                >
+                                                    <i class="fi-rs-minus"></i>
+                                                </button>
+
+                                                <input
+                                                    type="number"
+                                                    v-model="qte[item.id]"
+                                                    @change="update(item.id)"
+                                                    ref="input"
+                                                    autocomplete="off"
+                                                    class="qty-val form-control"
+                                                    style="max-width: 80px"
+                                                />
+                                                <button
+                                                    class="btn btn-small"
+                                                    @click="increment(item.id)"
+                                                >
+                                                    <i class="fi-rs-plus"></i>
+                                                </button>
+                                            </div>
+                                        </td>
+
+                                        <td>
+                                            {{ Price_euro.format(item.price) }}
+                                        </td>
+                                        <td class="action" data-title="Remove">
+                                            <button
+                                                @click="
+                                                    deleteProduct(
+                                                        route(
+                                                            'cart.destroy',
+                                                            item.id
+                                                        )
+                                                    )
+                                                "
+                                                class="btn-small btn-danger text-white"
+                                            >
+                                                <i class="fi-rs-trash"></i>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="col-md-8">
+                        <div class="table-responsive order_table text-center">
+                            <table class="table">
+                                <tr>
+                                    <th>Livraison</th>
+                                    <td>
+                                        <em>Free Shipping</em>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th>TotalQuantity</th>
+                                    <td>
+                                        <em>{{ TotalQuantity }}</em>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th>Total</th>
+                                    <td class="product-subtotal">
+                                        <span class="font-xl text-brand fw-900">
+                                            {{ Price_euro.format(Total) }}</span
+                                        >
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
                         <div class="mb-25">
                             <h4>Billing Details</h4>
                         </div>
-                        <form method="post">
-                            <Input
-                                input_type="text"
-                                place="votre prenom"
-                                label="preNom"
-                                v-model="form.prenom"
-                                :message="form.errors.prenom"
-                                required
-                            />
-                            <Input
-                                input_type="text"
-                                place="votre nom"
-                                label="Nom"
-                                v-model="form.nom"
-                                :message="form.errors.nom"
-                                required
-                            />
-                            <Input
-                                input_type="email"
-                                place="votre email"
-                                label="email"
-                                v-model="form.email"
-                                :message="form.errors.email"
-                                required
-                            />
-                            <Input
-                                input_type="text"
-                                place="votre contact"
-                                label="contact"
-                                v-model="form.contact"
-                                :message="form.errors.contact"
-                                required
-                            />
-                            <Input
-                                input_type="text"
-                                place="votre ville"
-                                label="Ville"
-                                v-model="form.ville"
-                                :message="form.errors.ville"
-                                required
-                            />
+                        <form method="post" @submit.prevent="submit">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <Input
+                                        input_type="text"
+                                        place="votre prenom"
+                                        label="preNom"
+                                        v-model="form.prenom"
+                                        :message="form.errors.prenom"
+                                        required
+                                    />
+                                </div>
+                                <div class="col-md-6">
+                                    <Input
+                                        input_type="text"
+                                        place="votre nom"
+                                        label="Nom"
+                                        v-model="form.nom"
+                                        :message="form.errors.nom"
+                                        required
+                                    />
+                                </div>
+                                <div class="col-md-6">
+                                    <Input
+                                        input_type="email"
+                                        place="votre email"
+                                        label="email"
+                                        v-model="form.email"
+                                        :message="form.errors.email"
+                                        required
+                                    />
+                                </div>
+                                <div class="col-md-6">
+                                    <Input
+                                        input_type="text"
+                                        place="votre contact"
+                                        label="contact"
+                                        v-model="form.contact"
+                                        :message="form.errors.contact"
+                                        required
+                                    />
+                                </div>
+                                <div class="col-md-6">
+                                    <Input
+                                        input_type="text"
+                                        place="votre ville"
+                                        label="Ville"
+                                        v-model="form.ville"
+                                        :message="form.errors.ville"
+                                        required
+                                    />
+                                </div>
+                                <div class="col-md-6">
+                                    <Input
+                                        input_type="text"
+                                        place="votre adresse"
+                                        label="Adresse"
+                                        v-model="form.adresse"
+                                        :message="form.errors.adresse"
+                                        required
+                                    />
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="mb-4">
+                                        <label class="text-uppercase form-label"
+                                            >Pays de livraison</label
+                                        >
+                                        <select
+                                            class="form-select"
+                                            v-model="form.pays"
+                                            @change="getShipping()"
+                                        >
+                                            <option
+                                                v-for="item in pays"
+                                                :key="item.id"
+                                                :value="item.id"
+                                            >
+                                                {{ item.nom }}
+                                            </option>
+                                        </select>
 
-                            <Input
-                                input_type="text"
-                                place="votre adresse"
-                                label="Adresse"
-                                v-model="form.adresse"
-                                :message="form.errors.adresse"
-                                required
-                            />
-                            <div class="mb-4">
-                                <label class="text-uppercase form-label"
-                                    >Pays de livraison</label
-                                >
-                                <select class="form-select" v-model="form.pays">
-                                    <option
-                                        v-for="item in pays"
-                                        :key="item.id"
-                                        :value="item.id"
-                                    >
-                                        {{ item.nom }}
-                                    </option>
-                                </select>
+                                        <div v-show="form.errors.pays">
+                                            <p class="text-sm text-danger">
+                                                {{ form.errors.pays }}
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="mb-4">
+                                        <label class="text-uppercase form-label"
+                                            >Transporteur</label
+                                        >
+                                        <select
+                                            class="form-select"
+                                            v-model="form.trans"
+                                            @change="getShipping()"
+                                        >
+                                            <option
+                                                v-for="item in transport"
+                                                :key="item.id"
+                                                :value="item.id"
+                                            >
+                                                {{ item.nom }}
+                                            </option>
+                                        </select>
 
-                                <div v-show="form.errors.pays">
-                                    <p class="text-sm text-danger">
-                                        {{ form.errors.pays }}
-                                    </p>
+                                        <div v-show="form.errors.trans">
+                                            <p class="text-sm text-danger">
+                                                {{ form.errors.trans }}
+                                            </p>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
 
@@ -262,67 +500,14 @@ const submit = () => {
                             </div>
                             <div class="form-group mb-30">
                                 <textarea
+                                    v-model="form.commentaire"
                                     rows="5"
                                     placeholder="Order notes"
                                 ></textarea>
                             </div>
                         </form>
                     </div>
-                    <div class="col-md-9">
-                        <div class="mb-20">
-                            <h4>panier</h4>
-                        </div>
-                        <div class="table-responsive order_table text-center">
-                            <table class="table">
-                                <thead>
-                                    <tr>
-                                        <th colspan="2">Produit</th>
-                                        <th>Montant</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr v-for="item in items" :key="item">
-                                        <td class="image product-thumbnail">
-                                            <img
-                                                src="assets/imgs/shop/product-1-1.jpg"
-                                                alt="#"
-                                            />
-                                        </td>
-                                        <td>
-                                            <h5>{{ item.name }}</h5>
-                                            <span class="product-qty"
-                                                >Qte {{ item.quantity }}</span
-                                            >
-                                        </td>
-                                        <td>
-                                            {{ Price_euro.format(item.price) }}
-                                        </td>
-                                    </tr>
-
-                                    <tr>
-                                        <th>Shipping</th>
-                                        <td colspan="2">
-                                            <em>Free Shipping</em>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <th>Total</th>
-                                        <td
-                                            colspan="2"
-                                            class="product-subtotal"
-                                        >
-                                            <span
-                                                class="font-xl text-brand fw-900"
-                                            >
-                                                {{
-                                                    Price_euro.format(Total)
-                                                }}</span
-                                            >
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
+                    <div class="col-md-4">
                         <div class="bt-1 border-color-1 mt-30 mb-30"></div>
                         <div class="payment_method">
                             <div class="mb-25">

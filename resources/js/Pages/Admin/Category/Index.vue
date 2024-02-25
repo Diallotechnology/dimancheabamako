@@ -8,14 +8,14 @@ import Modal from "@/Components/Modal.vue";
 import Input from "@/Components/Input.vue";
 import notify from "@/helper";
 import { ref, watch, onMounted } from "vue";
-import VueMultiselect from "vue-multiselect";
+// import VueMultiselect from "vue-multiselect";
 // debounce((value) => {
 //     router.get(
 //         "/admin/category",
 //         { search: value },
 //         { preserveState: true, replace: true }
 //     );
-// }, 600)
+// }, 600);
 
 const props = defineProps({
     rows: {

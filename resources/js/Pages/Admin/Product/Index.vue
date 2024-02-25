@@ -31,6 +31,7 @@ const props = defineProps({
 
 let search = ref(props.filter.search);
 let cat = ref(props.filter.cat);
+let gory = props.filter.cat;
 
 const filters = reactive({
     search: props.filter.search,
@@ -53,6 +54,7 @@ const SelectFilter = () => {
         { preserveState: true, replace: true }
     );
 };
+const test = "";
 const form = useForm({
     categorie_id: "",
     reference: "",
@@ -83,7 +85,6 @@ const submit = () => {
     });
 };
 const favori = (url) => {
-    console.log(url);
     axios
         .get(url)
         .then((response) => {
@@ -129,13 +130,8 @@ const favori = (url) => {
                             class="form-control"
                         />
                     </div>
-                    <div class="col-lg-2 col-6 col-md-3">
-                        <select
-                            class="form-select"
-                            v-model="filters.cat"
-                            @change="SelectFilter"
-                        >
-                            <option selected>Tier par category</option>
+                    <div class="col-6 col-md-3">
+                        <Select v-model="test" label="">
                             <option
                                 v-for="row in category"
                                 :key="row.id"
@@ -143,7 +139,7 @@ const favori = (url) => {
                             >
                                 {{ row.nom }}
                             </option>
-                        </select>
+                        </Select>
                     </div>
                 </div>
             </header>
@@ -239,8 +235,7 @@ const favori = (url) => {
                         />
                     </div>
                     <div class="col-md-6">
-                        <label for="">categorie</label>
-                        <select class="form-select" v-model="form.categorie_id">
+                        <Select v-model="form.categorie_id" label="categorie">
                             <option
                                 v-for="row in category"
                                 :key="row.id"
@@ -248,7 +243,7 @@ const favori = (url) => {
                             >
                                 {{ row.nom }}
                             </option>
-                        </select>
+                        </Select>
                     </div>
                     <div class="col-md-6">
                         <Input

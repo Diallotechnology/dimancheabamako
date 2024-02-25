@@ -55,14 +55,19 @@ Route::controller(CartController::class)->group(function () {
     Route::get('panier', 'index')->name('cart.index');
     Route::get('count', 'GetCount')->name('cart.count');
     Route::get('country', 'GetCountry')->name('cart.country');
+    Route::get('cart/trans', 'GetTransport')->name('cart.transport');
+    Route::get('cart/shipping/{id}/{transid}', 'GetShipping')->name('cart.shipping');
     Route::get('cart/{product}', 'store')->name('cart.store');
+    Route::get('cart/update/{cart}/{qte}', 'update')->name('cart.update');
+    Route::delete('cart/delete/{id}', 'destroy')->name('cart.destroy');
 });
 Route::controller(LinkController::class)->group(function () {
     Route::get('/', 'home')->name('home');
-    Route::get('category/{category}', 'shop')->name('shop');
+    Route::get('/test', 'currenci');
+    Route::get('shop/{category?}', 'shop')->name('shop');
     Route::get('livraison', 'livraison')->name('livraison');
     Route::get('getcategory', 'getCategory')->name('getCategory');
-    Route::get('shop/{product}', 'shopshow')->name('shop.show');
+    Route::get('shop/show/{product}', 'shopshow')->name('shop.show');
 });
 
 Route::inertia('contact', 'Contact')->name('contact');

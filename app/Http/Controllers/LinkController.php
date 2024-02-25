@@ -23,19 +23,25 @@ class LinkController extends Controller
         return Inertia::render('Home', \compact('popular', 'latest', 'slide'));
     }
 
+    public function currenci()
+    {
+    }
+
     public function livraison()
     {
         return Inertia::render('Livraison');
     }
 
-    public function shop(Category $category)
+    public function shop(?Category $category = null)
     {
-        $rows =
+
+        $query =
             Product::when(Request::input('search'), function ($query, $search) {
                 $query->where('nom', 'like', '%'.$search.'%')->orwhere('color', 'like', '%'.$search.'%');
             })->when($category, function ($query, $category) {
                 $query->where('categorie_id', $category->id);
-            })->latest('id')->paginate(15)->withQueryString();
+            });
+        $rows = $query->latest('id')->paginate(15)->withQueryString();
         $filter = Request::only('search', 'cat');
         $categorie = Category::all();
 

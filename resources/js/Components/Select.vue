@@ -1,6 +1,8 @@
 <script setup>
+import Multiselect from "vue-multiselect";
+import { onMounted } from "vue";
 const model = defineModel({
-    type: [String, Number, Array],
+    type: [String, Number, Object, Array],
     required: true,
 });
 
@@ -14,18 +16,39 @@ const props = defineProps({
         type: Boolean,
         default: false,
     },
+
     message: {
         type: String,
     },
 });
+onMounted(() => {
+    // if ($(".select-nice").length) {
+    //     $(".select-nice").select2();
+    // }
+});
 </script>
-
+<style src="vue-multiselect/dist/vue-multiselect.css"></style>
 <template>
     <div class="mb-4">
-        <label class="text-uppercase form-label">{{ props.label }}</label>
-        <select class="form-select" v-model="model" id="">
-            <slot />
-        </select>
+        <div>
+            <label class="text-uppercase form-label">{{ props.label }}</label>
+            <!-- <multiselect
+                :options="options"
+                v-model="model"
+                placeholder="Selectionner"
+                slot="singleLabel"
+                slot-scope="{ option }"
+            >
+                <template slot="singleLabel" slot-scope="{ option }"
+                    ><strong>{{ data.name }}</strong> is written in<strong>
+                        {{ data.language }}</strong
+                    ></template
+                >
+            </multiselect> -->
+            <select class="nice" style="width: 100%" v-model="model">
+                <slot />
+            </select>
+        </div>
         <div v-show="props.message">
             <p class="text-sm text-danger">
                 {{ props.message }}

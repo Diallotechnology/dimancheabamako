@@ -402,168 +402,6 @@ onMounted(() => {
                                                             </div>
                                                         </div>
                                                         <!--single-comment -->
-                                                        <div
-                                                            class="single-comment justify-content-between d-flex"
-                                                        >
-                                                            <div
-                                                                class="user justify-content-between d-flex"
-                                                            >
-                                                                <div
-                                                                    class="thumb text-center"
-                                                                >
-                                                                    <img
-                                                                        src="assets/imgs/page/avatar-7.jpg"
-                                                                        alt=""
-                                                                    />
-                                                                    <h6>
-                                                                        <a
-                                                                            href="#"
-                                                                            >Ana
-                                                                            Rosie</a
-                                                                        >
-                                                                    </h6>
-                                                                    <p
-                                                                        class="font-xxs"
-                                                                    >
-                                                                        Since
-                                                                        2008
-                                                                    </p>
-                                                                </div>
-                                                                <div
-                                                                    class="desc"
-                                                                >
-                                                                    <div
-                                                                        class="product-rate d-inline-block"
-                                                                    >
-                                                                        <div
-                                                                            class="product-rating"
-                                                                            style="
-                                                                                width: 90%;
-                                                                            "
-                                                                        ></div>
-                                                                    </div>
-                                                                    <p>
-                                                                        Great
-                                                                        low
-                                                                        price
-                                                                        and
-                                                                        works
-                                                                        well.
-                                                                    </p>
-                                                                    <div
-                                                                        class="d-flex justify-content-between"
-                                                                    >
-                                                                        <div
-                                                                            class="d-flex align-items-center"
-                                                                        >
-                                                                            <p
-                                                                                class="font-xs mr-30"
-                                                                            >
-                                                                                December
-                                                                                4,
-                                                                                2020
-                                                                                at
-                                                                                3:12
-                                                                                pm
-                                                                            </p>
-                                                                            <a
-                                                                                href="#"
-                                                                                class="text-brand btn-reply"
-                                                                                >Reply
-                                                                                <i
-                                                                                    class="fi-rs-arrow-right"
-                                                                                ></i>
-                                                                            </a>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                        <!--single-comment -->
-                                                        <div
-                                                            class="single-comment justify-content-between d-flex"
-                                                        >
-                                                            <div
-                                                                class="user justify-content-between d-flex"
-                                                            >
-                                                                <div
-                                                                    class="thumb text-center"
-                                                                >
-                                                                    <img
-                                                                        src="assets/imgs/page/avatar-8.jpg"
-                                                                        alt=""
-                                                                    />
-                                                                    <h6>
-                                                                        <a
-                                                                            href="#"
-                                                                            >Steven
-                                                                            Keny</a
-                                                                        >
-                                                                    </h6>
-                                                                    <p
-                                                                        class="font-xxs"
-                                                                    >
-                                                                        Since
-                                                                        2010
-                                                                    </p>
-                                                                </div>
-                                                                <div
-                                                                    class="desc"
-                                                                >
-                                                                    <div
-                                                                        class="product-rate d-inline-block"
-                                                                    >
-                                                                        <div
-                                                                            class="product-rating"
-                                                                            style="
-                                                                                width: 90%;
-                                                                            "
-                                                                        ></div>
-                                                                    </div>
-                                                                    <p>
-                                                                        Authentic
-                                                                        and
-                                                                        Beautiful,
-                                                                        Love
-                                                                        these
-                                                                        way more
-                                                                        than
-                                                                        ever
-                                                                        expected
-                                                                        They are
-                                                                        Great
-                                                                        earphones
-                                                                    </p>
-                                                                    <div
-                                                                        class="d-flex justify-content-between"
-                                                                    >
-                                                                        <div
-                                                                            class="d-flex align-items-center"
-                                                                        >
-                                                                            <p
-                                                                                class="font-xs mr-30"
-                                                                            >
-                                                                                December
-                                                                                4,
-                                                                                2020
-                                                                                at
-                                                                                3:12
-                                                                                pm
-                                                                            </p>
-                                                                            <a
-                                                                                href="#"
-                                                                                class="text-brand btn-reply"
-                                                                                >Reply
-                                                                                <i
-                                                                                    class="fi-rs-arrow-right"
-                                                                                ></i>
-                                                                            </a>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                        <!--single-comment -->
                                                     </div>
                                                 </div>
                                             </div>
@@ -626,26 +464,13 @@ onMounted(() => {
                                                                     />
                                                                 </div>
                                                             </div>
-                                                            <div class="col-12">
-                                                                <div
-                                                                    class="form-group"
-                                                                >
-                                                                    <input
-                                                                        class="form-control"
-                                                                        name="website"
-                                                                        id="website"
-                                                                        type="text"
-                                                                        placeholder="Website"
-                                                                    />
-                                                                </div>
-                                                            </div>
                                                         </div>
                                                         <div class="form-group">
                                                             <button
                                                                 type="submit"
                                                                 class="button button-contactForm"
                                                             >
-                                                                Submit Review
+                                                                Valider
                                                             </button>
                                                         </div>
                                                     </form>
@@ -666,7 +491,7 @@ onMounted(() => {
                     <div class="col-md-12">
                         <div class="row related-products">
                             <div class="row product-grid-4">
-                                <Cart :items="product" />
+                                <Cart :items="rows" />
                             </div>
                         </div>
                     </div>
@@ -675,4 +500,3 @@ onMounted(() => {
         </section>
     </Layout>
 </template>
-@/helper

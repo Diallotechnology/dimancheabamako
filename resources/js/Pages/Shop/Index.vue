@@ -3,7 +3,7 @@ import Layout from "@/Shared/Layout.vue";
 import Pagination from "@/Components/Pagination.vue";
 import { Price_euro, AddToCard } from "@/helper";
 import { Link, router } from "@inertiajs/vue3";
-import { onMounted } from "vue";
+import { onMounted, watch, ref } from "vue";
 const props = defineProps({
     rows: {
         type: Object,
@@ -15,7 +15,23 @@ const props = defineProps({
         required: true,
         default: () => ({}),
     },
+    filter: {
+        type: Object,
+        required: true,
+        default: () => ({}),
+    },
 });
+const search = ref(props.filter.search);
+watch(search, (value) => {
+    setTimeout(() => {
+        router.get(
+            "/shop",
+            { search: value },
+            { preserveState: true, replace: true }
+        );
+    }, 600);
+});
+
 onMounted(() => {
     if ($(".sort-by-product-area").length) {
         var $body = $("body"),
@@ -69,78 +85,21 @@ onMounted(() => {
                                     element for you!
                                 </p>
                             </div>
-                            <div class="sort-by-product-area">
-                                <div class="sort-by-cover mr-10">
-                                    <div class="sort-by-product-wrap">
-                                        <div class="sort-by">
-                                            <span
-                                                ><i class="fi-rs-apps"></i
-                                                >Show:</span
-                                            >
-                                        </div>
-                                        <div class="sort-by-dropdown-wrap">
-                                            <span>
-                                                50
-                                                <i
-                                                    class="fi-rs-angle-small-down"
-                                                ></i
-                                            ></span>
-                                        </div>
-                                    </div>
-                                    <div class="sort-by-dropdown">
-                                        <ul>
-                                            <li>
-                                                <a class="active" href="#"
-                                                    >50</a
-                                                >
-                                            </li>
-                                            <li><a href="#">100</a></li>
-                                            <li><a href="#">150</a></li>
-                                            <li><a href="#">200</a></li>
-                                            <li><a href="#">All</a></li>
-                                        </ul>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="me-auto">
+                                        <input
+                                            v-model="search"
+                                            type="text"
+                                            placeholder="Recherche..."
+                                            class="form-control"
+                                        />
                                     </div>
                                 </div>
-                                <div class="sort-by-cover">
-                                    <div class="sort-by-product-wrap">
-                                        <div class="sort-by">
-                                            <span
-                                                ><i class="fi-rs-apps-sort"></i
-                                                >Sort by:</span
-                                            >
-                                        </div>
-                                        <div class="sort-by-dropdown-wrap">
-                                            <span>
-                                                Featured
-                                                <i
-                                                    class="fi-rs-angle-small-down"
-                                                ></i
-                                            ></span>
-                                        </div>
-                                    </div>
-                                    <div class="sort-by-dropdown">
-                                        <ul>
-                                            <li>
-                                                <a class="active" href="#"
-                                                    >Featured</a
-                                                >
-                                            </li>
-                                            <li>
-                                                <a href="#"
-                                                    >Price: Low to High</a
-                                                >
-                                            </li>
-                                            <li>
-                                                <a href="#"
-                                                    >Price: High to Low</a
-                                                >
-                                            </li>
-                                            <li>
-                                                <a href="#">Release Date</a>
-                                            </li>
-                                            <li><a href="#">Avg. Rating</a></li>
-                                        </ul>
-                                    </div>
+                                <div class="col-md-6">
+                                    <select class="form-select form-select-lg">
+                                        <option>sjsjsj</option>
+                                    </select>
                                 </div>
                             </div>
                         </div>

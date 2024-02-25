@@ -1,15 +1,15 @@
 <script setup>
 import { Link } from "@inertiajs/vue3";
-import { computed, onMounted, ref } from "vue";
+import { onMounted, ref } from "vue";
+import getCount from "@/helper";
 
+// var Emitter = require("tiny-emitter/instance");
 const props = defineProps({
     active: {
         type: Boolean,
     },
 });
-const classes = computed(() =>
-    props.active ? "menu-item active" : "menu-item"
-);
+
 const rows = ref([]);
 const Count = ref(0);
 onMounted(() => {
@@ -22,16 +22,9 @@ onMounted(() => {
             // handle error
             console.log(error.response);
         });
-
-    axios
-        .get("/count")
-        .then(async (response) => {
-            Count.value = await response.data;
-        })
-        .catch(function (error) {
-            // handle error
-            console.log(error.response);
-        });
+    axios.get("/count").then((res) => {
+        Count.value = res.data;
+    });
 });
 </script>
 <template>
@@ -77,8 +70,47 @@ onMounted(() => {
                                             >Se connecter</Link
                                         >
                                     </li>
+                                    <li class="dropdown nav-item">
+                                        <a
+                                            class="dropdown-toggle"
+                                            data-bs-toggle="dropdown"
+                                            href="#"
+                                            id="dropdownAccount"
+                                            aria-expanded="false"
+                                        >
+                                            <!-- <img
+                                                class="img-xs rounded-circle"
+                                                v-bind:src="'/admin/assets/imgs/people/avatar2.jpg'"
+                                                alt="User"
+                                        /> -->
+                                        </a>
+                                        <div
+                                            class="dropdown-menu dropdown-menu-end"
+                                            aria-labelledby="dropdownAccount"
+                                        >
+                                            <a class="dropdown-item" href="#"
+                                                ><i
+                                                    class="material-icons md-perm_identity"
+                                                ></i
+                                                >Profil</a
+                                            >
+
+                                            <div class="dropdown-divider"></div>
+                                            <Link
+                                                class="dropdown-item text-danger"
+                                                :href="route('logout')"
+                                                method="post"
+                                                as="button"
+                                                ><i
+                                                    class="material-icons md-exit_to_app"
+                                                ></i
+                                                >Deconnexion
+                                            </Link>
+                                        </div>
+                                    </li>
                                 </ul>
                             </div>
+
                             <div class="header-action-2">
                                 <div class="header-action-icon-2">
                                     <Link
@@ -89,9 +121,9 @@ onMounted(() => {
                                             alt="Evara"
                                             v-bind:src="'/assets/imgs/theme/icons/icon-cart.svg'"
                                         />
-                                        <span class="pro-count blue">
-                                            {{ Count }}</span
-                                        >
+                                        <span class="pro-count blue"
+                                            >{{ Count }}
+                                        </span>
                                     </Link>
                                 </div>
                             </div>
