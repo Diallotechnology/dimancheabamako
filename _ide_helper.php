@@ -5,7 +5,7 @@
 
 /**
  * A helper file for Laravel, to provide autocomplete information to your IDE
- * Generated for Laravel 10.44.0.
+ * Generated for Laravel 10.45.1.
  *
  * This file should not be included in your code, only analyzed by your IDE!
  *
@@ -17188,35 +17188,6 @@ namespace Illuminate\Support\Facades {
             }
     }
 
-namespace AmrShawky\LaravelCurrency\Facade {
-            /**
-     * 
-     *
-     */        class Currency {
-                    /**
-         * 
-         *
-         * @param \GuzzleHttp\Client|null $client
-         * @return \AmrShawky\CurrencyConversion 
-         * @static 
-         */        public static function convert($client = null)
-        {
-                        /** @var \AmrShawky\CurrencyFactory $instance */
-                        return $instance->convert($client);
-        }
-                    /**
-         * 
-         *
-         * @return \AmrShawky\CurrencyRatesProxy 
-         * @static 
-         */        public static function rates()
-        {
-                        /** @var \AmrShawky\CurrencyFactory $instance */
-                        return $instance->rates();
-        }
-            }
-    }
-
 namespace Darryldecode\Cart\Facades {
             /**
      * 
@@ -21451,7 +21422,7 @@ namespace  {
             class Validator extends \Illuminate\Support\Facades\Validator {}
             class View extends \Illuminate\Support\Facades\View {}
             class Vite extends \Illuminate\Support\Facades\Vite {}
-            class Currency extends \AmrShawky\LaravelCurrency\Facade\Currency {}
+            class GoogleTranslate extends \Stichoza\GoogleTranslate\GoogleTranslate {}
             class Cart extends \Darryldecode\Cart\Facades\CartFacade {}
             class Flare extends \Spatie\LaravelIgnition\Facades\Flare {}
     }

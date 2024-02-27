@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Category;
 use App\Models\Product;
 use App\Models\Slide;
+use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Request;
 use Inertia\Inertia;
 
@@ -23,8 +24,12 @@ class LinkController extends Controller
         return Inertia::render('Home', \compact('popular', 'latest', 'slide'));
     }
 
-    public function currenci()
+    public function langchange(string $lang)
     {
+        App::setLocale($lang);
+        session()->put('locale', $lang);
+
+        return redirect()->back();
     }
 
     public function livraison()

@@ -1,9 +1,6 @@
 <script setup>
 import { Link } from "@inertiajs/vue3";
-import { onMounted, ref } from "vue";
-import getCount from "@/helper";
-
-// var Emitter = require("tiny-emitter/instance");
+import { onMounted, ref, onUnmounted } from "vue";
 const props = defineProps({
     active: {
         type: Boolean,
@@ -11,20 +8,38 @@ const props = defineProps({
 });
 
 const rows = ref([]);
-const Count = ref(0);
-onMounted(() => {
-    axios
-        .get("/getcategory")
-        .then((response) => {
-            rows.value = response.data;
-        })
-        .catch(function (error) {
-            // handle error
-            console.log(error.response);
+const cartCount = ref(0);
+
+const updateCartCount = () => {
+    try {
+        axios.get("/count").then((res) => {
+            cartCount.value = res.data;
         });
-    axios.get("/count").then((res) => {
-        Count.value = res.data;
-    });
+    } catch (error) {
+        console.error(error);
+    }
+};
+
+onMounted(() => {
+    document.addEventListener("cart-updated", updateCartCount);
+    try {
+        axios.get("/getcategory").then((response) => {
+            rows.value = response.data;
+        });
+    } catch (error) {
+        console.error(error);
+    }
+
+    try {
+        axios.get("/count").then((res) => {
+            cartCount.value = res.data;
+        });
+    } catch (error) {
+        console.error(error);
+    }
+});
+onUnmounted(() => {
+    document.removeEventListener("cart-updated", updateCartCount);
 });
 </script>
 <template>
@@ -43,27 +58,25 @@ onMounted(() => {
                         <div class="header-action-right">
                             <div class="header-info header-info-right px-4">
                                 <ul>
-                                    <li>
-                                        <a
-                                            class="language-dropdown-active"
-                                            href="#"
-                                        >
-                                            <i class="fi-rs-world"></i> English
-                                            <i
-                                                class="fi-rs-angle-small-down"
-                                            ></i
-                                        ></a>
-                                        <ul class="language-dropdown">
-                                            <li>
-                                                <a href="#"
-                                                    ><img
-                                                        v-bind:src="'/assets/imgs/theme/flag-fr.png'"
-                                                        alt=""
-                                                    />Français</a
-                                                >
-                                            </li>
-                                        </ul>
-                                    </li>
+                                    <Link
+                                        class="language-dropdown-active"
+                                        :href="route('language', 'en')"
+                                    >
+                                        <i class="fi-rs-world"></i> English
+                                        <i class="fi-rs-angle-small-down"></i
+                                    ></Link>
+                                    <!-- <ul class="language-dropdown">
+                                        <li>
+                                            <Link
+                                                :href="route('language', 'fr')"
+                                                ><img
+                                                    v-bind:src="'/assets/imgs/theme/flag-fr.png'"
+                                                    alt=""
+                                                />Français</Link
+                                            >
+                                        </li>
+                                    </ul> -->
+
                                     <li>
                                         <i class="fi-rs-user"></i>
                                         <Link :href="route('login')"
@@ -122,7 +135,7 @@ onMounted(() => {
                                             v-bind:src="'/assets/imgs/theme/icons/icon-cart.svg'"
                                         />
                                         <span class="pro-count blue"
-                                            >{{ Count }}
+                                            >{{ cartCount }}
                                         </span>
                                     </Link>
                                 </div>

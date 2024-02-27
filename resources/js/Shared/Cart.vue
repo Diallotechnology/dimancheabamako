@@ -2,6 +2,8 @@
 import { Link } from "@inertiajs/vue3";
 import { Price_euro } from "@/helper";
 import AddToCard from "@/helper";
+const { event } = usePage();
+
 const props = defineProps({
     items: {
         type: Object,
