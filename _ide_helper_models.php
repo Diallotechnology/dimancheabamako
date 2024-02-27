@@ -72,6 +72,8 @@ namespace App\Models{
  * @property string $nom
  * @property string $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Order> $orders
+ * @property-read int|null $orders_count
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Shipping> $shippings
  * @property-read int|null $shippings_count
  * @property-read \App\Models\Zone $zone
@@ -117,19 +119,21 @@ namespace App\Models{
  *
  * @property int $id
  * @property int $client_id
+ * @property int $country_id
  * @property string|null $reference
  * @property string $adresse
  * @property string|null $postal
  * @property string $ville
  * @property string $payment
- * @property string $pays
  * @property string|null $commentaire
  * @property string $etat
  * @property string $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property-read \App\Models\Client $client
+ * @property-read \App\Models\Country $country
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Product> $products
  * @property-read int|null $products_count
+ * @property-read \App\Models\Transport|null $transport
  * @method static \Database\Factories\OrderFactory factory($count = null, $state = [])
  * @method static \Illuminate\Database\Eloquent\Builder|Order newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Order newQuery()
@@ -137,11 +141,11 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder|Order whereAdresse($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Order whereClientId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Order whereCommentaire($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Order whereCountryId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Order whereCreatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Order whereEtat($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Order whereId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Order wherePayment($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Order wherePays($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Order wherePostal($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Order whereReference($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Order whereUpdatedAt($value)
@@ -295,6 +299,8 @@ namespace App\Models{
  * @property string $nom
  * @property string $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, Transport> $orders
+ * @property-read int|null $orders_count
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Shipping> $shippings
  * @property-read int|null $shippings_count
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Zone> $zones

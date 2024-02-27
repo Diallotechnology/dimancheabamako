@@ -18,14 +18,14 @@ class Order extends Model
      *
      * @var array
      */
-    protected $fillable = ['payment', 'client_id', 'reference', 'adresse', 'postal', 'ville', 'pays', 'etat'];
+    protected $fillable = ['payment', 'client_id', 'reference', 'adresse', 'postal', 'ville', 'country_id', 'transport_id', 'etat'];
 
     /**
      * The relationships that should always be loaded.
      *
      * @var array
      */
-    protected $with = ['client', 'products'];
+    protected $with = ['client', 'products', 'country'];
 
     /**
      * The products that belong to the Order
@@ -33,6 +33,22 @@ class Order extends Model
     public function products(): BelongsToMany
     {
         return $this->belongsToMany(Product::class)->withPivot('quantity', 'montant');
+    }
+
+    /**
+     * Get the pays that owns the Order
+     */
+    public function country(): BelongsTo
+    {
+        return $this->belongsTo(Country::class);
+    }
+
+    /**
+     * Get the transport that owns the Order
+     */
+    public function transport(): BelongsTo
+    {
+        return $this->belongsTo(Transport::class);
     }
 
     /**

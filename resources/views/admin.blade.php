@@ -32,6 +32,7 @@
 
     <script src="{{ asset('admin/assets/js/vendors/perfect-scrollbar.js') }}"></script>
     <script src="{{ asset('admin/assets/js/vendors/jquery.fullscreen.min.js') }}"></script>
+    <script src="{{ asset('admin/assets/js/vendors/chart.js') }}"></script>
 </body>
 
 </html>

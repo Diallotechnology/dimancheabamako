@@ -15,13 +15,12 @@ return new class extends Migration
         Schema::create('orders', function (Blueprint $table) {
             $table->id();
             $table->foreignId('client_id')->constrained()->cascadeOnUpdate()->cascadeOnDelete();
-            // $table->foreignId('shipping_id')->constrained()->cascadeOnUpdate()->cascadeOnDelete();
+            $table->foreignId('country_id')->constrained()->cascadeOnUpdate()->cascadeOnDelete();
             $table->string('reference')->nullable()->unique();
             $table->string('adresse');
             $table->string('postal')->nullable();
             $table->string('ville');
             $table->string('payment');
-            $table->string('pays');
             $table->string('commentaire')->nullable();
             $table->string('etat')->default(OrderEnum::SAVE);
             $table->timestamps();

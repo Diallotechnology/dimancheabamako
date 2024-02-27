@@ -33,4 +33,12 @@ class Country extends Model
     {
         return $this->hasMany(Shipping::class);
     }
+
+    /**
+     * Get all of the orders for the Country
+     */
+    public function orders(): HasMany
+    {
+        return $this->hasMany(Order::class);
+    }
 }

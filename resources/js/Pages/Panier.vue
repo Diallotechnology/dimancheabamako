@@ -43,8 +43,8 @@ const form = useForm({
     nom: "",
     email: "",
     contact: "",
-    trans: "",
-    pays: "",
+    transport_id: "",
+    country_id: "",
     ville: "",
     adresse: "",
     postal: "",
@@ -66,9 +66,7 @@ const getPays = async () => {
 const getShipping = async () => {
     // if (form.pays.length && form.trans.length) {
     try {
-        const response = await axios.get(
-            route("cart.shipping", [form.pays, form.trans])
-        );
+        await axios.get(route("cart.shipping", [form.pays, form.trans])).then;
         shipping.value = response.data;
         console.log(response.data);
     } catch (error) {
@@ -135,10 +133,10 @@ const decrement = async (produitId) => {
         });
 };
 const submit = () => {
-    form.post(route("category.store"), {
+    form.post(route("order.store"), {
         onSuccess: () => {
             form.reset();
-            notify("Categorie ajouter avec success !", true);
+            notify("Commande effectué avec success !", true);
         },
         onError: () => {
             notify(false);
@@ -150,85 +148,6 @@ const submit = () => {
     <Layout>
         <section class="mt-50 mb-50">
             <div class="container">
-                <div class="row">
-                    <div class="col-lg-6 mb-sm-15">
-                        <div class="toggle_info">
-                            <span
-                                ><i class="fi-rs-user mr-10"></i
-                                ><span class="text-muted"
-                                    >Already have an account?</span
-                                >
-                                <a
-                                    href="#loginform"
-                                    data-bs-toggle="collapse"
-                                    class="collapsed"
-                                    aria-expanded="false"
-                                    >Click here to login</a
-                                ></span
-                            >
-                        </div>
-                        <div
-                            class="panel-collapse collapse login_form"
-                            id="loginform"
-                        >
-                            <div class="panel-body">
-                                <p class="mb-30 font-sm">
-                                    If you have shopped with us before, please
-                                    enter your details below. If you are a new
-                                    customer, please proceed to the Billing
-                                    &amp; Shipping section.
-                                </p>
-                                <form method="post">
-                                    <div class="form-group">
-                                        <input
-                                            type="text"
-                                            name="email"
-                                            placeholder="Username Or Email"
-                                        />
-                                    </div>
-                                    <div class="form-group">
-                                        <input
-                                            type="password"
-                                            name="password"
-                                            placeholder="Password"
-                                        />
-                                    </div>
-                                    <div class="login_footer form-group">
-                                        <div class="chek-form">
-                                            <div class="custome-checkbox">
-                                                <input
-                                                    class="form-check-input"
-                                                    type="checkbox"
-                                                    name="checkbox"
-                                                    id="remember"
-                                                    value=""
-                                                />
-                                                <label
-                                                    class="form-check-label"
-                                                    for="remember"
-                                                    ><span
-                                                        >Remember me</span
-                                                    ></label
-                                                >
-                                            </div>
-                                        </div>
-                                        <a href="#">Forgot password?</a>
-                                    </div>
-                                    <div class="form-group">
-                                        <button class="btn btn-md" name="login">
-                                            Log in
-                                        </button>
-                                    </div>
-                                </form>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-md-12">
-                        <div class="divider mt-50 mb-50"></div>
-                    </div>
-                </div>
                 <div class="row">
                     <div class="col-md-12">
                         <div class="mb-20">
@@ -407,14 +326,23 @@ const submit = () => {
                                     />
                                 </div>
                                 <div class="col-md-6">
+                                    <Input
+                                        input_type="text"
+                                        place="votre code postal"
+                                        label="Postal"
+                                        v-model="form.postal"
+                                        :message="form.errors.postal"
+                                        required
+                                    />
+                                </div>
+                                <div class="col-md-6">
                                     <div class="mb-4">
                                         <label class="text-uppercase form-label"
                                             >Pays de livraison</label
                                         >
                                         <select
                                             class="form-select"
-                                            v-model="form.pays"
-                                            @change="getShipping()"
+                                            v-model="form.country_id"
                                         >
                                             <option
                                                 v-for="item in pays"
@@ -425,9 +353,9 @@ const submit = () => {
                                             </option>
                                         </select>
 
-                                        <div v-show="form.errors.pays">
+                                        <div v-show="form.errors.country_id">
                                             <p class="text-sm text-danger">
-                                                {{ form.errors.pays }}
+                                                {{ form.errors.country_id }}
                                             </p>
                                         </div>
                                     </div>
@@ -439,8 +367,7 @@ const submit = () => {
                                         >
                                         <select
                                             class="form-select"
-                                            v-model="form.trans"
-                                            @change="getShipping()"
+                                            v-model="form.transport_id"
                                         >
                                             <option
                                                 v-for="item in transport"
@@ -505,78 +432,45 @@ const submit = () => {
                                     placeholder="Order notes"
                                 ></textarea>
                             </div>
+                            <div class="col-md-4">
+                                <div
+                                    class="bt-1 border-color-1 mt-30 mb-30"
+                                ></div>
+                                <div class="payment_method">
+                                    <div class="mb-25">
+                                        <h5>Payment</h5>
+                                    </div>
+                                    <div class="payment_option">
+                                        <div class="custome-radio">
+                                            <input
+                                                class="form-check-input"
+                                                v-model="form.payment"
+                                                type="radio"
+                                                name="payment_option"
+                                                id="exampleRadios3"
+                                                checked
+                                            />
+                                            <label
+                                                class="form-check-label"
+                                                for="exampleRadios3"
+                                                data-bs-toggle="collapse"
+                                                data-target="#bankTranfer"
+                                                aria-controls="bankTranfer"
+                                                >Direct Bank Transfer</label
+                                            >
+                                        </div>
+                                    </div>
+                                </div>
+                                <button
+                                    :class="{ 'opacity-25': form.processing }"
+                                    :disabled="form.processing"
+                                    type="submit"
+                                    class="btn btn-fill-out btn-block mt-30"
+                                >
+                                    Valider
+                                </button>
+                            </div>
                         </form>
-                    </div>
-                    <div class="col-md-4">
-                        <div class="bt-1 border-color-1 mt-30 mb-30"></div>
-                        <div class="payment_method">
-                            <div class="mb-25">
-                                <h5>Payment</h5>
-                            </div>
-                            <div class="payment_option">
-                                <div class="custome-radio">
-                                    <input
-                                        class="form-check-input"
-                                        required=""
-                                        type="radio"
-                                        name="payment_option"
-                                        id="exampleRadios3"
-                                        checked=""
-                                    />
-                                    <label
-                                        class="form-check-label"
-                                        for="exampleRadios3"
-                                        data-bs-toggle="collapse"
-                                        data-target="#bankTranfer"
-                                        aria-controls="bankTranfer"
-                                        >Direct Bank Transfer</label
-                                    >
-                                    <div
-                                        class="form-group collapse in"
-                                        id="bankTranfer"
-                                    >
-                                        <p class="text-muted mt-5">
-                                            There are many variations of
-                                            passages of Lorem Ipsum available,
-                                            but the majority have suffered
-                                            alteration.
-                                        </p>
-                                    </div>
-                                </div>
-
-                                <div class="custome-radio">
-                                    <input
-                                        class="form-check-input"
-                                        required=""
-                                        type="radio"
-                                        name="payment_option"
-                                        id="exampleRadios5"
-                                        checked=""
-                                    />
-                                    <label
-                                        class="form-check-label"
-                                        for="exampleRadios5"
-                                        data-bs-toggle="collapse"
-                                        data-target="#paypal"
-                                        aria-controls="paypal"
-                                        >Paypal</label
-                                    >
-                                    <div
-                                        class="form-group collapse in"
-                                        id="paypal"
-                                    >
-                                        <p class="text-muted mt-5">
-                                            Pay via PayPal; you can pay with
-                                            your credit card if you don't have a
-                                            PayPal account.
-                                        </p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <a href="#" class="btn btn-fill-out btn-block mt-30"
-                            >Valider</a
-                        >
                     </div>
                 </div>
             </div>

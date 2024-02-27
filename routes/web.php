@@ -51,6 +51,7 @@ Route::prefix('admin')->middleware('auth')->group(function () {
     });
 });
 
+Route::resource('order', OrderController::class)->only('store');
 Route::controller(CartController::class)->group(function () {
     Route::get('panier', 'index')->name('cart.index');
     Route::get('count', 'GetCount')->name('cart.count');

@@ -18,11 +18,12 @@ class OrderFactory extends Factory
     {
         return [
             'client_id' => rand(1, 10),
+            'country_id' => rand(1, 10),
             'reference' => uniqid(),
             'adresse' => fake()->streetAddress(),
             'postal' => fake()->postcode(),
             'ville' => fake()->city(),
-            'pays' => fake()->country(),
+            // 'pays' => fake()->country(),
             'payment' => fake()->randomElement(['Mastercard', 'Visa', 'Paypal']),
         ];
     }

@@ -33,4 +33,12 @@ class Transport extends Model
     {
         return $this->belongsToMany(Zone::class);
     }
+
+    /**
+     * Get all of the orders for the Transport
+     */
+    public function orders(): HasMany
+    {
+        return $this->hasMany(Transport::class);
+    }
 }

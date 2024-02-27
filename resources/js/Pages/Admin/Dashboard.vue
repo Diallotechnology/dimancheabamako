@@ -4,6 +4,7 @@ import Table from "@/Components/Table.vue";
 import ButtonShow from "@/Components/ButtonShow.vue";
 import { Head } from "@inertiajs/vue3";
 import { Price_format } from "@/helper";
+import { onMounted } from "vue";
 const props = defineProps({
     order: {
         type: Number,
@@ -25,6 +26,53 @@ const props = defineProps({
         type: Object,
         default: () => ({}),
     },
+});
+onMounted(() => {
+    /*Sale statistics Chart*/
+    if ($("#myChart").length) {
+        var ctx = document.getElementById("myChart").getContext("2d");
+        var chart = new Chart(ctx, {
+            // The type of chart we want to create
+            type: "line",
+
+            // The data for our dataset
+            data: {
+                labels: [
+                    "Jan",
+                    "Feb",
+                    "Mar",
+                    "Apr",
+                    "May",
+                    "Jun",
+                    "Jul",
+                    "Aug",
+                    "Sep",
+                    "Oct",
+                    "Nov",
+                    "Dec",
+                ],
+                datasets: [
+                    {
+                        label: "Order",
+                        tension: 0.3,
+                        fill: true,
+                        backgroundColor: "rgba(380, 200, 230, 0.2)",
+                        borderColor: "rgb(380, 200, 230)",
+                        data: [30, 10, 27, 19, 33, 15, 19, 20, 24, 15, 37, 6],
+                    },
+                ],
+            },
+            options: {
+                plugins: {
+                    legend: {
+                        labels: {
+                            usePointStyle: true,
+                        },
+                    },
+                },
+            },
+        });
+    } //End if
 });
 </script>
 
@@ -99,6 +147,16 @@ const props = defineProps({
                             <h6 class="mb-1 card-title">Total Categories</h6>
                             <span>{{ categorie }}</span>
                         </div>
+                    </article>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card mb-4">
+                    <article class="card-body">
+                        <h5 class="card-title">Sale statistics</h5>
+                        <canvas id="myChart" height="120px"></canvas>
                     </article>
                 </div>
             </div>
