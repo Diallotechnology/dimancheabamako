@@ -27,6 +27,14 @@ class Zone extends Model
     }
 
     /**
+     * Get all of the shippings for the Zone
+     */
+    public function shippings(): HasMany
+    {
+        return $this->hasMany(Shipping::class);
+    }
+
+    /**
      * The transport that belong to the Zone
      */
     public function transports(): BelongsToMany

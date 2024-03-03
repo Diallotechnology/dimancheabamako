@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Helper\DeleteAction;
 use App\Http\Requests\StoreTransportRequest;
-use App\Models\Country;
 use App\Models\Transport;
 use App\Models\Zone;
 use Inertia\Inertia;
@@ -13,9 +12,9 @@ class TransportController extends Controller
 {
     use DeleteAction;
 
-    public function get_trans_country(Transport $transport)
+    public function get_trans_zone(Transport $transport)
     {
-        return Country::whereIn('zone_id', $transport->zones()->pluck('id'))->get();
+        return $transport->zones()->get();
     }
 
     /**

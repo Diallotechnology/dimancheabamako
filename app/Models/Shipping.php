@@ -15,14 +15,14 @@ class Shipping extends Model
      *
      * @var array
      */
-    protected $fillable = ['country_id', 'transport_id', 'montant', 'temps', 'poids'];
+    protected $fillable = ['zone_id', 'transport_id', 'montant', 'temps', 'poids'];
 
     /**
-     * Get the pays that owns the Transport
+     * Get the zone that owns the Shipping
      */
-    public function country(): BelongsTo
+    public function zone(): BelongsTo
     {
-        return $this->belongsTo(Country::class);
+        return $this->belongsTo(Zone::class);
     }
 
     /**

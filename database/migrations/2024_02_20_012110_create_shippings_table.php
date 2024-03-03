@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('shippings', function (Blueprint $table) {
             $table->id();
             $table->foreignId('transport_id')->constrained()->cascadeOnUpdate()->cascadeOnDelete();
-            $table->foreignId('country_id')->constrained()->cascadeOnUpdate()->cascadeOnDelete();
+            $table->foreignId('zone_id')->constrained()->cascadeOnUpdate()->cascadeOnDelete();
             $table->string('temps');
             $table->string('poids');
             $table->integer('montant');

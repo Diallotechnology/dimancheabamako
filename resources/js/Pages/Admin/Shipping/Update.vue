@@ -16,12 +16,12 @@ const props = defineProps({
         default: () => ({}),
     },
 });
-const pays = ref([]);
-const getpays = async (url) => {
+const zone = ref([]);
+const getzone = async (url) => {
     await axios
         .get(url)
         .then((response) => {
-            pays.value = response.data;
+            zone.value = response.data;
         })
         .catch(function (error) {
             // handle error
@@ -29,14 +29,14 @@ const getpays = async (url) => {
         });
 };
 onMounted(() => {
-    getpays(route("transport.country", props.shipping.transport_id));
+    getzone(route("transport.zone", props.shipping.transport_id));
 });
 const form = useForm({
     poids: props.shipping.poids,
     temps: props.shipping.temps,
     montant: props.shipping.montant,
     transport_id: props.shipping.transport_id,
-    country_id: props.shipping.country_id,
+    zone_id: props.shipping.zone_id,
 });
 
 const submit = () => {
@@ -46,7 +46,7 @@ const submit = () => {
             form.temps = props.shipping.temps;
             form.montant = props.shipping.montant;
             form.transport_id = props.shipping.transport_id;
-            form.country_id = props.shipping.country_id;
+            form.zone_id = props.shipping.zone_id;
             notify("livraison mise à jour avec success !", true);
         },
         onError: () => {
@@ -66,9 +66,7 @@ const submit = () => {
                         :message="form.errors.transport_id"
                         label="Nom du transporteur"
                         @change="
-                            getpays(
-                                route('transport.country', form.transport_id)
-                            )
+                            getzone(route('transport.zone', form.transport_id))
                         "
                     >
                         <option
@@ -81,12 +79,12 @@ const submit = () => {
                     </Select>
 
                     <Select
-                        v-model="form.country_id"
-                        :message="form.errors.country_id"
+                        v-model="form.zone_id"
+                        :message="form.errors.zone_id"
                         label="Nom du pays"
                     >
                         <option
-                            v-for="row in pays"
+                            v-for="row in zone"
                             :key="row.id"
                             :value="row.id"
                         >

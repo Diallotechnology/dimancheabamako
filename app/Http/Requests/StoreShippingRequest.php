@@ -23,7 +23,7 @@ class StoreShippingRequest extends FormRequest
     {
         return [
             'transport_id' => 'required|exists:transports,id',
-            'country_id' => 'required|exists:countries,id',
+            'zone_id' => 'required|exists:zones,id',
             'temps' => 'required|string',
             'poids' => 'required|string',
             'montant' => 'required|integer',

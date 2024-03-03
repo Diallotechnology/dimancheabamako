@@ -45,6 +45,7 @@ namespace App\Models{
  * @property string $prenom
  * @property string $nom
  * @property string $contact
+ * @property string $pays
  * @property string $email
  * @property string $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
@@ -59,6 +60,7 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder|Client whereEmail($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Client whereId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Client whereNom($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Client wherePays($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Client wherePrenom($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Client whereUpdatedAt($value)
  */
@@ -76,8 +78,6 @@ namespace App\Models{
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Order> $orders
  * @property-read int|null $orders_count
- * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Shipping> $shippings
- * @property-read int|null $shippings_count
  * @property-read \App\Models\Zone $zone
  * @method static \Database\Factories\CountryFactory factory($count = null, $state = [])
  * @method static \Illuminate\Database\Eloquent\Builder|Country newModelQuery()
@@ -249,8 +249,8 @@ namespace App\Models{
  * @property int $montant
  * @property string $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
- * @property-read \App\Models\Country $country
  * @property-read \App\Models\Transport $transport
+ * @property-read \App\Models\Zone|null $zone
  * @method static \Database\Factories\ShippingFactory factory($count = null, $state = [])
  * @method static \Illuminate\Database\Eloquent\Builder|Shipping newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Shipping newQuery()
@@ -367,6 +367,8 @@ namespace App\Models{
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Country> $countries
  * @property-read int|null $countries_count
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Shipping> $shippings
+ * @property-read int|null $shippings_count
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Transport> $transports
  * @property-read int|null $transports_count
  * @method static \Database\Factories\ZoneFactory factory($count = null, $state = [])
