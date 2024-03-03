@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Helper\DeleteAction;
 use App\Http\Requests\StoreClientRequest;
 use App\Models\Client;
+use App\Models\Country;
 use Inertia\Inertia;
 
 class ClientController extends Controller
@@ -36,7 +37,9 @@ class ClientController extends Controller
      */
     public function edit(Client $client)
     {
-        return Inertia::render('Admin/Client/Update', compact('client'));
+        $country = Country::all();
+
+        return Inertia::render('Admin/Client/Update', compact('client', 'country'));
     }
 
     /**

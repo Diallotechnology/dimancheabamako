@@ -37,6 +37,7 @@ class OrderController extends Controller
                 'nom' => $request->nom,
                 'contact' => $request->contact,
                 'email' => $request->email,
+                'pays' => $request->country_id,
             ]);
             $data = new Order([
                 'payment' => $request->payment,

@@ -45,7 +45,7 @@ onMounted(() => {
                     ></template
                 >
             </multiselect> -->
-            <select class="nice" style="width: 100%" v-model="model">
+            <select class="form-select" style="width: 100%" v-model="model">
                 <slot />
             </select>
         </div>

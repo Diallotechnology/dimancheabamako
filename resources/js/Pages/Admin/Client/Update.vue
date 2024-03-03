@@ -10,18 +10,28 @@ const props = defineProps({
         required: true,
         default: () => ({}),
     },
+    country: {
+        type: Object,
+        required: true,
+        default: () => ({}),
+    },
 });
 const form = useForm({
     prenom: props.client.prenom,
     nom: props.client.nom,
     contact: props.client.contact,
     email: props.client.email,
+    pays: props.client.pays,
 });
 
 const submit = () => {
     form.patch(route("client.update", props.client.id), {
         onSuccess: () => {
+            form.prenom = props.client.prenom;
             form.nom = props.client.nom;
+            form.contact = props.client.contact;
+            form.email = props.client.email;
+            form.pays = props.client.pays;
             notify("client mise à jour avec success !", true);
         },
         onError: () => {
@@ -68,6 +78,15 @@ const submit = () => {
                         :message="form.errors.contact"
                         required
                     />
+                    <Select v-model="form.pays" label="pays">
+                        <option
+                            v-for="row in country"
+                            :key="row.id"
+                            :value="row.nom"
+                        >
+                            {{ row.nom }}
+                        </option>
+                    </Select>
                     <div class="modal-footer">
                         <Link
                             :href="route('client')"

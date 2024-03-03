@@ -14,6 +14,10 @@ const props = defineProps({
         type: Object,
         default: () => ({}),
     },
+    country: {
+        type: Object,
+        default: () => ({}),
+    },
     filter: {
         type: Object,
         default: () => ({}),
@@ -35,6 +39,7 @@ const form = useForm({
     nom: "",
     email: "",
     contact: "",
+    pays: "",
 });
 
 const submit = () => {
@@ -93,6 +98,7 @@ const submit = () => {
                         <th scope="col">Nom</th>
                         <th scope="col">email</th>
                         <th scope="col">contact</th>
+                        <th scope="col">pays</th>
                         <th scope="col">Date</th>
                         <th scope="col">Action</th>
                     </tr>
@@ -104,6 +110,7 @@ const submit = () => {
                         <td>{{ row.nom }}</td>
                         <td>{{ row.email }}</td>
                         <td>{{ row.contact }}</td>
+                        <td>{{ row.pays }}</td>
                         <td>{{ row.created_at }}</td>
                         <td>
                             <ButtonShow :href="route('client.show', row.id)" />
@@ -151,6 +158,15 @@ const submit = () => {
                     :message="form.errors.contact"
                     required
                 />
+                <Select v-model="form.pays" label="pays">
+                    <option
+                        v-for="row in country"
+                        :key="row.id"
+                        :value="row.nom"
+                    >
+                        {{ row.nom }}
+                    </option>
+                </Select>
                 <div class="modal-footer">
                     <button
                         type="button"

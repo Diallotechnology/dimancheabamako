@@ -15,7 +15,7 @@ class Client extends Model
      *
      * @var array
      */
-    protected $fillable = ['nom', 'prenom', 'email', 'contact'];
+    protected $fillable = ['nom', 'prenom', 'email', 'contact', 'pays'];
 
     /**
      * Get all of the orders for the Client

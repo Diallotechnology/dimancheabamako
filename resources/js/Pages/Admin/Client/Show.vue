@@ -2,7 +2,6 @@
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 import ButtonShow from "@/Components/ButtonShow.vue";
 import Table from "@/Components/Table.vue";
-import { Price_format } from "@/helper";
 
 const props = defineProps({
     client: {
@@ -22,6 +21,7 @@ const props = defineProps({
                         <h3>{{ client.prenom }} {{ client.nom }}</h3>
                         <p>{{ client.email }}</p>
                         <p>{{ client.contact }}</p>
+                        <p>{{ client.pays }}</p>
                     </div>
                 </div>
 

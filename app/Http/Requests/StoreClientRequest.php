@@ -26,6 +26,7 @@ class StoreClientRequest extends FormRequest
             'nom' => 'required|string',
             'email' => 'required|string|email',
             'contact' => 'required|string',
+            'pays' => 'required|string',
         ];
     }
 }

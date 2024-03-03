@@ -97,8 +97,9 @@ class AdminController extends Controller
                 ->orwhere('contact', 'like', '%'.$search.'%');
         })->latest('id')->paginate(10)->withQueryString();
         $filter = Request::only('search');
+        $country = Country::all();
 
-        return Inertia::render('Admin/Client/Index', compact('rows', 'filter'));
+        return Inertia::render('Admin/Client/Index', compact('rows', 'filter', 'country'));
     }
 
     public function promotion()

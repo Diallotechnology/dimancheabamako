@@ -21,6 +21,7 @@ class ClientFactory extends Factory
             'nom' => fake()->lastName(),
             'email' => fake()->unique()->safeEmail(),
             'contact' => fake()->phoneNumber(),
+            'pays' => fake()->country(),
         ];
     }
 }
