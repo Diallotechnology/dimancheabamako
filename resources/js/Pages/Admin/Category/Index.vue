@@ -5,9 +5,8 @@ import ButtonEdit from "@/Components/ButtonEdit.vue";
 import ButtonDelete from "@/Components/ButtonDelete.vue";
 import Table from "@/Components/Table.vue";
 import Modal from "@/Components/Modal.vue";
-import Input from "@/Components/Input.vue";
 import notify from "@/helper";
-import { ref, watch, onMounted } from "vue";
+import { ref, watch } from "vue";
 // import VueMultiselect from "vue-multiselect";
 // debounce((value) => {
 //     router.get(
@@ -40,7 +39,7 @@ watch(search, (value) => {
 });
 const form = useForm({
     nom: "",
-    type: "",
+    description: "",
 });
 
 const submit = () => {
@@ -54,7 +53,6 @@ const submit = () => {
         },
     });
 };
-const data = [];
 </script>
 
 <template>
@@ -98,6 +96,7 @@ const data = [];
                     <tr>
                         <th>#ID</th>
                         <th scope="col">Nom</th>
+                        <th scope="col">description</th>
                         <th scope="col">Date</th>
                         <th scope="col">Action</th>
                     </tr>
@@ -106,6 +105,7 @@ const data = [];
                     <tr v-for="row in rows.data" :key="row.id">
                         <td>{{ row.id }}</td>
                         <td>{{ row.nom }}</td>
+                        <td>{{ row.description }}</td>
                         <td>{{ row.created_at }}</td>
                         <td>
                             <ButtonEdit
@@ -130,8 +130,13 @@ const data = [];
                     :message="form.errors.nom"
                     required
                 />
-                <VueMultiselect v-model="form.type" :options="data" />
-
+                <TextArea
+                    place="la description courte de la categorie"
+                    label="description"
+                    v-model="form.description"
+                    :message="form.errors.description"
+                    required
+                />
                 <div class="modal-footer">
                     <button
                         type="button"

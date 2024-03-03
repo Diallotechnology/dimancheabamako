@@ -147,19 +147,6 @@ const submit = () => {
                         {{ row.nom }}
                     </option>
                 </Select>
-                <div class="mb-4">
-                    <label class="text-uppercase form-label">Ville</label>
-                    <select multiple v-model="form.city" class="form-select">
-                        <option v-for="row in ville" :key="row" :value="row.id">
-                            {{ row.nom }}
-                        </option>
-                        <div v-show="form.errors.city">
-                            <p class="text-sm text-danger">
-                                {{ form.errors.city }}
-                            </p>
-                        </div>
-                    </select>
-                </div>
 
                 <div class="modal-footer">
                     <button

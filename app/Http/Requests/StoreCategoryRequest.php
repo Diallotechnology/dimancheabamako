@@ -23,7 +23,8 @@ class StoreCategoryRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'nom' => 'required',
+            'nom' => 'required|string',
+            'description' => 'required|string',
         ];
     }
 

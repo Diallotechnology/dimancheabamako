@@ -8,6 +8,7 @@ import { ZiggyVue } from "../../vendor/tightenco/ziggy/dist/vue.m";
 
 import Select from "@/Components/Select.vue";
 import Input from "@/Components/Input.vue";
+import TextArea from "@/Components/TextArea.vue";
 import InputDate from "@/Components/InputDate.vue";
 // import Multiselect from "vue-multiselect";
 
@@ -29,6 +30,7 @@ createInertiaApp({
                 // .component("multiselect", Multiselect)
                 .component("InputDate", InputDate)
                 .component("Input", Input)
+                .component("TextArea", TextArea)
                 .mount(el)
         );
     },

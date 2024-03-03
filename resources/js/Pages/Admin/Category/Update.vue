@@ -1,6 +1,5 @@
 <script setup>
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
-import Input from "@/Components/Input.vue";
 import { useForm, Link } from "@inertiajs/vue3";
 import notify from "@/helper";
 const props = defineProps({
@@ -12,12 +11,14 @@ const props = defineProps({
 });
 const form = useForm({
     nom: props.category.nom,
+    description: props.category.description,
 });
 
 const submit = () => {
     form.patch(route("category.update", props.category.id), {
         onSuccess: () => {
             form.nom = props.category.nom;
+            form.description = props.category.description;
             notify("category mise à jour avec success !", true);
         },
         onError: () => {
@@ -41,7 +42,13 @@ const submit = () => {
                         :message="form.errors.nom"
                         required
                     />
-
+                    <TextArea
+                        place="la description courte de la categorie"
+                        label="description"
+                        v-model="form.description"
+                        :message="form.errors.description"
+                        required
+                    />
                     <div class="modal-footer">
                         <Link
                             :href="route('category')"

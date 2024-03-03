@@ -287,21 +287,11 @@ const submit = () => {
                                 </div>
                                 <div class="col-md-6">
                                     <Input
-                                        input_type="email"
-                                        place="votre email"
-                                        label="email"
-                                        v-model="form.email"
-                                        :message="form.errors.email"
-                                        required
-                                    />
-                                </div>
-                                <div class="col-md-6">
-                                    <Input
                                         input_type="text"
-                                        place="votre contact"
-                                        label="contact"
-                                        v-model="form.contact"
-                                        :message="form.errors.contact"
+                                        place="votre adresse"
+                                        label="Adresse"
+                                        v-model="form.adresse"
+                                        :message="form.errors.adresse"
                                         required
                                     />
                                 </div>
@@ -318,13 +308,24 @@ const submit = () => {
                                 <div class="col-md-6">
                                     <Input
                                         input_type="text"
-                                        place="votre adresse"
-                                        label="Adresse"
-                                        v-model="form.adresse"
-                                        :message="form.errors.adresse"
+                                        place="votre numero de telephone"
+                                        label="Telephone"
+                                        v-model="form.contact"
+                                        :message="form.errors.contact"
                                         required
                                     />
                                 </div>
+                                <div class="col-md-6">
+                                    <Input
+                                        input_type="email"
+                                        place="votre email"
+                                        label="email"
+                                        v-model="form.email"
+                                        :message="form.errors.email"
+                                        required
+                                    />
+                                </div>
+
                                 <div class="col-md-6">
                                     <Input
                                         input_type="text"
@@ -404,7 +405,8 @@ const submit = () => {
                                             aria-controls="collapsePassword"
                                             for="createaccount"
                                             ><span
-                                                >Créer un compte??</span
+                                                >Souhaitez vous crée un compte
+                                                directement?</span
                                             ></label
                                         >
                                     </div>
@@ -423,7 +425,10 @@ const submit = () => {
                             </div>
 
                             <div class="mb-20">
-                                <h5>Additional information</h5>
+                                <h5>
+                                    Avez-vous des commentaire a ajouter a votre
+                                    commande ?
+                                </h5>
                             </div>
                             <div class="form-group mb-30">
                                 <textarea
@@ -438,7 +443,7 @@ const submit = () => {
                                 ></div>
                                 <div class="payment_method">
                                     <div class="mb-25">
-                                        <h5>Payment</h5>
+                                        <h5>Moyen de Paiment</h5>
                                     </div>
                                     <div class="payment_option">
                                         <div class="custome-radio">
