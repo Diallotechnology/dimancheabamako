@@ -15,7 +15,7 @@ class Shipping extends Model
      *
      * @var array
      */
-    protected $fillable = ['zone_id', 'transport_id', 'montant', 'temps', 'poids'];
+    protected $fillable = ['zone_id', 'transport_id', 'poids_id', 'montant', 'temps'];
 
     /**
      * Get the zone that owns the Shipping
@@ -31,5 +31,13 @@ class Shipping extends Model
     public function transport(): BelongsTo
     {
         return $this->belongsTo(Transport::class);
+    }
+
+    /**
+     * Get the poid that owns the Shipping
+     */
+    public function poid(): BelongsTo
+    {
+        return $this->belongsTo(Poids::class);
     }
 }

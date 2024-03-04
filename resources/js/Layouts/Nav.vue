@@ -56,6 +56,12 @@
                     <span class="text">Pays</span>
                 </Link>
             </NavLink>
+            <NavLink :active="route().current('poids')">
+                <Link class="menu-link" :href="route('poids')">
+                    <i class="icon material-icons md-power_input"></i>
+                    <span class="text">Poids</span>
+                </Link>
+            </NavLink>
             <NavLink :active="route().current('shipping')">
                 <Link class="menu-link" :href="route('shipping')">
                     <i class="icon material-icons md-directions_transit"></i>
@@ -118,6 +124,5 @@
 </template>
 <script setup>
 import NavLink from "@/Components/NavLink.vue";
-import Dropdown from "@/Components/Dropdown.vue";
 import { Link } from "@inertiajs/vue3";
 </script>

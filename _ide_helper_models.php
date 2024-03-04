@@ -158,6 +158,21 @@ namespace App\Models{
 
 namespace App\Models{
 /**
+ * App\Models\Poids
+ *
+ * @property-read string $created_at
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Shipping> $shippings
+ * @property-read int|null $shippings_count
+ * @method static \Database\Factories\PoidsFactory factory($count = null, $state = [])
+ * @method static \Illuminate\Database\Eloquent\Builder|Poids newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|Poids newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|Poids query()
+ */
+	class Poids extends \Eloquent {}
+}
+
+namespace App\Models{
+/**
  * App\Models\Product
  *
  * @property int $id
@@ -249,6 +264,7 @@ namespace App\Models{
  * @property int $montant
  * @property string $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property-read \App\Models\Poids|null $poid
  * @property-read \App\Models\Transport $transport
  * @property-read \App\Models\Zone $zone
  * @method static \Database\Factories\ShippingFactory factory($count = null, $state = [])

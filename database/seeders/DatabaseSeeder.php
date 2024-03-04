@@ -8,6 +8,7 @@ use App\Enum\RoleEnum;
 use App\Models\Category;
 use App\Models\Client;
 use App\Models\Order;
+use App\Models\Poids;
 use App\Models\Product;
 use App\Models\Shipping;
 use App\Models\Slide;
@@ -47,6 +48,10 @@ class DatabaseSeeder extends Seeder
         Zone::factory()->hasCountries(5)->create(['nom' => 'Asie']);
         Transport::factory()->hasZones(2)->create(['nom' => 'DHL']);
         Transport::factory()->hasZones(2)->create(['nom' => 'FeDEX']);
+        Poids::factory()->create(['min' => '1', 'max' => '2']);
+        Poids::factory()->create(['min' => '3', 'max' => '4']);
+        Poids::factory()->create(['min' => '5', 'max' => '7']);
+        Poids::factory()->create(['min' => '8', 'max' => '10']);
         Shipping::factory(20)->create();
         User::factory(30)->create();
         Category::factory(20)->create();

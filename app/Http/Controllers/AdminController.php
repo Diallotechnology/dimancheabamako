@@ -7,6 +7,7 @@ use App\Models\Category;
 use App\Models\Client;
 use App\Models\Country;
 use App\Models\Order;
+use App\Models\Poids;
 use App\Models\Product;
 use App\Models\Promotion;
 use App\Models\Shipping;
@@ -149,6 +150,17 @@ class AdminController extends Controller
         return Inertia::render('Admin/Shipping/Index', compact('filter', 'rows', 'transport', 'zone'));
     }
 
+    public function poids()
+    {
+        $rows = Poids::when(Request::input('search'), function ($query, $search) {
+            $query->where('min', 'like', '%'.$search.'%')->orwhere('max', 'like', '%'.$search.'%');
+        })->latest('id')->paginate(10)
+            ->withQueryString();
+        $filter = Request::only('search');
+
+        return Inertia::render('Admin/Poids/Index', compact('rows', 'filter'));
+    }
+
     public function transport()
     {
         $rows = Transport::with('zones')->when(Request::input('search'), function ($query, $search) {
@@ -158,11 +170,6 @@ class AdminController extends Controller
         $filter = Request::only('search');
 
         return Inertia::render('Admin/Transport/Index', compact('filter', 'rows', 'zone'));
-    }
-
-    public function maintenance()
-    {
-        return Artisan::call('down --with-secret');
     }
 
     public function user()
@@ -185,5 +192,10 @@ class AdminController extends Controller
         $filter = Request::only('search');
 
         return Inertia::render('Admin/User/Client', compact('rows', 'filter'));
+    }
+
+    public function maintenance()
+    {
+        return Artisan::call('down --with-secret');
     }
 }

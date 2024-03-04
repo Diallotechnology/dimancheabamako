@@ -15,8 +15,8 @@ return new class extends Migration
             $table->id();
             $table->foreignId('transport_id')->constrained()->cascadeOnUpdate()->cascadeOnDelete();
             $table->foreignId('zone_id')->constrained()->cascadeOnUpdate()->cascadeOnDelete();
+            $table->foreignId('poids_id')->constrained()->cascadeOnUpdate()->cascadeOnDelete();
             $table->string('temps');
-            $table->string('poids');
             $table->integer('montant');
             $table->timestamps();
         });
