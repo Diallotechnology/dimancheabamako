@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 
+use App\Enum\RoleEnum;
 use App\Models\Category;
 use App\Models\Client;
 use App\Models\Order;
@@ -22,7 +23,7 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        User::factory()->create(['email' => 'admin@gmail.com', 'role' => true]);
+        User::factory()->create(['email' => 'admin@gmail.com', 'role' => RoleEnum::ADMIN->value]);
         Slide::factory()->create([
             'text_one' => 'Supper value deals',
             'text_two' => 'On all products',

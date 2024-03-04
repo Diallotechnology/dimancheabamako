@@ -69,17 +69,42 @@
                     <span class="text">Transporteur</span>
                 </Link>
             </NavLink>
+
+            <li
+                class="menu-item has-submenu"
+                :class="{
+                    active:
+                        route().current('user')
+                        | route().current('user.client'),
+                }"
+            >
+                <a class="menu-link" href="">
+                    <i class="icon material-icons md-person"></i>
+                    <span class="text">Utilisateurs</span>
+                </a>
+                <div class="submenu" style="display: none">
+                    <Link
+                        :href="route('user.client')"
+                        :class="{
+                            active: route().current('user.client'),
+                        }"
+                    >
+                        Client
+                    </Link>
+                    <Link
+                        :href="route('user')"
+                        :class="{
+                            active: route().current('user'),
+                        }"
+                    >
+                        Administration
+                    </Link>
+                </div>
+            </li>
             <NavLink :active="route().current('slide')">
                 <Link class="menu-link" :href="route('slide')">
                     <i class="icon material-icons md-image"></i>
                     <span class="text">Slide</span>
-                </Link>
-            </NavLink>
-
-            <NavLink :active="route().current('user')">
-                <Link class="menu-link" :href="route('user')">
-                    <i class="icon material-icons md-person"></i>
-                    <span class="text">Utilisateurs</span>
                 </Link>
             </NavLink>
             <NavLink :active="route().current('maintenance')">
@@ -90,18 +115,6 @@
             </NavLink>
         </ul>
     </nav>
-    <!-- <Dropdown>
-        <template #nom>
-            <i class="icon material-icons md-shopping_bag"></i>
-            <span class="text">Products</span>
-        </template>
-        <div class="submenu">
-            <a href="page-products-list.html">Product List</a>
-            <a href="page-products-grid.html">Product grid</a>
-            <a href="page-products-grid-2.html">Product grid 2</a>
-            <a href="page-categories.html">Categories</a>
-        </div>
-    </Dropdown> -->
 </template>
 <script setup>
 import NavLink from "@/Components/NavLink.vue";

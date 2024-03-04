@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Enum\RoleEnum;
 use App\Models\Category;
 use App\Models\Client;
 use App\Models\Country;
@@ -169,9 +170,20 @@ class AdminController extends Controller
         $rows = User::when(Request::input('search'), function ($query, $search) {
             $query->where('name', 'like', '%'.$search.'%')
                 ->orwhere('email', 'like', '%'.$search.'%');
-        })->latest('id')->paginate(10)->withQueryString();
+        })->where('role', '!=', RoleEnum::CUSTOMER->value)->latest('id')->paginate(10)->withQueryString();
         $filter = Request::only('search');
 
         return Inertia::render('Admin/User/Index', compact('rows', 'filter'));
+    }
+
+    public function customer()
+    {
+        $rows = User::when(Request::input('search'), function ($query, $search) {
+            $query->where('name', 'like', '%'.$search.'%')
+                ->orwhere('email', 'like', '%'.$search.'%');
+        })->where('role', RoleEnum::CUSTOMER->value)->latest('id')->paginate(10)->withQueryString();
+        $filter = Request::only('search');
+
+        return Inertia::render('Admin/User/Client', compact('rows', 'filter'));
     }
 }

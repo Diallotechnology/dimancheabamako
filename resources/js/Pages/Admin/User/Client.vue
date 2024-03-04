@@ -19,21 +19,10 @@ const props = defineProps({
 });
 
 let search = ref(props.filter.search);
-// watch(
-//     search,
-//     debounce((value) => {
-//         router.get(
-//             "/admin/user",
-//             { search: value },
-//             { preserveState: true, replace: true }
-//         );
-//     }, 600)
-// );
-
 watch(search, (value) => {
     setTimeout(() => {
         router.get(
-            "/admin/user",
+            "/admin/user/client",
             { search: value },
             { preserveState: true, replace: true }
         );
@@ -59,13 +48,13 @@ const submit = () => {
 </script>
 
 <template>
-    <Head title="Utilisateur" />
+    <Head title="Utilisateur client" />
 
     <AuthenticatedLayout>
         <div class="content-header">
             <div>
                 <h2 class="content-title card-title">
-                    Listes des utilisateurs
+                    Listes des utilisateurs client
                 </h2>
             </div>
             <div>

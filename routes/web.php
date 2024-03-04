@@ -40,6 +40,7 @@ Route::prefix('admin')->middleware('auth')->group(function () {
         Route::get('product', 'product')->name('product');
         Route::get('category', 'category')->name('category');
         Route::get('user', 'user')->name('user');
+        Route::get('customer', 'customer')->name('user.client');
         Route::get('client', 'client')->name('client');
         Route::get('promotion', 'promotion')->name('promotion');
         Route::get('zone', 'zone')->name('zone');

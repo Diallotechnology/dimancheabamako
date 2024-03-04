@@ -243,19 +243,18 @@ namespace App\Models{
  *
  * @property int $id
  * @property int $transport_id
- * @property int $country_id
+ * @property int $zone_id
  * @property string $temps
  * @property string $poids
  * @property int $montant
  * @property string $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property-read \App\Models\Transport $transport
- * @property-read \App\Models\Zone|null $zone
+ * @property-read \App\Models\Zone $zone
  * @method static \Database\Factories\ShippingFactory factory($count = null, $state = [])
  * @method static \Illuminate\Database\Eloquent\Builder|Shipping newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Shipping newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Shipping query()
- * @method static \Illuminate\Database\Eloquent\Builder|Shipping whereCountryId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Shipping whereCreatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Shipping whereId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Shipping whereMontant($value)
@@ -263,6 +262,7 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder|Shipping whereTemps($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Shipping whereTransportId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Shipping whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Shipping whereZoneId($value)
  */
 	class Shipping extends \Eloquent {}
 }
@@ -329,7 +329,7 @@ namespace App\Models{
  * @property \Illuminate\Support\Carbon|null $email_verified_at
  * @property mixed $password
  * @property int $change_password
- * @property int $role
+ * @property \App\Enum\RoleEnum $role
  * @property int $etat
  * @property string|null $remember_token
  * @property string $created_at
