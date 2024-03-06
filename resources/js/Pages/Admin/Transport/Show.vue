@@ -1,8 +1,5 @@
 <script setup>
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
-import Input from "@/Components/Input.vue";
-import { router, useForm, Link } from "@inertiajs/vue3";
-import notify from "@/notifications";
 
 const props = defineProps({
     transport: {
@@ -15,4 +12,3 @@ const props = defineProps({
 <template>
     <AuthenticatedLayout> </AuthenticatedLayout>
 </template>
-@/helper

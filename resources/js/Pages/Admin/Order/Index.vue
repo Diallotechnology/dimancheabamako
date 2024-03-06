@@ -1,6 +1,6 @@
 <script setup>
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
-import { Head, router, useForm } from "@inertiajs/vue3";
+import { Head, router } from "@inertiajs/vue3";
 import ButtonEdit from "@/Components/ButtonEdit.vue";
 import ButtonDelete from "@/Components/ButtonDelete.vue";
 import Table from "@/Components/Table.vue";
@@ -24,7 +24,7 @@ const props = defineProps({
 });
 
 let search = ref(props.filter.search);
-let etat = ref(props.filter.etat);
+// let etat = ref(props.filter.etat);
 let date = ref(props.filter.date);
 let client_id = ref(props.filter.client_id);
 watch(search, (value) => {
@@ -60,7 +60,6 @@ watch(search, (value) => {
                     </div>
                     <div class="col-md-2 col-6">
                         <input
-                            v-model="date"
                             type="date"
                             value="02.05.2022"
                             class="form-control"
