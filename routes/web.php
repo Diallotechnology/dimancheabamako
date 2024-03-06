@@ -32,7 +32,7 @@ Route::prefix('admin')->middleware('auth')->group(function () {
     Route::resource('zone', ZoneController::class)->except('index', 'create');
     Route::resource('country', CountryController::class)->except('index', 'create');
     Route::resource('shipping', ShippingController::class)->except('index', 'create');
-    Route::resource('poids', PoidsController::class)->except('index', 'create', 'show');
+    Route::resource('poid', PoidsController::class)->except('index', 'create', 'show');
     Route::get('transport/{transport}', [TransportController::class, 'get_trans_zone'])->name('transport.zone');
     Route::resource('slide', SlideController::class)->except('index', 'create');
 

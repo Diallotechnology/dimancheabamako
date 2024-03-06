@@ -3,22 +3,22 @@ import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 import { useForm, Link } from "@inertiajs/vue3";
 import notify from "@/helper";
 const props = defineProps({
-    poids: {
+    poid: {
         type: Object,
         required: true,
         default: () => ({}),
     },
 });
 const form = useForm({
-    min: props.poids.min,
-    max: props.poids.max,
+    min: props.poid.min,
+    max: props.poid.max,
 });
 
 const submit = () => {
-    form.patch(route("poids.update", props.poids.id), {
+    form.patch(route("poid.update", props.poid.id), {
         onSuccess: () => {
-            form.min = props.poids.min;
-            form.max = props.poids.max;
+            form.min = props.poid.min;
+            form.max = props.poid.max;
             notify("poids mise à jour avec success !", true);
         },
         onError: () => {

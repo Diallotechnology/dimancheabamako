@@ -139,7 +139,7 @@ class AdminController extends Controller
 
     public function shipping()
     {
-        $rows = Shipping::with('zone', 'transport')->when(Request::input('search'), function ($query, $search) {
+        $rows = Shipping::with('zone', 'transport', 'poids')->when(Request::input('search'), function ($query, $search) {
             $query->where('nom', 'like', '%'.$search.'%');
         })->latest('id')->paginate(10)->withQueryString();
         $filter = Request::only('search');

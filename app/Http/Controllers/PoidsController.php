@@ -24,17 +24,18 @@ class PoidsController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Poids $poids)
+    public function edit(Poids $poid)
     {
-        return Inertia::render('Admin/Poids/Update', compact('poids'));
+
+        return Inertia::render('Admin/Poids/Update', compact('poid'));
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(StorePoidsRequest $request, Poids $poids)
+    public function update(StorePoidsRequest $request, Poids $poid)
     {
-        $poids->update($request->validated());
+        $poid->update($request->validated());
 
         return back();
     }
@@ -42,8 +43,8 @@ class PoidsController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Poids $poids)
+    public function destroy(Poids $poid)
     {
-        return $this->supp($poids);
+        return $this->supp($poid);
     }
 }

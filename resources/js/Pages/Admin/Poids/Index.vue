@@ -100,9 +100,9 @@ const submit = () => {
                         <td>{{ row.max }}</td>
                         <td>{{ row.created_at }}</td>
                         <td>
-                            <ButtonEdit :href="route('poids.edit', row.id)" />
+                            <ButtonEdit :href="route('poid.edit', row.id)" />
                             <ButtonDelete
-                                :url="route('poids.destroy', row.id)"
+                                :url="route('poid.destroy', row.id)"
                             />
                         </td>
                     </tr>
