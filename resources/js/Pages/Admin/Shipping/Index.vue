@@ -17,6 +17,10 @@ const props = defineProps({
         type: Object,
         default: () => ({}),
     },
+    poids: {
+        type: Object,
+        default: () => ({}),
+    },
     filter: {
         type: Object,
         default: () => ({}),
@@ -45,9 +49,9 @@ watch(search, (value) => {
     }, 600);
 });
 const form = useForm({
-    poids: "",
     temps: "",
     montant: "",
+    poids_id: "",
     transport_id: "",
     zone_id: "",
 });
@@ -119,7 +123,7 @@ const submit = () => {
                         <td>{{ row.transport.nom }}</td>
                         <td>{{ row.zone.nom }}</td>
                         <td>{{ row.temps }}</td>
-                        <td>{{ row.poids }}</td>
+                        <td>{{ row.poids.min }} à {{ row.poids.max }}Kg</td>
                         <td>{{ Price_format.format(row.montant) }}</td>
                         <td>{{ row.created_at }}</td>
                         <td>
@@ -163,20 +167,21 @@ const submit = () => {
                         {{ row.nom }}
                     </option>
                 </Select>
+                <Select
+                    v-model="form.poids_id"
+                    :message="form.errors.poids_id"
+                    label="Poids"
+                >
+                    <option v-for="row in poids" :key="row.id" :value="row.id">
+                        {{ row.min }} à {{ row.max }} Kg
+                    </option>
+                </Select>
                 <Input
                     input_type="text"
                     place="le temps du transport"
                     label="Temps"
                     v-model="form.temps"
                     :message="form.errors.temps"
-                    required
-                />
-                <Input
-                    input_type="text"
-                    place="le poids du transport"
-                    label="Poids"
-                    v-model="form.poids"
-                    :message="form.errors.poids"
                     required
                 />
                 <Input

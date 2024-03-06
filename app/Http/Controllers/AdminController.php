@@ -143,11 +143,10 @@ class AdminController extends Controller
             $query->where('nom', 'like', '%'.$search.'%');
         })->latest('id')->paginate(10)->withQueryString();
         $filter = Request::only('search');
-
-        $zone = Zone::all();
+        $poids = Poids::all();
         $transport = Transport::all();
 
-        return Inertia::render('Admin/Shipping/Index', compact('filter', 'rows', 'transport', 'zone'));
+        return Inertia::render('Admin/Shipping/Index', compact('filter', 'rows', 'transport', 'poids'));
     }
 
     public function poids()

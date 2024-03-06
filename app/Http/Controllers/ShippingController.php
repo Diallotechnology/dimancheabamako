@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Helper\DeleteAction;
 use App\Http\Requests\StoreShippingRequest;
+use App\Models\Poids;
 use App\Models\Shipping;
 use App\Models\Transport;
 use Inertia\Inertia;
@@ -11,22 +12,6 @@ use Inertia\Inertia;
 class ShippingController extends Controller
 {
     use DeleteAction;
-
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
-    {
-        //
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
 
     /**
      * Store a newly created resource in storage.
@@ -52,8 +37,9 @@ class ShippingController extends Controller
     public function edit(Shipping $shipping)
     {
         $transport = Transport::all();
+        $poids = Poids::all();
 
-        return Inertia::render('Admin/Shipping/Update', compact('shipping', 'transport'));
+        return Inertia::render('Admin/Shipping/Update', compact('shipping', 'transport', 'poids'));
     }
 
     /**

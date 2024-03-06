@@ -15,6 +15,11 @@ const props = defineProps({
         required: true,
         default: () => ({}),
     },
+    poids: {
+        type: Object,
+        required: true,
+        default: () => ({}),
+    },
 });
 const zone = ref([]);
 const getzone = async (url) => {
@@ -32,9 +37,9 @@ onMounted(() => {
     getzone(route("transport.zone", props.shipping.transport_id));
 });
 const form = useForm({
-    poids: props.shipping.poids,
     temps: props.shipping.temps,
     montant: props.shipping.montant,
+    poids_id: props.shipping.poids_id,
     transport_id: props.shipping.transport_id,
     zone_id: props.shipping.zone_id,
 });
@@ -45,6 +50,7 @@ const submit = () => {
             form.poids = props.shipping.poids;
             form.temps = props.shipping.temps;
             form.montant = props.shipping.montant;
+            form.poids_id = props.shipping.poids_id;
             form.transport_id = props.shipping.transport_id;
             form.zone_id = props.shipping.zone_id;
             notify("livraison mise à jour avec success !", true);
@@ -91,6 +97,19 @@ const submit = () => {
                             {{ row.nom }}
                         </option>
                     </Select>
+                    <Select
+                        v-model="form.poids_id"
+                        :message="form.errors.poids_id"
+                        label="Poids"
+                    >
+                        <option
+                            v-for="row in poids"
+                            :key="row.id"
+                            :value="row.id"
+                        >
+                            {{ row.min }} à {{ row.max }} Kg
+                        </option>
+                    </Select>
                     <Input
                         input_type="text"
                         place="le temps du transport"
@@ -99,14 +118,7 @@ const submit = () => {
                         :message="form.errors.temps"
                         required
                     />
-                    <Input
-                        input_type="text"
-                        place="le poids du transport"
-                        label="Poids"
-                        v-model="form.poids"
-                        :message="form.errors.poids"
-                        required
-                    />
+
                     <Input
                         input_type="number"
                         place="le prix du transport"

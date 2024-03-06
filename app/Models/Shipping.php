@@ -36,7 +36,7 @@ class Shipping extends Model
     /**
      * Get the poid that owns the Shipping
      */
-    public function poid(): BelongsTo
+    public function poids(): BelongsTo
     {
         return $this->belongsTo(Poids::class);
     }

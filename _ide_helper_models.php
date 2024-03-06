@@ -160,13 +160,22 @@ namespace App\Models{
 /**
  * App\Models\Poids
  *
- * @property-read string $created_at
+ * @property int $id
+ * @property int $min
+ * @property int $max
+ * @property string $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Shipping> $shippings
  * @property-read int|null $shippings_count
  * @method static \Database\Factories\PoidsFactory factory($count = null, $state = [])
  * @method static \Illuminate\Database\Eloquent\Builder|Poids newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Poids newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Poids query()
+ * @method static \Illuminate\Database\Eloquent\Builder|Poids whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Poids whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Poids whereMax($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Poids whereMin($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Poids whereUpdatedAt($value)
  */
 	class Poids extends \Eloquent {}
 }
@@ -259,12 +268,12 @@ namespace App\Models{
  * @property int $id
  * @property int $transport_id
  * @property int $zone_id
+ * @property int $poids_id
  * @property string $temps
- * @property string $poids
  * @property int $montant
  * @property string $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
- * @property-read \App\Models\Poids|null $poid
+ * @property-read \App\Models\Poids $poids
  * @property-read \App\Models\Transport $transport
  * @property-read \App\Models\Zone $zone
  * @method static \Database\Factories\ShippingFactory factory($count = null, $state = [])
@@ -274,7 +283,7 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder|Shipping whereCreatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Shipping whereId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Shipping whereMontant($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Shipping wherePoids($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Shipping wherePoidsId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Shipping whereTemps($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Shipping whereTransportId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Shipping whereUpdatedAt($value)
