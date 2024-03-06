@@ -94,6 +94,19 @@ namespace App\Models{
 
 namespace App\Models{
 /**
+ * App\Models\Devise
+ *
+ * @property-read string $created_at
+ * @method static \Database\Factories\DeviseFactory factory($count = null, $state = [])
+ * @method static \Illuminate\Database\Eloquent\Builder|Devise newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|Devise newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|Devise query()
+ */
+	class Devise extends \Eloquent {}
+}
+
+namespace App\Models{
+/**
  * App\Models\Image
  *
  * @property int $id

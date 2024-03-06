@@ -75,6 +75,12 @@
                     <span class="text">Transporteur</span>
                 </Link>
             </NavLink>
+            <NavLink :active="route().current('devise')">
+                <Link class="menu-link" :href="route('devise')">
+                    <i class="icon material-icons md-monetization_on"></i>
+                    <span class="text">Devise</span>
+                </Link>
+            </NavLink>
 
             <li
                 class="menu-item has-submenu"

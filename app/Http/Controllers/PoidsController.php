@@ -26,7 +26,6 @@ class PoidsController extends Controller
      */
     public function edit(Poids $poid)
     {
-
         return Inertia::render('Admin/Poids/Update', compact('poid'));
     }
 

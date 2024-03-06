@@ -5,6 +5,7 @@ use App\Http\Controllers\CartController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\ClientController;
 use App\Http\Controllers\CountryController;
+use App\Http\Controllers\DeviseController;
 use App\Http\Controllers\ImageController;
 use App\Http\Controllers\LinkController;
 use App\Http\Controllers\OrderController;
@@ -33,6 +34,7 @@ Route::prefix('admin')->middleware('auth')->group(function () {
     Route::resource('country', CountryController::class)->except('index', 'create');
     Route::resource('shipping', ShippingController::class)->except('index', 'create');
     Route::resource('poid', PoidsController::class)->except('index', 'create', 'show');
+    Route::resource('devise', DeviseController::class)->except('index', 'create', 'show', 'store');
     Route::get('transport/{transport}', [TransportController::class, 'get_trans_zone'])->name('transport.zone');
     Route::resource('slide', SlideController::class)->except('index', 'create');
 
@@ -50,6 +52,7 @@ Route::prefix('admin')->middleware('auth')->group(function () {
         Route::get('transport', 'transport')->name('transport');
         Route::get('shipping', 'shipping')->name('shipping');
         Route::get('poids', 'poids')->name('poids');
+        Route::get('devise', 'devise')->name('devise');
         Route::get('slide', 'slide')->name('slide');
         Route::get('maintenance', 'maintenance')->name('maintenance');
     });

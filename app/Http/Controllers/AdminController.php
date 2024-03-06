@@ -6,6 +6,7 @@ use App\Enum\RoleEnum;
 use App\Models\Category;
 use App\Models\Client;
 use App\Models\Country;
+use App\Models\Devise;
 use App\Models\Order;
 use App\Models\Poids;
 use App\Models\Product;
@@ -158,6 +159,13 @@ class AdminController extends Controller
         $filter = Request::only('search');
 
         return Inertia::render('Admin/Poids/Index', compact('rows', 'filter'));
+    }
+
+    public function devise()
+    {
+        $rows = Devise::paginate(10);
+
+        return Inertia::render('Admin/Devise/Index', compact('rows'));
     }
 
     public function transport()
