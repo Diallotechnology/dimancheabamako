@@ -1,5 +1,4 @@
 import "./bootstrap";
-// import '../css/app.css';
 
 import { createApp, h } from "vue";
 import { createInertiaApp } from "@inertiajs/vue3";
@@ -11,8 +10,6 @@ import Input from "@/Components/Input.vue";
 import TextArea from "@/Components/TextArea.vue";
 import InputDate from "@/Components/InputDate.vue";
 
-// import Multiselect from "vue-multiselect";
-
 const appName = import.meta.env.VITE_APP_NAME;
 
 createInertiaApp({
@@ -23,17 +20,14 @@ createInertiaApp({
             import.meta.glob("./Pages/**/*.vue")
         ),
     setup({ el, App, props, plugin }) {
-        return (
-            createApp({ render: () => h(App, props) })
-                .use(plugin)
-                .use(ZiggyVue)
-                .component("Select", Select)
-                // .component("multiselect", Multiselect)
-                .component("InputDate", InputDate)
-                .component("Input", Input)
-                .component("TextArea", TextArea)
-                .mount(el)
-        );
+        return createApp({ render: () => h(App, props) })
+            .use(plugin)
+            .use(ZiggyVue)
+            .component("Select", Select)
+            .component("InputDate", InputDate)
+            .component("Input", Input)
+            .component("TextArea", TextArea)
+            .mount(el);
     },
     progress: {
         color: "#4B5563",

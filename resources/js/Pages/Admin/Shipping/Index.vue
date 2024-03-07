@@ -104,7 +104,7 @@ const submit = () => {
                     </div>
                 </div>
             </header>
-            <Table :rows="rows">
+            <Table>
                 <thead>
                     <tr>
                         <th>#ID</th>
@@ -118,23 +118,30 @@ const submit = () => {
                     </tr>
                 </thead>
                 <tbody>
-                    <tr v-for="row in rows.data" :key="row.id">
-                        <td>{{ row.id }}</td>
-                        <td>{{ row.transport.nom }}</td>
-                        <td>{{ row.zone.nom }}</td>
-                        <td>{{ row.temps }}</td>
-                        <td>{{ row.poids.min }} à {{ row.poids.max }}Kg</td>
-                        <td>{{ Price_format.format(row.montant) }}</td>
-                        <td>{{ row.created_at }}</td>
-                        <td>
-                            <ButtonEdit
-                                :href="route('shipping.edit', row.id)"
-                            />
-                            <ButtonDelete
-                                :url="route('shipping.destroy', row.id)"
-                            />
-                        </td>
-                    </tr>
+                    <template
+                        v-for="(group, transportName) in rows"
+                        :key="transportName"
+                    >
+                        <tr v-for="item in group" :key="item.id">
+                            <td>{{ item.id }}</td>
+                            <td>{{ transportName }}</td>
+                            <td>{{ item.zone.nom }}</td>
+                            <td>{{ item.temps }}</td>
+                            <td>
+                                {{ item.poids.min }} à {{ item.poids.max }}Kg
+                            </td>
+                            <td>{{ Price_format.format(item.montant) }}</td>
+                            <td>{{ item.created_at }}</td>
+                            <td>
+                                <ButtonEdit
+                                    :href="route('shipping.edit', item.id)"
+                                />
+                                <ButtonDelete
+                                    :url="route('shipping.destroy', item.id)"
+                                />
+                            </td>
+                        </tr>
+                    </template>
                 </tbody>
             </Table>
         </div>

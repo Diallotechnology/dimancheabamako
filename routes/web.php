@@ -17,6 +17,7 @@ use App\Http\Controllers\SlideController;
 use App\Http\Controllers\TransportController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\ZoneController;
+use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Route;
 
 Route::prefix('admin')->middleware('auth')->group(function () {
@@ -71,7 +72,8 @@ Route::controller(CartController::class)->group(function () {
 });
 Route::controller(LinkController::class)->group(function () {
     Route::get('/', 'home')->name('home');
-    Route::get('lang/{id}', 'langchange')->name('language');
+    Route::get('lang/{lang}', 'langchange')->name('language');
+    Route::get('devise', 'getTaux')->name('devise.taux');
     Route::get('shop/{category?}', 'shop')->name('shop');
     Route::get('livraison', 'livraison')->name('livraison');
     Route::get('getcategory', 'getCategory')->name('getCategory');
@@ -80,4 +82,9 @@ Route::controller(LinkController::class)->group(function () {
 
 Route::inertia('contact', 'Contact')->name('contact');
 Route::inertia('about', 'About')->name('about');
+// Route::get('test', function () {
+//     Artisan::call('optimize:clear');
+//     Artisan::call('db:wipe');
+//     Artisan::call('migrate --seed');
+// });
 require __DIR__.'/auth.php';

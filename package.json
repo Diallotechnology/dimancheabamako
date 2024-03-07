@@ -3,7 +3,7 @@
     "type": "module",
     "scripts": {
         "dev": "vite",
-        "build": "vite build && vite build --ssr && vite build && vite build --ssr --ssr && vite build && vite build --ssr && vite build && vite build --ssr --ssr --ssr"
+        "build": "vite build"
     },
     "devDependencies": {
         "@inertiajs/vue3": "^1.0.0",
@@ -21,10 +21,6 @@
         "vue3-toastify": "^0.2.1"
     },
     "dependencies": {
-        "@headlessui/vue": "^1.7.19",
-        "maz-ui": "^3.32.2",
-        "select2-bootstrap-5-theme": "^1.3.0",
-        "tiny-emitter": "^2.1.0",
         "vue-multiselect": "^3.0.0-beta.3"
     }
 }

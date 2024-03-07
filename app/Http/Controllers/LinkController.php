@@ -3,9 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\Category;
+use App\Models\Devise;
 use App\Models\Product;
 use App\Models\Slide;
-use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Request;
 use Inertia\Inertia;
 
@@ -26,7 +26,6 @@ class LinkController extends Controller
 
     public function langchange(string $lang)
     {
-        App::setLocale($lang);
         session()->put('locale', $lang);
 
         return redirect()->back();
@@ -37,20 +36,35 @@ class LinkController extends Controller
         return Inertia::render('Livraison');
     }
 
+    public function getTaux()
+    {
+        $taux = '';
+
+        if (session('locale') === 'fr') {
+            $taux = Devise::whereType('EUR')->first('taux');
+        } elseif (session('locale') === 'en') {
+            $taux = Devise::whereType('USD')->first('taux');
+        }
+
+        return $taux->taux;
+    }
+
     public function shop(?Category $category = null)
     {
 
         $query =
             Product::when(Request::input('search'), function ($query, $search) {
-                $query->where('nom', 'like', '%'.$search.'%')->orwhere('color', 'like', '%'.$search.'%');
+                $query->whereAny(['nom', 'color'], 'LIKE', '%'.$search.'%');
             })->when($category, function ($query, $category) {
                 $query->where('categorie_id', $category->id);
             });
         $rows = $query->latest('id')->paginate(15)->withQueryString();
-        $filter = Request::only('search', 'cat');
-        $categorie = Category::all();
 
-        return Inertia::render('Shop/Index', \compact('categorie', 'filter', 'rows'));
+        $filter = Request::only('search');
+        $categorie = Category::all();
+        $desc = $category ? $category->description : '';
+
+        return Inertia::render('Shop/Index', compact('categorie', 'filter', 'rows', 'desc'));
     }
 
     public function getCategory()

@@ -1,4 +1,3 @@
-import { ref } from "vue";
 import { toast } from "vue3-toastify";
 import "vue3-toastify/dist/index.css";
 
@@ -30,11 +29,6 @@ export let cartnotify = (message = "", type) => {
 export let Price_format = new Intl.NumberFormat("fr-FR", {
     style: "currency",
     currency: "XOF",
-});
-
-export let Price_euro = new Intl.NumberFormat("fr-FR", {
-    style: "currency",
-    currency: "EUR",
 });
 
 export default notify;

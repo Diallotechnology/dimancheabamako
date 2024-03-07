@@ -1,8 +1,8 @@
 <script setup>
 import Layout from "@/Shared/Layout.vue";
 import Pagination from "@/Components/Pagination.vue";
-import { Price_euro, AddToCard } from "@/helper";
-import { Link, router } from "@inertiajs/vue3";
+import { AddToCard } from "@/helper";
+import { Link, router, usePage } from "@inertiajs/vue3";
 import { onMounted, watch, ref } from "vue";
 const props = defineProps({
     rows: {
@@ -14,6 +14,11 @@ const props = defineProps({
         type: Object,
         required: true,
         default: () => ({}),
+    },
+    desc: {
+        type: String,
+        required: true,
+        default: "",
     },
     filter: {
         type: Object,
@@ -31,7 +36,37 @@ watch(search, (value) => {
         );
     }, 600);
 });
+const page = usePage();
+const local = page.props.locale;
+const taux = ref();
+const getDevise = async () => {
+    try {
+        await axios.get(route("devise.taux")).then((response) => {
+            taux.value = response.data;
+        });
+    } catch (error) {
+        console.error(error);
+    }
+};
+getDevise();
 
+const convertToPrice = (prixXOF) => {
+    // Remplacez 655 par le taux de conversion de XOF à EUR
+    const tauxConversion = taux.value;
+    const prixEUR = prixXOF / tauxConversion;
+    // Formatez le prix avec deux décimales
+    if (local == "fr") {
+        return new Intl.NumberFormat("fr-FR", {
+            style: "currency",
+            currency: "EUR",
+        }).format(prixEUR.toFixed(2));
+    } else if (local == "en") {
+        return new Intl.NumberFormat("en-US", {
+            style: "currency",
+            currency: "USD",
+        }).format(prixEUR.toFixed(2));
+    }
+};
 onMounted(() => {
     if ($(".sort-by-product-area").length) {
         var $body = $("body"),
@@ -77,12 +112,12 @@ onMounted(() => {
                     <div class="col-lg-9">
                         <div class="shop-product-fillter style-2">
                             <div class="totall-product">
+                                <h4 class="mb-3">{{ desc }}</h4>
                                 <p>
-                                    We found
                                     <strong class="text-brand">{{
                                         rows.total
                                     }}</strong>
-                                    element for you!
+                                    elements
                                 </p>
                             </div>
                             <div class="row">
@@ -95,11 +130,6 @@ onMounted(() => {
                                             class="form-control"
                                         />
                                     </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <select class="form-select form-select-lg">
-                                        <option>sjsjsj</option>
-                                    </select>
                                 </div>
                             </div>
                         </div>
@@ -154,7 +184,7 @@ onMounted(() => {
                                     </h2>
                                     <div class="product-price">
                                         <span>
-                                            {{ Price_euro.format(item.prix) }}
+                                            {{ convertToPrice(item.prix) }}
                                         </span>
                                         <span class="old-price">$245.8</span>
                                     </div>
@@ -208,4 +238,3 @@ onMounted(() => {
         </section>
     </Layout>
 </template>
-@/helper

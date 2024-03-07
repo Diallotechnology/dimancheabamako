@@ -18,7 +18,7 @@ class Product extends Model
      *
      * @var array
      */
-    protected $fillable = ['categorie_id', 'reference', 'nom', 'color', 'taille', 'description', 'resume', 'poids', 'video', 'prix', 'cover', 'stock', 'favoris', 'slug'];
+    protected $fillable = ['categorie_id', 'reference', 'nom', 'color', 'taille', 'description', 'resume', 'poids', 'video', 'prix', 'cover', 'stock', 'favoris'];
 
     /**
      * The relationships that should always be loaded.
@@ -26,6 +26,14 @@ class Product extends Model
      * @var array
      */
     protected $with = ['categorie'];
+
+    public function getEurAttribute()
+    {
+        // Remplacez 655 par le taux de conversion de XOF à EUR
+        $tauxConversion = 655;
+
+        return number_format($this->attributes['prix'] / $tauxConversion, 2);
+    }
 
     /**
      * Get the categorie that owns the Product

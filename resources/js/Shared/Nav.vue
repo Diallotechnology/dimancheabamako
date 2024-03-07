@@ -1,18 +1,20 @@
 <script setup>
 import { Link } from "@inertiajs/vue3";
 import { onMounted, ref, onUnmounted } from "vue";
+import { usePage } from "@inertiajs/vue3";
 const props = defineProps({
     active: {
         type: Boolean,
     },
 });
-
+const page = usePage();
+const local = page.props.locale;
 const rows = ref([]);
 const cartCount = ref(0);
 
-const updateCartCount = () => {
+const updateCartCount = async () => {
     try {
-        axios.get("/count").then((res) => {
+        await axios.get("/count").then((res) => {
             cartCount.value = res.data;
         });
     } catch (error) {
@@ -58,25 +60,46 @@ onUnmounted(() => {
                         <div class="header-action-right">
                             <div class="header-info header-info-right px-4">
                                 <ul>
-                                    <Link
-                                        class="language-dropdown-active"
-                                        :href="route('language', 'en')"
-                                    >
-                                        <i class="fi-rs-world"></i> English
-                                        <i class="fi-rs-angle-small-down"></i
-                                    ></Link>
-                                    <!-- <ul class="language-dropdown">
-                                        <li>
-                                            <Link
-                                                :href="route('language', 'fr')"
-                                                ><img
-                                                    v-bind:src="'/assets/imgs/theme/flag-fr.png'"
-                                                    alt=""
-                                                />Français</Link
-                                            >
-                                        </li>
-                                    </ul> -->
-
+                                    <li>
+                                        <Link
+                                            class="language-dropdown-active"
+                                            href="#"
+                                        >
+                                            <i class="fi-rs-world"></i>
+                                            {{
+                                                local === "fr"
+                                                    ? "Français"
+                                                    : "English"
+                                            }}
+                                            <i
+                                                class="fi-rs-angle-small-down"
+                                            ></i>
+                                        </Link>
+                                        <ul class="language-dropdown">
+                                            <li>
+                                                <Link
+                                                    :href="
+                                                        route('language', 'fr')
+                                                    "
+                                                    ><img
+                                                        src="/assets/imgs/theme/flag-fr.png"
+                                                        alt=""
+                                                    />
+                                                    Français
+                                                </Link>
+                                                <Link
+                                                    :href="
+                                                        route('language', 'en')
+                                                    "
+                                                    ><img
+                                                        src="/assets/imgs/theme/flag-us.png"
+                                                        alt=""
+                                                    />
+                                                    English
+                                                </Link>
+                                            </li>
+                                        </ul>
+                                    </li>
                                     <li>
                                         <i class="fi-rs-user"></i>
                                         <Link :href="route('login')"

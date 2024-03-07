@@ -142,7 +142,8 @@ class AdminController extends Controller
     {
         $rows = Shipping::with('zone', 'transport', 'poids')->when(Request::input('search'), function ($query, $search) {
             $query->where('nom', 'like', '%'.$search.'%');
-        })->latest('id')->paginate(10)->withQueryString();
+        })->latest('id')->get()->groupBy('transport.nom');
+        // dd($rows);
         $filter = Request::only('search');
         $poids = Poids::all();
         $transport = Transport::all();
@@ -153,7 +154,7 @@ class AdminController extends Controller
     public function poids()
     {
         $rows = Poids::when(Request::input('search'), function ($query, $search) {
-            $query->where('min', 'like', '%'.$search.'%')->orwhere('max', 'like', '%'.$search.'%');
+            $query->whereAny(['min', 'max'], 'LIKE', '%'.$search.'%');
         })->latest('id')->paginate(10)
             ->withQueryString();
         $filter = Request::only('search');

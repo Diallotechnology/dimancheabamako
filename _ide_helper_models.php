@@ -13,7 +13,7 @@
 
 namespace App\Models{
 /**
- * App\Models\Category
+ * 
  *
  * @property int $id
  * @property string $nom
@@ -39,7 +39,7 @@ namespace App\Models{
 
 namespace App\Models{
 /**
- * App\Models\Client
+ * 
  *
  * @property int $id
  * @property string $prenom
@@ -69,7 +69,7 @@ namespace App\Models{
 
 namespace App\Models{
 /**
- * App\Models\Country
+ * 
  *
  * @property int $id
  * @property int $zone_id
@@ -94,20 +94,29 @@ namespace App\Models{
 
 namespace App\Models{
 /**
- * App\Models\Devise
+ * 
  *
- * @property-read string $created_at
+ * @property int $id
+ * @property string $type
+ * @property int $taux
+ * @property string $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
  * @method static \Database\Factories\DeviseFactory factory($count = null, $state = [])
  * @method static \Illuminate\Database\Eloquent\Builder|Devise newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Devise newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Devise query()
+ * @method static \Illuminate\Database\Eloquent\Builder|Devise whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Devise whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Devise whereTaux($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Devise whereType($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Devise whereUpdatedAt($value)
  */
 	class Devise extends \Eloquent {}
 }
 
 namespace App\Models{
 /**
- * App\Models\Image
+ * 
  *
  * @property int $id
  * @property int $product_id
@@ -130,7 +139,7 @@ namespace App\Models{
 
 namespace App\Models{
 /**
- * App\Models\Order
+ * 
  *
  * @property int $id
  * @property int $client_id
@@ -171,7 +180,7 @@ namespace App\Models{
 
 namespace App\Models{
 /**
- * App\Models\Poids
+ * 
  *
  * @property int $id
  * @property int $min
@@ -195,7 +204,7 @@ namespace App\Models{
 
 namespace App\Models{
 /**
- * App\Models\Product
+ * 
  *
  * @property int $id
  * @property int $categorie_id
@@ -209,12 +218,12 @@ namespace App\Models{
  * @property string|null $taille
  * @property string $resume
  * @property string $description
- * @property string|null $slug
  * @property string|null $video
  * @property string $cover
  * @property string $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property-read \App\Models\Category $categorie
+ * @property-read mixed $eur
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Image> $images
  * @property-read int|null $images_count
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Order> $orders
@@ -237,7 +246,6 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder|Product wherePrix($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Product whereReference($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Product whereResume($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Product whereSlug($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Product whereStock($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Product whereTaille($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Product whereUpdatedAt($value)
@@ -248,7 +256,7 @@ namespace App\Models{
 
 namespace App\Models{
 /**
- * App\Models\Promotion
+ * 
  *
  * @property int $id
  * @property string $nom
@@ -276,7 +284,7 @@ namespace App\Models{
 
 namespace App\Models{
 /**
- * App\Models\Shipping
+ * 
  *
  * @property int $id
  * @property int $transport_id
@@ -307,7 +315,7 @@ namespace App\Models{
 
 namespace App\Models{
 /**
- * App\Models\Slide
+ * 
  *
  * @property int $id
  * @property string $text_one
@@ -333,7 +341,7 @@ namespace App\Models{
 
 namespace App\Models{
 /**
- * App\Models\Transport
+ * 
  *
  * @property int $id
  * @property string $nom
@@ -359,7 +367,7 @@ namespace App\Models{
 
 namespace App\Models{
 /**
- * App\Models\User
+ * 
  *
  * @property int $id
  * @property string $name
@@ -397,7 +405,7 @@ namespace App\Models{
 
 namespace App\Models{
 /**
- * App\Models\Zone
+ * 
  *
  * @property int $id
  * @property string $nom

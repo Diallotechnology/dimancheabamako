@@ -1,6 +1,4 @@
 <script setup>
-import Multiselect from "vue-multiselect";
-import { onMounted } from "vue";
 const model = defineModel({
     type: [String, Number, Object, Array],
     required: true,
@@ -21,13 +19,8 @@ const props = defineProps({
         type: String,
     },
 });
-onMounted(() => {
-    // if ($(".select-nice").length) {
-    //     $(".select-nice").select2();
-    // }
-});
 </script>
-<style src="vue-multiselect/dist/vue-multiselect.css"></style>
+
 <template>
     <div class="mb-4">
         <div>
