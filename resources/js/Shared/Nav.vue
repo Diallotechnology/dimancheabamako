@@ -2,6 +2,7 @@
 import { Link } from "@inertiajs/vue3";
 import { onMounted, ref, onUnmounted } from "vue";
 import { usePage } from "@inertiajs/vue3";
+import Cart from "@/Shared/Cart.vue";
 const props = defineProps({
     active: {
         type: Boolean,
@@ -238,104 +239,33 @@ onUnmounted(() => {
                             ><span>Info Line</span> 1900 - 888
                         </p>
                     </div>
-                    <p class="mobile-promotion">
-                        Happy <span class="text-brand">Mother's Day</span>. Big
-                        Sale Up to 40%
-                    </p>
+
                     <div class="header-action-right d-block d-lg-none">
                         <div class="header-action-2">
                             <div class="header-action-icon-2">
-                                <a href="shop-wishlist.html">
-                                    <img
-                                        alt="Evara"
-                                        v-bind:src="'assets/imgs/theme/icons/icon-heart.svg'"
-                                    />
-                                    <span class="pro-count white">4</span>
-                                </a>
-                            </div>
-                            <div class="header-action-icon-2">
-                                <a class="mini-cart-icon" href="shop-cart.html">
+                                <ul class="me-4">
+                                    <li>
+                                        <Link
+                                            :href="route('login')"
+                                            class="btn btn-brand btn-sm"
+                                        >
+                                            <i class="fi-rs-user"></i>
+                                            Connexion</Link
+                                        >
+                                    </li>
+                                </ul>
+                                <Link
+                                    class="mini-cart-icon"
+                                    :href="route('cart.index')"
+                                >
                                     <img
                                         alt="Evara"
                                         v-bind:src="'/assets/imgs/theme/icons/icon-cart.svg'"
                                     />
-                                    <span class="pro-count white">2</span>
-                                </a>
-                                <div
-                                    class="cart-dropdown-wrap cart-dropdown-hm2"
-                                >
-                                    <ul>
-                                        <li>
-                                            <div class="shopping-cart-img">
-                                                <a
-                                                    href="shop-product-right.html"
-                                                    ><img
-                                                        alt="Evara"
-                                                        v-bind:src="'assets/imgs/shop/thumbnail-3.jpg'"
-                                                /></a>
-                                            </div>
-                                            <div class="shopping-cart-title">
-                                                <h4>
-                                                    <a
-                                                        href="shop-product-right.html"
-                                                        >Plain Striola Shirts</a
-                                                    >
-                                                </h4>
-                                                <h3>
-                                                    <span>1 × </span>$800.00
-                                                </h3>
-                                            </div>
-                                            <div class="shopping-cart-delete">
-                                                <a href="#"
-                                                    ><i
-                                                        class="fi-rs-cross-small"
-                                                    ></i
-                                                ></a>
-                                            </div>
-                                        </li>
-                                        <li>
-                                            <div class="shopping-cart-img">
-                                                <a
-                                                    href="shop-product-right.html"
-                                                    ><img
-                                                        alt="Evara"
-                                                        v-bind:src="'/assets/imgs/shop/thumbnail-4.jpg'"
-                                                /></a>
-                                            </div>
-                                            <div class="shopping-cart-title">
-                                                <h4>
-                                                    <a
-                                                        href="shop-product-right.html"
-                                                        >Macbook Pro 2022</a
-                                                    >
-                                                </h4>
-                                                <h3>
-                                                    <span>1 × </span>$3500.00
-                                                </h3>
-                                            </div>
-                                            <div class="shopping-cart-delete">
-                                                <a href="#"
-                                                    ><i
-                                                        class="fi-rs-cross-small"
-                                                    ></i
-                                                ></a>
-                                            </div>
-                                        </li>
-                                    </ul>
-                                    <div class="shopping-cart-footer">
-                                        <div class="shopping-cart-total">
-                                            <h4>Total <span>$383.00</span></h4>
-                                        </div>
-                                        <div class="shopping-cart-button">
-                                            <a href="shop-cart.html"
-                                                >View cart</a
-                                            >
-                                            <a href="shop-checkout.html"
-                                                >Checkout</a
-                                            >
-                                        </div>
-                                    </div>
-                                </div>
+                                    <span class="pro-count blue"
+                                        >{{ cartCount }}
+                                    </span>
+                                </Link>
                             </div>
                             <div class="header-action-icon-2 d-block d-lg-none">
                                 <div class="burger-icon burger-icon-white">
@@ -354,11 +284,11 @@ onUnmounted(() => {
         <div class="mobile-header-wrapper-inner">
             <div class="mobile-header-top">
                 <div class="mobile-header-logo">
-                    <a href="index.html"
+                    <Link :href="route('home')"
                         ><img
-                            v-bind:src="'/assets/imgs/theme/logo.svg'"
+                            v-bind:src="'/assets/imgs/theme/logo-sm.svg'"
                             alt="logo"
-                    /></a>
+                    /></Link>
                 </div>
                 <div
                     class="mobile-menu-close close-style-wrap close-style-position-inherit"
@@ -370,38 +300,42 @@ onUnmounted(() => {
                 </div>
             </div>
             <div class="mobile-header-content-area">
-                <div class="mobile-search search-style-3 mobile-header-border">
-                    <form action="#">
-                        <input type="text" placeholder="Search for items…" />
-                        <button type="submit">
-                            <i class="fi-rs-search"></i>
-                        </button>
-                    </form>
-                </div>
                 <div class="mobile-menu-wrap mobile-header-border">
-                    <div class="main-categori-wrap mobile-header-border">
-                        <a class="categori-button-active-2" href="#">
-                            <span class="fi-rs-apps"></span> Browse Categories
-                        </a>
-                        <div
-                            class="categori-dropdown-wrap categori-dropdown-active-small"
-                        >
-                            <ul>
-                                <li>
-                                    <a href="shop-grid-right.html"
-                                        ><i class="evara-font-dress"></i>Women's
-                                        Clothing</a
-                                    >
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
                     <!-- mobile menu start -->
                     <nav>
                         <ul class="mobile-menu">
+                            <li>
+                                <Link
+                                    :class="{
+                                        active: route().current('home'),
+                                    }"
+                                    :href="route('home')"
+                                    >Accueil</Link
+                                >
+                            </li>
+
                             <li class="menu-item-has-children">
                                 <span class="menu-expand"></span
-                                ><a href="index.html">Home</a>
+                                ><a href="#">Categories</a>
+                                <ul class="dropdown">
+                                    <li v-for="row in rows" :key="row.id">
+                                        <Link :href="route('shop', row.id)">{{
+                                            row.nom
+                                        }}</Link>
+                                    </li>
+                                </ul>
+                            </li>
+
+                            <li>
+                                <Link :href="route('about')">A propos</Link>
+                            </li>
+                            <li>
+                                <Link :href="route('livraison')"
+                                    >Livraison</Link
+                                >
+                            </li>
+                            <li>
+                                <Link :href="route('contact')">Contact</Link>
                             </li>
                             <li class="menu-item-has-children">
                                 <span class="menu-expand"></span

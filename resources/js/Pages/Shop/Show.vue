@@ -1,9 +1,10 @@
 <script setup>
 import Layout from "@/Shared/Layout.vue";
-import { Link } from "@inertiajs/vue3";
-import { Price_euro, AddToCard } from "@/helper";
-import { onMounted } from "vue";
+import { AddToCard } from "@/helper";
+import { onMounted, ref } from "vue";
 import Cart from "@/Shared/Cart.vue";
+import { usePage } from "@inertiajs/vue3";
+
 const props = defineProps({
     product: {
         type: Object,
@@ -21,7 +22,37 @@ const props = defineProps({
         default: () => ({}),
     },
 });
+const page = usePage();
+const local = page.props.locale;
+const taux = ref();
+const getDevise = async () => {
+    try {
+        await axios.get(route("devise.taux")).then((response) => {
+            taux.value = response.data;
+        });
+    } catch (error) {
+        console.error(error);
+    }
+};
+getDevise();
 
+const convertToPrice = (prixXOF) => {
+    // Remplacez 655 par le taux de conversion de XOF à EUR
+    const tauxConversion = taux.value;
+    const prixEUR = prixXOF / tauxConversion;
+    // Formatez le prix avec deux décimales
+    if (local == "fr") {
+        return new Intl.NumberFormat("fr-FR", {
+            style: "currency",
+            currency: "EUR",
+        }).format(prixEUR.toFixed(2));
+    } else if (local == "en") {
+        return new Intl.NumberFormat("en-US", {
+            style: "currency",
+            currency: "USD",
+        }).format(prixEUR.toFixed(2));
+    }
+};
 onMounted(() => {
     /*Product Details*/
     var productDetails = function () {
@@ -144,7 +175,7 @@ onMounted(() => {
             <div class="container">
                 <div class="row">
                     <div class="col-lg-9">
-                        <div class="product-detail accordion-detail">
+                        <div class="product-detail accordion-detail mb-4">
                             <div class="row mb-50">
                                 <div class="col-md-6 col-sm-12 col-xs-12">
                                     <div class="detail-gallery">
@@ -203,7 +234,7 @@ onMounted(() => {
                                             >
                                                 <ins
                                                     ><span class="text-brand">{{
-                                                        Price_euro.format(
+                                                        convertToPrice(
                                                             product.prix
                                                         )
                                                     }}</span>
@@ -261,7 +292,7 @@ onMounted(() => {
                                                         AddToCard(
                                                             route(
                                                                 'cart.store',
-                                                                item.id
+                                                                product.id
                                                             )
                                                         )
                                                     "
@@ -287,16 +318,6 @@ onMounted(() => {
                                             >Description</a
                                         >
                                     </li>
-
-                                    <li class="nav-item">
-                                        <a
-                                            class="nav-link"
-                                            id="Reviews-tab"
-                                            data-bs-toggle="tab"
-                                            href="#Reviews"
-                                            >Commentaire (3)</a
-                                        >
-                                    </li>
                                 </ul>
                                 <div
                                     class="tab-content shop_info_tab entry-main-content"
@@ -311,185 +332,13 @@ onMounted(() => {
                                             </p>
                                         </div>
                                     </div>
-
-                                    <div class="tab-pane fade" id="Reviews">
-                                        <!--Comments-->
-                                        <div class="comments-area">
-                                            <div class="row">
-                                                <div class="col-lg-8">
-                                                    <h4 class="mb-30">
-                                                        Customer questions &
-                                                        answers
-                                                    </h4>
-                                                    <div class="comment-list">
-                                                        <div
-                                                            class="single-comment justify-content-between d-flex"
-                                                        >
-                                                            <div
-                                                                class="user justify-content-between d-flex"
-                                                            >
-                                                                <div
-                                                                    class="thumb text-center"
-                                                                >
-                                                                    <img
-                                                                        src="assets/imgs/page/avatar-6.jpg"
-                                                                        alt=""
-                                                                    />
-                                                                    <h6>
-                                                                        <a
-                                                                            href="#"
-                                                                            >Jacky
-                                                                            Chan</a
-                                                                        >
-                                                                    </h6>
-                                                                    <p
-                                                                        class="font-xxs"
-                                                                    >
-                                                                        Since
-                                                                        2012
-                                                                    </p>
-                                                                </div>
-                                                                <div
-                                                                    class="desc"
-                                                                >
-                                                                    <div
-                                                                        class="product-rate d-inline-block"
-                                                                    >
-                                                                        <div
-                                                                            class="product-rating"
-                                                                            style="
-                                                                                width: 90%;
-                                                                            "
-                                                                        ></div>
-                                                                    </div>
-                                                                    <p>
-                                                                        Thank
-                                                                        you very
-                                                                        fast
-                                                                        shipping
-                                                                        from
-                                                                        Poland
-                                                                        only
-                                                                        3days.
-                                                                    </p>
-                                                                    <div
-                                                                        class="d-flex justify-content-between"
-                                                                    >
-                                                                        <div
-                                                                            class="d-flex align-items-center"
-                                                                        >
-                                                                            <p
-                                                                                class="font-xs mr-30"
-                                                                            >
-                                                                                December
-                                                                                4,
-                                                                                2020
-                                                                                at
-                                                                                3:12
-                                                                                pm
-                                                                            </p>
-                                                                            <a
-                                                                                href="#"
-                                                                                class="text-brand btn-reply"
-                                                                                >Reply
-                                                                                <i
-                                                                                    class="fi-rs-arrow-right"
-                                                                                ></i>
-                                                                            </a>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                        <!--single-comment -->
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <!--comment form-->
-                                        <div class="comment-form">
-                                            <h4 class="mb-15">Add a review</h4>
-                                            <div
-                                                class="product-rate d-inline-block mb-30"
-                                            ></div>
-                                            <div class="row">
-                                                <div class="col-lg-8 col-md-12">
-                                                    <form
-                                                        class="form-contact comment_form"
-                                                        action="#"
-                                                        id="commentForm"
-                                                    >
-                                                        <div class="row">
-                                                            <div class="col-12">
-                                                                <div
-                                                                    class="form-group"
-                                                                >
-                                                                    <textarea
-                                                                        class="form-control w-100"
-                                                                        name="comment"
-                                                                        id="comment"
-                                                                        cols="30"
-                                                                        rows="9"
-                                                                        placeholder="Write Comment"
-                                                                    ></textarea>
-                                                                </div>
-                                                            </div>
-                                                            <div
-                                                                class="col-sm-6"
-                                                            >
-                                                                <div
-                                                                    class="form-group"
-                                                                >
-                                                                    <input
-                                                                        class="form-control"
-                                                                        name="name"
-                                                                        id="name"
-                                                                        type="text"
-                                                                        placeholder="Name"
-                                                                    />
-                                                                </div>
-                                                            </div>
-                                                            <div
-                                                                class="col-sm-6"
-                                                            >
-                                                                <div
-                                                                    class="form-group"
-                                                                >
-                                                                    <input
-                                                                        class="form-control"
-                                                                        name="email"
-                                                                        id="email"
-                                                                        type="email"
-                                                                        placeholder="Email"
-                                                                    />
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                        <div class="form-group">
-                                                            <button
-                                                                type="submit"
-                                                                class="button button-contactForm"
-                                                            >
-                                                                Valider
-                                                            </button>
-                                                        </div>
-                                                    </form>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
 
                     <div class="col-md-12">
-                        <h3 class="section-title style-1 mb-30">
-                            Related products
-                        </h3>
-                    </div>
-                    <div class="col-md-12">
-                        <div class="row related-products">
+                        <div class="row related-products mt-4">
                             <div class="row product-grid-4">
                                 <Cart :items="rows" />
                             </div>

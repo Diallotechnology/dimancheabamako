@@ -557,18 +557,18 @@
     });
 
     // Isotope active
-    $(".grid").imagesLoaded(function () {
-        // init Isotope
-        var $grid = $(".grid").isotope({
-            itemSelector: ".grid-item",
-            percentPosition: true,
-            layoutMode: "masonry",
-            masonry: {
-                // use outer width of grid-sizer for columnWidth
-                columnWidth: ".grid-item",
-            },
-        });
-    });
+    // $(".grid").imagesLoaded(function () {
+    //     // init Isotope
+    //     var $grid = $(".grid").isotope({
+    //         itemSelector: ".grid-item",
+    //         percentPosition: true,
+    //         layoutMode: "masonry",
+    //         masonry: {
+    //             // use outer width of grid-sizer for columnWidth
+    //             columnWidth: ".grid-item",
+    //         },
+    //     });
+    // });
 
     /*====== SidebarSearch ======*/
     function sidebarSearch() {
@@ -617,54 +617,54 @@
     /*---------------------
         Mobile menu active
     ------------------------ */
-    var $offCanvasNav = $(".mobile-menu"),
-        $offCanvasNavSubMenu = $offCanvasNav.find(".dropdown");
+    // var $offCanvasNav = $(".mobile-menu"),
+    //     $offCanvasNavSubMenu = $offCanvasNav.find(".dropdown");
 
     /*Add Toggle Button With Off Canvas Sub Menu*/
-    $offCanvasNavSubMenu
-        .parent()
-        .prepend(
-            '<span class="menu-expand"><i class="fi-rs-angle-small-down"></i></span>'
-        );
+    // $offCanvasNavSubMenu
+    //     .parent()
+    //     .prepend(
+    //         '<span class="menu-expand"><i class="fi-rs-angle-small-down"></i></span>'
+    //     );
 
     /*Close Off Canvas Sub Menu*/
-    $offCanvasNavSubMenu.slideUp();
+    // $offCanvasNavSubMenu.slideUp();
 
     /*Category Sub Menu Toggle*/
-    $offCanvasNav.on("click", "li a, li .menu-expand", function (e) {
-        var $this = $(this);
-        if (
-            $this
-                .parent()
-                .attr("class")
-                .match(
-                    /\b(menu-item-has-children|has-children|has-sub-menu)\b/
-                ) &&
-            ($this.attr("href") === "#" || $this.hasClass("menu-expand"))
-        ) {
-            e.preventDefault();
-            if ($this.siblings("ul:visible").length) {
-                $this.parent("li").removeClass("active");
-                $this.siblings("ul").slideUp();
-            } else {
-                $this.parent("li").addClass("active");
-                $this
-                    .closest("li")
-                    .siblings("li")
-                    .removeClass("active")
-                    .find("li")
-                    .removeClass("active");
-                $this.closest("li").siblings("li").find("ul:visible").slideUp();
-                $this.siblings("ul").slideDown();
-            }
-        }
-    });
+    // $offCanvasNav.on("click", "li a, li .menu-expand", function (e) {
+    //     var $this = $(this);
+    //     if (
+    //         $this
+    //             .parent()
+    //             .attr("class")
+    //             .match(
+    //                 /\b(menu-item-has-children|has-children|has-sub-menu)\b/
+    //             ) &&
+    //         ($this.attr("href") === "#" || $this.hasClass("menu-expand"))
+    //     ) {
+    //         e.preventDefault();
+    //         if ($this.siblings("ul:visible").length) {
+    //             $this.parent("li").removeClass("active");
+    //             $this.siblings("ul").slideUp();
+    //         } else {
+    //             $this.parent("li").addClass("active");
+    //             $this
+    //                 .closest("li")
+    //                 .siblings("li")
+    //                 .removeClass("active")
+    //                 .find("li")
+    //                 .removeClass("active");
+    //             $this.closest("li").siblings("li").find("ul:visible").slideUp();
+    //             $this.siblings("ul").slideDown();
+    //         }
+    //     }
+    // });
 
     /*--- language currency active ----*/
-    $(".mobile-language-active").on("click", function (e) {
-        e.preventDefault();
-        $(".lang-dropdown-active").slideToggle(900);
-    });
+    // $(".mobile-language-active").on("click", function (e) {
+    //     e.preventDefault();
+    //     $(".lang-dropdown-active").slideToggle(900);
+    // });
 
     /*--- Categori-button-active-2 ----*/
     $(".categori-button-active-2").on("click", function (e) {

@@ -51,15 +51,22 @@ class LinkController extends Controller
 
     public function shop(?Category $category = null)
     {
+        $rows = Product::with('promotions')->when(Request::input('search'), function ($query, $search) {
+            $query->whereAny(['nom', 'color'], 'LIKE', '%'.$search.'%');
+        })->when($category, function ($query, $category) {
+            $query->where('categorie_id', $category->id);
+        })->latest('id')->paginate(15)->transfom(function ($row) {
+            $row->prix_final = $row->getPrixFinalAttribute();
 
-        $query =
-            Product::when(Request::input('search'), function ($query, $search) {
-                $query->whereAny(['nom', 'color'], 'LIKE', '%'.$search.'%');
-            })->when($category, function ($query, $category) {
-                $query->where('categorie_id', $category->id);
-            });
-        $rows = $query->latest('id')->paginate(15)->withQueryString();
+            return $row;
+        });
 
+        // $rows->transfom(function ($row) {
+        //     $row->prix_final = $row->getPrixFinalAttribute();
+
+        //     return $row;
+        // });
+        dd($rows);
         $filter = Request::only('search');
         $categorie = Category::all();
         $desc = $category ? $category->description : '';

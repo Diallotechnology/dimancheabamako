@@ -27,7 +27,7 @@ class Product extends Model
      */
     protected $with = ['categorie'];
 
-    public function getEurAttribute()
+    public function getPrixFinalAttribute()
     {
         // Remplacez 655 par le taux de conversion de XOF à EUR
         $tauxConversion = 655;

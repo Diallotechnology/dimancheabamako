@@ -11,7 +11,7 @@
     <meta property="og:url" content="">
     <meta property="og:image" content="">
     <!-- Favicon -->
-    <link rel="shortcut icon" type="image/x-icon" href="assets/imgs/theme/favicon.svg">
+    <link rel="shortcut icon" type="image/x-icon" href="{{ asset('assets/imgs/theme/favicon.svg') }}">
     <title>DAB</title>
     <link href="{{ asset('assets/css/main.css') }}" rel="stylesheet" />
     @routes
