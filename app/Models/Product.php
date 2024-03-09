@@ -27,12 +27,38 @@ class Product extends Model
      */
     protected $with = ['categorie'];
 
-    public function getPrixFinalAttribute()
+    public function getPrixPromoAttribute(): string
     {
-        // Remplacez 655 par le taux de conversion de XOF à EUR
-        $tauxConversion = 655;
+        // Récupération du taux de conversion et du symbole de devise en fonction de la locale de la session
+        $tauxConversion = session('locale') === 'fr' ? Devise::whereType('EUR')->value('taux') : Devise::whereType('USD')->value('taux');
+        $deviseSymbole = session('locale') === 'fr' ? '€' : '$';
 
-        return number_format($this->attributes['prix'] / $tauxConversion, 2).' $';
+        // Si une promotion est associée au produit, calculer le prix avec réduction
+        if ($this->promotions->isNotEmpty()) {
+            $promo = $this->promotions()->first();
+            $prix = $this->prix * (1 - $promo->reduction / 100);
+
+            // Conversion du prix en devise locale et formatage
+            $prixFormat = number_format($prix / $tauxConversion, 2);
+
+            // Retour du prix formaté avec le symbole de devise
+            return $prixFormat.' '.$deviseSymbole;
+        } else {
+            // Sinon, le prix après réduction est zéro
+            return $prix = 0;
+        }
+
+    }
+
+    public function getReductionAttribute(): int
+    {
+        if ($this->promotions->isNotEmpty()) {
+            $promo = $this->promotions()->first();
+
+            return $promo->reduction;
+        } else {
+            return 0;
+        }
     }
 
     public function getPrixFormatAttribute(): string
@@ -56,6 +82,11 @@ class Product extends Model
         $prixFormat = number_format($this->attributes['prix'] / $tauxConversion, 2);
 
         return $prixFormat.' '.$deviseSymbole;
+    }
+
+    public function getpromo()
+    {
+        dd($this->promotions->isNotEmpty());
     }
 
     /**

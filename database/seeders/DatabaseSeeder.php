@@ -11,6 +11,7 @@ use App\Models\Devise;
 use App\Models\Order;
 use App\Models\Poids;
 use App\Models\Product;
+use App\Models\Promotion;
 use App\Models\Shipping;
 use App\Models\Slide;
 use App\Models\Transport;
@@ -60,6 +61,7 @@ class DatabaseSeeder extends Seeder
         Category::factory(20)->create();
         Client::factory(30)->create();
         Product::factory(30)->hasImages(3)->create();
+        Promotion::factory(5)->hasProducts(10)->create();
         Order::factory(30)->hasAttached(
             Product::factory(10)->hasImages(3)->count(4),
             ['montant' => rand(50000, 100000), 'quantity' => rand(1, 10)]

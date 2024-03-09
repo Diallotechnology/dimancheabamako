@@ -156,9 +156,18 @@ onMounted(() => {
                                     </h2>
                                     <div class="product-price">
                                         <span>
+                                            {{
+                                                item.reduction > 0
+                                                    ? item.prix_promo
+                                                    : item.prix_format
+                                            }}
+                                        </span>
+                                        <span
+                                            v-if="item.reduction > 0"
+                                            class="old-price"
+                                        >
                                             {{ item.prix_format }}
                                         </span>
-                                        <span class="old-price">$245.8</span>
                                     </div>
                                     <p class="mt-15">
                                         Categorie: {{ item.categorie.nom }}
@@ -194,7 +203,7 @@ onMounted(() => {
                             <h5
                                 class="section-title style-1 mb-30 wow fadeIn animated"
                             >
-                                Categorie
+                                Categories
                             </h5>
                             <ul class="categories">
                                 <li v-for="item in categorie" :key="item">

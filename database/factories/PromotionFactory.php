@@ -17,7 +17,10 @@ class PromotionFactory extends Factory
     public function definition(): array
     {
         return [
-            //
+            'nom' => \fake()->sentence(),
+            'debut' => \fake()->date(),
+            'fin' => \fake()->date(),
+            'reduction' => \rand(5, 10),
         ];
     }
 }

@@ -17,8 +17,25 @@ class LinkController extends Controller
     public function home()
     {
         $query = Product::query();
-        $latest = $query->take(4)->latest()->get();
-        $popular = $query->where('favoris', 1)->get();
+
+        // Récupération des derniers produits
+        $latest = $query->take(4)->latest()->get()->map(function ($row) {
+            $row->prix_promo = $row->getPrixPromoAttribute();
+            $row->prix_format = $row->getPrixFormatAttribute();
+            $row->reduction = $row->getReductionAttribute();
+
+            return $row;
+        });
+
+        // Récupération des produits populaires
+        $popular = $query->where('favoris', 1)->get()->map(function ($row) {
+            $row->prix_promo = $row->getPrixPromoAttribute();
+            $row->prix_format = $row->getPrixFormatAttribute();
+            $row->reduction = $row->getReductionAttribute();
+
+            return $row;
+        });
+
         $slide = Slide::all();
 
         return Inertia::render('Home', \compact('popular', 'latest', 'slide'));
@@ -56,12 +73,13 @@ class LinkController extends Controller
         })->when($category, function ($query, $category) {
             $query->where('categorie_id', $category->id);
         })->latest('id')->paginate(15)->through(function ($row) {
-            $row->prix_final = $row->getPrixFinalAttribute();
+            $row->prix_promo = $row->getPrixPromoAttribute();
             $row->prix_format = $row->getPrixFormatAttribute();
+            $row->reduction = $row->getReductionAttribute();
 
             return $row;
         });
-        // dd($rows);
+
         $filter = Request::only('search');
         $categorie = Category::all();
         $desc = $category ? $category->description : '';

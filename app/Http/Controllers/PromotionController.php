@@ -28,7 +28,7 @@ class PromotionController extends Controller
     public function create()
     {
         $query = Category::all();
-        $product = Product::all()->map(function ($row) {
+        $product = Product::doesntHave('promotions')->get()->map(function ($row) {
             return [
                 'label' => 'Ref '.$row->reference.' '.$row->nom,
                 'value' => "$row->id",

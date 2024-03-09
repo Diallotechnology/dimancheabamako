@@ -80,9 +80,15 @@ const props = defineProps({
                 <span v-show="item.color">Couleur {{ item.color }}</span>
                 <div class="product-price">
                     <span>
+                        {{
+                            item.reduction > 0
+                                ? item.prix_promo
+                                : item.prix_format
+                        }}
+                    </span>
+                    <span v-if="item.reduction > 0" class="old-price">
                         {{ item.prix_format }}
                     </span>
-                    <span class="old-price">$245.8</span>
                 </div>
                 <div class="product-action-1 show">
                     <button
