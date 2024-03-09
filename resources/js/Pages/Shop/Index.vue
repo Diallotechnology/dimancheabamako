@@ -36,37 +36,7 @@ watch(search, (value) => {
         );
     }, 600);
 });
-const page = usePage();
-const local = page.props.locale;
-const taux = ref();
-const getDevise = async () => {
-    try {
-        await axios.get(route("devise.taux")).then((response) => {
-            taux.value = response.data;
-        });
-    } catch (error) {
-        console.error(error);
-    }
-};
-getDevise();
 
-const convertToPrice = (prixXOF) => {
-    // Remplacez 655 par le taux de conversion de XOF à EUR
-    const tauxConversion = taux.value;
-    const prixEUR = prixXOF / tauxConversion;
-    // Formatez le prix avec deux décimales
-    if (local == "fr") {
-        return new Intl.NumberFormat("fr-FR", {
-            style: "currency",
-            currency: "EUR",
-        }).format(prixEUR.toFixed(2));
-    } else if (local == "en") {
-        return new Intl.NumberFormat("en-US", {
-            style: "currency",
-            currency: "USD",
-        }).format(prixEUR.toFixed(2));
-    }
-};
 onMounted(() => {
     if ($(".sort-by-product-area").length) {
         var $body = $("body"),
@@ -186,7 +156,7 @@ onMounted(() => {
                                     </h2>
                                     <div class="product-price">
                                         <span>
-                                            {{ convertToPrice(item.prix) }}
+                                            {{ item.prix_format }}
                                         </span>
                                         <span class="old-price">$245.8</span>
                                     </div>

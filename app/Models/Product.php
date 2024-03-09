@@ -32,7 +32,30 @@ class Product extends Model
         // Remplacez 655 par le taux de conversion de XOF à EUR
         $tauxConversion = 655;
 
-        return number_format($this->attributes['prix'] / $tauxConversion, 2);
+        return number_format($this->attributes['prix'] / $tauxConversion, 2).' $';
+    }
+
+    public function getPrixFormatAttribute(): string
+    {
+        $tauxConversion = 1; // Par défaut, aucun taux de conversion
+
+        if (session('locale') === 'fr') {
+            $devise = Devise::whereType('EUR')->first();
+            if ($devise) {
+                $tauxConversion = $devise->taux;
+            }
+            $deviseSymbole = '€';
+        } elseif (session('locale') === 'en') {
+            $devise = Devise::whereType('USD')->first();
+            if ($devise) {
+                $tauxConversion = $devise->taux;
+            }
+            $deviseSymbole = '$';
+        }
+
+        $prixFormat = number_format($this->attributes['prix'] / $tauxConversion, 2);
+
+        return $prixFormat.' '.$deviseSymbole;
     }
 
     /**

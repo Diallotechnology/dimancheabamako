@@ -55,18 +55,13 @@ class LinkController extends Controller
             $query->whereAny(['nom', 'color'], 'LIKE', '%'.$search.'%');
         })->when($category, function ($query, $category) {
             $query->where('categorie_id', $category->id);
-        })->latest('id')->paginate(15)->transfom(function ($row) {
+        })->latest('id')->paginate(15)->through(function ($row) {
             $row->prix_final = $row->getPrixFinalAttribute();
+            $row->prix_format = $row->getPrixFormatAttribute();
 
             return $row;
         });
-
-        // $rows->transfom(function ($row) {
-        //     $row->prix_final = $row->getPrixFinalAttribute();
-
-        //     return $row;
-        // });
-        dd($rows);
+        // dd($rows);
         $filter = Request::only('search');
         $categorie = Category::all();
         $desc = $category ? $category->description : '';

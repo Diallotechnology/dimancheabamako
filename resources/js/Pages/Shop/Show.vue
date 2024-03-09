@@ -1,9 +1,8 @@
 <script setup>
 import Layout from "@/Shared/Layout.vue";
 import { AddToCard } from "@/helper";
-import { onMounted, ref } from "vue";
+import { onMounted } from "vue";
 import Cart from "@/Shared/Cart.vue";
-import { usePage } from "@inertiajs/vue3";
 
 const props = defineProps({
     product: {
@@ -22,37 +21,6 @@ const props = defineProps({
         default: () => ({}),
     },
 });
-const page = usePage();
-const local = page.props.locale;
-const taux = ref();
-const getDevise = async () => {
-    try {
-        await axios.get(route("devise.taux")).then((response) => {
-            taux.value = response.data;
-        });
-    } catch (error) {
-        console.error(error);
-    }
-};
-getDevise();
-
-const convertToPrice = (prixXOF) => {
-    // Remplacez 655 par le taux de conversion de XOF à EUR
-    const tauxConversion = taux.value;
-    const prixEUR = prixXOF / tauxConversion;
-    // Formatez le prix avec deux décimales
-    if (local == "fr") {
-        return new Intl.NumberFormat("fr-FR", {
-            style: "currency",
-            currency: "EUR",
-        }).format(prixEUR.toFixed(2));
-    } else if (local == "en") {
-        return new Intl.NumberFormat("en-US", {
-            style: "currency",
-            currency: "USD",
-        }).format(prixEUR.toFixed(2));
-    }
-};
 onMounted(() => {
     /*Product Details*/
     var productDetails = function () {
@@ -234,9 +202,7 @@ onMounted(() => {
                                             >
                                                 <ins
                                                     ><span class="text-brand">{{
-                                                        convertToPrice(
-                                                            product.prix
-                                                        )
+                                                        product.prix_format
                                                     }}</span>
                                                 </ins>
                                                 <ins
