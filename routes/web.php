@@ -73,15 +73,15 @@ Route::controller(CartController::class)->group(function () {
 Route::controller(LinkController::class)->group(function () {
     Route::get('/', 'home')->name('home');
     Route::get('lang/{lang}', 'langchange')->name('language');
-    Route::get('devise', 'getTaux')->name('devise.taux');
     Route::get('shop/{category?}', 'shop')->name('shop');
-    Route::get('livraison', 'livraison')->name('livraison');
     Route::get('getcategory', 'getCategory')->name('getCategory');
     Route::get('shop/show/{product}', 'shopshow')->name('shop.show');
 });
 
 Route::inertia('contact', 'Contact')->name('contact');
 Route::inertia('about', 'About')->name('about');
+Route::inertia('livraison', 'Livraison')->name('livraison');
+
 // Route::get('test', function () {
 //     Artisan::call('optimize:clear');
 //     Artisan::call('db:wipe');

@@ -144,7 +144,13 @@ onMounted(() => {
                                     <div
                                         class="product-badges product-badges-position product-badges-mrg"
                                     >
-                                        <span class="hot">Hot</span>
+                                        <span class="hot">{{
+                                            item.reduction > 0
+                                                ? "Bon plan -" +
+                                                  item.reduction +
+                                                  "%"
+                                                : "hot"
+                                        }}</span>
                                     </div>
                                 </div>
                                 <div class="product-content-wrap">

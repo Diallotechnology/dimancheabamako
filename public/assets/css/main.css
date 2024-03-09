@@ -3734,11 +3734,11 @@ table .product-thumbnail img {
 }
 
 .product-cart-wrap .product-badges span.hot {
-    background-color: #e900dd;
+    background-color: red;
 }
 
 .product-cart-wrap .product-badges span.new {
-    background-color: red;
+    background-color: #e900dd;
 }
 
 .product-cart-wrap .product-badges span.sale {

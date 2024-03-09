@@ -52,13 +52,23 @@ class Product extends Model
 
     public function getReductionAttribute(): int
     {
-        if ($this->promotions->isNotEmpty()) {
+        // Vérifie s'il y a des promotions associées et si la première promotion est toujours valide
+        if ($this->promotions->isNotEmpty() && now() < $this->promotions()->first()->fin) {
+            // Récupère la première promotion active
             $promo = $this->promotions()->first();
 
+            // Retourne la réduction de la promotion
             return $promo->reduction;
-        } else {
-            return 0;
         }
+
+        // Si aucune promotion active n'est trouvée ou si la promotion est expirée
+        if ($this->promotions->isNotEmpty()) {
+            // Met à jour l'état de la promotion expirée
+            $this->promotions()->update(['etat' => 'Expiré']);
+        }
+
+        // Aucune réduction n'est applicable
+        return 0;
     }
 
     public function getPrixFormatAttribute(): string
@@ -82,11 +92,6 @@ class Product extends Model
         $prixFormat = number_format($this->attributes['prix'] / $tauxConversion, 2);
 
         return $prixFormat.' '.$deviseSymbole;
-    }
-
-    public function getpromo()
-    {
-        dd($this->promotions->isNotEmpty());
     }
 
     /**

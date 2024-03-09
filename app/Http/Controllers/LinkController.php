@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Models\Category;
-use App\Models\Devise;
 use App\Models\Product;
 use App\Models\Slide;
 use Illuminate\Support\Facades\Request;
@@ -48,24 +47,6 @@ class LinkController extends Controller
         return redirect()->back();
     }
 
-    public function livraison()
-    {
-        return Inertia::render('Livraison');
-    }
-
-    public function getTaux()
-    {
-        $taux = '';
-
-        if (session('locale') === 'fr') {
-            $taux = Devise::whereType('EUR')->first('taux');
-        } elseif (session('locale') === 'en') {
-            $taux = Devise::whereType('USD')->first('taux');
-        }
-
-        return $taux->taux;
-    }
-
     public function shop(?Category $category = null)
     {
         $rows = Product::with('promotions')->when(Request::input('search'), function ($query, $search) {
@@ -95,7 +76,17 @@ class LinkController extends Controller
     public function shopshow(Product $product)
     {
         $product->load('images');
-        $rows = Product::where('categorie_id', $product->categorie_id)->take(4)->get();
+        $product->prix_promo = $product->getPrixPromoAttribute();
+        $product->prix_format = $product->getPrixFormatAttribute();
+        $product->reduction = $product->getReductionAttribute();
+
+        $rows = Product::where('categorie_id', $product->categorie_id)->take(4)->get()->map(function ($row) {
+            $row->prix_promo = $row->getPrixPromoAttribute();
+            $row->prix_format = $row->getPrixFormatAttribute();
+            $row->reduction = $row->getReductionAttribute();
+
+            return $row;
+        });
         $category = Category::all();
 
         return Inertia::render('Shop/Show', compact('product', 'rows', 'category'));

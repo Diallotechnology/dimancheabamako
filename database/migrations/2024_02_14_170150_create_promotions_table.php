@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('promotions', function (Blueprint $table) {
             $table->id();
             $table->string('nom');
+            $table->string('etat')->default('En cours');
             $table->integer('reduction');
             $table->dateTime('debut');
             $table->dateTime('fin');

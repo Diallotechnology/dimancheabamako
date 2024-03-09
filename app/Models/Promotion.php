@@ -15,7 +15,7 @@ class Promotion extends Model
      *
      * @var array
      */
-    protected $fillable = ['reduction', 'nom', 'debut', 'fin'];
+    protected $fillable = ['reduction', 'nom', 'debut', 'fin', 'etat'];
 
     /**
      * The products that belong to the Promotion

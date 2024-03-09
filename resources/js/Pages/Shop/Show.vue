@@ -201,20 +201,37 @@ onMounted(() => {
                                                 class="product-price primary-color float-left"
                                             >
                                                 <ins
-                                                    ><span class="text-brand">{{
-                                                        product.prix_format
-                                                    }}</span>
+                                                    ><span class="text-brand">
+                                                        {{
+                                                            product.reduction >
+                                                            0
+                                                                ? product.prix_promo
+                                                                : product.prix_format
+                                                        }}
+                                                    </span>
                                                 </ins>
-                                                <ins
-                                                    ><span
+                                                <ins>
+                                                    <span
+                                                        v-if="
+                                                            product.reduction >
+                                                            0
+                                                        "
                                                         class="old-price font-md ml-15"
-                                                        >$200.00</span
-                                                    ></ins
-                                                >
+                                                        >{{
+                                                            product.prix_format
+                                                        }}</span
+                                                    >
+                                                </ins>
                                                 <span
-                                                    class="save-price font-md color3 ml-15"
-                                                    >25% Off</span
-                                                >
+                                                    class="save-price font-md color3 ml-15 text-danger"
+                                                    >{{
+                                                        product.reduction > 0
+                                                            ? "Bon plan -" +
+                                                              product.reduction +
+                                                              "%"
+                                                            : ""
+                                                    }}
+                                                </span>
                                             </div>
                                         </div>
                                         <div
