@@ -39,13 +39,13 @@ class DatabaseSeeder extends Seeder
             'text_one' => 'Fashion Trending',
             'text_two' => 'Great Collection',
             'paragraph' => 'Save more with coupons & up to 20% off',
-            'image' => '/assets/imgs/slider/slider-1.png',
+            'image' => '/assets/imgs/slider/slider-2.png',
         ]);
         Slide::factory()->create([
             'text_one' => 'Big Deals From',
             'text_two' => 'Manufacturer',
             'paragraph' => 'Clothing, Shoes, Bags, Wallets...',
-            'image' => '/assets/imgs/slider/slider-1.png',
+            'image' => '/assets/imgs/slider/slider-3.png',
         ]);
         Zone::factory()->hasCountries(5)->create(['nom' => 'Afrique']);
         Zone::factory()->hasCountries(5)->create(['nom' => 'Europe']);
