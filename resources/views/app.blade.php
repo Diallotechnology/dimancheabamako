@@ -17,6 +17,7 @@
     <link href="{{ asset('assets/css/main.css') }}" rel="stylesheet" />
     @routes
     @vite(['resources/js/app.js', "resources/js/Pages/{$page['component']}.vue"])
+    {{-- <script type="module" src="{{ asset('build/assets/app-D2g6DFaM.js')}}"></script> --}}
     @inertiaHead
 </head>
 

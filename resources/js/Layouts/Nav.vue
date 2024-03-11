@@ -56,31 +56,53 @@
                     <span class="text">Pays</span>
                 </Link>
             </NavLink>
-            <NavLink :active="route().current('poids')">
-                <Link class="menu-link" :href="route('poids')">
-                    <i class="icon material-icons md-power_input"></i>
-                    <span class="text">Poids</span>
-                </Link>
-            </NavLink>
-            <NavLink :active="route().current('shipping')">
-                <Link class="menu-link" :href="route('shipping')">
-                    <i class="icon material-icons md-directions_transit"></i>
-                    <span class="text">Shipping</span>
-                </Link>
-            </NavLink>
 
-            <NavLink :active="route().current('transport')">
-                <Link class="menu-link" :href="route('transport')">
-                    <i class="icon material-icons md-transit_enterexit"></i>
-                    <span class="text">Transporteur</span>
-                </Link>
-            </NavLink>
             <NavLink :active="route().current('devise')">
                 <Link class="menu-link" :href="route('devise')">
                     <i class="icon material-icons md-monetization_on"></i>
                     <span class="text">Devise</span>
                 </Link>
             </NavLink>
+            <li
+                class="menu-item has-submenu"
+                :class="{
+                    active:
+                        route().current('transport')
+                        | route().current('poids')
+                        | route().current('shipping'),
+                }"
+            >
+                <a class="menu-link" href="">
+                    <i class="icon material-icons md-directions_transit"></i>
+                    <span class="text">Shipping</span>
+                </a>
+                <div class="submenu" style="display: none">
+                    <Link
+                        :href="route('transport')"
+                        :class="{
+                            active: route().current('transport'),
+                        }"
+                    >
+                        Transporteur
+                    </Link>
+                    <Link
+                        :href="route('poids')"
+                        :class="{
+                            active: route().current('poids'),
+                        }"
+                    >
+                        Poids
+                    </Link>
+                    <Link
+                        :href="route('shipping')"
+                        :class="{
+                            active: route().current('shipping'),
+                        }"
+                    >
+                        Tarifications
+                    </Link>
+                </div>
+            </li>
 
             <li
                 class="menu-item has-submenu"

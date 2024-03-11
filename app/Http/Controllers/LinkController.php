@@ -60,7 +60,6 @@ class LinkController extends Controller
 
             return $row;
         });
-
         $filter = Request::only('search');
         $categorie = Category::all();
         $desc = $category ? $category->description : '';

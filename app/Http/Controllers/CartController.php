@@ -44,7 +44,8 @@ class CartController extends Controller
         // get total qte
         $TotalQuantity = CartFacade::session($this->get_userid())->getTotalQuantity();
         // get total price
-        $Total = CartFacade::session($this->get_userid())->getTotal();
+        $deviseSymbole = session('locale') === 'fr' ? '€' : '$';
+        $Total = CartFacade::session($this->get_userid())->getTotal().' '.$deviseSymbole;
         $pays = Country::all();
         $transport = Transport::all();
 
@@ -74,13 +75,12 @@ class CartController extends Controller
      */
     public function store(Product $product)
     {
-
+        $product->prix_final = $product->getPrixFinalAttribute();
         $productSelected = $product;
-
         $productAdded = [
             'id' => $productSelected->id,
             'name' => $productSelected->nom,
-            'price' => $productSelected->prix,
+            'price' => $productSelected->getPrixFinal(),
             'quantity' => 1,
             'attributes' => [],
             'associatedModel' => $productSelected,

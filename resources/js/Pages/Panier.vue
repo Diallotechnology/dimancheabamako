@@ -1,6 +1,6 @@
 <script setup>
 import Layout from "@/Shared/Layout.vue";
-import notify, { Price_euro, cartnotify } from "@/helper";
+import notify, { cartnotify } from "@/helper";
 import { Head, router, useForm } from "@inertiajs/vue3";
 import { ref, onMounted } from "vue";
 
@@ -173,12 +173,6 @@ const submit = () => {
                                             <h5>
                                                 {{ item.name }} {{ item.id }}
                                             </h5>
-                                            <span class="product-qty"
-                                                >st
-                                                {{
-                                                    item.associatedModel.stock
-                                                }}</span
-                                            >
                                         </td>
                                         <td
                                             class="text-center"
@@ -213,7 +207,9 @@ const submit = () => {
                                         </td>
 
                                         <td>
-                                            {{ Price_euro.format(item.price) }}
+                                            {{
+                                                item.associatedModel.prix_final
+                                            }}
                                         </td>
                                         <td class="action" data-title="Remove">
                                             <button
@@ -254,7 +250,7 @@ const submit = () => {
                                     <th>Total</th>
                                     <td class="product-subtotal">
                                         <span class="font-xl text-brand fw-900">
-                                            {{ Price_euro.format(Total) }}</span
+                                            {{ Total }}</span
                                         >
                                     </td>
                                 </tr>

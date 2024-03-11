@@ -87,7 +87,7 @@ onMounted(() => {
                             class="banner-features wow fadeIn animated hover-up"
                         >
                             <img
-                                src="assets/imgs/theme/icons/feature-1.png"
+                                src="/assets/imgs/theme/icons/feature-1.png"
                                 alt=""
                             />
                             <h4 class="bg-1">Livraison partout</h4>
@@ -98,7 +98,7 @@ onMounted(() => {
                             class="banner-features wow fadeIn animated hover-up"
                         >
                             <img
-                                src="assets/imgs/theme/icons/feature-2.png"
+                                src="/assets/imgs/theme/icons/feature-2.png"
                                 alt=""
                             />
                             <h4 class="bg-3">Commande en ligne</h4>
@@ -109,7 +109,7 @@ onMounted(() => {
                             class="banner-features wow fadeIn animated hover-up"
                         >
                             <img
-                                src="assets/imgs/theme/icons/feature-3.png"
+                                src="/assets/imgs/theme/icons/feature-3.png"
                                 alt=""
                             />
                             <h4 class="bg-2">Économiser de l'argent</h4>
@@ -120,7 +120,7 @@ onMounted(() => {
                             class="banner-features wow fadeIn animated hover-up"
                         >
                             <img
-                                src="assets/imgs/theme/icons/feature-4.png"
+                                src="/assets/imgs/theme/icons/feature-4.png"
                                 alt=""
                             />
                             <h4 class="bg-4">Promotions</h4>
@@ -131,7 +131,7 @@ onMounted(() => {
                             class="banner-features wow fadeIn animated hover-up"
                         >
                             <img
-                                src="assets/imgs/theme/icons/feature-5.png"
+                                src="/assets/imgs/theme/icons/feature-5.png"
                                 alt=""
                             />
                             <h4 class="bg-5">Bon shopping</h4>
@@ -142,7 +142,7 @@ onMounted(() => {
                             class="banner-features wow fadeIn animated hover-up"
                         >
                             <img
-                                src="assets/imgs/theme/icons/feature-6.png"
+                                src="/assets/imgs/theme/icons/feature-6.png"
                                 alt=""
                             />
                             <h4 class="bg-6">24/7 Support</h4>
