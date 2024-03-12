@@ -62,7 +62,11 @@ class ProductController extends Controller
      */
     public function edit(Product $product)
     {
-        $category = Category::all();
+        $category = Category::all()->map(function ($row) {
+            return [
+                'label' => "$row->nom", 'value' => "$row->id",
+            ];
+        });
 
         return Inertia::render('Admin/Product/Update', compact('product', 'category'));
     }

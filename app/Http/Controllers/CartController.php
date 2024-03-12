@@ -45,7 +45,7 @@ class CartController extends Controller
         $TotalQuantity = CartFacade::session($this->get_userid())->getTotalQuantity();
         // get total price
         $deviseSymbole = session('locale') === 'fr' ? '€' : '$';
-        $Total = CartFacade::session($this->get_userid())->getTotal().' '.$deviseSymbole;
+        $Total = CartFacade::session($this->get_userid())->getTotal();
         $pays = Country::all();
         $transport = Transport::all();
 

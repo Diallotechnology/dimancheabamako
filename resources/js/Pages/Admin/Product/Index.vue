@@ -5,12 +5,10 @@ import ButtonDelete from "@/Components/ButtonDelete.vue";
 import ButtonShow from "@/Components/ButtonShow.vue";
 import Modal from "@/Components/Modal.vue";
 import TextArea from "@/Components/TextArea.vue";
-import Select from "@/Components/Select.vue";
 import notify, { Price_format } from "@/helper";
 import Pagination from "@/Components/Pagination.vue";
-import { ref, watch, reactive } from "vue";
+import { ref, watch } from "vue";
 import { Head, router, useForm } from "@inertiajs/vue3";
-
 const props = defineProps({
     rows: {
         required: true,
@@ -29,11 +27,7 @@ const props = defineProps({
     },
 });
 
-let search = ref(props.filter.search);
-let cat = ref(props.filter.cat);
-let gory = props.filter.cat;
-
-const filters = reactive({
+const filters = ref({
     search: props.filter.search,
     cat: props.filter.cat,
 });
@@ -50,11 +44,10 @@ watch(filters, (value) => {
 const SelectFilter = () => {
     router.get(
         "/admin/product",
-        { cat: cat.value },
+        { cat: filters.cat.value },
         { preserveState: true, replace: true }
     );
 };
-const test = "";
 const form = useForm({
     categorie_id: "",
     reference: "",
@@ -131,15 +124,7 @@ const favori = (url) => {
                         />
                     </div>
                     <div class="col-6 col-md-3">
-                        <Select v-model="test" label="">
-                            <option
-                                v-for="row in category"
-                                :key="row.id"
-                                :value="row.id"
-                            >
-                                {{ row.nom }}
-                            </option>
-                        </Select>
+                        <Select2 v-model="filters.cat" :data="category" label=""/>
                     </div>
                 </div>
             </header>
@@ -235,16 +220,11 @@ const favori = (url) => {
                         />
                     </div>
                     <div class="col-md-6">
-                        <Select v-model="form.categorie_id" label="categorie">
-                            <option
-                                v-for="row in category"
-                                :key="row.id"
-                                :value="row.id"
-                            >
-                                {{ row.nom }}
-                            </option>
-                        </Select>
+                        <Select2 label="categorie" :message="form.errors.categorie_id">
+                            <VueSelect placeholder="selectionner" v-model="form.categorie_id" :options="category" />
+                        </Select2>
                     </div>
+
                     <div class="col-md-6">
                         <Input
                             input_type="text"

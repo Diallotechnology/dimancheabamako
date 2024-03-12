@@ -1,6 +1,47 @@
 <template>
     <Nav />
-
+    <!-- Quick view -->
+    <div
+        class="modal fade custom-modal"
+        id="quickViewModal"
+        tabindex="-1"
+        aria-labelledby="quickViewModalLabel"
+        aria-hidden="true"
+        data-bs-backdrop="static"
+        data-bs-keyboard="false"
+    >
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <button
+                    type="button"
+                    class="btn-close"
+                    data-bs-dismiss="modal"
+                    aria-label="Close"
+                ></button>
+                <div class="modal-body">
+                    <div class="cart-action text-center m-3">
+                        <h4 class="my-3">
+                            Produit ajouter au panier avec success!
+                        </h4>
+                        <Link
+                            class="btn mr-10 mb-sm-15"
+                            :href="route('cart.index')"
+                            @click="handleModalHidden"
+                            ><i class="fi-rs-shuffle mr-10"></i>Finaliser ma
+                            commande</Link
+                        >
+                        <a
+                            class="btn"
+                            data-bs-dismiss="modal"
+                            aria-label="Close"
+                            ><i class="fi-rs-shopping-bag mr-10"></i>Continue
+                            Shopping</a
+                        >
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
     <main class="main">
         <slot></slot>
     </main>
@@ -113,7 +154,10 @@
 
 <script setup>
 import Nav from "@/Shared/Nav.vue";
+import { handleModalHidden } from "@/helper";
+import { Link } from "@inertiajs/vue3";
 import { onMounted } from "vue";
+
 onMounted(() => {
     /*====== Sidebar menu Active ======*/
     function mobileHeaderActive() {
@@ -141,80 +185,6 @@ onMounted(() => {
         });
     }
     mobileHeaderActive();
-    /*-----------------------
-        Magnific Popup
-    ------------------------*/
-    $(".img-popup").magnificPopup({
-        type: "image",
-        gallery: {
-            enabled: true,
-        },
-    });
-
-    $(".btn-close").on("click", function (e) {
-        $(".zoomContainer").remove();
-    });
-    $("#quickViewModal").on("show.bs.modal", function (e) {
-        $(document).click(function (e) {
-            var modalDialog = $(".modal-dialog");
-            if (
-                !modalDialog.is(e.target) &&
-                modalDialog.has(e.target).length === 0
-            ) {
-                $(".zoomContainer").remove();
-            }
-        });
-    });
-
-    // Isotope active
-    $(".grid").imagesLoaded(function () {
-        // init Isotope
-        var $grid = $(".grid").isotope({
-            itemSelector: ".grid-item",
-            percentPosition: true,
-            layoutMode: "masonry",
-            masonry: {
-                // use outer width of grid-sizer for columnWidth
-                columnWidth: ".grid-item",
-            },
-        });
-    });
-
-    /*---------------------
-        Select active
-    --------------------- */
-    $(".select-active").select2();
-
-    /*--- language currency active ----*/
-    $(".mobile-language-active").on("click", function (e) {
-        e.preventDefault();
-        $(".lang-dropdown-active").slideToggle(900);
-    });
-
-    /*--- Mobile demo active ----*/
-    var demo = $(".tm-demo-options-wrapper");
-    $(".view-demo-btn-active").on("click", function (e) {
-        e.preventDefault();
-        demo.toggleClass("demo-open");
-    });
-
-    /*-----More Menu Open----*/
-    $(".more_slide_open").slideUp();
-    $(".more_categories").on("click", function () {
-        $(this).toggleClass("show");
-        $(".more_slide_open").slideToggle();
-    });
-
-    $(".modal").on("shown.bs.modal", function (e) {
-        $(".product-image-slider").slick("setPosition");
-        $(".slider-nav-thumbnails").slick("setPosition");
-        $(".product-image-slider .slick-active img").elevateZoom({
-            zoomType: "inner",
-            cursor: "crosshair",
-            zoomWindowFadeIn: 500,
-            zoomWindowFadeOut: 750,
-        });
-    });
 
     /*---------------------
         Mobile menu active
@@ -262,9 +232,38 @@ onMounted(() => {
         }
     });
 
-    $(".categori-button-active-2").on("click", function (e) {
+    /*--- language currency active ----*/
+    $(".mobile-language-active").on("click", function (e) {
         e.preventDefault();
-        $(".categori-dropdown-active-small").slideToggle(900);
+        $(".lang-dropdown-active").slideToggle(900);
+    });
+
+    /*-----------------------
+        Magnific Popup
+    ------------------------*/
+    $(".img-popup").magnificPopup({
+        type: "image",
+        gallery: {
+            enabled: true,
+        },
+    });
+
+    $(".btn-close").on("click", function (e) {
+        $(".zoomContainer").remove();
+    });
+
+    // Isotope active
+    $(".grid").imagesLoaded(function () {
+        // init Isotope
+        var $grid = $(".grid").isotope({
+            itemSelector: ".grid-item",
+            percentPosition: true,
+            layoutMode: "masonry",
+            masonry: {
+                // use outer width of grid-sizer for columnWidth
+                columnWidth: ".grid-item",
+            },
+        });
     });
 });
 </script>

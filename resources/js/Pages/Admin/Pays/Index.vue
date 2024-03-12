@@ -48,6 +48,7 @@ const form = useForm({
 });
 
 const submit = () => {
+    console.log(form);
     form.post(route("country.store"), {
         onSuccess: () => {
             form.reset();
@@ -137,7 +138,13 @@ const submit = () => {
                         {{ row.official_name }}
                     </option>
                 </Select>
-
+                <VueSelect v-model="form.zone_id" :options="zone" />
+                <!-- <Select2
+                    v-model="form.zone_id"
+                    :data="zone"
+                    label="zone"
+                    :message="form.errors.zone_id"
+                /> -->
                 <Select
                     v-model="form.zone_id"
                     :message="form.errors.zone_id"

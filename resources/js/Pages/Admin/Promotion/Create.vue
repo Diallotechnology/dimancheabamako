@@ -2,7 +2,6 @@
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 import { useForm, Link } from "@inertiajs/vue3";
 import notify from "@/helper";
-import { ref } from "vue";
 
 const props = defineProps({
     product: {
@@ -20,11 +19,8 @@ const form = useForm({
     reduction: "",
     debut: "",
     fin: "",
-    product_id: "",
-    categorie_id: "",
+    product_id: [],
 });
-
-const test = ref();
 const submit = () => {
     form.post(route("promotion.store"), {
         onSuccess: () => {
@@ -59,39 +55,45 @@ const submit = () => {
                         :message="form.errors.reduction"
                         required
                     />
-                    <InputDate
-                        label="Debut de la promo"
-                        v-model="form.debut"
-                        :message="form.errors.debut"
-                        required
-                    />
-                    <InputDate
-                        label="Fin de la promo"
-                        v-model="form.fin"
-                        :message="form.errors.fin"
-                        required
-                    />
-
-                    <Select
-                        label="Categorie"
-                        v-model="form.categorie_id"
-                        :data="category"
-                        :message="form.errors.categorie_id"
-                    />
-                    <Select
-                        label="Produit concerne"
-                        v-model="form.product_id"
-                        :data="product"
+                    <div class="row">
+                        <div class="col-md-6">
+                            <InputDate
+                                label="Debut de la promo"
+                                v-model="form.debut"
+                                :message="form.errors.debut"
+                                required
+                            />
+                        </div>
+                        <div class="col-md-6">
+                            <InputDate
+                                label="Fin de la promo"
+                                v-model="form.fin"
+                                :message="form.errors.fin"
+                                required
+                            />
+                        </div>
+                    </div>
+                    <Select2
+                        label="Produit concerné"
                         :message="form.errors.product_id"
-                    />
+                    >
+                        <VueSelect
+                            :is-multi="true"
+                            placeholder="selectionner"
+                            v-model="form.product_id"
+                            :options="product"
+                        />
+                    </Select2>
+
                     <div class="modal-footer">
-                        <button
-                            type="button"
+                        <Link
+                            :href="route('promotion')"
+                            role="button"
                             class="btn btn-danger rounded"
                             data-bs-dismiss="modal"
                         >
                             Fermer
-                        </button>
+                        </Link>
                         <button
                             :class="{ 'opacity-25': form.processing }"
                             :disabled="form.processing"

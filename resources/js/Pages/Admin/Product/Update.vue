@@ -5,6 +5,7 @@ import { useForm, Link } from "@inertiajs/vue3";
 import TextArea from "@/Components/TextArea.vue";
 import Select from "@/Components/Select.vue";
 import notify from "@/helper";
+import { parse } from "vue/compiler-sfc";
 
 const props = defineProps({
     category: {
@@ -19,7 +20,7 @@ const props = defineProps({
     },
 });
 const form = useForm({
-    categorie_id: props.product.categorie_id,
+    categorie_id: `${props.product.categorie_id}`,
     reference: props.product.reference,
     nom: props.product.nom,
     color: props.product.color,
@@ -40,7 +41,7 @@ const submit = () => {
     form.post(route("product.update", props.product.id), {
         forceFormData: true,
         onSuccess: () => {
-            form.categorie_id = props.product.categorie_id;
+            form.categorie_id = `${props.product.categorie_id}`;
             form.reference = props.product.reference;
             form.nom = props.product.nom;
             form.color = props.product.color;
@@ -90,21 +91,16 @@ const submit = () => {
                             />
                         </div>
                         <div class="col-md-6">
-                            <label for="">categorie</label>
-                            <select
-                                class="form-select"
-                                v-model="form.categorie_id"
-                                :message="form.errors.categorie_id"
+                            <Select2
                                 label="categorie"
+                                :message="form.errors.categorie_id"
                             >
-                                <option
-                                    v-for="row in category"
-                                    :key="row.id"
-                                    :value="row.id"
-                                >
-                                    {{ row.nom }}
-                                </option>
-                            </select>
+                                <VueSelect
+                                    placeholder="selectionner"
+                                    v-model="form.categorie_id"
+                                    :options="category"
+                                />
+                            </Select2>
                         </div>
                         <div class="col-md-6">
                             <label for="">Favoris</label>

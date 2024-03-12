@@ -7,7 +7,7 @@ import Table from "@/Components/Table.vue";
 import Modal from "@/Components/Modal.vue";
 import notify from "@/helper";
 import { ref, watch } from "vue";
-// import VueMultiselect from "vue-multiselect";
+
 // debounce((value) => {
 //     router.get(
 //         "/admin/category",
@@ -46,6 +46,7 @@ const submit = () => {
     form.post(route("category.store"), {
         onSuccess: () => {
             form.reset();
+
             notify("Categorie ajouter avec success !", true);
         },
         onError: () => {

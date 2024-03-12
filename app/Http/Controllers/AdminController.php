@@ -46,7 +46,11 @@ class AdminController extends Controller
             $query->where('categorie_id', $cat);
         })->latest('id')->paginate(10)->withQueryString();
         $filter = Request::only('filters.search', 'filters.cat');
-        $category = Category::all();
+        $category = Category::all()->map(function ($row) {
+            return [
+                'label' => "$row->nom", 'value' => "$row->id",
+            ];
+        });
 
         return Inertia::render('Admin/Product/Index', compact('rows', 'filter', 'category'));
     }
@@ -133,7 +137,11 @@ class AdminController extends Controller
         })->latest('id')->paginate(10);
         $filter = Request::only('search');
         $countries = countries();
-        $zone = Zone::all();
+        $zone = Zone::all()->map(function ($row) {
+            return [
+                'label' => "$row->nom", 'value' => "$row->id",
+            ];
+        });
 
         return Inertia::render('Admin/Pays/Index', compact('filter', 'rows', 'zone', 'countries'));
     }

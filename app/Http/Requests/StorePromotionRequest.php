@@ -27,7 +27,7 @@ class StorePromotionRequest extends FormRequest
             'debut' => 'required|date',
             'fin' => 'required|date',
             'product_id' => 'required|array|exists:products,id',
-            'categorie_id' => 'required|exists:categories,id',
+            // 'categorie_id' => 'required_if:product_id,false|exists:categories,id',
         ];
     }
 }

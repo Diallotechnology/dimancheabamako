@@ -47,10 +47,6 @@ onMounted(() => {
         }
     });
 
-    //Nice select
-    if ($(".select-nice").length) {
-        $(".select-nice").select2();
-    }
     // Perfect Scrollbar
     if ($("#offcanvas_aside").length) {
         const demo = document.querySelector("#offcanvas_aside");

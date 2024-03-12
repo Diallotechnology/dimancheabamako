@@ -67,6 +67,9 @@ watch(search, (value) => {
                     <tr>
                         <th>#ID</th>
                         <th scope="col">Nom</th>
+                        <th scope="col">reduction</th>
+                        <th scope="col">Debut</th>
+                        <th scope="col">fin</th>
                         <th scope="col">Date</th>
                         <th scope="col">Action</th>
                     </tr>
@@ -75,6 +78,9 @@ watch(search, (value) => {
                     <tr v-for="row in rows.data" :key="row.id">
                         <td>{{ row.id }}</td>
                         <td>{{ row.nom }}</td>
+                        <td>{{ row.reduction }} %</td>
+                        <td>{{ row.debut }}</td>
+                        <td>{{ row.fin }}</td>
                         <td>{{ row.created_at }}</td>
                         <td>
                             <ButtonEdit

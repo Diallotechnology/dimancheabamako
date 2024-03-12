@@ -75,7 +75,6 @@ const getShipping = async () => {
     // }
 };
 const deleteProduct = async (url) => {
-    console.log(url);
     await axios
         .delete(url)
         .then((response) => {

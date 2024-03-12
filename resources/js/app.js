@@ -6,10 +6,12 @@ import { resolvePageComponent } from "laravel-vite-plugin/inertia-helpers";
 import { ZiggyVue } from "../../vendor/tightenco/ziggy/dist/vue.m";
 
 import Select from "@/Components/Select.vue";
+import Select2 from "@/Components/Select2.vue";
 import Input from "@/Components/Input.vue";
 import TextArea from "@/Components/TextArea.vue";
 import InputDate from "@/Components/InputDate.vue";
-
+import "vue3-select-component/dist/style.css";
+import VueSelect from "vue3-select-component";
 const appName = import.meta.env.VITE_APP_NAME;
 
 createInertiaApp({
@@ -24,6 +26,8 @@ createInertiaApp({
             .use(plugin)
             .use(ZiggyVue)
             .component("Select", Select)
+            .component("Select2", Select2)
+            .component("VueSelect", VueSelect)
             .component("InputDate", InputDate)
             .component("Input", Input)
             .component("TextArea", TextArea)

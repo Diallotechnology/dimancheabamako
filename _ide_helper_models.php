@@ -223,7 +223,10 @@ namespace App\Models{
  * @property string $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property-read \App\Models\Category $categorie
- * @property-read mixed $eur
+ * @property-read string $prix_final
+ * @property-read string $prix_format
+ * @property-read string $prix_promo
+ * @property-read int $reduction
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Image> $images
  * @property-read int|null $images_count
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Order> $orders
@@ -260,6 +263,7 @@ namespace App\Models{
  *
  * @property int $id
  * @property string $nom
+ * @property string $etat
  * @property int $reduction
  * @property string $debut
  * @property string $fin
@@ -273,6 +277,7 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder|Promotion query()
  * @method static \Illuminate\Database\Eloquent\Builder|Promotion whereCreatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Promotion whereDebut($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Promotion whereEtat($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Promotion whereFin($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Promotion whereId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Promotion whereNom($value)
