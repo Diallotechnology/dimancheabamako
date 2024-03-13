@@ -113,7 +113,14 @@ class AdminController extends Controller
     {
         $rows = Promotion::when(Request::input('search'), function ($query, $search) {
             $query->where('nom', 'like', '%'.$search.'%');
-        })->latest('id')->paginate(10)->withQueryString();
+        })->latest('id')->paginate(10)
+            ->withQueryString()
+            ->through(function ($row) {
+                $row->debut = $row->debutat();
+                $row->fin = $row->finat();
+
+                return $row;
+            });
         $filter = Request::only('search');
 
         return Inertia::render('Admin/Promotion/Index', \compact('filter', 'rows'));

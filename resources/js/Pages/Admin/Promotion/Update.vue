@@ -2,6 +2,7 @@
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 import { useForm, Link } from "@inertiajs/vue3";
 import notify from "@/helper";
+import { ref } from "vue";
 
 const props = defineProps({
     promotion: {
@@ -15,26 +16,23 @@ const props = defineProps({
         default: () => ({}),
     },
 });
-
-const test = [{ label: "24", value: "24" }];
-// const test = props.promotion.products.map((row) => row.id);
-console.log(test);
 const form = useForm({
     nom: props.promotion.nom,
     reduction: props.promotion.reduction,
     debut: props.promotion.debut,
     fin: props.promotion.fin,
-    product_id: [],
+    product_id: props.promotion.products.map((row) => `${row.id}`),
 });
-// `${props.product.categorie_id}`
 const submit = () => {
-    form.post(route("promotion.update"), {
+    form.patch(route("promotion.update", props.promotion.id), {
         onSuccess: () => {
             form.nom = props.promotion.nom;
             form.reduction = props.promotion.reduction;
             form.debut = props.promotion.debut;
             form.fin = props.promotion.fin;
-            form.product_id = props.promotion.products.map((row) => row.id);
+            form.product_id = props.promotion.products.map(
+                (row) => `${row.id}`
+            );
             notify("Promo mise à jour avec success !", true);
         },
         onError: () => {
@@ -83,6 +81,7 @@ const submit = () => {
                             />
                         </div>
                     </div>
+
                     <Select2
                         label="Produit concerné"
                         :message="form.errors.product_id"
@@ -91,12 +90,7 @@ const submit = () => {
                             :is-multi="true"
                             placeholder="selectionner"
                             v-model="form.product_id"
-                            :options="
-                                product.map((p) => ({
-                                    label: p.label,
-                                    value: p.value,
-                                }))
-                            "
+                            :options="product"
                         />
                     </Select2>
 

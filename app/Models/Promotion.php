@@ -26,13 +26,13 @@ class Promotion extends Model
         return $this->belongsToMany(Product::class);
     }
 
-    // protected function getDebutAttribute(string $date): string
-    // {
-    //     return Carbon::parse($date)->format('d/m/Y H:i');
-    // }
+    public function debutat(): string
+    {
+        return Carbon::parse($this->attributes['debut'])->format('d/m/Y H:i');
+    }
 
-    // protected function getFinAttribute(string $date): string
-    // {
-    //     return Carbon::parse($date)->format('d/m/Y H:i');
-    // }
+    public function finat(): string
+    {
+        return Carbon::parse($this->attributes['fin'])->format('d/m/Y H:i');
+    }
 }

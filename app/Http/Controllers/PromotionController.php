@@ -13,14 +13,6 @@ class PromotionController extends Controller
     use DeleteAction;
 
     /**
-     * Display a listing of the resource.
-     */
-    public function index()
-    {
-        //
-    }
-
-    /**
      * Show the form for creating a new resource.
      */
     public function create()
@@ -41,11 +33,6 @@ class PromotionController extends Controller
     public function store(StorePromotionRequest $request)
     {
         $item = Promotion::create($request->validated());
-        // dd($item);
-        // if ($request->categorie_id) {
-        //     $product = Product::whereCategorieId($request->categorie_id);
-        //     $item->products()->attach($product->id);
-        // }
         $item->products()->attach($request->product_id);
 
         return back();
@@ -56,6 +43,8 @@ class PromotionController extends Controller
      */
     public function show(Promotion $promotion)
     {
+        $promotion->load('products');
+
         return Inertia::render('Admin/Promotion/Show', compact('promotion'));
     }
 
@@ -65,9 +54,9 @@ class PromotionController extends Controller
     public function edit(Promotion $promotion)
     {
         $promotion->load('products');
-        $product = Product::doesntHave('promotions')->get()->map(function ($row) {
+        $product = Product::with('promotions')->get()->map(function ($row) {
             return [
-                'label' => 'Ref '.$row->id.' '.$row->nom,
+                'label' => 'Ref '.$row->reference.' '.$row->nom,
                 'value' => "$row->id",
             ];
         });

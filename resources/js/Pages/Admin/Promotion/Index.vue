@@ -5,6 +5,7 @@ import ButtonEdit from "@/Components/ButtonEdit.vue";
 import ButtonDelete from "@/Components/ButtonDelete.vue";
 import Table from "@/Components/Table.vue";
 import { ref, watch } from "vue";
+import ButtonShow from "@/Components/ButtonShow.vue";
 
 const props = defineProps({
     rows: {
@@ -83,9 +84,13 @@ watch(search, (value) => {
                         <td>{{ row.fin }}</td>
                         <td>{{ row.created_at }}</td>
                         <td>
+                            <ButtonShow
+                                :href="route('promotion.show', row.id)"
+                            />
                             <ButtonEdit
                                 :href="route('promotion.edit', row.id)"
                             />
+
                             <ButtonDelete
                                 :url="route('promotion.destroy', row.id)"
                             />
