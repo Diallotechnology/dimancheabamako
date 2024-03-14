@@ -11,44 +11,15 @@ const props = defineProps({
         default: () => ({}),
     },
 });
-
-const form = useForm({
-    nom: "",
-});
-
-const submit = () => {
-    form.post(route("slide.store"), {
-        onSuccess: () => {
-            form.reset();
-            notify("Slide ajouter avec success !", true);
-        },
-        onError: () => {
-            notify(false);
-        },
-    });
-};
 </script>
 
 <template>
-    <Head title="Categorie" />
+    <Head title="Slider" />
 
     <AuthenticatedLayout>
         <div class="content-header">
             <div>
                 <h2 class="content-title card-title">Listes des slides</h2>
-            </div>
-            <div>
-                <a
-                    href="#"
-                    class="btn btn-primary btn-sm rounded"
-                    type="button"
-                    data-bs-toggle="modal"
-                    data-bs-target="#exampleModal"
-                >
-                    <i class="material-icons md-plus md-18"></i>
-
-                    Nouveau</a
-                >
             </div>
         </div>
         <div class="card mb-4">
