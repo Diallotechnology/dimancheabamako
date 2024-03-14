@@ -4,9 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Helper\DeleteAction;
 use App\Http\Requests\StoreCountryRequest;
-use App\Http\Requests\UpdateCountryRequest;
 use App\Models\Country;
-use App\Models\Ville;
 use App\Models\Zone;
 use Inertia\Inertia;
 
@@ -15,42 +13,13 @@ class CountryController extends Controller
     use DeleteAction;
 
     /**
-     * Display a listing of the resource.
-     */
-    public function index()
-    {
-        //
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
      * Store a newly created resource in storage.
      */
     public function store(StoreCountryRequest $request)
     {
-        $item = Country::create($request->validated());
-        $data = [];
-        foreach ($request->city as $value) {
-            $data[] = new Ville(['nom' => $value]);
-        }
-        $item->villes()->saveMany($data);
+        Country::create($request->validated());
 
         return back();
-    }
-
-    /**
-     * Display the specified resource.
-     */
-    public function show(Country $country)
-    {
-        //
     }
 
     /**
@@ -58,8 +27,18 @@ class CountryController extends Controller
      */
     public function edit(Country $country)
     {
-        $zone = Zone::all();
-        $pays = countries();
+        $countryNames = array_column(countries(), 'name');
+        $pays = array_map(function ($country) {
+            return [
+                'label' => $country, 'value' => $country,
+            ];
+        }, $countryNames);
+
+        $zone = Zone::all()->map(function ($row) {
+            return [
+                'label' => "$row->nom", 'value' => "$row->id",
+            ];
+        });
 
         return Inertia::render('Admin/Pays/Update', compact('zone', 'country', 'pays'));
     }
@@ -67,7 +46,7 @@ class CountryController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateCountryRequest $request, Country $country)
+    public function update(StoreCountryRequest $request, Country $country)
     {
         $country->update($request->validated());
 

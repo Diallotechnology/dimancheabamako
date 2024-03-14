@@ -8,10 +8,6 @@ const props = defineProps({
         type: Object,
         default: () => ({}),
     },
-    category: {
-        type: Object,
-        default: () => ({}),
-    },
 });
 
 const form = useForm({

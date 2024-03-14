@@ -128,26 +128,17 @@ const submit = () => {
                     required
                 />
                 <div class="mb-3">
-                    <label for="">Pays de livraison</label>
-                    <select
-                        class="form-select"
-                        v-model="form.pays"
-                        multiple
-                        required
+                    <Select2
+                        label="Pays de livraison"
+                        :message="form.errors.pays"
                     >
-                        <option
-                            v-for="row in pays"
-                            :key="row"
-                            :value="row.official_name"
-                        >
-                            {{ row.official_name }}
-                        </option>
-                    </select>
-                    <div v-show="form.errors.pays">
-                        <p class="text-sm text-danger">
-                            {{ form.errors.pays }}
-                        </p>
-                    </div>
+                        <VueSelect
+                            :is-multi="true"
+                            placeholder="selectionner"
+                            v-model="form.pays"
+                            :options="pays"
+                        />
+                    </Select2>
                 </div>
 
                 <div class="modal-footer">

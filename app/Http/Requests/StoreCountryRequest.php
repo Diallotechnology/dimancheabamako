@@ -24,7 +24,6 @@ class StoreCountryRequest extends FormRequest
         return [
             'nom' => 'required|string',
             'zone_id' => 'required|exists:zones,id',
-            'city' => 'required|array',
         ];
     }
 }

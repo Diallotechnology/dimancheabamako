@@ -158,15 +158,14 @@ const submit = () => {
                     :message="form.errors.contact"
                     required
                 />
-                <Select v-model="form.pays" label="pays">
-                    <option
-                        v-for="row in country"
-                        :key="row.id"
-                        :value="row.nom"
-                    >
-                        {{ row.nom }}
-                    </option>
-                </Select>
+                <Select2 label="pays" :message="form.errors.pays">
+                    <VueSelect
+                        placeholder="selectionner"
+                        v-model="form.pays"
+                        :options="country"
+                    />
+                </Select2>
+
                 <div class="modal-footer">
                     <button
                         type="button"

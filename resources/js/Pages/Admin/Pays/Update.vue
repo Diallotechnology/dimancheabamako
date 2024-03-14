@@ -22,14 +22,13 @@ const props = defineProps({
 });
 const form = useForm({
     nom: props.country.nom,
-    zone_id: props.country.zone_id,
+    zone_id: `${props.country.zone_id}`,
 });
-
 const submit = () => {
     form.patch(route("country.update", props.country.id), {
         onSuccess: () => {
             form.nom = props.country.nom;
-            form.zone_id = props.country.zone_id;
+            form.zone_id = `${props.country.zone_id}`;
             notify("pays mise à jour avec success !", true);
         },
         onError: () => {
@@ -44,28 +43,20 @@ const submit = () => {
             <h2 class="p-4 text-center">Formulaire de mise à jour</h2>
             <div class="card-body">
                 <form @submit.prevent="submit">
-                    <Select
-                        v-model="form.nom"
-                        :message="form.errors.nom"
-                        label="Nom du pays"
-                    >
-                        <option
-                            v-for="row in pays"
-                            :key="row"
-                            :value="row.official_name"
-                        >
-                            {{ row.official_name }}
-                        </option>
-                    </Select>
-                    <Select
-                        v-model="form.zone_id"
-                        :message="form.errors.zone_id"
-                        label="Zone"
-                    >
-                        <option v-for="row in zone" :key="row" :value="row.id">
-                            {{ row.nom }}
-                        </option>
-                    </Select>
+                    <Select2 label="Nom du pays" :message="form.errors.nom">
+                        <VueSelect
+                            placeholder="selectionner"
+                            v-model="form.nom"
+                            :options="pays"
+                        />
+                    </Select2>
+                    <Select2 label="Zone" :message="form.errors.zone_id">
+                        <VueSelect
+                            placeholder="selectionner"
+                            v-model="form.zone_id"
+                            :options="zone"
+                        />
+                    </Select2>
                     <div class="modal-footer">
                         <Link
                             :href="route('pays')"

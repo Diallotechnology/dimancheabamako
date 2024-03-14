@@ -21,10 +21,6 @@ const props = defineProps({
         type: Object,
         default: () => ({}),
     },
-    ville: {
-        type: Object,
-        default: () => ({}),
-    },
     filter: {
         type: Object,
         default: () => ({}),
@@ -44,11 +40,9 @@ watch(search, (value) => {
 const form = useForm({
     nom: "",
     zone_id: "",
-    city: [],
 });
 
 const submit = () => {
-    console.log(form);
     form.post(route("country.store"), {
         onSuccess: () => {
             form.reset();
@@ -125,35 +119,20 @@ const submit = () => {
         <!-- card end// -->
         <Modal name="Formulaire de nouveau pays">
             <form @submit.prevent="submit">
-                <Select
-                    v-model="form.nom"
-                    :message="form.errors.nom"
-                    label="Nom du pays"
-                >
-                    <option
-                        v-for="row in countries"
-                        :key="row"
-                        :value="row.official_name"
-                    >
-                        {{ row.official_name }}
-                    </option>
-                </Select>
-                <VueSelect v-model="form.zone_id" :options="zone" />
-                <!-- <Select2
-                    v-model="form.zone_id"
-                    :data="zone"
-                    label="zone"
-                    :message="form.errors.zone_id"
-                /> -->
-                <Select
-                    v-model="form.zone_id"
-                    :message="form.errors.zone_id"
-                    label="Zone"
-                >
-                    <option v-for="row in zone" :key="row" :value="row.id">
-                        {{ row.nom }}
-                    </option>
-                </Select>
+                <Select2 label="Nom du pays" :message="form.errors.nom">
+                    <VueSelect
+                        placeholder="selectionner"
+                        v-model="form.nom"
+                        :options="countries"
+                    />
+                </Select2>
+                <Select2 label="Zone" :message="form.errors.zone_id">
+                    <VueSelect
+                        placeholder="selectionner"
+                        v-model="form.zone_id"
+                        :options="zone"
+                    />
+                </Select2>
 
                 <div class="modal-footer">
                     <button

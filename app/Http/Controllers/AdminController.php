@@ -104,7 +104,11 @@ class AdminController extends Controller
                 ->orwhere('contact', 'like', '%'.$search.'%');
         })->latest('id')->paginate(10)->withQueryString();
         $filter = Request::only('search');
-        $country = Country::all();
+        $country = Country::all()->map(function ($row) {
+            return [
+                'label' => "$row->nom", 'value' => "$row->id",
+            ];
+        });
 
         return Inertia::render('Admin/Client/Index', compact('rows', 'filter', 'country'));
     }
@@ -132,7 +136,12 @@ class AdminController extends Controller
             $query->where('nom', 'like', '%'.$search.'%');
         })->latest('id')->paginate(10);
         $filter = Request::only('search');
-        $pays = countries();
+        $countryNames = array_column(countries(), 'name');
+        $pays = array_map(function ($country) {
+            return [
+                'label' => $country, 'value' => $country,
+            ];
+        }, $countryNames);
 
         return Inertia::render('Admin/Zone/Index', compact('filter', 'rows', 'pays'));
     }
@@ -143,7 +152,13 @@ class AdminController extends Controller
             $query->where('nom', 'like', '%'.$search.'%');
         })->latest('id')->paginate(10);
         $filter = Request::only('search');
-        $countries = countries();
+        $countryNames = array_column(countries(), 'name');
+        $countries = array_map(function ($country) {
+            return [
+                'label' => $country, 'value' => $country,
+            ];
+        }, $countryNames);
+
         $zone = Zone::all()->map(function ($row) {
             return [
                 'label' => "$row->nom", 'value' => "$row->id",
@@ -158,7 +173,7 @@ class AdminController extends Controller
         $rows = Shipping::with('zone', 'transport', 'poids')->when(Request::input('search'), function ($query, $search) {
             $query->where('nom', 'like', '%'.$search.'%');
         })->latest('id')->get()->groupBy('transport.nom');
-        // dd($rows);
+
         $filter = Request::only('search');
         $poids = Poids::all();
         $transport = Transport::all();
@@ -189,7 +204,11 @@ class AdminController extends Controller
         $rows = Transport::with('zones')->when(Request::input('search'), function ($query, $search) {
             $query->where('nom', 'like', '%'.$search.'%');
         })->latest('id')->paginate(10)->withQueryString();
-        $zone = Zone::all();
+        $zone = Zone::all()->map(function ($row) {
+            return [
+                'label' => "$row->nom", 'value' => "$row->id",
+            ];
+        });
         $filter = Request::only('search');
 
         return Inertia::render('Admin/Transport/Index', compact('filter', 'rows', 'zone'));
