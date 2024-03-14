@@ -17,14 +17,14 @@ const props = defineProps({
 });
 const form = useForm({
     nom: props.transport.nom,
-    zone_id: props.transport.zones.map((row) => row.id),
+    zone_id: props.transport.zones.map((row) => `${row.id}`),
 });
 
 const submit = () => {
     form.patch(route("transport.update", props.transport.id), {
         onSuccess: () => {
             form.nom = props.transport.nom;
-            form.zone_id = props.transport.zones.map((row) => row.id);
+            form.zone_id = props.transport.zones.map((row) => `${row.id}`);
             notify("transporteur mise à jour avec success !", true);
         },
         onError: () => {
@@ -47,28 +47,18 @@ const submit = () => {
                         :message="form.errors.nom"
                         required
                     />
-                    <div class="mb-3">
-                        <label for="">zone de livraison</label>
-                        <select
-                            class="form-select"
+                    <Select2
+                        label="zone de livraison"
+                        :message="form.errors.zone_id"
+                    >
+                        <VueSelect
+                            :is-multi="true"
+                            placeholder="selectionner"
                             v-model="form.zone_id"
-                            multiple
-                            required
-                        >
-                            <option
-                                v-for="row in zone"
-                                :key="row.id"
-                                :value="row.id"
-                            >
-                                {{ row.nom }}
-                            </option>
-                        </select>
-                        <div v-show="form.errors.zone_id">
-                            <p class="text-sm text-danger">
-                                {{ form.errors.zone_id }}
-                            </p>
-                        </div>
-                    </div>
+                            :options="zone"
+                        />
+                    </Select2>
+
                     <div class="modal-footer">
                         <Link
                             :href="route('transport')"

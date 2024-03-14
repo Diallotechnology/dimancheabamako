@@ -175,7 +175,11 @@ class AdminController extends Controller
         })->latest('id')->get()->groupBy('transport.nom');
 
         $filter = Request::only('search');
-        $poids = Poids::all();
+        $poids = Poids::all()->map(function ($row) {
+            return [
+                'label' => "$row->min à $row->max Kg", 'value' => "$row->id",
+            ];
+        });
         $transport = Transport::all();
 
         return Inertia::render('Admin/Shipping/Index', compact('filter', 'rows', 'transport', 'poids'));

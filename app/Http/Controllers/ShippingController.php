@@ -37,7 +37,11 @@ class ShippingController extends Controller
     public function edit(Shipping $shipping)
     {
         $transport = Transport::all();
-        $poids = Poids::all();
+        $poids = Poids::all()->map(function ($row) {
+            return [
+                'label' => "$row->min à $row->max Kg", 'value' => "$row->id",
+            ];
+        });
 
         return Inertia::render('Admin/Shipping/Update', compact('shipping', 'transport', 'poids'));
     }

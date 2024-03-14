@@ -39,9 +39,9 @@ onMounted(() => {
 const form = useForm({
     temps: props.shipping.temps,
     montant: props.shipping.montant,
-    poids_id: props.shipping.poids_id,
+    poids_id: `${props.shipping.poids_id}`,
     transport_id: props.shipping.transport_id,
-    zone_id: props.shipping.zone_id,
+    zone_id: `${props.shipping.zone_id}`,
 });
 
 const submit = () => {
@@ -50,9 +50,9 @@ const submit = () => {
             form.poids = props.shipping.poids;
             form.temps = props.shipping.temps;
             form.montant = props.shipping.montant;
-            form.poids_id = props.shipping.poids_id;
+            form.poids_id = `${props.shipping.poids_id}`;
             form.transport_id = props.shipping.transport_id;
-            form.zone_id = props.shipping.zone_id;
+            form.zone_id = `${props.shipping.zone_id}`;
             notify("livraison mise à jour avec success !", true);
         },
         onError: () => {
@@ -83,33 +83,25 @@ const submit = () => {
                             {{ row.nom }}
                         </option>
                     </Select>
-
-                    <Select
-                        v-model="form.zone_id"
+                    <Select2
+                        label="Nom de la zone"
                         :message="form.errors.zone_id"
-                        label="Nom du pays"
                     >
-                        <option
-                            v-for="row in zone"
-                            :key="row.id"
-                            :value="row.id"
-                        >
-                            {{ row.nom }}
-                        </option>
-                    </Select>
-                    <Select
-                        v-model="form.poids_id"
-                        :message="form.errors.poids_id"
-                        label="Poids"
-                    >
-                        <option
-                            v-for="row in poids"
-                            :key="row.id"
-                            :value="row.id"
-                        >
-                            {{ row.min }} à {{ row.max }} Kg
-                        </option>
-                    </Select>
+                        <VueSelect
+                            placeholder="selectionner"
+                            v-model="form.zone_id"
+                            :options="zone"
+                        />
+                    </Select2>
+
+                    <Select2 label="Poids" :message="form.errors.poids_id">
+                        <VueSelect
+                            placeholder="selectionner"
+                            v-model="form.poids_id"
+                            :options="poids"
+                        />
+                    </Select2>
+
                     <Input
                         input_type="text"
                         place="le temps du transport"

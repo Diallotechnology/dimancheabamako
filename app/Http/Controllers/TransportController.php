@@ -14,7 +14,11 @@ class TransportController extends Controller
 
     public function get_trans_zone(Transport $transport)
     {
-        return $transport->zones()->get();
+        return $transport->zones()->get()->map(function ($row) {
+            return [
+                'label' => "$row->nom", 'value' => "$row->id",
+            ];
+        });
     }
 
     /**
@@ -42,7 +46,11 @@ class TransportController extends Controller
     public function edit(Transport $transport)
     {
         $transport->load('zones');
-        $zone = Zone::all();
+        $zone = Zone::all()->map(function ($row) {
+            return [
+                'label' => "$row->nom", 'value' => "$row->id",
+            ];
+        });
 
         return Inertia::render('Admin/Transport/Update', compact('zone', 'transport'));
 

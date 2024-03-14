@@ -164,25 +164,21 @@ const submit = () => {
                         {{ row.nom }}
                     </option>
                 </Select>
+                <Select2 label="Nom de la zone" :message="form.errors.zone_id">
+                    <VueSelect
+                        placeholder="selectionner"
+                        v-model="form.zone_id"
+                        :options="zone"
+                    />
+                </Select2>
 
-                <Select
-                    v-model="form.zone_id"
-                    :message="form.errors.zone_id"
-                    label="Nom de la zone"
-                >
-                    <option v-for="row in zone" :key="row.id" :value="row.id">
-                        {{ row.nom }}
-                    </option>
-                </Select>
-                <Select
-                    v-model="form.poids_id"
-                    :message="form.errors.poids_id"
-                    label="Poids"
-                >
-                    <option v-for="row in poids" :key="row.id" :value="row.id">
-                        {{ row.min }} à {{ row.max }} Kg
-                    </option>
-                </Select>
+                <Select2 label="Poids" :message="form.errors.poids_id">
+                    <VueSelect
+                        placeholder="selectionner"
+                        v-model="form.poids_id"
+                        :options="poids"
+                    />
+                </Select2>
                 <Input
                     input_type="text"
                     place="le temps du transport"
@@ -221,4 +217,3 @@ const submit = () => {
         </Modal>
     </AuthenticatedLayout>
 </template>
-@/helper

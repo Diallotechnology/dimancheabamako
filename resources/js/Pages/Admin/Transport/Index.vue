@@ -131,28 +131,18 @@ const submit = () => {
                     :message="form.errors.nom"
                     required
                 />
-                <div class="mb-3">
-                    <label for="">zone de livraison</label>
-                    <select
-                        class="form-select"
+                <Select2
+                    label="zone de livraison"
+                    :message="form.errors.zone_id"
+                >
+                    <VueSelect
+                        :is-multi="true"
+                        placeholder="selectionner"
                         v-model="form.zone_id"
-                        multiple
-                        required
-                    >
-                        <option
-                            v-for="row in zone"
-                            :key="row.id"
-                            :value="row.id"
-                        >
-                            {{ row.nom }}
-                        </option>
-                    </select>
-                    <div v-show="form.errors.zone_id">
-                        <p class="text-sm text-danger">
-                            {{ form.errors.zone_id }}
-                        </p>
-                    </div>
-                </div>
+                        :options="zone"
+                    />
+                </Select2>
+
                 <div class="modal-footer">
                     <button
                         type="button"
