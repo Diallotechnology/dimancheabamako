@@ -65,6 +65,41 @@ onUnmounted(() => {
                                             class="language-dropdown-active"
                                             href="#"
                                         >
+                                            <i class="fi-rs-euro"></i>
+                                            {{
+                                                local === "fr"
+                                                    ? "Euro"
+                                                    : "Dollar"
+                                            }}
+                                            <i
+                                                class="fi-rs-angle-small-down"
+                                            ></i>
+                                        </Link>
+                                        <ul class="language-dropdown">
+                                            <li>
+                                                <Link
+                                                    :href="
+                                                        route('language', 'fr')
+                                                    "
+                                                >
+                                                    Euro
+                                                </Link>
+                                                <Link
+                                                    :href="
+                                                        route('language', 'en')
+                                                    "
+                                                >
+                                                    Dollars
+                                                </Link>
+                                            </li>
+                                        </ul>
+                                    </li>
+
+                                    <li>
+                                        <Link
+                                            class="language-dropdown-active"
+                                            href="#"
+                                        >
                                             <i class="fi-rs-world"></i>
                                             {{
                                                 local === "fr"
