@@ -154,7 +154,7 @@ onMounted(() => {
                                         <div class="product-image-slider">
                                             <figure class="border-radius-10">
                                                 <img
-                                                    v-bind:src="'/assets/imgs/shop/product-2-2.jpg'"
+                                                    v-bind:src="product.cover"
                                                     alt="product image"
                                                 />
                                             </figure>
@@ -168,8 +168,8 @@ onMounted(() => {
                                                 :key="row"
                                             >
                                                 <img
-                                                    v-bind:src="'/assets/imgs/shop/thumbnail-7.jpg'"
-                                                    alt="product image"
+                                                    v-bind:src="row.chemin"
+                                                    alt="product image cover"
                                                 />
                                             </div>
                                         </div>

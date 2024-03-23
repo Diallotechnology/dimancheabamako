@@ -1,11 +1,7 @@
 <script setup>
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
-import Input from "@/Components/Input.vue";
 import { useForm, Link } from "@inertiajs/vue3";
-import TextArea from "@/Components/TextArea.vue";
-import Select from "@/Components/Select.vue";
 import notify from "@/helper";
-import { parse } from "vue/compiler-sfc";
 
 const props = defineProps({
     category: {

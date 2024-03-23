@@ -40,4 +40,14 @@ class Shipping extends Model
     {
         return $this->belongsTo(Poids::class);
     }
+
+    public function getPrixFinalAttribute(): string
+    {
+        $deviseSymbole = session('locale') === 'fr' ? '€' : '$';
+        $tauxConversion = session('locale') === 'fr' ? Devise::whereType('EUR')->value('taux') : Devise::whereType('USD')->value('taux');
+        // Conversion du prix en devise locale et formatage
+        $prixFormat = number_format($this->montant / $tauxConversion, 2);
+
+        return $prixFormat.' '.$deviseSymbole;
+    }
 }

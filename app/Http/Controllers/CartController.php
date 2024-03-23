@@ -7,19 +7,15 @@ use App\Models\Product;
 use App\Models\Shipping;
 use App\Models\Transport;
 use Darryldecode\Cart\Facades\CartFacade;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Http\JsonResponse;
 use Inertia\Inertia;
+use Inertia\Response;
 
 class CartController extends Controller
 {
-    private function get_userid()
+    private function get_userid(): string
     {
-        // if (! auth()->check()) {
-        //     if (session()->has('user_id')) {
-        //         $userId = session()->get('user_id');
-        //     }
-        // } else {
-        //     $userId = auth()->user()->id;
-        // }
         if (! auth()->check()) {
             if (session()->has('user_id')) {
                 $userId = session()->get('user_id');
@@ -37,7 +33,7 @@ class CartController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(): Response
     {
 
         $items = CartFacade::session($this->get_userid())->getContent()->sortBy('name');
@@ -46,34 +42,60 @@ class CartController extends Controller
         // get total price
         $deviseSymbole = session('locale') === 'fr' ? '€' : '$';
         $Total = CartFacade::session($this->get_userid())->getTotal();
-        $pays = Country::all();
-        $transport = Transport::all();
+        // $pays = Country::all();
+        $transport = Transport::all('nom', 'id');
 
-        return Inertia::render('Panier', compact('items', 'TotalQuantity', 'Total', 'pays', 'transport'));
+        return Inertia::render('Panier', compact('items', 'TotalQuantity', 'Total', 'transport'));
     }
 
     /**
      * Show the form for creating a new resource.
      */
-    public function GetCount()
+    public function GetCount(): int
     {
         return CartFacade::session($this->get_userid())->getContent()->count();
     }
 
-    public function GetCountry()
+    public function GetCountry($trans_id)
     {
-        return Country::all();
+        $query = Transport::with('zones')->find($trans_id);
+        $country = Country::whereIn('zone_id', $query->zones->pluck('id'))->get('nom', 'id');
+
+        return $country;
     }
 
-    public function GetShipping($id, $trans_id)
+    public function GetShipping(int $country, int $trans_id)
     {
-        return Shipping::whereCountryId($id)->whereTransportId($trans_id)->first();
+        // Retrieve the total weight of the products in the cart
+        $items = CartFacade::session($this->get_userid())->getContent()->sortBy('name');
+        $totalWeight = $items->pluck('attributes')->sum('poids');
+        // get zone id
+        $pays = Country::findOrFail($country);
+        // dd($totalWeight);
+        try {
+            // Fetch the shipping rule based on the country ID, transport ID, and weight range
+            $shipping = Shipping::whereZoneId($pays->zone_id)
+                ->whereTransportId($trans_id)
+                ->whereRelation('poids', function ($query) use ($totalWeight) {
+                    $query->where('min', '<=', $totalWeight)
+                        ->where('max', '>=', $totalWeight);
+                })->firstOrFail();
+            // dd($shipping);
+        } catch (ModelNotFoundException $e) {
+            // Handle case where shipping rule is not found
+            return response()->json([
+                'message' => 'Aucune correspondance trouvé!',
+                'type' => true,
+            ]);
+        }
+
+        return $shipping;
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Product $product)
+    public function store(Product $product): JsonResponse
     {
         $product->prix_final = $product->getPrixFinalAttribute();
         $productSelected = $product;
@@ -82,7 +104,7 @@ class CartController extends Controller
             'name' => $productSelected->nom,
             'price' => $productSelected->getPrixFinal(),
             'quantity' => 1,
-            'attributes' => [],
+            'attributes' => ['poids' => $productSelected->poids],
             'associatedModel' => $productSelected,
         ];
 
@@ -110,22 +132,6 @@ class CartController extends Controller
     }
 
     /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
-    {
-        //
-    }
-
-    /**
      * Update the specified resource in storage.
      */
     public function update(int $id, int $qte)
@@ -138,7 +144,6 @@ class CartController extends Controller
         } else {
             $user = auth()->user()->id;
         }
-        // $event = $this->emit('panier_updated');
 
         $cart = CartFacade::session($user)->get($id);
 
@@ -182,7 +187,7 @@ class CartController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(string $id): JsonResponse
     {
         $product = CartFacade::session($this->get_userid())->get($id);
         CartFacade::session($this->get_userid())->remove($product->id);

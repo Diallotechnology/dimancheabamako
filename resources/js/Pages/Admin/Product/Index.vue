@@ -124,7 +124,11 @@ const favori = (url) => {
                         />
                     </div>
                     <div class="col-6 col-md-3">
-                        <Select2 v-model="filters.cat" :data="category" label=""/>
+                        <Select2
+                            v-model="filters.cat"
+                            :data="category"
+                            label=""
+                        />
                     </div>
                 </div>
             </header>
@@ -137,8 +141,8 @@ const favori = (url) => {
                         <div class="card card-product-grid">
                             <a href="#" class="img-wrap">
                                 <img
-                                    v-bind:src="'/admin/assets/imgs/items/1.jpg'"
-                                    alt="Product"
+                                    v-bind:src="row.cover"
+                                    alt="Produit cover"
                                 />
                             </a>
                             <div class="info-wrap">
@@ -220,8 +224,15 @@ const favori = (url) => {
                         />
                     </div>
                     <div class="col-md-6">
-                        <Select2 label="categorie" :message="form.errors.categorie_id">
-                            <VueSelect placeholder="selectionner" v-model="form.categorie_id" :options="category" />
+                        <Select2
+                            label="categorie"
+                            :message="form.errors.categorie_id"
+                        >
+                            <VueSelect
+                                placeholder="selectionner"
+                                v-model="form.categorie_id"
+                                :options="category"
+                            />
                         </Select2>
                     </div>
 
@@ -302,7 +313,7 @@ const favori = (url) => {
                     <div class="col-md-6">
                         <div class="mb-4">
                             <label class="text-uppercase form-label"
-                                >Images du produit</label
+                                >Images du produit 600x600</label
                             >
                             <input
                                 class="form-control"

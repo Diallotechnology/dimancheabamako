@@ -150,14 +150,14 @@ class Product extends Model
         return $this->belongsToMany(Order::class)->withPivot('quantity', 'montant');
     }
 
-    // public function getCoverAttribute($image)
-    // {
-    //     return Storage::url($image);
-    // }
+    public function getCoverAttribute(): string
+    {
+        return Storage::url($this->attributes['cover']);
+    }
 
     public function DocLink(): string
     {
-        return Storage::url($this->cover);
+        return Storage::url($this->attributes['cover']);
     }
 
     /**

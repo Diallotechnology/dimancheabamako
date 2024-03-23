@@ -21,7 +21,5 @@
         "vue3-select-component": "^0.1.3",
         "vue3-toastify": "^0.2.1"
     },
-    "dependencies": {
-        "vue-select2": "^0.2.6"
-    }
+    "dependencies": {}
 }

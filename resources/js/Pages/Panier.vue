@@ -10,11 +10,6 @@ const props = defineProps({
         required: true,
         default: () => ({}),
     },
-    pays: {
-        type: Object,
-        required: true,
-        default: () => ({}),
-    },
     transport: {
         type: Object,
         required: true,
@@ -32,6 +27,8 @@ const props = defineProps({
     },
 });
 const qte = ref({});
+const shipping = ref([]);
+const pays = ref([]);
 onMounted(() => {
     for (const produitId in props.items) {
         qte.value[produitId] = ref(props.items[produitId].quantity);
@@ -51,12 +48,12 @@ const form = useForm({
     payment: "",
     commentaire: "",
 });
-const shipping = ref();
+
 const getPays = async () => {
     await axios
-        .get(route("cart.country"))
+        .get(route("cart.country", form.transport_id))
         .then((response) => {
-            countrie.value = response.data;
+            pays.value = response.data;
         })
         .catch(function (error) {
             // handle error
@@ -64,15 +61,27 @@ const getPays = async () => {
         });
 };
 const getShipping = async () => {
-    // if (form.pays.length && form.trans.length) {
-    try {
-        await axios.get(route("cart.shipping", [form.pays, form.trans])).then;
-        shipping.value = response.data;
-        console.log(response.data);
-    } catch (error) {
-        console.error(error.response);
-    }
-    // }
+    // try {
+    console.log(form.country_id);
+    await axios
+        .get(
+            route("cart.shipping", {
+                pays: form.country_id,
+                transid: form.trans,
+            })
+        )
+        .then((res) => {
+            if (res.data.type) {
+                cartnotify(res.data.message, res.data.type);
+            }
+
+            shipping.value = res.data;
+            console.log(res);
+        })
+        .catch(function (error) {
+            // handle error
+            console.log(error.res);
+        });
 };
 const deleteProduct = async (url) => {
     await axios
@@ -150,7 +159,7 @@ const submit = () => {
                 <div class="row">
                     <div class="col-md-12">
                         <div class="mb-20">
-                            <h4>panier</h4>
+                            <h4>Panier {{ items.length }} element</h4>
                         </div>
                         <div class="table-responsive order_table text-center">
                             <table class="table">
@@ -228,15 +237,23 @@ const submit = () => {
                                     </tr>
                                 </tbody>
                             </table>
+                            <!-- <h4
+                                class="text-center my-5"
+                                v-if="!items.length > 0"
+                            >
+                                Aucun produit present dans le panier
+                            </h4> -->
                         </div>
                     </div>
-                    <div class="col-md-8">
-                        <div class="table-responsive order_table text-center">
+                    <div class="col-md-4 order-1">
+                        <div
+                            class="table-responsive order_table text-center sticky-top"
+                        >
                             <table class="table">
                                 <tr>
                                     <th>Livraison</th>
                                     <td>
-                                        <em>Free Shipping</em>
+                                        <em>{{ shipping.montant }}</em>
                                     </td>
                                 </tr>
                                 <tr>
@@ -255,6 +272,8 @@ const submit = () => {
                                 </tr>
                             </table>
                         </div>
+                    </div>
+                    <div class="col-md-8">
                         <div class="mb-25">
                             <h4>Billing Details</h4>
                         </div>
@@ -320,42 +339,6 @@ const submit = () => {
                                         required
                                     />
                                 </div>
-
-                                <div class="col-md-6">
-                                    <Input
-                                        input_type="text"
-                                        place="votre code postal"
-                                        label="Postal"
-                                        v-model="form.postal"
-                                        :message="form.errors.postal"
-                                        required
-                                    />
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="mb-4">
-                                        <label class="text-uppercase form-label"
-                                            >Pays de livraison</label
-                                        >
-                                        <select
-                                            class="form-select"
-                                            v-model="form.country_id"
-                                        >
-                                            <option
-                                                v-for="item in pays"
-                                                :key="item.id"
-                                                :value="item.id"
-                                            >
-                                                {{ item.nom }}
-                                            </option>
-                                        </select>
-
-                                        <div v-show="form.errors.country_id">
-                                            <p class="text-sm text-danger">
-                                                {{ form.errors.country_id }}
-                                            </p>
-                                        </div>
-                                    </div>
-                                </div>
                                 <div class="col-md-6">
                                     <div class="mb-4">
                                         <label class="text-uppercase form-label"
@@ -363,8 +346,12 @@ const submit = () => {
                                         >
                                         <select
                                             class="form-select"
+                                            @change="getPays()"
                                             v-model="form.transport_id"
                                         >
+                                            <option selected disabled value="">
+                                                selectionner un transporteur
+                                            </option>
                                             <option
                                                 v-for="item in transport"
                                                 :key="item.id"
@@ -377,6 +364,50 @@ const submit = () => {
                                         <div v-show="form.errors.trans">
                                             <p class="text-sm text-danger">
                                                 {{ form.errors.trans }}
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <Input
+                                        input_type="text"
+                                        place="votre code postal"
+                                        label="Postal"
+                                        v-model="form.postal"
+                                        :message="form.errors.postal"
+                                        required
+                                    />
+                                </div>
+
+                                <div class="col-md-6">
+                                    <div class="mb-4">
+                                        <p>
+                                            NB: en premier lieu, sélectionnez un
+                                            transporteur
+                                        </p>
+                                        <label class="text-uppercase form-label"
+                                            >Pays de livraison</label
+                                        >
+                                        <select
+                                            class="form-select"
+                                            v-model="form.country_id"
+                                            @change="getShipping()"
+                                        >
+                                            <option selected disabled value="">
+                                                selectionner
+                                            </option>
+                                            <option
+                                                v-for="item in pays"
+                                                :key="item.id"
+                                                :value="item.id"
+                                            >
+                                                {{ item.nom }}
+                                            </option>
+                                        </select>
+
+                                        <div v-show="form.errors.country_id">
+                                            <p class="text-sm text-danger">
+                                                {{ form.errors.country_id }}
                                             </p>
                                         </div>
                                     </div>
@@ -414,7 +445,7 @@ const submit = () => {
                                 <input
                                     required
                                     type="password"
-                                    placeholder="entrez voter mot de passe"
+                                    placeholder="entrez votre mot de passe"
                                     autocomplete="off"
                                 />
                             </div>

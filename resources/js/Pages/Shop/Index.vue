@@ -121,13 +121,13 @@ onMounted(() => {
                                             >
                                                 <img
                                                     class="default-img"
-                                                    v-bind:src="'/assets/imgs/shop/product-2-2.jpg'"
-                                                    alt=""
+                                                    v-bind:src="item.cover"
+                                                    alt="produit image"
                                                 />
                                                 <img
                                                     class="hover-img"
-                                                    v-bind:src="'/assets/imgs/shop/product-3-2.jpg'"
-                                                    alt=""
+                                                    v-bind:src="item.cover"
+                                                    alt="produit image hover"
                                                 />
                                             </Link>
                                         </div>

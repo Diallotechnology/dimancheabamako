@@ -1,18 +1,17 @@
 <script setup>
 import { Link } from "@inertiajs/vue3";
-import { onMounted, ref, onUnmounted } from "vue";
+import { onMounted, ref, onUnmounted, computed } from "vue";
 import { usePage } from "@inertiajs/vue3";
-import Cart from "@/Shared/Cart.vue";
 const props = defineProps({
     active: {
         type: Boolean,
     },
 });
 const page = usePage();
+const user = computed(() => page.props.auth.user);
 const local = page.props.locale;
 const rows = ref([]);
 const cartCount = ref(0);
-
 const updateCartCount = async () => {
     try {
         await axios.get("/count").then((res) => {
@@ -101,13 +100,17 @@ onUnmounted(() => {
                                             </li>
                                         </ul>
                                     </li>
-                                    <li>
+
+                                    <li v-show="user === null">
                                         <i class="fi-rs-user"></i>
                                         <Link :href="route('login')"
                                             >Se connecter</Link
                                         >
                                     </li>
-                                    <li class="dropdown nav-item">
+                                    <li
+                                        v-show="user !== null"
+                                        class="dropdown nav-item"
+                                    >
                                         <a
                                             class="dropdown-toggle"
                                             data-bs-toggle="dropdown"
@@ -115,11 +118,10 @@ onUnmounted(() => {
                                             id="dropdownAccount"
                                             aria-expanded="false"
                                         >
-                                            <!-- <img
-                                                class="img-xs rounded-circle"
-                                                v-bind:src="'/admin/assets/imgs/people/avatar2.jpg'"
-                                                alt="User"
-                                        /> -->
+                                            <i
+                                                class="fi-rs-user"
+                                                style="font-size: large"
+                                            ></i>
                                         </a>
                                         <div
                                             class="dropdown-menu dropdown-menu-end"
@@ -131,14 +133,14 @@ onUnmounted(() => {
                                                 ></i
                                                 >Profil</a
                                             >
-
                                             <div class="dropdown-divider"></div>
                                             <Link
                                                 class="dropdown-item text-danger"
                                                 :href="route('logout')"
                                                 method="post"
                                                 as="button"
-                                                ><i
+                                            >
+                                                <i
                                                     class="material-icons md-exit_to_app"
                                                 ></i
                                                 >Deconnexion
@@ -244,14 +246,41 @@ onUnmounted(() => {
                         <div class="header-action-2">
                             <div class="header-action-icon-2">
                                 <ul class="me-4">
-                                    <li>
-                                        <Link
-                                            :href="route('login')"
-                                            class="btn btn-brand btn-sm"
+                                    <li class="dropdown nav-item">
+                                        <a
+                                            class="dropdown-toggle"
+                                            data-bs-toggle="dropdown"
+                                            href="#"
+                                            id="dropdownAccount"
+                                            aria-expanded="false"
                                         >
-                                            <i class="fi-rs-user"></i>
-                                            Connexion</Link
+                                            <i
+                                                class="fi-rs-user"
+                                                style="font-size: large"
+                                            ></i>
+                                        </a>
+                                        <div
+                                            class="dropdown-menu dropdown-menu-end"
+                                            aria-labelledby="dropdownAccount"
                                         >
+                                            <Link
+                                                class="dropdown-item"
+                                                :href="route('login')"
+                                                ><i
+                                                    class="material-icons md-perm_identity"
+                                                ></i
+                                                >Profil</Link
+                                            >
+
+                                            <div class="dropdown-divider"></div>
+                                            <Link
+                                                :href="route('login')"
+                                                class="dropdown-item"
+                                            >
+                                                <i class="fi-rs-user"></i>
+                                                Connexion</Link
+                                            >
+                                        </div>
                                     </li>
                                 </ul>
                                 <Link

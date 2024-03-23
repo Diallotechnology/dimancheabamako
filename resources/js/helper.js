@@ -52,9 +52,11 @@ export const AddToCard = async (url) => {
     try {
         await axios.get(url).then((response) => {
             document.dispatchEvent(new CustomEvent("cart-updated", {}));
-            cartnotify(response.data.message, response.data.type);
+
             if (response.data.type) {
                 showModal();
+            } else {
+                cartnotify(response.data.message, response.data.type);
             }
         });
     } catch (error) {

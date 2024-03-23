@@ -26,8 +26,13 @@ class Image extends Model
         return $this->belongsTo(Product::class);
     }
 
+    public function getCheminAttribute(): string
+    {
+        return Storage::url($this->attributes['chemin']);
+    }
+
     public function DocLink(): string
     {
-        return Storage::url($this->chemin);
+        return Storage::url($this->attributes['chemin']);
     }
 }

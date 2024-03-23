@@ -31,13 +31,13 @@ const props = defineProps({
                     <Link :href="route('shop.show', item.id)">
                         <img
                             class="default-img"
-                            src="/assets/imgs/shop/product-2-2.jpg"
-                            alt=""
+                            v-bind:src="item.cover"
+                            alt="produit image"
                         />
                         <img
                             class="hover-img"
-                            src="/assets/imgs/shop/product-3-2.jpg"
-                            alt=""
+                            v-bind:src="item.cover"
+                            alt="produit image hover"
                         />
                     </Link>
                 </div>

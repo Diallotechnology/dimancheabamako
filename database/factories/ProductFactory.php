@@ -21,7 +21,7 @@ class ProductFactory extends Factory
             'reference' => uniqid(),
             'nom' => $this->faker->sentence(1),
             'prix' => rand(15000, 50000),
-            'poids' => rand(100, 500),
+            'poids' => rand(1, 5),
             'stock' => rand(15, 50),
             'color' => $this->faker->colorName(),
             'favoris' => $this->faker->boolean(50),

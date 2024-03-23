@@ -1,9 +1,9 @@
 <script setup>
-import ApplicationLogo from "@/Components/ApplicationLogo.vue";
 import Nav from "@/Layouts/Nav.vue";
-import { Link } from "@inertiajs/vue3";
-import { onMounted } from "vue";
-
+import { Link, usePage } from "@inertiajs/vue3";
+import { onMounted, computed } from "vue";
+const page = usePage();
+const user = computed(() => page.props.auth.user);
 onMounted(() => {
     $(".menu-item.has-submenu .menu-link").on("click", function (e) {
         e.preventDefault();
@@ -105,7 +105,7 @@ onMounted(() => {
                         >
                             <a class="dropdown-item" href="#"
                                 ><i class="material-icons md-perm_identity"></i
-                                >Profil</a
+                                >{{ user.email }}</a
                             >
 
                             <div class="dropdown-divider"></div>

@@ -104,6 +104,7 @@ class ProductController extends Controller
     public function destroy(Product $product)
     {
         $this->file_delete($product);
+        $this->file_multiple_delete($product->images()->pluck('chemin'));
 
         return $this->supp($product);
     }
