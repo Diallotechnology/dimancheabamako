@@ -50,7 +50,6 @@ const form = useForm({
 });
 
 const getPays = async () => {
-    console.log(form.transport_id);
     await axios
         .get(route("cart.country", form.transport_id))
         .then((response) => {
@@ -61,27 +60,21 @@ const getPays = async () => {
             console.log(error.response);
         });
 };
-const getShipping = async (tesr) => {
-    console.log(tesr);
-    // await axios
-    //     .get(
-    //         route("cart.shipping", {
-    //             pays: form.country_id,
-    //             transid: form.trans,
-    //         })
-    //     )
-    //     .then((res) => {
-    //         if (res.data.type) {
-    //             cartnotify(res.data.message, res.data.type);
-    //         }
 
-    //         shipping.value = res.data;
-    //         console.log(res);
-    //     })
-    //     .catch(function (error) {
-    //         // handle error
-    //         console.log(error.res);
-    //     });
+const getShipping = async () => {
+    await axios
+        .get(route("cart.shipping", [form.country_id, form.transport_id]))
+        .then((res) => {
+            if (res.data.type) {
+                cartnotify(res.data.message, res.data.type);
+            } else {
+                shipping.value = res.data;
+            }
+        })
+        .catch(function (error) {
+            // handle error
+            console.log(error.res);
+        });
 };
 const deleteProduct = async (url) => {
     await axios
@@ -253,7 +246,7 @@ const submit = () => {
                                 <tr>
                                     <th>Livraison</th>
                                     <td>
-                                        <em>{{ shipping.montant }}</em>
+                                        <em>{{ shipping.montant_format }}</em>
                                     </td>
                                 </tr>
                                 <tr>
@@ -391,9 +384,7 @@ const submit = () => {
                                         <select
                                             class="form-select"
                                             v-model="form.country_id"
-                                            @change="
-                                                getShipping(form.country_id)
-                                            "
+                                            @change="getShipping()"
                                         >
                                             <option selected disabled value="">
                                                 selectionner

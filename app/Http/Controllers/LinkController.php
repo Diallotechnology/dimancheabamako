@@ -18,22 +18,12 @@ class LinkController extends Controller
         $query = Product::query();
 
         // Récupération des derniers produits
-        $latest = $query->take(4)->latest()->get()->map(function ($row) {
-            $row->prix_promo = $row->getPrixPromoAttribute();
-            $row->prix_format = $row->getPrixFormatAttribute();
-            $row->reduction = $row->getReductionAttribute();
-
-            return $row;
-        });
-
+        $latest = $query->take(4)->latest()->get();
         // Récupération des produits populaires
-        $popular = $query->where('favoris', 1)->get()->map(function ($row) {
-            $row->prix_promo = $row->getPrixPromoAttribute();
-            $row->prix_format = $row->getPrixFormatAttribute();
-            $row->reduction = $row->getReductionAttribute();
-
-            return $row;
-        });
+        $popular = $query->where('favoris', 1)->get();
+        // add custom attributes
+        $popular->append(['prix_promo', 'prix_format', 'reduction']);
+        $latest->append(['prix_promo', 'prix_format', 'reduction']);
 
         $slide = Slide::all();
 
@@ -74,18 +64,11 @@ class LinkController extends Controller
 
     public function shopshow(Product $product)
     {
+        $product->append(['prix_promo', 'prix_format', 'reduction']);
         $product->load('images');
-        $product->prix_promo = $product->getPrixPromoAttribute();
-        $product->prix_format = $product->getPrixFormatAttribute();
-        $product->reduction = $product->getReductionAttribute();
 
-        $rows = Product::where('categorie_id', $product->categorie_id)->take(4)->get()->map(function ($row) {
-            $row->prix_promo = $row->getPrixPromoAttribute();
-            $row->prix_format = $row->getPrixFormatAttribute();
-            $row->reduction = $row->getReductionAttribute();
-
-            return $row;
-        });
+        $rows = Product::where('categorie_id', $product->categorie_id)->take(4)->get();
+        $rows->append(['prix_promo', 'prix_format', 'reduction']);
         $category = Category::all();
 
         return Inertia::render('Shop/Show', compact('product', 'rows', 'category'));

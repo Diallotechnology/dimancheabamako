@@ -10,6 +10,8 @@ class Shipping extends Model
 {
     use DateFormat;
 
+    protected $appends = ['montant_format'];
+
     /**
      * The attributes that are mass assignable.
      *
@@ -41,7 +43,7 @@ class Shipping extends Model
         return $this->belongsTo(Poids::class);
     }
 
-    public function getPrixFinalAttribute(): string
+    public function getMontantFormatAttribute(): string
     {
         $deviseSymbole = session('locale') === 'fr' ? '€' : '$';
         $tauxConversion = session('locale') === 'fr' ? Devise::whereType('EUR')->value('taux') : Devise::whereType('USD')->value('taux');

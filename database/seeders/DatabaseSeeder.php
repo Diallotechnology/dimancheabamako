@@ -58,7 +58,7 @@ class DatabaseSeeder extends Seeder
         Poids::factory()->create(['min' => '8', 'max' => '10']);
         Shipping::factory(20)->create();
         User::factory(30)->create();
-        Category::factory(20)->create();
+        Category::factory(5)->create();
         Client::factory(30)->create();
         Product::factory(30)->hasImages(3)->create();
         Promotion::factory(5)->hasProducts(10)->create();

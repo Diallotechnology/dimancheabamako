@@ -59,7 +59,7 @@ class CartController extends Controller
     public function GetCountry($trans_id)
     {
         $query = Transport::with('zones')->find($trans_id);
-        $country = Country::whereIn('zone_id', $query->zones->pluck('id'))->get('nom', 'id');
+        $country = Country::whereIn('zone_id', $query->zones->pluck('id'))->get(['id', 'nom']);
 
         return $country;
     }
@@ -97,7 +97,7 @@ class CartController extends Controller
      */
     public function store(Product $product): JsonResponse
     {
-        $product->prix_final = $product->getPrixFinalAttribute();
+        $product->append(['prix_final']);
         $productSelected = $product;
         $productAdded = [
             'id' => $productSelected->id,

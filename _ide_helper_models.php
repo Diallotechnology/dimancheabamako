@@ -299,7 +299,7 @@ namespace App\Models{
  * @property int $montant
  * @property string $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
- * @property-read string $prix_final
+ * @property-read string $montant_format
  * @property-read \App\Models\Poids $poids
  * @property-read \App\Models\Transport $transport
  * @property-read \App\Models\Zone $zone
