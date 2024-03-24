@@ -22,18 +22,17 @@ class StoreOrderRequest extends FormRequest
     public function rules(): array
     {
         return [
+            'country_id' => 'required|exists:countries,id',
+            'transport_id' => 'required|exists:transports,id',
             'prenom' => 'required|string',
             'nom' => 'required|string',
             'email' => 'required|string|email',
             'contact' => 'required|string',
-            'trans' => 'nullable|string',
-            'country_id' => 'required|exists:countries,id',
-            'transport_id' => 'required|exists:transports,id',
             'ville' => 'required|string',
             'adresse' => 'required|string',
             'postal' => 'nullable|string',
             'payment' => 'nullable|string',
-            'commentaire' => 'required|string',
+            'commentaire' => 'nullable|string',
         ];
     }
 }

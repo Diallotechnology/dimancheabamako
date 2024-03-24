@@ -7,6 +7,7 @@ use App\Helper\DeleteAction;
 use App\Http\Requests\StoreOrderRequest;
 use App\Http\Requests\UpdateOrderRequest;
 use App\Models\Client;
+use App\Models\Country;
 use App\Models\Order;
 use Darryldecode\Cart\Facades\CartFacade;
 use Illuminate\Support\Facades\DB;
@@ -32,22 +33,25 @@ class OrderController extends Controller
                 $user = auth()->user()->id;
             }
 
+            $pays = Country::findOrFail($request->country_id);
+            // register client
             $client = Client::create([
                 'prenom' => $request->prenom,
                 'nom' => $request->nom,
                 'contact' => $request->contact,
                 'email' => $request->email,
-                'pays' => $request->country_id,
+                'pays' => $pays->nom,
             ]);
+            // register client order infos
             $data = new Order([
                 'payment' => $request->payment,
                 'adresse' => $request->adresse,
                 'postal' => $request->postal,
                 'ville' => $request->ville,
-                'country_id' => $request->country_id,
+                'country_id' => $pays->id,
                 'transport_id' => $request->transport_id,
             ]);
-
+            // save client order infos
             $order = $client->orders()->save($data);
             // Variable pour suivre si une erreur de stock est survenue
             $erreurStockInsuffisant = false;
@@ -57,12 +61,14 @@ class OrderController extends Controller
             // add pivot table value
             $panier->each(function ($product) use ($order, $erreurStockInsuffisant) {
                 if ($product->quantity > $product->associatedModel->stock) {
-                    // toastr()->error('Quantité demandée non disponible, vérifiez le stock!');
                     // Indique qu'une erreur s'est produite
                     $erreurStockInsuffisant = true;
 
                     // Arrête l'itération de la boucle
-                    return false;
+                    return response()->json([
+                        'message' => "Quantité demandée d'un produit non disponible!!",
+                        'type' => \false,
+                    ]);
                 } else {
                     $order->products()->attach($product->associatedModel->id, [
                         'quantity' => $product->quantity,
@@ -83,7 +89,11 @@ class OrderController extends Controller
             $order->save();
             // Supprime le contenu du panier utilisateur
             CartFacade::session($user)->clear();
-            // toastr()->success('Vente effectuée avec succès!');
+
+            return response()->json([
+                'message' => 'Commande effectuée avec success!',
+                'type' => true,
+            ]);
         });
 
     }

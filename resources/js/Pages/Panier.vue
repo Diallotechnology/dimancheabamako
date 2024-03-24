@@ -168,11 +168,13 @@ const submit = () => {
                                     <tr v-for="item in items" :key="item.id">
                                         <td class="image product-thumbnail">
                                             <img
-                                                src="assets/imgs/shop/product-1-1.jpg"
+                                                v-bind:src="
+                                                    item.associatedModel.cover
+                                                "
                                                 alt="#"
                                             />
                                             <h5>
-                                                {{ item.name }} {{ item.id }}
+                                                {{ item.name }}
                                             </h5>
                                         </td>
                                         <td
@@ -250,7 +252,13 @@ const submit = () => {
                                     </td>
                                 </tr>
                                 <tr>
-                                    <th>TotalQuantity</th>
+                                    <th>Delai de Livraison</th>
+                                    <td>
+                                        <em>4 à 7 jours</em>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th>Total Quantity</th>
                                     <td>
                                         <em>{{ TotalQuantity }}</em>
                                     </td>
@@ -268,7 +276,7 @@ const submit = () => {
                     </div>
                     <div class="col-md-8">
                         <div class="mb-25">
-                            <h4>Billing Details</h4>
+                            <h4>Informations de la commande</h4>
                         </div>
                         <form method="post" @submit.prevent="submit">
                             <div class="row">
