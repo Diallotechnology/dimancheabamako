@@ -22,6 +22,17 @@ const updateCartCount = async () => {
     }
 };
 
+function googleTranslateElementInit() {
+    new google.translate.TranslateElement(
+        { pageLanguage: local, includedLanguages: "en,fr" },
+        "google_translate_element"
+    );
+}
+
+const closeSidebar = () => {
+    var wrapper4 = document.querySelector("body");
+    wrapper4.classList.remove("mobile-menu-active");
+};
 onMounted(() => {
     document.addEventListener("cart-updated", updateCartCount);
     try {
@@ -39,6 +50,8 @@ onMounted(() => {
     } catch (error) {
         console.error(error);
     }
+
+    // googleTranslateElementInit();
 });
 onUnmounted(() => {
     document.removeEventListener("cart-updated", updateCartCount);
@@ -47,6 +60,7 @@ onUnmounted(() => {
 <template>
     <header class="header-area header-style-1 header-height-2">
         <div class="header-middle header-middle-ptb-1 d-none d-lg-block">
+            <div id="google_translate_element"></div>
             <div class="container">
                 <div class="header-wrap">
                     <div class="logo logo-width-1">
@@ -96,7 +110,7 @@ onUnmounted(() => {
                                     </li>
 
                                     <li>
-                                        <Link
+                                        <a
                                             class="language-dropdown-active"
                                             href="#"
                                         >
@@ -109,7 +123,7 @@ onUnmounted(() => {
                                             <i
                                                 class="fi-rs-angle-small-down"
                                             ></i>
-                                        </Link>
+                                        </a>
                                         <ul class="language-dropdown">
                                             <li>
                                                 <Link
@@ -118,8 +132,9 @@ onUnmounted(() => {
                                                     "
                                                     ><img
                                                         src="/assets/imgs/theme/flag-fr.png"
-                                                        alt=""
+                                                        alt="flag-us"
                                                     />
+
                                                     Français
                                                 </Link>
                                                 <Link
@@ -128,7 +143,7 @@ onUnmounted(() => {
                                                     "
                                                     ><img
                                                         src="/assets/imgs/theme/flag-us.png"
-                                                        alt=""
+                                                        alt="flag-us"
                                                     />
                                                     English
                                                 </Link>
@@ -281,41 +296,13 @@ onUnmounted(() => {
                         <div class="header-action-2">
                             <div class="header-action-icon-2">
                                 <ul class="me-4">
-                                    <li class="dropdown nav-item">
-                                        <a
-                                            class="dropdown-toggle"
-                                            data-bs-toggle="dropdown"
-                                            href="#"
-                                            id="dropdownAccount"
-                                            aria-expanded="false"
-                                        >
+                                    <li class="mini-cart-icon">
+                                        <Link :href="route('login')">
                                             <i
-                                                class="fi-rs-user"
-                                                style="font-size: large"
+                                                class="fi-rs-user text-dark"
+                                                style="font-size: x-large"
                                             ></i>
-                                        </a>
-                                        <div
-                                            class="dropdown-menu dropdown-menu-end"
-                                            aria-labelledby="dropdownAccount"
-                                        >
-                                            <Link
-                                                class="dropdown-item"
-                                                :href="route('login')"
-                                                ><i
-                                                    class="material-icons md-perm_identity"
-                                                ></i
-                                                >Profil</Link
-                                            >
-
-                                            <div class="dropdown-divider"></div>
-                                            <Link
-                                                :href="route('login')"
-                                                class="dropdown-item"
-                                            >
-                                                <i class="fi-rs-user"></i>
-                                                Connexion</Link
-                                            >
-                                        </div>
+                                        </Link>
                                     </li>
                                 </ul>
                                 <Link
@@ -323,7 +310,7 @@ onUnmounted(() => {
                                     :href="route('cart.index')"
                                 >
                                     <img
-                                        alt="Evara"
+                                        alt="cart"
                                         v-bind:src="'/assets/imgs/theme/icons/icon-cart.svg'"
                                     />
                                     <span class="pro-count blue"
@@ -383,23 +370,35 @@ onUnmounted(() => {
                                 ><a href="#">Categories</a>
                                 <ul class="dropdown">
                                     <li v-for="row in rows" :key="row.id">
-                                        <Link :href="route('shop', row.id)">{{
-                                            row.nom
-                                        }}</Link>
+                                        <Link
+                                            @click="closeSidebar()"
+                                            :href="route('shop', row.id)"
+                                            >{{ row.nom }}</Link
+                                        >
                                     </li>
                                 </ul>
                             </li>
 
                             <li>
-                                <Link :href="route('about')">A propos</Link>
+                                <Link
+                                    :href="route('about')"
+                                    @click="closeSidebar()"
+                                    >A propos</Link
+                                >
                             </li>
                             <li>
-                                <Link :href="route('livraison')"
+                                <Link
+                                    :href="route('livraison')"
+                                    @click="closeSidebar()"
                                     >Livraison</Link
                                 >
                             </li>
                             <li>
-                                <Link :href="route('contact')">Contact</Link>
+                                <Link
+                                    :href="route('contact')"
+                                    @click="closeSidebar()"
+                                    >Contact</Link
+                                >
                             </li>
                             <li class="menu-item-has-children">
                                 <span class="menu-expand"></span
@@ -416,12 +415,6 @@ onUnmounted(() => {
                     <!-- mobile menu end -->
                 </div>
                 <div class="mobile-header-info-wrap mobile-header-border">
-                    <div class="single-mobile-header-info mt-30">
-                        <a href="page-contact.html"> Our location </a>
-                    </div>
-                    <div class="single-mobile-header-info">
-                        <a href="page-login-register.html">Log In / Sign Up </a>
-                    </div>
                     <div class="single-mobile-header-info">
                         <a href="#">(+01) - 2345 - 6789 </a>
                     </div>

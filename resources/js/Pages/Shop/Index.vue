@@ -2,7 +2,7 @@
 import Layout from "@/Shared/Layout.vue";
 import Pagination from "@/Components/Pagination.vue";
 import { AddToCard } from "@/helper";
-import { Link, router, usePage } from "@inertiajs/vue3";
+import { Link, router, Head } from "@inertiajs/vue3";
 import { onMounted, watch, ref } from "vue";
 const props = defineProps({
     rows: {
@@ -75,6 +75,7 @@ onMounted(() => {
 });
 </script>
 <template>
+    <Head title="{{ desc }}" />
     <Layout>
         <section class="mt-50 mb-50">
             <div class="container">

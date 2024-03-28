@@ -161,27 +161,29 @@ import { onMounted } from "vue";
 onMounted(() => {
     /*====== Sidebar menu Active ======*/
     function mobileHeaderActive() {
-        var navbarTrigger = $(".burger-icon"),
-            endTrigger = $(".mobile-menu-close"),
-            container = $(".mobile-header-active"),
-            wrapper4 = $("body");
+        var navbarTrigger = document.querySelector(".burger-icon"),
+            endTrigger = document.querySelector(".mobile-menu-close"),
+            container = document.querySelector(".mobile-header-active"),
+            wrapper4 = document.querySelector("body");
 
-        wrapper4.prepend('<div class="body-overlay-1"></div>');
+        var bodyOverlay = document.createElement("div");
+        bodyOverlay.className = "body-overlay-1";
+        wrapper4.insertBefore(bodyOverlay, wrapper4.firstChild);
 
-        navbarTrigger.on("click", function (e) {
+        navbarTrigger.addEventListener("click", function (e) {
             e.preventDefault();
-            container.addClass("sidebar-visible");
-            wrapper4.addClass("mobile-menu-active");
+            container.classList.add("sidebar-visible");
+            wrapper4.classList.add("mobile-menu-active");
         });
 
-        endTrigger.on("click", function () {
-            container.removeClass("sidebar-visible");
-            wrapper4.removeClass("mobile-menu-active");
+        endTrigger.addEventListener("click", function () {
+            container.classList.remove("sidebar-visible");
+            wrapper4.classList.remove("mobile-menu-active");
         });
 
-        $(".body-overlay-1").on("click", function () {
-            container.removeClass("sidebar-visible");
-            wrapper4.removeClass("mobile-menu-active");
+        bodyOverlay.addEventListener("click", function () {
+            container.classList.remove("sidebar-visible");
+            wrapper4.classList.remove("mobile-menu-active");
         });
     }
     mobileHeaderActive();
@@ -189,45 +191,64 @@ onMounted(() => {
     /*---------------------
         Mobile menu active
     ------------------------ */
-    var $offCanvasNav = $(".mobile-menu"),
-        $offCanvasNavSubMenu = $offCanvasNav.find(".dropdown");
+    // Sélection des éléments du menu et des éléments du sous-menu
+    var offCanvasNav = document.querySelector(".mobile-menu");
+    var offCanvasNavSubMenuItems = offCanvasNav.querySelectorAll(".dropdown");
 
-    /*Add Toggle Button With Off Canvas Sub Menu*/
-    $offCanvasNavSubMenu
-        .parent()
-        .prepend(
-            '<span class="menu-expand"><i class="fi-rs-angle-small-down"></i></span>'
+    // Ajout du bouton de bascule à chaque sous-menu
+    offCanvasNavSubMenuItems.forEach(function (subMenuItem) {
+        var toggleButton = document.createElement("span");
+        toggleButton.className = "menu-expand";
+        toggleButton.innerHTML = '<i class="fi-rs-angle-small-down"></i>';
+        subMenuItem.parentNode.insertBefore(
+            toggleButton,
+            subMenuItem.parentNode.firstChild
         );
+    });
 
-    /*Close Off Canvas Sub Menu*/
-    $offCanvasNavSubMenu.slideUp();
+    // Fermeture de tous les sous-menus
+    offCanvasNavSubMenuItems.forEach(function (subMenuItem) {
+        subMenuItem.style.display = "none";
+    });
 
-    /*Category Sub Menu Toggle*/
-    $offCanvasNav.on("click", "li a, li .menu-expand", function (e) {
-        var $this = $(this);
+    // Gestion de l'événement de clic sur les éléments du menu
+    offCanvasNav.addEventListener("click", function (event) {
+        var target = event.target;
+
+        // Vérifier si l'élément cliqué est un lien ou un bouton de bascule
         if (
-            $this
-                .parent()
-                .attr("class")
-                .match(
-                    /\b(menu-item-has-children|has-children|has-sub-menu)\b/
-                ) &&
-            ($this.attr("href") === "#" || $this.hasClass("menu-expand"))
+            target.tagName === "A" ||
+            target.classList.contains("menu-expand")
         ) {
-            e.preventDefault();
-            if ($this.siblings("ul:visible").length) {
-                $this.parent("li").removeClass("active");
-                $this.siblings("ul").slideUp();
-            } else {
-                $this.parent("li").addClass("active");
-                $this
-                    .closest("li")
-                    .siblings("li")
-                    .removeClass("active")
-                    .find("li")
-                    .removeClass("active");
-                $this.closest("li").siblings("li").find("ul:visible").slideUp();
-                $this.siblings("ul").slideDown();
+            // Récupérer l'élément parent du lien ou du bouton de bascule
+            var listItem = target.parentElement;
+
+            // Vérifier si l'élément parent a une classe indiquant la présence d'un sous-menu
+            if (
+                listItem.classList.contains("menu-item-has-children") ||
+                listItem.classList.contains("has-children") ||
+                listItem.classList.contains("has-sub-menu")
+            ) {
+                event.preventDefault();
+
+                // Vérifier si le sous-menu est déjà visible ou caché
+                var subMenu = listItem.querySelector("ul");
+                if (subMenu.style.display === "block") {
+                    listItem.classList.remove("active");
+                    subMenu.style.display = "none";
+                } else {
+                    listItem.classList.add("active");
+
+                    // Fermer les autres sous-menus ouverts
+                    offCanvasNavSubMenuItems.forEach(function (item) {
+                        if (item !== subMenu) {
+                            item.parentElement.classList.remove("active");
+                            item.style.display = "none";
+                        }
+                    });
+
+                    subMenu.style.display = "block";
+                }
             }
         }
     });
@@ -241,18 +262,37 @@ onMounted(() => {
     /*-----------------------
         Magnific Popup
     ------------------------*/
-    $(".img-popup").magnificPopup({
-        type: "image",
-        gallery: {
-            enabled: true,
-        },
+
+    // Magnific Popup
+    document.querySelectorAll(".img-popup").forEach(function (element) {
+        element.addEventListener("click", function () {
+            // Initialise Magnific Popup pour chaque élément .img-popup
+            if (typeof magnificPopup !== "undefined") {
+                magnificPopup({
+                    items: {
+                        src: element.getAttribute("href"),
+                    },
+                    type: "image",
+                    gallery: {
+                        enabled: true,
+                    },
+                });
+            }
+        });
     });
 
-    $(".btn-close").on("click", function (e) {
-        $(".zoomContainer").remove();
+    // Bouton de fermeture
+    document.querySelectorAll(".btn-close").forEach(function (button) {
+        button.addEventListener("click", function () {
+            // Supprimer le conteneur de zoom
+            var zoomContainers = document.querySelectorAll(".zoomContainer");
+            zoomContainers.forEach(function (container) {
+                container.parentNode.removeChild(container);
+            });
+        });
     });
 
-    // Isotope active
+    // Isotope alternative (par exemple Masonry)
     $(".grid").imagesLoaded(function () {
         // init Isotope
         var $grid = $(".grid").isotope({

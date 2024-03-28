@@ -8,14 +8,6 @@ import Modal from "@/Components/Modal.vue";
 import notify from "@/helper";
 import { ref, watch } from "vue";
 
-// debounce((value) => {
-//     router.get(
-//         "/admin/category",
-//         { search: value },
-//         { preserveState: true, replace: true }
-//     );
-// }, 600);
-
 const props = defineProps({
     rows: {
         type: Object,

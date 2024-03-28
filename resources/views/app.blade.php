@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en">
+<html lang="en-US">
 
 <head>
     <meta charset="utf-8">
@@ -41,6 +41,9 @@
     <script src="{{ asset('assets/js/plugins/scrollup.js') }}"></script>
     <script src="{{ asset('assets/js/plugins/jquery.theia.sticky.js')}}"></script>
     <script src="{{ asset('assets/js/plugins/jquery.elevatezoom.js')}}"></script>
+    {{-- <script type="text/javascript"
+        src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit">
+    </script> --}}
 </body>
 
 </html>

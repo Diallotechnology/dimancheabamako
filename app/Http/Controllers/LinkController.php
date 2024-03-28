@@ -34,7 +34,7 @@ class LinkController extends Controller
     {
         session()->put('locale', $lang);
 
-        return redirect()->back();
+        return back();
     }
 
     public function shop(?Category $category = null)
