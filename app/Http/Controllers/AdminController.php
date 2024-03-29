@@ -16,6 +16,8 @@ use App\Models\Slide;
 use App\Models\Transport;
 use App\Models\User;
 use App\Models\Zone;
+use Countries;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Request;
 use Inertia\Inertia;
@@ -41,7 +43,7 @@ class AdminController extends Controller
     {
         $rows = Product::when(Request::input('filters.search'), function ($query, $search) {
 
-            $query->where('nom', 'like', '%'.$search.'%')->orwhere('color', 'like', '%'.$search.'%');
+            $query->whereAny(['nom', 'color', 'prix', 'taille', 'reference', 'poids'], 'like', '%'.$search.'%');
         })->when(Request::input('filters.cat'), function ($query, $cat) {
             $query->where('categorie_id', $cat);
         })->latest('id')->paginate(10)->withQueryString();
@@ -58,12 +60,7 @@ class AdminController extends Controller
     public function order()
     {
         $rows = Order::withSum('products as totaux', 'order_product.montant')->when(Request::input('search'), function ($query, $search) {
-            $query->where('reference', 'like', '%'.$search.'%')
-                ->orwhere('adresse', 'like', '%'.$search.'%')
-                ->orwhere('ville', 'like', '%'.$search.'%')
-                ->orwhere('pays', 'like', '%'.$search.'%')
-                ->orwhere('payment', 'like', '%'.$search.'%')
-                ->orwhere('postal', 'like', '%'.$search.'%');
+            $query->whereAny(['reference', 'adresse', 'ville', 'pays', 'payment', 'postal'], 'LIKE', '%'.$search.'%');
         })->when(Request::input('etat'), function ($query, $etat) {
             $query->where('etat', $etat);
         })->when(Request::input('client_id'), function ($query, $client_id) {
@@ -98,10 +95,7 @@ class AdminController extends Controller
     public function client()
     {
         $rows = Client::when(Request::input('search'), function ($query, $search) {
-            $query->where('nom', 'like', '%'.$search.'%')
-                ->orwhere('prenom', 'like', '%'.$search.'%')
-                ->orwhere('email', 'like', '%'.$search.'%')
-                ->orwhere('contact', 'like', '%'.$search.'%');
+            $query->whereAny(['prenom', 'nom', 'email', 'contact'], 'LIKE', '%'.$search.'%');
         })->latest('id')->paginate(10)->withQueryString();
         $filter = Request::only('search');
         $country = Country::all()->map(function ($row) {
@@ -136,12 +130,12 @@ class AdminController extends Controller
             $query->where('nom', 'like', '%'.$search.'%');
         })->latest('id')->paginate(10);
         $filter = Request::only('search');
-        $countryNames = array_column(countries(), 'name');
-        $pays = array_map(function ($country) {
+        $countryNames = new Collection(Countries::getList('fr'));
+        $pays = $countryNames->values()->map(function ($row) {
             return [
-                'label' => $country, 'value' => $country,
+                'label' => $row, 'value' => $row,
             ];
-        }, $countryNames);
+        });
 
         return Inertia::render('Admin/Zone/Index', compact('filter', 'rows', 'pays'));
     }
@@ -152,12 +146,12 @@ class AdminController extends Controller
             $query->where('nom', 'like', '%'.$search.'%');
         })->latest('id')->paginate(10);
         $filter = Request::only('search');
-        $countryNames = array_column(countries(), 'name');
-        $countries = array_map(function ($country) {
+        $countryNames = new Collection(Countries::getList('fr'));
+        $countries = $countryNames->values()->map(function ($row) {
             return [
-                'label' => $country, 'value' => $country,
+                'label' => $row, 'value' => $row,
             ];
-        }, $countryNames);
+        });
 
         $zone = Zone::all()->map(function ($row) {
             return [
@@ -221,8 +215,7 @@ class AdminController extends Controller
     public function user()
     {
         $rows = User::when(Request::input('search'), function ($query, $search) {
-            $query->where('name', 'like', '%'.$search.'%')
-                ->orwhere('email', 'like', '%'.$search.'%');
+            $query->whereAny(['name', 'email'], 'like', '%'.$search.'%');
         })->where('role', '!=', RoleEnum::CUSTOMER->value)->latest('id')->paginate(10)->withQueryString();
         $filter = Request::only('search');
 
@@ -232,8 +225,7 @@ class AdminController extends Controller
     public function customer()
     {
         $rows = User::when(Request::input('search'), function ($query, $search) {
-            $query->where('name', 'like', '%'.$search.'%')
-                ->orwhere('email', 'like', '%'.$search.'%');
+            $query->whereAny(['name', 'email'], 'like', '%'.$search.'%');
         })->where('role', RoleEnum::CUSTOMER->value)->latest('id')->paginate(10)->withQueryString();
         $filter = Request::only('search');
 

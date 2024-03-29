@@ -6,6 +6,8 @@ use App\Helper\DeleteAction;
 use App\Http\Requests\StoreCountryRequest;
 use App\Models\Country;
 use App\Models\Zone;
+use Countries;
+use Illuminate\Support\Collection;
 use Inertia\Inertia;
 
 class CountryController extends Controller
@@ -27,12 +29,12 @@ class CountryController extends Controller
      */
     public function edit(Country $country)
     {
-        $countryNames = array_column(countries(), 'name');
-        $pays = array_map(function ($country) {
+        $countryNames = new Collection(Countries::getList('fr'));
+        $pays = $countryNames->values()->map(function ($row) {
             return [
-                'label' => $country, 'value' => $country,
+                'label' => $row, 'value' => $row,
             ];
-        }, $countryNames);
+        });
 
         $zone = Zone::all()->map(function ($row) {
             return [

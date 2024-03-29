@@ -17201,6 +17201,74 @@ namespace Illuminate\Support\Facades {
             }
     }
 
+namespace Monarobase\CountryList {
+            /**
+     * CountryListFacade
+     *
+     * @author Monarobase <jonathan@monarobase.net>
+     */        class CountryListFacade {
+                    /**
+         * Get the country data directory.
+         *
+         * @return string 
+         * @static 
+         */        public static function getDataDir()
+        {
+                        /** @var \Monarobase\CountryList\CountryList $instance */
+                        return $instance->getDataDir();
+        }
+                    /**
+         * Returns one country.
+         *
+         * @param string $countryCode The country
+         * @param string $locale The locale (default: en)
+         * @return string 
+         * @throws CountryNotFoundException  If the country code doesn't match any country.
+         * @static 
+         */        public static function getOne($countryCode, $locale = 'en')
+        {
+                        /** @var \Monarobase\CountryList\CountryList $instance */
+                        return $instance->getOne($countryCode, $locale);
+        }
+                    /**
+         * Returns a list of countries.
+         *
+         * @param string $locale The locale (default: en)
+         * @param string $format The format (default: php)
+         * @return mixed An array (list) with country or raw data
+         * @static 
+         */        public static function getList($locale = 'en', $format = 'php')
+        {
+                        /** @var \Monarobase\CountryList\CountryList $instance */
+                        return $instance->getList($locale, $format);
+        }
+                    /**
+         * 
+         *
+         * @param string $locale The locale
+         * @param array $data An array (list) with country data
+         * @return \Monarobase\CountryList\CountryList The instance of CountryList to enable fluent interface
+         * @static 
+         */        public static function setList($locale, $data)
+        {
+                        /** @var \Monarobase\CountryList\CountryList $instance */
+                        return $instance->setList($locale, $data);
+        }
+                    /**
+         * Indicates whether or not a given $countryCode matches a country.
+         *
+         * @param string $countryCode A 2-letter country code
+         * @param string $locale The locale (default: en)
+         * @return bool <code>true</code> if a match was found, <code>false</code> otherwise
+         * @static 
+         */        public static function has($countryCode, $locale = 'en')
+        {
+                        /** @var \Monarobase\CountryList\CountryList $instance */
+                        return $instance->has($countryCode, $locale);
+        }
+            }
+    }
+
 namespace Darryldecode\Cart\Facades {
             /**
      * 
@@ -17526,194 +17594,6 @@ namespace Darryldecode\Cart\Facades {
         {
                         /** @var \Darryldecode\Cart\Cart $instance */
                         $instance->associate($model);
-        }
-            }
-    }
-
-namespace NerdSnipe\LaravelCountries\Facades {
-            /**
-     * The Laravel Countries package.
-     * 
-     * This package provides a set of models, controllers, and views for managing countries, states, and cities. Use
-     *  the view component to create te country, state, city select drop-down series.
-     *
-     * @author NerdSnipe <hello@nerdsnipe.cc>
-     * @copyright Copyright (c) NerdSnipe Inc.
-     * @license https://opensource.org/licenses/MIT MIT License
-     * @link https://github.com/nerdsnipe/laravel-countries
-     * @link https://www.nerdsnipe.cc
-     */        class LaravelCountries {
-                    /**
-         * 
-         *
-         * @static 
-         */        public static function getCountries()
-        {
-                        /** @var \NerdSnipe\LaravelCountries\Controllers\LocationController $instance */
-                        return $instance->getCountries();
-        }
-                    /**
-         * 
-         *
-         * @static 
-         */        public static function getStates($countryId)
-        {
-                        /** @var \NerdSnipe\LaravelCountries\Controllers\LocationController $instance */
-                        return $instance->getStates($countryId);
-        }
-                    /**
-         * 
-         *
-         * @static 
-         */        public static function getCities($stateId)
-        {
-                        /** @var \NerdSnipe\LaravelCountries\Controllers\LocationController $instance */
-                        return $instance->getCities($stateId);
-        }
-                    /**
-         * 
-         *
-         * @static 
-         */        public static function getCityById($id)
-        {
-                        /** @var \NerdSnipe\LaravelCountries\Controllers\LocationController $instance */
-                        return $instance->getCityById($id);
-        }
-                    /**
-         * 
-         *
-         * @static 
-         */        public static function getStateById($id)
-        {
-                        /** @var \NerdSnipe\LaravelCountries\Controllers\LocationController $instance */
-                        return $instance->getStateById($id);
-        }
-                    /**
-         * 
-         *
-         * @static 
-         */        public static function getCountryById($countryId)
-        {
-                        return \NerdSnipe\LaravelCountries\Controllers\LocationController::getCountryById($countryId);
-        }
-                    /**
-         * Register middleware on the controller.
-         *
-         * @param \Closure|array|string $middleware
-         * @param array $options
-         * @return \Illuminate\Routing\ControllerMiddlewareOptions 
-         * @static 
-         */        public static function middleware($middleware, $options = [])
-        {            //Method inherited from \Illuminate\Routing\Controller         
-                        /** @var \NerdSnipe\LaravelCountries\Controllers\LocationController $instance */
-                        return $instance->middleware($middleware, $options);
-        }
-                    /**
-         * Get the middleware assigned to the controller.
-         *
-         * @return array 
-         * @static 
-         */        public static function getMiddleware()
-        {            //Method inherited from \Illuminate\Routing\Controller         
-                        /** @var \NerdSnipe\LaravelCountries\Controllers\LocationController $instance */
-                        return $instance->getMiddleware();
-        }
-                    /**
-         * Execute an action on the controller.
-         *
-         * @param string $method
-         * @param array $parameters
-         * @return \Symfony\Component\HttpFoundation\Response 
-         * @static 
-         */        public static function callAction($method, $parameters)
-        {            //Method inherited from \Illuminate\Routing\Controller         
-                        /** @var \NerdSnipe\LaravelCountries\Controllers\LocationController $instance */
-                        return $instance->callAction($method, $parameters);
-        }
-                    /**
-         * Authorize a given action for the current user.
-         *
-         * @param mixed $ability
-         * @param mixed|array $arguments
-         * @return \Illuminate\Auth\Access\Response 
-         * @throws \Illuminate\Auth\Access\AuthorizationException
-         * @static 
-         */        public static function authorize($ability, $arguments = [])
-        {            //Method inherited from \App\Http\Controllers\Controller         
-                        /** @var \NerdSnipe\LaravelCountries\Controllers\LocationController $instance */
-                        return $instance->authorize($ability, $arguments);
-        }
-                    /**
-         * Authorize a given action for a user.
-         *
-         * @param \Illuminate\Contracts\Auth\Authenticatable|mixed $user
-         * @param mixed $ability
-         * @param mixed|array $arguments
-         * @return \Illuminate\Auth\Access\Response 
-         * @throws \Illuminate\Auth\Access\AuthorizationException
-         * @static 
-         */        public static function authorizeForUser($user, $ability, $arguments = [])
-        {            //Method inherited from \App\Http\Controllers\Controller         
-                        /** @var \NerdSnipe\LaravelCountries\Controllers\LocationController $instance */
-                        return $instance->authorizeForUser($user, $ability, $arguments);
-        }
-                    /**
-         * Authorize a resource action based on the incoming request.
-         *
-         * @param string|array $model
-         * @param string|array|null $parameter
-         * @param array $options
-         * @param \Illuminate\Http\Request|null $request
-         * @return void 
-         * @static 
-         */        public static function authorizeResource($model, $parameter = null, $options = [], $request = null)
-        {            //Method inherited from \App\Http\Controllers\Controller         
-                        /** @var \NerdSnipe\LaravelCountries\Controllers\LocationController $instance */
-                        $instance->authorizeResource($model, $parameter, $options, $request);
-        }
-                    /**
-         * Run the validation routine against the given validator.
-         *
-         * @param \Illuminate\Contracts\Validation\Validator|array $validator
-         * @param \Illuminate\Http\Request|null $request
-         * @return array 
-         * @throws \Illuminate\Validation\ValidationException
-         * @static 
-         */        public static function validateWith($validator, $request = null)
-        {            //Method inherited from \App\Http\Controllers\Controller         
-                        /** @var \NerdSnipe\LaravelCountries\Controllers\LocationController $instance */
-                        return $instance->validateWith($validator, $request);
-        }
-                    /**
-         * Validate the given request with the given rules.
-         *
-         * @param \Illuminate\Http\Request $request
-         * @param array $rules
-         * @param array $messages
-         * @param array $attributes
-         * @return array 
-         * @throws \Illuminate\Validation\ValidationException
-         * @static 
-         */        public static function validate($request, $rules, $messages = [], $attributes = [])
-        {            //Method inherited from \App\Http\Controllers\Controller         
-                        /** @var \NerdSnipe\LaravelCountries\Controllers\LocationController $instance */
-                        return $instance->validate($request, $rules, $messages, $attributes);
-        }
-                    /**
-         * Validate the given request with the given rules.
-         *
-         * @param string $errorBag
-         * @param \Illuminate\Http\Request $request
-         * @param array $rules
-         * @param array $messages
-         * @param array $attributes
-         * @return array 
-         * @throws \Illuminate\Validation\ValidationException
-         * @static 
-         */        public static function validateWithBag($errorBag, $request, $rules, $messages = [], $attributes = [])
-        {            //Method inherited from \App\Http\Controllers\Controller         
-                        /** @var \NerdSnipe\LaravelCountries\Controllers\LocationController $instance */
-                        return $instance->validateWithBag($errorBag, $request, $rules, $messages, $attributes);
         }
             }
     }
@@ -21702,9 +21582,8 @@ namespace  {
             class Validator extends \Illuminate\Support\Facades\Validator {}
             class View extends \Illuminate\Support\Facades\View {}
             class Vite extends \Illuminate\Support\Facades\Vite {}
-            class GoogleTranslate extends \Stichoza\GoogleTranslate\GoogleTranslate {}
+            class Countries extends \Monarobase\CountryList\CountryListFacade {}
             class Cart extends \Darryldecode\Cart\Facades\CartFacade {}
-            class LaravelCountries extends \NerdSnipe\LaravelCountries\Facades\LaravelCountries {}
             class Flare extends \Spatie\LaravelIgnition\Facades\Flare {}
     }
 

@@ -75,7 +75,7 @@ onUnmounted(() => {
                             <div class="header-info header-info-right px-4">
                                 <ul>
                                     <li>
-                                        <Link
+                                        <a
                                             class="language-dropdown-active"
                                             href="#"
                                         >
@@ -88,7 +88,7 @@ onUnmounted(() => {
                                             <i
                                                 class="fi-rs-angle-small-down"
                                             ></i>
-                                        </Link>
+                                        </a>
                                         <ul class="language-dropdown">
                                             <li>
                                                 <Link
