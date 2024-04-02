@@ -130,8 +130,15 @@ class AdminController extends Controller
             $query->where('nom', 'like', '%'.$search.'%');
         })->latest('id')->paginate(10);
         $filter = Request::only('search');
-        $countryNames = new Collection(Countries::getList('fr'));
         // dd($countryNames->whereNotIn('', Country::all()));
+        $countryNames = new Collection(Countries::getList('fr'));
+        // Get an array of country names that already exist in the database
+        $existingCountryNames = Country::pluck('nom')->toArray();
+
+        // Use the reject method to filter out countries that already exist in the database
+        $countryNames = $countryNames->reject(function ($name) use ($existingCountryNames) {
+            return in_array($name, $existingCountryNames);
+        });
         $pays = $countryNames->values()->map(function ($row) {
             return [
                 'label' => $row, 'value' => $row,
