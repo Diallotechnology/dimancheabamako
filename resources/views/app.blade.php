@@ -5,7 +5,8 @@
     <meta charset="utf-8">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
     <meta name="description"
-        content="E-commerce vente Bazin teinté, de Getzner Magnum, de boubou et robes prêt-à-porter, des brodés, wax et des accessoires pour femme">
+        content="E-commerce Dimanche à Bamako - Vente de Bazin teinté, Getzner Magnum, boubou et robes prêt-à-porter, brodés, wax et accessoires pour femme. Trouvez tout ce dont vous avez besoin ici.">
+
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <!-- Google / Search Engine Tags -->
     <meta itemprop="name" content="Dimanche à bamako">
@@ -29,7 +30,8 @@
     <meta name="twitter:image" content="{{ asset('assets/imgs/theme/logo_meta_tag.png') }}">
     <!-- Favicon -->
     <link rel="shortcut icon" type="image/x-icon" href="{{ asset('assets/imgs/theme/favicon.svg') }}">
-    <title>Dimanche à bamako</title>
+    <title>E-commerce Dimanche à Bamako - Vente de Bazin, Getzner Magnum, Boubou et Robes</title>
+
     <link href="{{ asset('assets/css/main.css') }}" rel="stylesheet" />
     @routes
     @vite(['resources/js/app.js', "resources/js/Pages/{$page['component']}.vue"])
@@ -49,8 +51,6 @@
     <script src="{{ asset('assets/js/plugins/jquery-ui.js') }}"></script>
     <script src="{{ asset('assets/js/plugins/perfect-scrollbar.js')}}"></script>
     <script src="{{ asset('assets/js/plugins/magnific-popup.js')}}"></script>
-    <script src="{{ asset('assets/js/plugins/counterup.js')}}"></script>
-    <script src="{{ asset('assets/js/plugins/jquery.countdown.min.js')}}"></script>
     <script src="{{ asset('assets/js/plugins/images-loaded.js')}}"></script>
     <script src="{{ asset('assets/js/plugins/isotope.js')}}"></script>
     <script src="{{ asset('assets/js/plugins/scrollup.js') }}"></script>

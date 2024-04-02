@@ -3,6 +3,7 @@ import Layout from "@/Shared/Layout.vue";
 import { AddToCard } from "@/helper";
 import { onMounted } from "vue";
 import Cart from "@/Shared/Cart.vue";
+import { Head } from "@inertiajs/vue3";
 
 const props = defineProps({
     product: {
@@ -86,24 +87,6 @@ onMounted(() => {
                 zoomWindowFadeOut: 750,
             });
         }
-        //Filter color/Size
-        $(".list-filter").each(function () {
-            $(this)
-                .find("a")
-                .on("click", function (event) {
-                    event.preventDefault();
-                    $(this).parent().siblings().removeClass("active");
-                    $(this).parent().toggleClass("active");
-                    $(this)
-                        .parents(".attr-detail")
-                        .find(".current-size")
-                        .text($(this).text());
-                    $(this)
-                        .parents(".attr-detail")
-                        .find(".current-color")
-                        .text($(this).attr("data-color"));
-                });
-        });
     };
     /* WOW active */
     new WOW().init();
@@ -111,6 +94,7 @@ onMounted(() => {
 });
 </script>
 <template>
+    <Head title="{{ product.resume }}" />
     <Layout>
         <section class="mt-50 mb-50">
             <div class="container">
@@ -271,7 +255,7 @@ onMounted(() => {
                                             id="Description-tab"
                                             data-bs-toggle="tab"
                                             href="#Description"
-                                            >Description</a
+                                            >Description du produit</a
                                         >
                                     </li>
                                 </ul>
