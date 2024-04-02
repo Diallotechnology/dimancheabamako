@@ -14,6 +14,7 @@ use App\Http\Controllers\PoidsController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\PromotionController;
 use App\Http\Controllers\ShippingController;
+use App\Http\Controllers\SitemapController;
 use App\Http\Controllers\SlideController;
 use App\Http\Controllers\TransportController;
 use App\Http\Controllers\UserController;
@@ -83,6 +84,13 @@ Route::inertia('contact', 'Contact')->name('contact');
 Route::inertia('about', 'About')->name('about');
 Route::inertia('livraison', 'Livraison')->name('livraison');
 
+Route::controller(SitemapController::class)->group(function () {
+    Route::get('sitemap/index', 'index')->name('sitemap.index');
+    Route::get('sitemap/page', 'page')->name('sitemap.page');
+    Route::get('sitemap/category', 'category')->name('sitemap.category');
+    Route::get('sitemap/product', 'product')->name('sitemap.product');
+
+});
 // Route::get('test', function () {
 //     Artisan::call('optimize:clear');
 //     Artisan::call('db:wipe');

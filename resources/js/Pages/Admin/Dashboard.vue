@@ -74,10 +74,6 @@ onMounted(() => {
         });
     } //End if
 });
-
-import { ref } from "vue";
-
-const selected = ref([]);
 </script>
 
 <template>
@@ -87,7 +83,6 @@ const selected = ref([]);
         <div class="content-header">
             <div>
                 <h2 class="content-title card-title">Tableau de bord</h2>
-                <p>Whole data about your business here</p>
             </div>
         </div>
         <div class="row">

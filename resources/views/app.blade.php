@@ -49,7 +49,6 @@
     <script src="{{ asset('assets/js/plugins/jquery-ui.js') }}"></script>
     <script src="{{ asset('assets/js/plugins/perfect-scrollbar.js')}}"></script>
     <script src="{{ asset('assets/js/plugins/magnific-popup.js')}}"></script>
-    <script src="{{ asset('assets/js/plugins/select2.min.js')}}"></script>
     <script src="{{ asset('assets/js/plugins/counterup.js')}}"></script>
     <script src="{{ asset('assets/js/plugins/jquery.countdown.min.js')}}"></script>
     <script src="{{ asset('assets/js/plugins/images-loaded.js')}}"></script>
