@@ -10,11 +10,15 @@ const props = defineProps({
         required: true,
         default: () => ({}),
     },
+    pays: {
+        type: Object,
+        default: () => ({}),
+    },
 });
 const form = useForm({
     nom: props.zone.nom,
+    pays: props.zone.countries.map((row) => `${row.nom}`),
 });
-
 const submit = () => {
     form.patch(route("zone.update", props.zone.id), {
         onSuccess: () => {
@@ -41,6 +45,20 @@ const submit = () => {
                         :message="form.errors.nom"
                         required
                     />
+
+                    <div class="mb-3">
+                        <Select2
+                            label="Pays de livraison"
+                            :message="form.errors.pays"
+                        >
+                            <VueSelect
+                                :is-multi="true"
+                                placeholder="selectionner"
+                                v-model="form.pays"
+                                :options="pays"
+                            />
+                        </Select2>
+                    </div>
                     <div class="modal-footer">
                         <Link
                             :href="route('zone')"

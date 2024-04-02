@@ -146,6 +146,7 @@ const submit = () => {
 };
 </script>
 <template>
+    <Head title="Panier" />
     <Layout>
         <section class="mt-50 mb-50">
             <div class="container">

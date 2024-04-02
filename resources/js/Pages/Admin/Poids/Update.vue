@@ -37,7 +37,7 @@ const submit = () => {
                     <Input
                         input_type="number"
                         place="le minimum du poids"
-                        label="Minimum"
+                        label="Minimum en Kg"
                         v-model="form.min"
                         :message="form.errors.min"
                         required
@@ -45,7 +45,7 @@ const submit = () => {
                     <Input
                         input_type="number"
                         place="le maximum du poids"
-                        label="Maximum"
+                        label="Maximum en Kg"
                         v-model="form.max"
                         :message="form.errors.max"
                         required

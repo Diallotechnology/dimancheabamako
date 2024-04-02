@@ -1,7 +1,9 @@
 <script setup>
 import Layout from "@/Shared/Layout.vue";
+import { Head } from "@inertiajs/vue3";
 </script>
 <template>
+    <Head title="A propos" />
     <Layout>
         <div class="page-header breadcrumb-wrap">
             <div class="container">

@@ -114,7 +114,7 @@ const submit = () => {
                     <Input
                         input_type="number"
                         place="le prix du transport"
-                        label="montant"
+                        label="montant en cfa"
                         v-model="form.montant"
                         :message="form.errors.montant"
                         required

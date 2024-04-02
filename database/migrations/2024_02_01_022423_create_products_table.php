@@ -18,7 +18,7 @@ return new class extends Migration
             $table->string('nom');
             $table->integer('prix');
             $table->boolean('favoris');
-            $table->string('poids');
+            $table->float('poids');
             $table->integer('stock')->default(1);
             $table->string('color')->nullable();
             $table->string('taille')->nullable();

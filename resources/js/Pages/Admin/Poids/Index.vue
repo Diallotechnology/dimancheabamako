@@ -35,7 +35,7 @@ const form = useForm({
 });
 
 const submit = () => {
-    form.post(route("poids.store"), {
+    form.post(route("poid.store"), {
         onSuccess: () => {
             form.reset();
             notify("Poids ajouter avec success !", true);
@@ -48,7 +48,7 @@ const submit = () => {
 </script>
 
 <template>
-    <Head title="Categorie" />
+    <Head title="Poids" />
 
     <AuthenticatedLayout>
         <div class="content-header">
@@ -96,8 +96,8 @@ const submit = () => {
                 <tbody>
                     <tr v-for="row in rows.data" :key="row.id">
                         <td>{{ row.id }}</td>
-                        <td>{{ row.min }}</td>
-                        <td>{{ row.max }}</td>
+                        <td>{{ row.min }} kg</td>
+                        <td>{{ row.max }} kg</td>
                         <td>{{ row.created_at }}</td>
                         <td>
                             <ButtonEdit :href="route('poid.edit', row.id)" />
@@ -115,7 +115,7 @@ const submit = () => {
                 <Input
                     input_type="number"
                     place="le minimum du poids"
-                    label="Minimum"
+                    label="Minimum en Kg"
                     v-model="form.min"
                     :message="form.errors.min"
                     required
@@ -123,7 +123,7 @@ const submit = () => {
                 <Input
                     input_type="number"
                     place="le maximum du poids"
-                    label="Maximum"
+                    label="Maximum en Kg"
                     v-model="form.max"
                     :message="form.errors.max"
                     required

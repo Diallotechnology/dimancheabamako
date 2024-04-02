@@ -22,8 +22,8 @@ class StorePoidsRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'min' => 'required|integer',
-            'max' => 'required|integer',
+            'min' => 'required|decimal:2',
+            'max' => 'required|decimal:2',
         ];
     }
 }

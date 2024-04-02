@@ -4,6 +4,7 @@ use App\Http\Controllers\AdminController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\ClientController;
+use App\Http\Controllers\ContactController;
 use App\Http\Controllers\CountryController;
 use App\Http\Controllers\DeviseController;
 use App\Http\Controllers\ImageController;
@@ -77,7 +78,7 @@ Route::controller(LinkController::class)->group(function () {
     Route::get('getcategory', 'getCategory')->name('getCategory');
     Route::get('shop/show/{product}', 'shopshow')->name('shop.show');
 });
-
+Route::post('contact/mail', ContactController::class)->name('contact.email');
 Route::inertia('contact', 'Contact')->name('contact');
 Route::inertia('about', 'About')->name('about');
 Route::inertia('livraison', 'Livraison')->name('livraison');

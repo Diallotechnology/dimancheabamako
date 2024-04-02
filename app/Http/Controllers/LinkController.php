@@ -18,7 +18,7 @@ class LinkController extends Controller
         $query = Product::query();
 
         // Récupération des derniers produits
-        $latest = $query->take(4)->latest()->get();
+        $latest = $query->ByStock()->take(4)->latest()->get();
         // Récupération des produits populaires
         $popular = $query->where('favoris', 1)->get();
         // add custom attributes
@@ -39,7 +39,7 @@ class LinkController extends Controller
 
     public function shop(?Category $category = null)
     {
-        $rows = Product::with('promotions')->when(Request::input('search'), function ($query, $search) {
+        $rows = Product::with('promotions')->ByStock()->when(Request::input('search'), function ($query, $search) {
             $query->whereAny(['nom', 'color'], 'LIKE', '%'.$search.'%');
         })->when($category, function ($query, $category) {
             $query->where('categorie_id', $category->id);
@@ -67,7 +67,7 @@ class LinkController extends Controller
         $product->append(['prix_promo', 'prix_format', 'reduction']);
         $product->load('images');
 
-        $rows = Product::where('categorie_id', $product->categorie_id)->take(4)->get();
+        $rows = Product::where('categorie_id', $product->categorie_id)->ByStock()->take(4)->get();
         $rows->append(['prix_promo', 'prix_format', 'reduction']);
         $category = Category::all();
 

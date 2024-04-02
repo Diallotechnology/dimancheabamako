@@ -13,8 +13,8 @@ return new class extends Migration
     {
         Schema::create('poids', function (Blueprint $table) {
             $table->id();
-            $table->integer('min');
-            $table->integer('max');
+            $table->float('min');
+            $table->float('max');
             $table->timestamps();
         });
     }

@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Query\Builder;
 use Illuminate\Support\Facades\Storage;
 
 class Product extends Model
@@ -26,6 +27,14 @@ class Product extends Model
      * @var array
      */
     protected $with = ['categorie'];
+
+    /**
+     * Scope to get nature by structure.
+     */
+    public function scopeByStock(Builder $query): Builder
+    {
+        return $query->where('stock', '>', 1);
+    }
 
     public function getPrixFinal(): float|int
     {

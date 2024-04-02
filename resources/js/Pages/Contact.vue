@@ -1,13 +1,41 @@
 <script setup>
 import Layout from "@/Shared/Layout.vue";
+import { Head, useForm } from "@inertiajs/vue3";
+import notify from "@/helper";
+import InputError from "@/Components/InputError.vue";
+defineProps({
+    email_success: {
+        type: String,
+    },
+});
+
+const form = useForm({
+    name: "",
+    email: "",
+    subject: "",
+    message: "",
+});
+
+const submit = () => {
+    form.post(route("contact.email"), {
+        onFinish: () => form.reset(),
+        onSuccess: () => {
+            form.reset();
+        },
+        onError: () => {
+            notify(false);
+        },
+    });
+};
 </script>
 <template>
+    <Head title="Contact" />
     <Layout>
         <div class="page-header breadcrumb-wrap">
             <div class="container">
                 <div class="breadcrumb">
-                    <a href="index.html" rel="nofollow">Home</a>
-                    <span></span> Pages <span></span> Contact us
+                    <a href="/" rel="nofollow">Accueil</a>
+                    <span></span> Pages <span></span> Contactez-nous
                 </div>
             </div>
         </div>
@@ -16,16 +44,15 @@ import Layout from "@/Shared/Layout.vue";
                 <!-- <div id="map-panes" class="leaflet-map mb-50"></div> -->
                 <div class="row">
                     <div class="col-md-6 mx-auto">
-                        <h4 class="mb-15 text-brand">Shop</h4>
-                        205 North Michigan Avenue, Suite 810<br />
-                        Chicago, 60601, USA<br />
-                        <abbr title="Phone">Phone:</abbr> (123) 456-7890<br />
+                        <h4 class="mb-15 text-brand">Boutique</h4>
+                        ACI 2 000<br />
+                        <abbr title="Phone">Phone:</abbr> +223 66 03 51 54<br />
                         <abbr title="Email">Email: </abbr
-                        >contact@Evara.com<br />
+                        >contact@dimancheabamako.com<br />
                         <a
                             class="btn btn-outline btn-sm btn-brand-outline font-weight-bold text-brand bg-white text-hover-white mt-20 border-radius-5 btn-shadow-brand hover-up"
                         >
-                            <i class="fi-rs-marker mr-10"></i> View map</a
+                            <i class="fi-rs-marker mr-10"></i> Voir sur map</a
                         >
                     </div>
                 </div>
@@ -38,65 +65,88 @@ import Layout from "@/Shared/Layout.vue";
                         <div
                             class="contact-from-area padding-20-row-col wow FadeInUp"
                         >
-                            <h3 class="mb-10 text-center">Drop Us a Line</h3>
+                            <h3 class="mb-10 text-center">Contactez-nous</h3>
                             <p class="text-muted mb-30 text-center font-sm">
                                 Lorem ipsum dolor sit amet consectetur.
                             </p>
+
+                            <div
+                                v-if="email_success"
+                                class="alert alert-primary text-white text-center"
+                                role="alert"
+                            >
+                                {{ email_success }}
+                            </div>
+
                             <form
                                 class="contact-form-style text-center"
                                 id="contact-form"
-                                action="#"
+                                @submit.prevent="submit"
                                 method="post"
                             >
                                 <div class="row">
                                     <div class="col-lg-6 col-md-6">
                                         <div class="input-style mb-20">
                                             <input
-                                                name="name"
-                                                placeholder="First Name"
+                                                v-model="form.name"
+                                                placeholder="votre nom"
                                                 type="text"
+                                            />
+                                            <InputError
+                                                class="mt-2"
+                                                :message="form.errors.name"
                                             />
                                         </div>
                                     </div>
                                     <div class="col-lg-6 col-md-6">
                                         <div class="input-style mb-20">
                                             <input
-                                                name="email"
-                                                placeholder="Your Email"
+                                                v-model="form.email"
+                                                placeholder="Votre Email"
                                                 type="email"
                                             />
-                                        </div>
-                                    </div>
-                                    <div class="col-lg-6 col-md-6">
-                                        <div class="input-style mb-20">
-                                            <input
-                                                name="telephone"
-                                                placeholder="Your Phone"
-                                                type="tel"
+                                            <InputError
+                                                class="mt-2"
+                                                :message="form.errors.email"
                                             />
                                         </div>
                                     </div>
-                                    <div class="col-lg-6 col-md-6">
+
+                                    <div class="col-md-12">
                                         <div class="input-style mb-20">
                                             <input
-                                                name="subject"
-                                                placeholder="Subject"
+                                                v-model="form.subject"
+                                                placeholder="Objet"
                                                 type="text"
                                             />
+                                            <InputError
+                                                class="mt-2"
+                                                :message="form.errors.subject"
+                                            />
                                         </div>
                                     </div>
+
                                     <div class="col-lg-12 col-md-12">
                                         <div class="textarea-style mb-30">
                                             <textarea
-                                                name="message"
+                                                v-model="form.message"
                                                 placeholder="Message"
                                             ></textarea>
+                                            <InputError
+                                                class="mt-2"
+                                                :message="form.errors.message"
+                                            />
                                         </div>
+
                                         <button
                                             class="submit submit-auto-width"
                                             type="submit"
+                                            :class="{
+                                                'opacity-25': form.processing,
+                                            }"
+                                            :disabled="form.processing"
                                         >
-                                            Send message
+                                            Envoyé
                                         </button>
                                     </div>
                                 </div>

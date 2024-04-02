@@ -131,6 +131,7 @@ class AdminController extends Controller
         })->latest('id')->paginate(10);
         $filter = Request::only('search');
         $countryNames = new Collection(Countries::getList('fr'));
+        // dd($countryNames->whereNotIn('', Country::all()));
         $pays = $countryNames->values()->map(function ($row) {
             return [
                 'label' => $row, 'value' => $row,

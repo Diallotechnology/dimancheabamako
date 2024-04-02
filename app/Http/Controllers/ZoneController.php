@@ -4,30 +4,15 @@ namespace App\Http\Controllers;
 
 use App\Helper\DeleteAction;
 use App\Http\Requests\StoreZoneRequest;
-use App\Http\Requests\UpdateZoneRequest;
 use App\Models\Country;
 use App\Models\Zone;
+use Countries;
+use Illuminate\Support\Collection;
 use Inertia\Inertia;
 
 class ZoneController extends Controller
 {
     use DeleteAction;
-
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
-    {
-        //
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
 
     /**
      * Store a newly created resource in storage.
@@ -57,14 +42,40 @@ class ZoneController extends Controller
      */
     public function edit(Zone $zone)
     {
-        return Inertia::render('Admin/Zone/Update', compact('zone'));
+        $zone->load('countries');
+        $countryNames = new Collection(Countries::getList('fr'));
+        $pays = $countryNames->values()->map(function ($row) {
+            return [
+                'label' => $row, 'value' => $row,
+            ];
+        });
+
+        return Inertia::render('Admin/Zone/Update', compact('zone', 'pays'));
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateZoneRequest $request, Zone $zone)
+    public function update(StoreZoneRequest $request, Zone $zone)
     {
+
+        // Get the pays data from the request
+        $newPays = $request->pays;
+
+        // Get the existing pays associated with the Zone
+        $existingPays = $zone->countries()->pluck('nom')->toArray();
+
+        // Check if there are any changes in pays
+        if ($newPays != $existingPays) {
+            // Update the related Country models
+            $zone->countries()->delete(); // Remove existing related countries
+            $data = [];
+            foreach ($newPays as $value) {
+                $data[] = new Country(['nom' => $value]);
+            }
+            $zone->countries()->saveMany($data); // Save the updated list of countries
+        }
+
         $zone->update($request->validated());
 
         return back();

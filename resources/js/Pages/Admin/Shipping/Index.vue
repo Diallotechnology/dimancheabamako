@@ -182,7 +182,7 @@ const submit = () => {
                 <Input
                     input_type="text"
                     place="le temps du transport"
-                    label="Temps"
+                    label="Temps (jour)"
                     v-model="form.temps"
                     :message="form.errors.temps"
                     required
@@ -190,7 +190,7 @@ const submit = () => {
                 <Input
                     input_type="number"
                     place="le prix du transport"
-                    label="montant"
+                    label="montant en CFA"
                     v-model="form.montant"
                     :message="form.errors.montant"
                     required

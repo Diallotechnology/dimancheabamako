@@ -2,7 +2,7 @@
 import { onMounted } from "vue";
 import Layout from "@/Shared/Layout.vue";
 import Cart from "@/Shared/Cart.vue";
-import { Link } from "@inertiajs/vue3";
+import { Link, Head } from "@inertiajs/vue3";
 const props = defineProps({
     popular: {
         type: Object,
@@ -39,6 +39,7 @@ onMounted(() => {
 });
 </script>
 <template>
+    <Head title="Acceuil" />
     <Layout>
         <section class="home-slider position-relative pt-50">
             <div class="hero-slider-1 dot-style-1 dot-style-1-position-1">

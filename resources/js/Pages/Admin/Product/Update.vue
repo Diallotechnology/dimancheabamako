@@ -126,7 +126,7 @@ const submit = () => {
                         <div class="col-md-6">
                             <Input
                                 input_type="text"
-                                label="poids"
+                                label="poids en Kg (pas de decimal)"
                                 place="le poids du produit"
                                 v-model="form.poids"
                                 :message="form.errors.poids"
@@ -136,7 +136,7 @@ const submit = () => {
                         <div class="col-md-6">
                             <Input
                                 input_type="number"
-                                label="prix"
+                                label="prix en CFA"
                                 place="le prix du produit"
                                 v-model="form.prix"
                                 :message="form.errors.prix"

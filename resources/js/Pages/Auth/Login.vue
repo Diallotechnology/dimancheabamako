@@ -7,7 +7,6 @@ import PrimaryButton from "@/Components/PrimaryButton.vue";
 import TextInput from "@/Components/TextInput.vue";
 import { Head, Link, useForm } from "@inertiajs/vue3";
 import notify from "@/helper";
-import Layout from "@/Shared/Layout.vue";
 
 defineProps({
     canResetPassword: {
@@ -40,9 +39,6 @@ const submit = () => {
 <template>
     <GuestLayout>
         <Head title="Connexion" />
-        <!-- <div class="container">
-            <div class="row">
-                <div class="col-6 mx-auto"> -->
         <div class="card mx-auto card-login">
             <div class="card-body">
                 <h4 class="card-title mb-4 h2">Se connecter</h4>
@@ -100,6 +96,17 @@ const submit = () => {
                             v-model:checked="form.remember"
                         />
                     </div>
+                    <div class="d-flex justify-content-center my-4">
+                        <p class="me-2">Vous n'avez de un compte?</p>
+                        <div>
+                            <Link
+                                :href="route('register')"
+                                class="underline text-end text-sm"
+                            >
+                                S'inscrire
+                            </Link>
+                        </div>
+                    </div>
                     <!-- form-group form-check .// -->
                     <div class="mb-4">
                         <PrimaryButton
@@ -114,8 +121,5 @@ const submit = () => {
                 </form>
             </div>
         </div>
-        <!-- </div>
-            </div>
-        </div> -->
     </GuestLayout>
 </template>
