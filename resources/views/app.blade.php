@@ -7,10 +7,26 @@
     <meta name="description"
         content="E-commerce vente Bazin teinté, de Getzner Magnum, de boubou et robes prêt-à-porter, des brodés, wax et des accessoires pour femme">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta property="og:title" content="">
-    <meta property="og:type" content="">
-    <meta property="og:url" content="">
-    <meta property="og:image" content="">
+    <!-- Google / Search Engine Tags -->
+    <meta itemprop="name" content="Dimanche à bamako">
+    <meta itemprop="description"
+        content="E-commerce vente Bazin teinté, de Getzner Magnum, de boubou et robes prêt-à-porter, des brodés, wax et des accessoires pour femme">
+    <meta itemprop="image" content="{{ asset('assets/imgs/theme/logo_meta_tag.png') }}">
+
+    <!-- Facebook Meta Tags -->
+    <meta property="og:url" content="https://www.dimancheabamako.com">
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Dimanche à bamako">
+    <meta property="og:description"
+        content="E-commerce vente Bazin teinté, de Getzner Magnum, de boubou et robes prêt-à-porter, des brodés, wax et des accessoires pour femme">
+    <meta property="og:image" content="{{ asset('assets/imgs/theme/logo_meta_tag.png') }}">
+
+    <!-- Twitter Meta Tags -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Dimanche à bamako">
+    <meta name="twitter:description"
+        content="E-commerce vente Bazin teinté, de Getzner Magnum, de boubou et robes prêt-à-porter, des brodés, wax et des accessoires pour femme">
+    <meta name="twitter:image" content="{{ asset('assets/imgs/theme/logo_meta_tag.png') }}">
     <!-- Favicon -->
     <link rel="shortcut icon" type="image/x-icon" href="{{ asset('assets/imgs/theme/favicon.svg') }}">
     <title>Dimanche à bamako</title>

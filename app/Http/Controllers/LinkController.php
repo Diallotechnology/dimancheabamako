@@ -15,10 +15,10 @@ class LinkController extends Controller
      */
     public function home()
     {
-        $query = Product::query();
+        $query = Product::ByStock();
 
         // Récupération des derniers produits
-        $latest = $query->ByStock()->take(4)->latest()->get();
+        $latest = $query->take(4)->latest()->get();
         // Récupération des produits populaires
         $popular = $query->where('favoris', 1)->get();
         // add custom attributes
