@@ -288,7 +288,7 @@ onUnmounted(() => {
                     <div class="hotline d-none d-lg-block">
                         <p>
                             <i class="fi-rs-headset"></i
-                            ><span>Info Line</span> 1900 - 888
+                            ><span>Contact </span> +223 66 03 51 54
                         </p>
                     </div>
 

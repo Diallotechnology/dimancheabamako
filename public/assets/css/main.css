@@ -1089,8 +1089,6 @@ button[type="submit"]:hover {
     background-image: url(../imgs/theme/btn-brush-bg-3.png);
 }
 
-
-
 /*COMPONENTS -> FORM*/
 input:-moz-placeholder,
 textarea:-moz-placeholder {
@@ -1115,7 +1113,7 @@ textarea:-ms-input-placeholder {
 input {
     border: 1px solid #e2e9e1;
     border-radius: 4px;
-    height: 45px;
+    height: 40px;
     -webkit-box-shadow: none;
     box-shadow: none;
     padding-left: 20px;

@@ -1,5 +1,7 @@
 <script setup>
 import Layout from "@/Shared/Layout.vue";
+import InputError from "@/Components/InputError.vue";
+import InputLabel from "@/Components/InputLabel.vue";
 import notify, { cartnotify } from "@/helper";
 import { Head, router, useForm } from "@inertiajs/vue3";
 import { ref, onMounted } from "vue";
@@ -322,14 +324,20 @@ const submit = () => {
                                     />
                                 </div>
                                 <div class="col-md-6">
-                                    <Input
-                                        input_type="text"
-                                        place="votre numero de telephone"
-                                        label="Telephone"
-                                        v-model="form.contact"
-                                        :message="form.errors.contact"
-                                        required
-                                    />
+                                    <div class="mt-3">
+                                        <InputLabel
+                                            for="contact"
+                                            value="Contact"
+                                        />
+
+                                        <vue-tel-input
+                                            v-model="form.contact"
+                                        ></vue-tel-input>
+                                        <InputError
+                                            class="mt-2"
+                                            :message="form.errors.contact"
+                                        />
+                                    </div>
                                 </div>
                                 <div class="col-md-6">
                                     <Input
