@@ -39,7 +39,6 @@ TABLE CONTENT
 /*import plugins*/
 @import url(plugins/jquery-ui.css);
 @import url(plugins/magnific-popup.css);
-@import url(plugins/select2.min.css);
 @import url(plugins/slick.css);
 @import url(plugins/perfect-scrollbar.css);
 /*RESET*/
@@ -962,7 +961,6 @@ h5.widget-title {
 
 .btn-brand {
     background-color: #d79f01;
-    border-color: #d79f01;
 }
 
 button.submit,
@@ -973,7 +971,6 @@ button[type="submit"] {
     color: #ffffff;
     border: none;
     background-color: #d79f01;
-    border: 1px solid #d79f01;
     border-radius: 5px;
 }
 
@@ -1019,7 +1016,6 @@ button[type="submit"]:hover {
     padding: 12px 30px;
     border-radius: 4px;
     color: #fff;
-    border: 1px solid #d79f01;
     background-color: #d79f01;
     cursor: pointer;
     -webkit-transition: all 300ms linear 0s;
@@ -1093,27 +1089,7 @@ button[type="submit"]:hover {
     background-image: url(../imgs/theme/btn-brush-bg-3.png);
 }
 
-.comments-area .btn-reply {
-    display: -webkit-box !important;
-    display: -ms-flexbox !important;
-    display: flex !important;
-    -ms-flex-line-pack: center;
-    align-content: center;
-    -webkit-box-align: center;
-    -ms-flex-align: center;
-    align-items: center;
-}
 
-.comments-area .btn-reply i {
-    margin-left: 5px;
-    font-size: 12px;
-}
-
-.tags .btn,
-.tags .button {
-    border-radius: 4px;
-    float: left;
-}
 
 /*COMPONENTS -> FORM*/
 input:-moz-placeholder,
@@ -1191,8 +1167,6 @@ textarea:focus {
     background: transparent;
     border: 1px solid #d79f01;
 }
-
-
 
 /*contact form*/
 .contact-from-area .contact-form-style button {
@@ -1304,7 +1278,6 @@ label {
 
 .custome-checkbox input[type="checkbox"]:checked + .form-check-label::before {
     background-color: #d79f01;
-    border-color: #d79f01;
 }
 
 .custome-checkbox input[type="checkbox"]:checked + .form-check-label::after {
@@ -2747,243 +2720,6 @@ table .product-thumbnail img {
     right: 30px;
     top: 30px;
     z-index: 2;
-}
-
-/*COMPONENTS -> BANNERS*/
-.banner-left-icon {
-    position: relative;
-    background: #fff;
-}
-
-.banner-left-icon:hover .banner-icon {
-    -webkit-transform: translateY(-5px);
-    transform: translateY(-5px);
-    -webkit-transition-duration: 0.3s;
-    transition-duration: 0.3s;
-}
-
-.banner-left-icon .banner-icon {
-    max-width: 60px;
-    margin-right: 20px;
-    -webkit-transition-duration: 0.3s;
-    transition-duration: 0.3s;
-}
-
-.banner-left-icon .banner-text h3 {
-    color: #242424;
-    font-size: 18px;
-    font-weight: 600;
-    margin-bottom: 5px;
-}
-
-.banner-left-icon .banner-text p {
-    margin-bottom: 0;
-    color: #90908e;
-}
-
-.banner-left-icon.style-2 {
-    position: relative;
-    border: 1px solid #e2e9e1;
-    padding: 20px;
-}
-
-.banner-img {
-    position: relative;
-    clear: both;
-}
-
-.banner-img:hover img {
-    opacity: 0.9;
-}
-
-.banner-img.banner-1 .banner-text {
-    top: 30%;
-}
-
-.banner-img.banner-1.home-3 {
-    margin-bottom: 24px;
-    border-radius: 10px;
-    overflow: hidden;
-    max-height: 348px;
-}
-
-.banner-img.banner-2 .banner-text {
-    right: 10px;
-}
-
-.banner-img .banner-text {
-    position: absolute;
-    top: 50%;
-    z-index: 2;
-    -webkit-transform: translateY(-50%);
-    transform: translateY(-50%);
-    padding: 20px 30px;
-}
-
-.banner-img .banner-text span {
-    color: #90908e;
-}
-
-.banner-img .banner-text h4 {
-    font-weight: 600;
-    margin-bottom: 15px;
-}
-
-.banner-img .banner-text:hover h4 {
-    margin-left: 5px;
-}
-
-.banner-img .banner-text a i {
-    margin-left: 5px;
-    -webkit-transition-duration: 0.3s;
-    transition-duration: 0.3s;
-    font-size: 10px;
-}
-
-.banner-img .banner-text a:hover i {
-    margin-left: 10px;
-    -webkit-transition-duration: 0.3s;
-    transition-duration: 0.3s;
-}
-
-.banner-img.style-2 {
-    border: 1px solid #e2e9e1;
-    background-color: #fff;
-    border-radius: 20px;
-    overflow: hidden;
-    height: 338px;
-}
-
-.banner-img.style-2 h4 {
-    color: #fff;
-}
-
-.banner-big .btn {
-    background: #d79f01 !important;
-    color: #fff;
-    border-radius: 3px;
-    font-size: 13px;
-    padding: 10px 22px;
-    border: 0;
-}
-
-.banner-big .btn:hover {
-    background: #046963 !important;
-}
-
-/*Deal banners*/
-.deal {
-    width: 100%;
-    display: -webkit-box;
-    display: -ms-flexbox;
-    display: flex;
-    -webkit-box-orient: horizontal;
-    -webkit-box-direction: normal;
-    -ms-flex-flow: row wrap;
-    flex-flow: row wrap;
-    padding: 50px;
-    background-color: #f5f6f9;
-    background-size: cover;
-    background-position: center center;
-    background-repeat: no-repeat;
-    min-height: 420px;
-}
-
-.deal > div {
-    width: 100%;
-}
-
-.deal h2 {
-    color: #ff3551;
-    font-weight: 600;
-    font-size: 26px;
-    line-height: 1.1;
-    margin-bottom: 5px;
-}
-
-.deal h5 {
-    color: #242424;
-    font-weight: 400;
-    letter-spacing: 0;
-    margin-bottom: 20px;
-    max-width: 240px;
-}
-
-.deal .deal-content {
-    -ms-flex-item-align: center;
-    -ms-grid-row-align: center;
-    align-self: center;
-}
-
-.deal .product-title {
-    max-width: 240px;
-    margin-bottom: 20px;
-    font-weight: 400;
-    font-size: 18px;
-    line-height: 1.23;
-}
-
-.deal .product-title a {
-    color: #1a1a1a;
-}
-
-.deal .product-price {
-    display: -webkit-box;
-    display: -ms-flexbox;
-    display: flex;
-    -webkit-box-align: center;
-    -ms-flex-align: center;
-    align-items: center;
-    -ms-flex-flow: wrap;
-    flex-flow: wrap;
-    font-weight: 300;
-    font-size: 20px;
-    line-height: 1.25;
-    margin-bottom: 20px;
-    color: #ff3551;
-}
-
-.deal .product-price .new-price {
-    font-weight: 400;
-    letter-spacing: -0.01em;
-    margin-right: 10px;
-}
-
-.deal .product-price .old-price {
-    color: #cccccc;
-    text-decoration: line-through;
-}
-
-.deal .btn {
-    background: none;
-    border: 2px solid #d79f01;
-    color: #d79f01;
-    border-radius: 4px;
-    font-size: 14px;
-    padding: 10px 24px;
-}
-
-.deal .btn i {
-    margin-left: 5px;
-    -webkit-transition-duration: 0.3s;
-    transition-duration: 0.3s;
-    font-size: 12px;
-}
-
-.deal .btn:hover i {
-    margin-left: 10px;
-    -webkit-transition-duration: 0.3s;
-    transition-duration: 0.3s;
-}
-
-.deal .deal-bottom {
-    -ms-flex-item-align: end;
-    align-self: flex-end;
-}
-
-.deal .deal-bottom .deals-countdown {
-    margin-left: -12px;
-    margin-bottom: 20px;
 }
 
 .banner-bg {

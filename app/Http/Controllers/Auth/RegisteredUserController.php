@@ -5,8 +5,10 @@ namespace App\Http\Controllers\Auth;
 use App\Enum\RoleEnum;
 use App\Http\Controllers\Controller;
 use App\Models\User;
+use Countries;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules;
 use Inertia\Inertia;
@@ -19,8 +21,14 @@ class RegisteredUserController extends Controller
      */
     public function create(): Response
     {
+        $countryNames = new Collection(Countries::getList('fr'));
+        $pays = $countryNames->values()->map(function ($row) {
+            return [
+                'label' => $row, 'value' => $row,
+            ];
+        });
 
-        return Inertia::render('Auth/Register', ['status' => session('status')]);
+        return Inertia::render('Auth/Register', ['status' => session('status'), 'pays' => $pays]);
     }
 
     /**
@@ -39,6 +47,7 @@ class RegisteredUserController extends Controller
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
         ]);
 
+        dd($request->all());
         $user = User::create([
             'name' => $request->prenom,
             'email' => $request->email,

@@ -1,5 +1,5 @@
 <template>
-    <button class="btn btn-primary w-100">
+    <button class="btn btn-brand w-100">
         <slot />
     </button>
 </template>

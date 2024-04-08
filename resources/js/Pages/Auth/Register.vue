@@ -10,12 +10,20 @@ defineProps({
     status: {
         type: String,
     },
+    pays: {
+        type: Object,
+        default: () => ({}),
+    },
 });
 const form = useForm({
     name: "",
     email: "",
     password: "",
     password_confirmation: "",
+    prenom: "",
+    nom: "",
+    contact: "",
+    pays: "",
 });
 
 const submit = () => {
@@ -47,10 +55,9 @@ const submit = () => {
                     <TextInput
                         id="prenom"
                         type="text"
-                        class="mt-1 block w-full"
+                        class="mt-1 block w-100"
                         v-model="form.prenom"
                         required
-                        autofocus
                         autocomplete="prenom"
                     />
 
@@ -62,10 +69,9 @@ const submit = () => {
                     <TextInput
                         id="nom"
                         type="text"
-                        class="mt-1 block w-full"
+                        class="mt-1 block w-100"
                         v-model="form.nom"
                         required
-                        autofocus
                         autocomplete="nom"
                     />
 
@@ -79,7 +85,7 @@ const submit = () => {
                 <TextInput
                     id="email"
                     type="email"
-                    class="mt-1 block w-full"
+                    class="mt-1 block w-100"
                     v-model="form.email"
                     required
                     autocomplete="username"
@@ -89,34 +95,26 @@ const submit = () => {
             </div>
             <div class="row">
                 <div class="col-md-6">
-                    <InputLabel for="contact" value="Contact" />
+                    <div class="mt-3">
+                        <InputLabel for="contact" value="Contact" />
 
-                    <TextInput
-                        id="contact"
-                        type="text"
-                        class="mt-1 block w-full"
-                        v-model="form.contact"
-                        required
-                        autofocus
-                        autocomplete="contact"
-                    />
-
-                    <InputError class="mt-2" :message="form.errors.contact" />
+                        <vue-tel-input v-model="form.contact"></vue-tel-input>
+                        <InputError
+                            class="mt-2"
+                            :message="form.errors.contact"
+                        />
+                    </div>
                 </div>
                 <div class="col-md-6">
-                    <InputLabel for="pays" value="Pays" />
-
-                    <TextInput
-                        id="pays"
-                        type="text"
-                        class="mt-1 block w-full"
-                        v-model="form.pays"
-                        required
-                        autofocus
-                        autocomplete="pays"
-                    />
-
-                    <InputError class="mt-2" :message="form.errors.pays" />
+                    <div class="mt-3">
+                        <Select2 label="Pays" :message="form.errors.pays">
+                            <VueSelect
+                                placeholder="selectionner"
+                                v-model="form.pays"
+                                :options="pays"
+                            />
+                        </Select2>
+                    </div>
                 </div>
             </div>
             <div class="mt-4">
@@ -125,7 +123,7 @@ const submit = () => {
                 <TextInput
                     id="password"
                     type="password"
-                    class="mt-1 block w-full"
+                    class="mt-1 block w-100"
                     v-model="form.password"
                     required
                     autocomplete="new-password"
@@ -143,7 +141,7 @@ const submit = () => {
                 <TextInput
                     id="password_confirmation"
                     type="password"
-                    class="mt-1 block w-full"
+                    class="mt-1 block w-100"
                     v-model="form.password_confirmation"
                     required
                     autocomplete="new-password"
