@@ -41,8 +41,9 @@ class CartController extends Controller
         $TotalQuantity = CartFacade::session($this->get_userid())->getTotalQuantity();
         // get total price
         $deviseSymbole = session('locale') === 'fr' ? '€' : '$';
-        $Total = CartFacade::session($this->get_userid())->getTotal();
-        // $pays = Country::all();
+        $tot = CartFacade::session($this->get_userid())->getTotal();
+        $Total = $tot.' '.$deviseSymbole;
+
         $transport = Transport::all('nom', 'id');
 
         return Inertia::render('Panier', compact('items', 'TotalQuantity', 'Total', 'transport'));

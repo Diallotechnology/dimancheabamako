@@ -23,7 +23,7 @@ const props = defineProps({
         default: 0,
     },
     Total: {
-        type: Number,
+        type: String,
         required: true,
         default: 0,
     },
