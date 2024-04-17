@@ -1351,37 +1351,10 @@ label {
     color: #777777;
 }
 
-.nice-select .list {
-    width: 100%;
-}
-
 .button-contactForm {
     background: #d79f01;
     color: #fff;
     padding: 12px 25px;
-}
-
-.search-form form {
-    position: relative;
-}
-
-.search-form form input {
-    -webkit-transition: all 0.25s cubic-bezier(0.645, 0.045, 0.355, 1);
-    transition: all 0.25s cubic-bezier(0.645, 0.045, 0.355, 1);
-}
-
-.search-form form button {
-    position: absolute;
-    top: 50%;
-    -webkit-transform: translateY(-50%);
-    transform: translateY(-50%);
-    right: 0;
-    border: none;
-    font-size: 14px;
-    height: 100%;
-    padding: 0 14px;
-    background-color: transparent;
-    color: #242424;
 }
 
 /*COMPONENTS -> SLIDER*/

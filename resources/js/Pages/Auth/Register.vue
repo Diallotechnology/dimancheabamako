@@ -16,7 +16,6 @@ defineProps({
     },
 });
 const form = useForm({
-    name: "",
     email: "",
     password: "",
     password_confirmation: "",
@@ -30,6 +29,7 @@ const submit = () => {
     form.post(route("register"), {
         onSuccess: () => {
             form.reset();
+            notify("Compte crée avec success !", true);
         },
         onError: () => {
             notify(false);

@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Auth;
 
 use App\Enum\RoleEnum;
 use App\Http\Controllers\Controller;
+use App\Models\Client;
 use App\Models\User;
 use Countries;
 use Illuminate\Http\RedirectResponse;
@@ -41,28 +42,27 @@ class RegisteredUserController extends Controller
         $request->validate([
             'prenom' => 'required|string|max:100',
             'nom' => 'required|string|max:100',
-            'pays' => 'required|string|max:100',
+            'pays' => 'required|string|max:50',
             'contact' => 'required|string|max:100',
             'email' => 'required|string|lowercase|email|max:255|unique:'.User::class,
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
         ]);
 
-        dd($request->all());
-        $user = User::create([
+        User::create([
             'name' => $request->prenom,
             'email' => $request->email,
             'role' => RoleEnum::CUSTOMER->value,
             'password' => Hash::make($request->password),
         ]);
 
-        // $client = Client::create([
-        //     'prenom' => $request->prenom,
-        //     'nom' => $request->nom,
-        //     'contact' => $request->contact,
-        //     'email' => $request->email,
-        //     'pays' => $pays->nom,
-        // ]);
+        Client::create([
+            'prenom' => $request->prenom,
+            'nom' => $request->nom,
+            'contact' => $request->contact,
+            'email' => $request->email,
+            'pays' => $request->pays,
+        ]);
 
-        return \to_route('login');
+        return to_route('login');
     }
 }

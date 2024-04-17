@@ -9,6 +9,9 @@
     <link href="{{ asset('admin/assets/css/main.css') }}" rel="stylesheet" type="text/css" />
     @routes
     @vite(['resources/js/app.js', "resources/js/Pages/{$page['component']}.vue"])
+    {{--
+    <link href="{{ asset('build/assets/app-C5SX0j15.css') }}" rel="stylesheet" /> --}}
+    {{-- <script type="module" src="{{ asset('build/assets/app-CZOr0d26.js')}}"></script> --}}
     @inertiaHead
 </head>
 
