@@ -195,7 +195,7 @@ onMounted(() => {
 
                             <td>{{ row.adresse }}</td>
                             <td>{{ row.postal }}</td>
-                            <td>{{ row.pays }}</td>
+                            <td>{{ row.country.nom }}</td>
                             <td>{{ row.ville }}</td>
                             <td>
                                 <i

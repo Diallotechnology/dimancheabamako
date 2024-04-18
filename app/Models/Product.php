@@ -33,7 +33,7 @@ class Product extends Model
      */
     public function scopeByStock(Builder $query): Builder
     {
-        return $query->where('stock', '>', 1);
+        return $query->where('stock', '>=', 1);
     }
 
     public function getPrixFinal(): float|int
