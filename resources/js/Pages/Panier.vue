@@ -47,8 +47,9 @@ const form = useForm({
     ville: "",
     adresse: "",
     postal: "",
-    payment: "",
+    payment: "Visa",
     commentaire: "",
+    password: "",
 });
 
 const getPays = async () => {
@@ -430,7 +431,6 @@ const submit = () => {
                                         <input
                                             class="form-check-input"
                                             type="checkbox"
-                                            name="checkbox"
                                             id="createaccount"
                                         />
                                         <label
@@ -455,8 +455,8 @@ const submit = () => {
                                 <input
                                     required
                                     type="password"
+                                    v-model="form.password"
                                     placeholder="entrez votre mot de passe"
-                                    autocomplete="off"
                                 />
                             </div>
 
@@ -487,7 +487,6 @@ const submit = () => {
                                                 class="form-check-input"
                                                 v-model="form.payment"
                                                 type="radio"
-                                                name="payment_option"
                                                 id="exampleRadios3"
                                                 checked
                                             />

@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rules;
 
 class StoreOrderRequest extends FormRequest
 {
@@ -33,6 +34,7 @@ class StoreOrderRequest extends FormRequest
             'postal' => 'nullable|string',
             'payment' => 'nullable|string',
             'commentaire' => 'nullable|string',
+            'password' => 'nullable|string',
         ];
     }
 }

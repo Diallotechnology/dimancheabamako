@@ -108,8 +108,8 @@ watch(search, (value) => {
                         <th>#ID</th>
                         <th scope="col">Reference</th>
                         <th scope="col">Client</th>
-
                         <th scope="col">Adresse</th>
+                        <th scope="col">transport</th>
                         <th scope="col">Postal</th>
                         <th scope="col">Pays</th>
                         <th scope="col">Ville</th>
@@ -140,6 +140,7 @@ watch(search, (value) => {
                         }}
 
                         <td>{{ row.adresse }}</td>
+                        <td>{{ row.transport.nom }}</td>
                         <td>{{ row.postal }}</td>
                         <td>{{ row.country.nom }}</td>
                         <td>{{ row.ville }}</td>

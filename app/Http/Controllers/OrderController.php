@@ -3,14 +3,17 @@
 namespace App\Http\Controllers;
 
 use App\Enum\OrderEnum;
+use App\Enum\RoleEnum;
 use App\Helper\DeleteAction;
 use App\Http\Requests\StoreOrderRequest;
 use App\Http\Requests\UpdateOrderRequest;
 use App\Models\Client;
 use App\Models\Country;
 use App\Models\Order;
+use App\Models\User;
 use Darryldecode\Cart\Facades\CartFacade;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
 use Inertia\Inertia;
 
 class OrderController extends Controller
@@ -22,8 +25,8 @@ class OrderController extends Controller
      */
     public function store(StoreOrderRequest $request)
     {
-        dd($request->all());
         DB::transaction(function () use ($request) {
+            // dd($request->all());
             $user = '';
             if (! auth()->check()) {
                 if (session()->has('user_id')) {
@@ -33,15 +36,24 @@ class OrderController extends Controller
                 $user = auth()->user()->id;
             }
 
+            if ($request->password && ! empty($request->password)) {
+                User::firstOrCreate(['email' => $request->email], [
+                    'name' => $request->prenom,
+                    'email' => $request->email,
+                    'role' => RoleEnum::CUSTOMER->value,
+                    'password' => Hash::make($request->password),
+                ]);
+            }
+
             $pays = Country::findOrFail($request->country_id);
             // register client
-            $client = Client::create([
+            $client = Client::firstOrCreate(['email' => $request->email], [
                 'prenom' => $request->prenom,
                 'nom' => $request->nom,
                 'contact' => $request->contact,
-                'email' => $request->email,
                 'pays' => $pays->nom,
             ]);
+
             // register client order infos
             $data = new Order([
                 'payment' => $request->payment,
@@ -88,7 +100,7 @@ class OrderController extends Controller
             }
             $order->save();
             // Supprime le contenu du panier utilisateur
-            CartFacade::session($user)->clear();
+            // CartFacade::session($user)->clear();
 
             return response()->json([
                 'message' => 'Commande effectuée avec success!',

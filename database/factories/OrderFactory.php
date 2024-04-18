@@ -19,6 +19,7 @@ class OrderFactory extends Factory
         return [
             'client_id' => rand(1, 10),
             'country_id' => rand(1, 10),
+            'transport_id' => rand(1, 2),
             'reference' => uniqid(),
             'adresse' => fake()->streetAddress(),
             'postal' => fake()->postcode(),

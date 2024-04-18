@@ -32,7 +32,7 @@ class AdminController extends Controller
         $order = Order::count();
         $product = Product::count();
         $categorie = Category::count();
-        $lastorder = $query->take(10)->latest('id')->get();
+        $lastorder = $query->with('transport', 'client')->take(10)->latest('id')->get();
         $order_stat = Order::selectRaw('COUNT(id) as total_order, DATE(created_at) as day')
             ->orderBy('day')->groupBy('day')->pluck('total_order', 'day');
 
@@ -59,7 +59,7 @@ class AdminController extends Controller
 
     public function order()
     {
-        $rows = Order::withSum('products as totaux', 'order_product.montant')->when(Request::input('search'), function ($query, $search) {
+        $rows = Order::withSum('products as totaux', 'order_product.montant')->with('transport', 'client')->when(Request::input('search'), function ($query, $search) {
             $query->whereAny(['reference', 'adresse', 'ville', 'pays', 'payment', 'postal'], 'LIKE', '%'.$search.'%');
         })->when(Request::input('etat'), function ($query, $etat) {
             $query->where('etat', $etat);
@@ -242,6 +242,7 @@ class AdminController extends Controller
 
     public function maintenance()
     {
+
         return Artisan::call('down --with-secret');
     }
 }
