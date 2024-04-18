@@ -41,8 +41,12 @@ class AuthenticatedSessionController extends Controller
             return redirect()->route('change.password', ['email' => $user->email]);
         } else {
             $request->session()->regenerate();
+            if ($request->user()->isClient()) {
+                return redirect()->intended('/');
+            } else {
+                return redirect()->intended(RouteServiceProvider::HOME);
+            }
 
-            return redirect()->intended(RouteServiceProvider::HOME);
         }
     }
 
