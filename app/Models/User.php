@@ -60,7 +60,7 @@ class User extends Authenticatable
     /**
      * Check if the user has the invite role.
      */
-    public function isInvite(): bool
+    public function isSecretaire(): bool
     {
         return $this->role === RoleEnum::SECRTETAIRE;
     }

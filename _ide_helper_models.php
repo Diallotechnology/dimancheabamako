@@ -144,6 +144,7 @@ namespace App\Models{
  * @property int $id
  * @property int $client_id
  * @property int $country_id
+ * @property int $transport_id
  * @property string|null $reference
  * @property string $adresse
  * @property string|null $postal
@@ -157,7 +158,7 @@ namespace App\Models{
  * @property-read \App\Models\Country $country
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Product> $products
  * @property-read int|null $products_count
- * @property-read \App\Models\Transport|null $transport
+ * @property-read \App\Models\Transport $transport
  * @method static \Database\Factories\OrderFactory factory($count = null, $state = [])
  * @method static \Illuminate\Database\Eloquent\Builder|Order newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Order newQuery()
@@ -172,6 +173,7 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder|Order wherePayment($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Order wherePostal($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Order whereReference($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Order whereTransportId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Order whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Order whereVille($value)
  */
@@ -183,8 +185,8 @@ namespace App\Models{
  * 
  *
  * @property int $id
- * @property int $min
- * @property int $max
+ * @property float $min
+ * @property float $max
  * @property string $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Shipping> $shippings
@@ -212,7 +214,7 @@ namespace App\Models{
  * @property string $nom
  * @property int $prix
  * @property int $favoris
- * @property string $poids
+ * @property float $poids
  * @property int $stock
  * @property string|null $color
  * @property string|null $taille
@@ -233,6 +235,7 @@ namespace App\Models{
  * @property-read int|null $orders_count
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Promotion> $promotions
  * @property-read int|null $promotions_count
+ * @method static \Illuminate\Database\Eloquent\Builder|Product byStock()
  * @method static \Database\Factories\ProductFactory factory($count = null, $state = [])
  * @method static \Illuminate\Database\Eloquent\Builder|Product newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Product newQuery()

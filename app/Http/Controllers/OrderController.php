@@ -99,8 +99,9 @@ class OrderController extends Controller
                 return back();
             }
             $order->save();
+            $order->generateId('FA');
             // Supprime le contenu du panier utilisateur
-            // CartFacade::session($user)->clear();
+            CartFacade::session($user)->clear();
 
             return response()->json([
                 'message' => 'Commande effectuée avec success!',
