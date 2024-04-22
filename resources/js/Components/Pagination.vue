@@ -13,7 +13,7 @@ defineProps({
 <template>
     <div
         class="pagination-area mt-15 mb-50"
-        v-if="pagination.data && pagination.data.length > 0"
+        v-if="pagination.data && Object.keys(pagination.data).length > 0"
     >
         <nav aria-label="Page navigation example">
             <ul class="pagination justify-content-start">

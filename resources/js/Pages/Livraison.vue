@@ -41,7 +41,7 @@ import { Head } from "@inertiajs/vue3";
                     </div>
                 </div>
                 <div class="col-lg-5">
-                    <img src="/assets/imgs/page/about-1.png" alt="" />
+                    <img src="/assets/imgs/theme/DHL.jpg" alt="dhl" />
                 </div>
             </div>
         </div>

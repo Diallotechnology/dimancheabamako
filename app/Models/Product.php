@@ -49,11 +49,11 @@ class Product extends Model
             // Conversion du prix en devise locale et formatage
             $prixFormat = number_format($prix / $tauxConversion, 2);
 
-            // Retour du prix formaté avec le symbole de devise
+            // Retour du prix formaté avec devise
             return $prixFormat;
         } else {
 
-            return $this->prix;
+            return number_format($this->prix / $tauxConversion, 2);
         }
 
     }
@@ -61,9 +61,8 @@ class Product extends Model
     public function getPrixFinalAttribute(): string
     {
         $deviseSymbole = session('locale') === 'fr' ? '€' : '$';
-        $tauxConversion = session('locale') === 'fr' ? Devise::whereType('EUR')->value('taux') : Devise::whereType('USD')->value('taux');
         // Conversion du prix en devise locale et formatage
-        $prixFormat = number_format($this->getPrixFinal() / $tauxConversion, 2);
+        $prixFormat = $this->getPrixFinal();
 
         return $prixFormat.' '.$deviseSymbole;
     }

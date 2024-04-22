@@ -26,7 +26,7 @@ class OrderController extends Controller
     public function store(StoreOrderRequest $request)
     {
         DB::transaction(function () use ($request) {
-            // dd($request->all());
+
             $user = '';
             if (! auth()->check()) {
                 if (session()->has('user_id')) {
@@ -34,6 +34,13 @@ class OrderController extends Controller
                 }
             } else {
                 $user = auth()->user()->id;
+            }
+
+            if (CartFacade::session($user)->getContent()->count() == 0) {
+                return response()->json([
+                    'message' => 'Panier vide!',
+                    'type' => true,
+                ]);
             }
 
             if ($request->password && ! empty($request->password)) {
@@ -62,14 +69,16 @@ class OrderController extends Controller
                 'ville' => $request->ville,
                 'country_id' => $pays->id,
                 'transport_id' => $request->transport_id,
+                'commentaire' => $pays->commentaire,
             ]);
             // save client order infos
             $order = $client->orders()->save($data);
+
             // Variable pour suivre si une erreur de stock est survenue
             $erreurStockInsuffisant = false;
             // get user cart content
             $panier = CartFacade::session($user)->getContent();
-
+            // dd($panier);
             // add pivot table value
             $panier->each(function ($product) use ($order, $erreurStockInsuffisant) {
                 if ($product->quantity > $product->associatedModel->stock) {

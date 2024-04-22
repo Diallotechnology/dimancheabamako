@@ -65,7 +65,7 @@ Route::resource('order', OrderController::class)->only('store');
 Route::controller(CartController::class)->group(function () {
     Route::get('panier', 'index')->name('cart.index');
     Route::get('count', 'GetCount')->name('cart.count');
-    Route::get('country/{id?}', 'GetCountry')->name('cart.country');
+    Route::get('trans/{id?}', 'GetTrans')->name('cart.trans');
     Route::get('cart/trans', 'GetTransport')->name('cart.transport');
     Route::get('cart/shipping/{country}/{transid}', 'GetShipping')->name('cart.shipping');
     Route::get('cart/{product}', 'store')->name('cart.store');

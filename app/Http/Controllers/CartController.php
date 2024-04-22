@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Models\Country;
 use App\Models\Product;
 use App\Models\Shipping;
-use App\Models\Transport;
 use Darryldecode\Cart\Facades\CartFacade;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\JsonResponse;
@@ -40,13 +39,11 @@ class CartController extends Controller
         // get total qte
         $TotalQuantity = CartFacade::session($this->get_userid())->getTotalQuantity();
         // get total price
-        $deviseSymbole = session('locale') === 'fr' ? '€' : '$';
-        $tot = CartFacade::session($this->get_userid())->getTotal();
-        $Total = $tot.' '.$deviseSymbole;
+        $Total = CartFacade::session($this->get_userid())->getTotal();
 
-        $transport = Transport::all('nom', 'id');
+        $country = Country::all('nom', 'id');
 
-        return Inertia::render('Panier', compact('items', 'TotalQuantity', 'Total', 'transport'));
+        return Inertia::render('Panier', compact('items', 'TotalQuantity', 'Total', 'country'));
     }
 
     /**
@@ -57,12 +54,19 @@ class CartController extends Controller
         return CartFacade::session($this->get_userid())->getContent()->count();
     }
 
-    public function GetCountry($trans_id)
+    public function GetTrans(int $country_id)
     {
-        $query = Transport::with('zones')->find($trans_id);
-        $country = Country::whereIn('zone_id', $query->zones->pluck('id'))->get(['id', 'nom']);
+        // get country
+        $country = Country::with('zone')->find($country_id);
+        if ($country->zone->transports->isNotEmpty()) {
+            return $country->zone->transports;
+        } else {
+            return response()->json([
+                'message' => 'Nous ne livrons pas dans ce pays!',
+                'type' => true,
+            ]);
+        }
 
-        return $country;
     }
 
     public function GetShipping(int $country, int $trans_id)
@@ -81,7 +85,7 @@ class CartController extends Controller
                     $query->where('min', '<=', $totalWeight)
                         ->where('max', '>=', $totalWeight);
                 })->firstOrFail();
-            // dd($shipping);
+
         } catch (ModelNotFoundException $e) {
             // Handle case where shipping rule is not found
             return response()->json([

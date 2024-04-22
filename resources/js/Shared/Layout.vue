@@ -30,12 +30,13 @@
                             ><i class="fi-rs-shuffle mr-10"></i>Finaliser ma
                             commande</Link
                         >
-                        <a
+                        <Link
                             class="btn"
-                            data-bs-dismiss="modal"
                             aria-label="Close"
+                            :href="route('home')"
+                            @click="handleModalHidden"
                             ><i class="fi-rs-shopping-bag mr-10"></i>Continue
-                            Shopping</a
+                            Shopping</Link
                         >
                     </div>
                 </div>
@@ -64,15 +65,15 @@
                                 Contact
                             </h5>
                             <p class="wow fadeIn animated">
-                                <strong>Address: </strong>562 Wellington Road,
-                                Street 32, San Francisco
+                                <strong>Address: </strong>Bamako, ACI 2000 près
+                                de la Place Can
                             </p>
                             <p class="wow fadeIn animated">
-                                <strong>Phone: </strong>+01 2222 365 /(+91) 01
-                                2345 6789
+                                <strong>Phone: </strong>+223 66 03 51 54
                             </p>
                             <p class="wow fadeIn animated">
-                                <strong>Hours: </strong>10:00 - 18:00, Mon - Sat
+                                <strong>Horaire: </strong>09:00 - 19:00, Lundi -
+                                Samedi
                             </p>
                             <h5
                                 class="mb-10 mt-30 fw-600 text-grey-4 wow fadeIn animated"
@@ -87,24 +88,10 @@
                                         v-bind:src="'/assets/imgs/theme/icons/icon-facebook.svg'"
                                         alt=""
                                 /></a>
-                                <a href="#"
-                                    ><img
-                                        v-bind:src="'/assets/imgs/theme/icons/icon-twitter.svg'"
-                                        alt=""
-                                /></a>
+
                                 <a href="#"
                                     ><img
                                         v-bind:src="'/assets/imgs/theme/icons/icon-instagram.svg'"
-                                        alt=""
-                                /></a>
-                                <a href="#"
-                                    ><img
-                                        v-bind:src="'/assets/imgs/theme/icons/icon-pinterest.svg'"
-                                        alt=""
-                                /></a>
-                                <a href="#"
-                                    ><img
-                                        v-bind:src="'/assets/imgs/theme/icons/icon-youtube.svg'"
                                         alt=""
                                 /></a>
                             </div>
@@ -112,9 +99,6 @@
                     </div>
 
                     <div class="col-md-6">
-                        <h5 class="widget-title wow fadeIn animated">
-                            Install App
-                        </h5>
                         <div class="row">
                             <div class="col-md-4 col-lg-12 mt-md-3 mt-lg-0">
                                 <p class="mb-20 wow fadeIn animated">
@@ -123,7 +107,7 @@
                                 <img
                                     class="wow fadeIn animated"
                                     v-bind:src="'/assets/imgs/theme/payment-method.png'"
-                                    alt=""
+                                    alt="payment-method"
                                 />
                             </div>
                         </div>
@@ -138,8 +122,9 @@
                 </div>
                 <div class="col-lg-6">
                     <p class="float-md-left font-sm text-muted mb-0">
-                        &copy; 2022, <strong class="text-brand">Evara</strong> -
-                        HTML Ecommerce Template
+                        &copy; 2024,
+                        <strong class="text-brand">Dimanche à Bamako</strong> -
+                        E-commerce
                     </p>
                 </div>
                 <div class="col-lg-6">

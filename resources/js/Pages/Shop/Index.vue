@@ -201,6 +201,12 @@ onMounted(() => {
                                     </div>
                                 </div>
                             </div>
+                            <h4
+                                class="text-center my-5"
+                                v-if="!Object.keys(rows.data).length > 0"
+                            >
+                                Aucun produit disponible
+                            </h4>
                         </div>
                         <!--pagination-->
                         <Pagination :pagination="rows" />

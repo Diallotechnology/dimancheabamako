@@ -57,7 +57,7 @@ import { Head } from "@inertiajs/vue3";
                         </p>
                     </div>
                     <div class="col-lg-6">
-                        <img src="/assets/imgs/page/about-1.png" alt="" />
+                        <img src="/assets/imgs/theme/about.png" alt="about" />
                     </div>
                 </div>
             </div>

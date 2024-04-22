@@ -66,9 +66,6 @@ const submit = () => {
                             class="contact-from-area padding-20-row-col wow FadeInUp"
                         >
                             <h3 class="mb-10 text-center">Contactez-nous</h3>
-                            <p class="text-muted mb-30 text-center font-sm">
-                                Lorem ipsum dolor sit amet consectetur.
-                            </p>
 
                             <div
                                 v-if="email_success"
