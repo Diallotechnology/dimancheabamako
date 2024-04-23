@@ -10,6 +10,7 @@ use App\Http\Requests\UpdateOrderRequest;
 use App\Models\Client;
 use App\Models\Country;
 use App\Models\Order;
+use App\Models\Shipping;
 use App\Models\User;
 use Darryldecode\Cart\Facades\CartFacade;
 use Illuminate\Support\Facades\DB;
@@ -25,6 +26,7 @@ class OrderController extends Controller
      */
     public function store(StoreOrderRequest $request)
     {
+
         DB::transaction(function () use ($request) {
 
             $user = '';
@@ -60,7 +62,11 @@ class OrderController extends Controller
                 'contact' => $request->contact,
                 'pays' => $pays->nom,
             ]);
-
+            // get user cart content
+            $panier = CartFacade::session($user)->getContent();
+            // get product poids sum
+            $totalWeight = $panier->pluck('attributes')->sum('poids');
+            $shipping = Shipping::findOrFail($request->livraison);
             // register client order infos
             $data = new Order([
                 'payment' => $request->payment,
@@ -68,6 +74,8 @@ class OrderController extends Controller
                 'postal' => $request->postal,
                 'ville' => $request->ville,
                 'country_id' => $pays->id,
+                'poids' => $totalWeight.' Kg',
+                'shipping' => $shipping->montant,
                 'transport_id' => $request->transport_id,
                 'commentaire' => $pays->commentaire,
             ]);
@@ -76,8 +84,7 @@ class OrderController extends Controller
 
             // Variable pour suivre si une erreur de stock est survenue
             $erreurStockInsuffisant = false;
-            // get user cart content
-            $panier = CartFacade::session($user)->getContent();
+
             // dd($panier);
             // add pivot table value
             $panier->each(function ($product) use ($order, $erreurStockInsuffisant) {

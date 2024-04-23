@@ -21,6 +21,8 @@ return new class extends Migration
             $table->string('adresse');
             $table->string('postal')->nullable();
             $table->string('ville');
+            $table->string('poids');
+            $table->string('shipping');
             $table->string('payment');
             $table->string('commentaire')->nullable();
             $table->string('etat')->default(OrderEnum::SAVE);

@@ -59,11 +59,7 @@ watch(search, (value) => {
                         />
                     </div>
                     <div class="col-md-2 col-6">
-                        <input
-                            type="date"
-                            value="02.05.2022"
-                            class="form-control"
-                        />
+                        <input type="date" value="" class="form-control" />
                     </div>
                     <div class="col-md-2 col-6">
                         <div class="custom_select">
@@ -109,7 +105,7 @@ watch(search, (value) => {
                         <th scope="col">Reference</th>
                         <th scope="col">Client</th>
                         <th scope="col">Adresse</th>
-                        <th scope="col">transport</th>
+                        <th scope="col">shipping</th>
                         <th scope="col">Postal</th>
                         <th scope="col">Pays</th>
                         <th scope="col">Ville</th>
@@ -140,7 +136,12 @@ watch(search, (value) => {
                         }}
 
                         <td>{{ row.adresse }}</td>
-                        <td>{{ row.transport.nom }}</td>
+                        <td>
+                            {{ row.transport.nom }} <br />
+                            {{ row.poids }} <br />{{
+                                Price_format.format(row.shipping)
+                            }}
+                        </td>
                         <td>{{ row.postal }}</td>
                         <td>{{ row.country.nom }}</td>
                         <td>{{ row.ville }}</td>

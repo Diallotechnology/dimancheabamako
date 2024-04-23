@@ -25,6 +25,7 @@ class StoreOrderRequest extends FormRequest
         return [
             'country_id' => 'required|exists:countries,id',
             'transport_id' => 'required|exists:transports,id',
+            'livraison' => 'required|integer',
             'prenom' => 'required|string',
             'nom' => 'required|string',
             'email' => 'required|string|email',

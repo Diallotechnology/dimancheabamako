@@ -2,7 +2,7 @@
 import Layout from "@/Shared/Layout.vue";
 import notify, { cartnotify } from "@/helper";
 import { Head, router, useForm, usePage } from "@inertiajs/vue3";
-import { ref, onMounted, computed } from "vue";
+import { ref, onMounted } from "vue";
 
 const props = defineProps({
     items: {
@@ -14,6 +14,11 @@ const props = defineProps({
         type: Object,
         required: true,
         default: () => ({}),
+    },
+    totalWeight: {
+        type: Number,
+        required: true,
+        default: 0,
     },
     TotalQuantity: {
         type: Number,
@@ -33,7 +38,6 @@ const trans = ref([]);
 const page = usePage();
 const locale = page.props.locale === "fr" ? "fr-FR" : "en-US";
 const currency = page.props.locale === "fr" ? "EUR" : "USD";
-
 const totalFormat = new Intl.NumberFormat(locale, {
     style: "currency",
     currency: currency,
@@ -58,6 +62,7 @@ const form = useForm({
     payment: "Visa",
     commentaire: "",
     password: "",
+    livraison: "",
 });
 
 const getTrans = async () => {
@@ -84,6 +89,8 @@ const getShipping = async () => {
                 cartnotify(res.data.message, res.data.type);
             } else {
                 shipping.value = res.data;
+                form.livraison = res.data.id;
+                console.log(form.livraison);
             }
         })
         .catch(function (error) {
@@ -266,6 +273,12 @@ const submit = () => {
                         >
                             <table class="table">
                                 <tr>
+                                    <th>Poids Total</th>
+                                    <td>
+                                        <em>{{ totalWeight + " Kg" }}</em>
+                                    </td>
+                                </tr>
+                                <tr>
                                     <th>Livraison</th>
                                     <td>
                                         <em>{{
@@ -277,6 +290,7 @@ const submit = () => {
                                         }}</em>
                                     </td>
                                 </tr>
+
                                 <tr>
                                     <th>Delai de Livraison</th>
                                     <td>

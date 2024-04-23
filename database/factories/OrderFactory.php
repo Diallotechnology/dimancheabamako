@@ -24,7 +24,8 @@ class OrderFactory extends Factory
             'adresse' => fake()->streetAddress(),
             'postal' => fake()->postcode(),
             'ville' => fake()->city(),
-            // 'pays' => fake()->country(),
+            'poids' => rand(1, 5),
+            'shipping' => rand(15000, 50000),
             'payment' => fake()->randomElement(['Mastercard', 'Visa', 'Paypal']),
         ];
     }

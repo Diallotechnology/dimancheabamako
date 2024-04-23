@@ -40,10 +40,10 @@ class CartController extends Controller
         $TotalQuantity = CartFacade::session($this->get_userid())->getTotalQuantity();
         // get total price
         $Total = CartFacade::session($this->get_userid())->getTotal();
-
+        $totalWeight = $items->pluck('attributes')->sum('poids');
         $country = Country::all('nom', 'id');
 
-        return Inertia::render('Panier', compact('items', 'TotalQuantity', 'Total', 'country'));
+        return Inertia::render('Panier', compact('items', 'TotalQuantity', 'Total', 'country', 'totalWeight'));
     }
 
     /**

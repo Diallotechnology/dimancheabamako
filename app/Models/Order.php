@@ -18,7 +18,7 @@ class Order extends Model
      *
      * @var array
      */
-    protected $fillable = ['payment', 'client_id', 'reference', 'adresse', 'postal', 'ville', 'country_id', 'transport_id', 'etat'];
+    protected $fillable = ['payment', 'client_id', 'reference', 'adresse', 'postal', 'ville', 'country_id', 'transport_id', 'etat', 'poids', 'shipping'];
 
     /**
      * The relationships that should always be loaded.
