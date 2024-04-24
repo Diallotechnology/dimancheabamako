@@ -126,7 +126,7 @@ const submit = () => {
                         <div class="col-md-6">
                             <Input
                                 input_type="text"
-                                label="poids en Kg (pas de decimal)"
+                                label="poids en Kg"
                                 place="le poids du produit"
                                 v-model="form.poids"
                                 :message="form.errors.poids"

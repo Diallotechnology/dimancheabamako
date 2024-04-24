@@ -152,7 +152,7 @@ const favori = (url) => {
                                 </p>
                                 <p class="title">Couleur {{ row.color }}</p>
                                 <p class="title">Taille {{ row.taille }}</p>
-                                <p class="title">Poids {{ row.poids }}</p>
+                                <p class="title">Poids {{ row.poids }} Kg</p>
                                 <p class="title">Stock {{ row.stock }}</p>
                                 <p class="title">favori {{ row.favoris }}</p>
                                 <div class="price mb-2">
@@ -257,7 +257,7 @@ const favori = (url) => {
                     <div class="col-md-6">
                         <Input
                             input_type="text"
-                            label="poids en Kg (pas de decimal)"
+                            label="poids en Kg"
                             place="le poids du produit"
                             v-model="form.poids"
                             :message="form.errors.poids"

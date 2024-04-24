@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Enum\RoleEnum;
+use App\Mail\MaintenanceMail;
 use App\Models\Category;
 use App\Models\Client;
 use App\Models\Country;
@@ -19,7 +20,9 @@ use App\Models\Zone;
 use Countries;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Artisan;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Request;
+use Illuminate\Support\Str;
 use Inertia\Inertia;
 
 class AdminController extends Controller
@@ -242,7 +245,8 @@ class AdminController extends Controller
 
     public function maintenance()
     {
-
-        return Artisan::call('down --with-secret');
+        $token = Str::random(60);
+        Artisan::call("down --secret='$token'");
+        Mail::to('contact@dimancheabamako.com')->send(new MaintenanceMail($token));
     }
 }

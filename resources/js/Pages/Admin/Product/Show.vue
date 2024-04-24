@@ -31,7 +31,7 @@ const props = defineProps({
                     <div class="col-sm-6 col-lg-4 col-xl-3">
                         <p>Couleur: {{ product.color }}</p>
                         <p>Taille: {{ product.taille }}</p>
-                        <p>Poids: {{ product.poids }}</p>
+                        <p>Poids: {{ product.poids }} Kg</p>
                     </div>
                     <div class="col-sm-6 col-lg-4 col-xl-3">
                         <p>prix: {{ product.prix }}</p>
