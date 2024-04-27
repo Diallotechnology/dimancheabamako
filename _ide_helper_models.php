@@ -149,6 +149,8 @@ namespace App\Models{
  * @property string $adresse
  * @property string|null $postal
  * @property string $ville
+ * @property string $poids
+ * @property string $shipping
  * @property string $payment
  * @property string|null $commentaire
  * @property string $etat
@@ -171,8 +173,10 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder|Order whereEtat($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Order whereId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Order wherePayment($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Order wherePoids($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Order wherePostal($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Order whereReference($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Order whereShipping($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Order whereTransportId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Order whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Order whereVille($value)

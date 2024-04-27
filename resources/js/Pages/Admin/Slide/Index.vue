@@ -1,9 +1,8 @@
 <script setup>
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
-import { Head, router, useForm } from "@inertiajs/vue3";
+import { Head } from "@inertiajs/vue3";
 import ButtonEdit from "@/Components/ButtonEdit.vue";
 import ButtonDelete from "@/Components/ButtonDelete.vue";
-import notify from "@/helper";
 
 const props = defineProps({
     rows: {

@@ -38,8 +38,10 @@ class AdminController extends Controller
         $lastorder = $query->with('transport', 'client')->take(10)->latest('id')->get();
         $order_stat = Order::selectRaw('COUNT(id) as total_order, DATE(created_at) as day')
             ->orderBy('day')->groupBy('day')->pluck('total_order', 'day');
+        $label = $order_stat->keys();
+        $data = $order_stat->values();
 
-        return Inertia::render('Admin/Dashboard', compact('order', 'product', 'revenu', 'categorie', 'lastorder', 'order_stat'));
+        return Inertia::render('Admin/Dashboard', compact('order', 'product', 'revenu', 'categorie', 'lastorder', 'data', 'label'));
     }
 
     public function product()

@@ -19,9 +19,13 @@ const form = useForm({
 });
 
 const submit = () => {
-    form.patch(route("slide.update", props.slide.id), {
+    form.post(route("slide.update", props.slide.id), {
+        forceFormData: true,
         onSuccess: () => {
-            form.nom = props.slide.nom;
+            form.text_one = props.slide.text_one;
+            form.text_two = props.slide.text_two;
+            form.paragraph = props.slide.paragraph;
+            form.image = props.slide.image;
             notify("slide mise à jour avec success !", true);
         },
         onError: () => {
@@ -68,7 +72,7 @@ const submit = () => {
                             <input
                                 class="form-control"
                                 name="image"
-                                @input="form.image = $event.target.files"
+                                @input="form.image = $event.target.files[0]"
                                 type="file"
                             />
                             <div v-show="form.errors.image">

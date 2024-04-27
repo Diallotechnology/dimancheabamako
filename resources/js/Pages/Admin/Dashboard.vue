@@ -26,6 +26,14 @@ const props = defineProps({
         type: Object,
         default: () => ({}),
     },
+    label: {
+        type: Object,
+        default: () => ({}),
+    },
+    data: {
+        type: Object,
+        default: () => ({}),
+    },
 });
 onMounted(() => {
     /*Sale statistics Chart*/
@@ -37,20 +45,7 @@ onMounted(() => {
 
             // The data for our dataset
             data: {
-                labels: [
-                    "Jan",
-                    "Feb",
-                    "Mar",
-                    "Apr",
-                    "May",
-                    "Jun",
-                    "Jul",
-                    "Aug",
-                    "Sep",
-                    "Oct",
-                    "Nov",
-                    "Dec",
-                ],
+                labels: props.label,
                 datasets: [
                     {
                         label: "Order",
@@ -58,7 +53,7 @@ onMounted(() => {
                         fill: true,
                         backgroundColor: "rgba(215, 159, 1, 0.2)",
                         borderColor: "rgb(215, 159, 1)",
-                        data: [30, 10, 27, 19, 33, 15, 19, 20, 24, 15, 37, 6],
+                        data: props.data,
                     },
                 ],
             },

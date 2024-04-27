@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Helper\DeleteAction;
-use App\Http\Requests\StoreSlideRequest;
 use App\Http\Requests\UpdateSlideRequest;
 use App\Models\Slide;
 use Inertia\Inertia;
@@ -11,22 +10,6 @@ use Inertia\Inertia;
 class SlideController extends Controller
 {
     use DeleteAction;
-
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(StoreSlideRequest $request)
-    {
-        //
-    }
-
-    /**
-     * Display the specified resource.
-     */
-    public function show(Slide $slide)
-    {
-        //
-    }
 
     /**
      * Show the form for editing the specified resource.
