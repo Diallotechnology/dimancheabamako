@@ -3,12 +3,9 @@ import Layout from "@/Shared/Layout.vue";
 import { Head, useForm } from "@inertiajs/vue3";
 import notify from "@/helper";
 import InputError from "@/Components/InputError.vue";
-defineProps({
-    email_success: {
-        type: String,
-    },
-});
+import { reactive, ref } from "vue";
 
+const email_success = ref("");
 const form = useForm({
     name: "",
     email: "",
@@ -21,6 +18,9 @@ const submit = () => {
         onFinish: () => form.reset(),
         onSuccess: () => {
             form.reset();
+            email_success.value =
+                "Votre message a été envoyé. Merci de nous avoir contactés.";
+            notify("Votre message a été envoyé. !", true);
         },
         onError: () => {
             notify(false);
@@ -69,7 +69,8 @@ const submit = () => {
 
                             <div
                                 v-if="email_success"
-                                class="alert alert-primary text-white text-center"
+                                class="alert alert-success text-white text-center"
+                                style="background: #07bc0c"
                                 role="alert"
                             >
                                 {{ email_success }}

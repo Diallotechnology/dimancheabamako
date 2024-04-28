@@ -19,7 +19,6 @@ class ContactController extends Controller
             'email' => 'required|email',
             'subject' => 'required|string',
             'message' => 'required|string',
-            // 'captcha' => 'required|captcha',
         ]);
         $data = [
             'name' => $request->name,
@@ -29,6 +28,6 @@ class ContactController extends Controller
         ];
         Mail::mailer('contact')->to('contact@dimancheabamako.com')->send(new ContactMail($data));
 
-        return back()->with('email_success', 'Votre message a été envoyer Merci de nous avoir contacter');
+        return back();
     }
 }

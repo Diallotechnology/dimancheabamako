@@ -43,12 +43,6 @@ const totalFormat = new Intl.NumberFormat(locale, {
     currency: currency,
 });
 
-onMounted(() => {
-    for (const produitId in props.items) {
-        qte.value[produitId] = ref(props.items[produitId].quantity);
-    }
-});
-
 const form = useForm({
     prenom: "",
     nom: "",
@@ -117,7 +111,6 @@ const update = async (produitId) => {
             if (response.data) {
                 cartnotify(response.data.message, response.data.type);
             }
-            console.log(response);
             router.reload();
         })
         .catch(function (error) {
@@ -125,14 +118,20 @@ const update = async (produitId) => {
             console.log(error.response);
         });
 };
+
+onMounted(() => {
+    for (const produitId in props.items) {
+        qte.value[produitId] = ref(props.items[produitId].quantity);
+    }
+});
 const increment = async (produitId) => {
     await axios
         .get(route("cart.update", [produitId, qte.value[produitId]++]))
         .then((response) => {
+            router.reload();
             if (response.data) {
                 cartnotify(response.data.message, response.data.type);
             }
-            router.reload();
         })
         .catch(function (error) {
             // handle error
@@ -140,7 +139,6 @@ const increment = async (produitId) => {
         });
 };
 const decrement = async (produitId) => {
-    console.log(quantity);
     await axios
         .get(route("cart.update", [produitId, qte.value[produitId]--]))
         .then((response) => {
@@ -212,7 +210,9 @@ const submit = () => {
                                             >
                                                 <button
                                                     class="btn btn-small"
-                                                    @click="decrement(item.id)"
+                                                    @click.prevent="
+                                                        decrement(item.id)
+                                                    "
                                                 >
                                                     <i class="fi-rs-minus"></i>
                                                 </button>
@@ -228,7 +228,9 @@ const submit = () => {
                                                 />
                                                 <button
                                                     class="btn btn-small"
-                                                    @click="increment(item.id)"
+                                                    @click.prevent="
+                                                        increment(item.id)
+                                                    "
                                                 >
                                                     <i class="fi-rs-plus"></i>
                                                 </button>

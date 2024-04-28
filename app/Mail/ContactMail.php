@@ -4,7 +4,6 @@ namespace App\Mail;
 
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
-use Illuminate\Mail\Mailables\Address;
 use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
@@ -18,7 +17,7 @@ class ContactMail extends Mailable
      */
     public function __construct(public array $data)
     {
-        //
+
     }
 
     /**
@@ -27,11 +26,6 @@ class ContactMail extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-
-            from: new Address($this->data['email'], $this->data['name']),
-            replyTo: [
-                new Address('contact@dimancheabamako.com', 'Dimanche à bamako'),
-            ],
             subject: $this->data['subject'],
 
         );
