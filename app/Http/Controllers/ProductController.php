@@ -67,6 +67,7 @@ class ProductController extends Controller
                 'label' => "$row->nom", 'value' => "$row->id",
             ];
         });
+        $product->load('images');
 
         return Inertia::render('Admin/Product/Update', compact('product', 'category'));
     }

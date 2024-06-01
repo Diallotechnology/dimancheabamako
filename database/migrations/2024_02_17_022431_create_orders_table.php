@@ -18,6 +18,7 @@ return new class extends Migration
             $table->foreignId('country_id')->constrained()->cascadeOnUpdate()->cascadeOnDelete();
             $table->foreignId('transport_id')->constrained()->cascadeOnUpdate()->cascadeOnDelete();
             $table->string('reference')->nullable()->unique();
+            $table->string('trans_ref')->unique();
             $table->string('adresse');
             $table->string('postal')->nullable();
             $table->string('ville');

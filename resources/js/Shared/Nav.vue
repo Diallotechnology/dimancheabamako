@@ -12,6 +12,7 @@ const user = computed(() => page.props.auth.user);
 const local = page.props.locale;
 const rows = ref([]);
 const cartCount = ref(0);
+const lg = ref("en");
 const updateCartCount = async () => {
     try {
         await axios.get("/count").then((res) => {
@@ -22,9 +23,15 @@ const updateCartCount = async () => {
     }
 };
 
+function selectElement(cls, valueToSelect) {
+    let element = document.getElementsByClassName(cls);
+    element.value = valueToSelect;
+    console.log(element);
+}
+
 function googleTranslateElementInit() {
     new google.translate.TranslateElement(
-        { pageLanguage: local, includedLanguages: "en,fr" },
+        { pageLanguage: "fr", includedLanguages: "en,fr" },
         "google_translate_element"
     );
 }
@@ -127,6 +134,12 @@ onUnmounted(() => {
                                         <ul class="language-dropdown">
                                             <li>
                                                 <Link
+                                                    v-on:click="
+                                                        selectElement(
+                                                            'goog-te-combo',
+                                                            'fr'
+                                                        )
+                                                    "
                                                     :href="
                                                         route('language', 'fr')
                                                     "
@@ -138,6 +151,12 @@ onUnmounted(() => {
                                                     Français
                                                 </Link>
                                                 <Link
+                                                    v-on:click="
+                                                        selectElement(
+                                                            'goog-te-combo',
+                                                            'en'
+                                                        )
+                                                    "
                                                     :href="
                                                         route('language', 'en')
                                                     "

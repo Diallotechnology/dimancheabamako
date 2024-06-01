@@ -1,9 +1,16 @@
 <script setup>
 import Layout from "@/Shared/Layout.vue";
 import { AddToCard } from "@/helper";
-import { onMounted } from "vue";
+import { onMounted, ref } from "vue";
 import Cart from "@/Shared/Cart.vue";
 import { Head } from "@inertiajs/vue3";
+import { Thumbs, Navigation, FreeMode } from "swiper/modules";
+import { Swiper, SwiperSlide } from "swiper/vue";
+
+import "swiper/css";
+import "swiper/css/free-mode";
+import "swiper/css/navigation";
+import "swiper/css/thumbs";
 
 const props = defineProps({
     product: {
@@ -22,76 +29,10 @@ const props = defineProps({
         default: () => ({}),
     },
 });
-onMounted(() => {
-    /*Product Details*/
-    var productDetails = function () {
-        $(".product-image-slider").slick({
-            slidesToShow: 1,
-            slidesToScroll: 1,
-            arrows: false,
-            fade: false,
-            asNavFor: ".slider-nav-thumbnails",
-        });
-
-        $(".slider-nav-thumbnails").slick({
-            slidesToShow: 5,
-            slidesToScroll: 1,
-            asNavFor: ".product-image-slider",
-            dots: false,
-            focusOnSelect: true,
-            prevArrow:
-                '<button type="button" class="slick-prev"><i class="fi-rs-angle-left"></i></button>',
-            nextArrow:
-                '<button type="button" class="slick-next"><i class="fi-rs-angle-right"></i></button>',
-        });
-
-        // Remove active class from all thumbnail slides
-        $(".slider-nav-thumbnails .slick-slide").removeClass("slick-active");
-
-        // Set active class to first thumbnail slides
-        $(".slider-nav-thumbnails .slick-slide").eq(0).addClass("slick-active");
-
-        // On before slide change match active thumbnail to current slide
-        $(".product-image-slider").on(
-            "beforeChange",
-            function (event, slick, currentSlide, nextSlide) {
-                var mySlideNumber = nextSlide;
-                $(".slider-nav-thumbnails .slick-slide").removeClass(
-                    "slick-active"
-                );
-                $(".slider-nav-thumbnails .slick-slide")
-                    .eq(mySlideNumber)
-                    .addClass("slick-active");
-            }
-        );
-
-        $(".product-image-slider").on(
-            "beforeChange",
-            function (event, slick, currentSlide, nextSlide) {
-                var img = $(slick.$slides[nextSlide]).find("img");
-                $(".zoomWindowContainer,.zoomContainer").remove();
-                $(img).elevateZoom({
-                    zoomType: "inner",
-                    cursor: "crosshair",
-                    zoomWindowFadeIn: 500,
-                    zoomWindowFadeOut: 750,
-                });
-            }
-        );
-        //Elevate Zoom
-        if ($(".product-image-slider").length) {
-            $(".product-image-slider .slick-active img").elevateZoom({
-                zoomType: "inner",
-                cursor: "crosshair",
-                zoomWindowFadeIn: 500,
-                zoomWindowFadeOut: 750,
-            });
-        }
-    };
-    /* WOW active */
-    new WOW().init();
-    productDetails();
-});
+const thumbsSwiper = ref(null);
+const setThumbsSwiper = (swiper) => {
+    thumbsSwiper.value = swiper;
+};
 </script>
 <template>
     <Head title="{{ product.resume }}" />
@@ -103,34 +44,37 @@ onMounted(() => {
                         <div class="product-detail accordion-detail mb-4">
                             <div class="row mb-50">
                                 <div class="col-md-6 col-sm-12 col-xs-12">
-                                    <div class="detail-gallery">
-                                        <span class="zoom-icon"
-                                            ><i class="fi-rs-search"></i
-                                        ></span>
-                                        <!-- MAIN SLIDES -->
-                                        <div class="product-image-slider">
-                                            <figure class="border-radius-10">
-                                                <img
-                                                    v-bind:src="product.cover"
-                                                    alt="product image"
-                                                />
-                                            </figure>
-                                        </div>
-                                        <!-- THUMBNAILS -->
-                                        <div
-                                            class="slider-nav-thumbnails pl-15 pr-15"
-                                        >
-                                            <div
-                                                v-for="row in product.images"
-                                                :key="row"
-                                            >
-                                                <img
-                                                    v-bind:src="row.chemin"
-                                                    alt="product image cover"
-                                                />
-                                            </div>
-                                        </div>
-                                    </div>
+                                    <swiper
+                                        :modules="[Thumbs]"
+                                        :thumbs="{ swiper: thumbsSwiper }"
+                                    >
+                                        <swiper-slide
+                                            v-for="row in product.images"
+                                            :key="row"
+                                            ><img
+                                                v-bind:src="row.chemin"
+                                                alt="product image"
+                                        /></swiper-slide>
+                                    </swiper>
+
+                                    <swiper
+                                        :modules="[Thumbs]"
+                                        watch-slides-progress
+                                        @swiper="setThumbsSwiper"
+                                        :spaceBetween="10"
+                                        :slidesPerView="4"
+                                        :freeMode="true"
+                                        :watchSlidesProgress="true"
+                                    >
+                                        <swiper-slide
+                                            v-for="row in product.images"
+                                            :key="row"
+                                            ><img
+                                                v-bind:src="row.chemin"
+                                                alt="product image"
+                                        /></swiper-slide>
+                                    </swiper>
+
                                     <!-- End Gallery -->
                                 </div>
                                 <div class="col-md-6 col-sm-12 col-xs-12">

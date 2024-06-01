@@ -91,6 +91,9 @@ Route::controller(SitemapController::class)->group(function () {
     Route::get('sitemap/product', 'product')->name('sitemap.product');
 
 });
+
+Route::get('users/order', [OrderController::class, 'processPayment']);
+Route::inertia('order/validate', 'Validate')->name('order.validate');
 // Route::get('test', function () {
 //     Artisan::call('optimize:clear');
 //     Artisan::call('db:wipe');

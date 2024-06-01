@@ -54,7 +54,7 @@ const props = defineProps({
                     >
                         <div class="card card-product-grid">
                             <a href="#" class="img-wrap">
-                                <img src="" alt="Product" />
+                                <img v-bind:src="row.chemin" alt="Product" />
                             </a>
                             <div class="info-wrap">
                                 <ButtonEdit

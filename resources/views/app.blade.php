@@ -38,26 +38,25 @@
     {{--
     <link href="{{ asset('build/assets/app-C5SX0j15.css') }}" rel="stylesheet" /> --}}
     {{-- <script type="module" src="{{ asset('build/assets/app-AmYcn-z2.js')}}"></script> --}}
+
     @inertiaHead
 </head>
 
 <body>
     @inertia
     <script src="{{ asset('assets/js/vendor/jquery-3.6.0.min.js')}}"></script>
-    <script src="{{ asset('assets/js/vendor/modernizr-3.6.0.min.js')}}"></script>
-    <script src="{{ asset('assets/js/vendor/jquery-migrate-3.3.0.min.js')}}"></script>
+    {{-- <script src="{{ asset('assets/js/vendor/modernizr-3.6.0.min.js')}}"></script> --}}
+    {{-- <script src="{{ asset('assets/js/vendor/jquery-migrate-3.3.0.min.js')}}"></script> --}}
+    {{-- <script src="{{ asset('assets/js/plugins/jquery.syotimer.min.js') }}"></script> --}}
+    {{-- <script src="{{ asset('assets/js/plugins/jquery-ui.js') }}"></script> --}}
+    {{-- <script src="{{ asset('assets/js/plugins/jquery.theia.sticky.js')}}"></script> --}}
     <script src="{{ asset('assets/js/vendor/bootstrap.bundle.min.js') }}"></script>
     <script src="{{ asset('assets/js/plugins/slick.js')}}"></script>
-    <script src="{{ asset('assets/js/plugins/jquery.syotimer.min.js') }}"></script>
     <script src="{{ asset('assets/js/plugins/wow.js')}}"></script>
-    <script src="{{ asset('assets/js/plugins/jquery-ui.js') }}"></script>
     <script src="{{ asset('assets/js/plugins/perfect-scrollbar.js')}}"></script>
-    <script src="{{ asset('assets/js/plugins/magnific-popup.js')}}"></script>
     <script src="{{ asset('assets/js/plugins/images-loaded.js')}}"></script>
     <script src="{{ asset('assets/js/plugins/isotope.js')}}"></script>
     <script src="{{ asset('assets/js/plugins/scrollup.js') }}"></script>
-    <script src="{{ asset('assets/js/plugins/jquery.theia.sticky.js')}}"></script>
-    <script src="{{ asset('assets/js/plugins/jquery.elevatezoom.js')}}"></script>
     {{-- <script type="text/javascript"
         src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit">
     </script> --}}

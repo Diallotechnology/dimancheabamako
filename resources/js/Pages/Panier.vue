@@ -125,6 +125,7 @@ onMounted(() => {
     }
 });
 const increment = async (produitId) => {
+    console.log(qte.value[produitId]++);
     await axios
         .get(route("cart.update", [produitId, qte.value[produitId]++]))
         .then((response) => {
