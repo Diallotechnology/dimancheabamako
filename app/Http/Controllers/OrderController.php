@@ -7,6 +7,7 @@ use App\Enum\RoleEnum;
 use App\Helper\DeleteAction;
 use App\Http\Requests\StoreOrderRequest;
 use App\Http\Requests\UpdateOrderRequest;
+use App\Mail\OrderMail;
 use App\Models\Client;
 use App\Models\Country;
 use App\Models\Order;
@@ -17,6 +18,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
 use Inertia\Inertia;
 
 class OrderController extends Controller
@@ -96,100 +98,31 @@ class OrderController extends Controller
 
     public function processPayment()
     {
-        $montant = 100;
-        $currencyCode = 'XOF';
-        $emailAddress = 'customer@test.com';
-        $redirectUrl = 'https://mysite.com/redirect';
-        $cancelUrl = 'https://myshop.com/basket';
+        $test = Order::find(1);
+        Mail::to('contact@dimancheabamako.com')->send(new OrderMail($test));
+        // $montant = 100;
+        // $currencyCode = 'XOF';
+        // $emailAddress = 'customer@test.com';
+        // $redirectUrl = 'https://mysite.com/redirect';
+        // $cancelUrl = route('home');
 
-        $apikey = 'ZGU3NmY1YTgtYWZmYy00NWNjLWI1ZGItYTI1NzQzMzMwMDBhOmJjMjQwYjllLTY5YmEtNDVlYy1hZWZhLTU4YTliNTQ3OTdjZQ==';
-        $realmName = 'OBMaliSandbox';
-        $outlet = 'af106601-8e01-41b5-bbb9-6b7fc82b71e5';
+        // $apikey = 'ZGU3NmY1YTgtYWZmYy00NWNjLWI1ZGItYTI1NzQzMzMwMDBhOmJjMjQwYjllLTY5YmEtNDVlYy1hZWZhLTU4YTliNTQ3OTdjZQ==';
+        // $realmName = 'OBMaliSandbox';
+        // $outlet = 'af106601-8e01-41b5-bbb9-6b7fc82b71e5';
 
-        $accessToken = $this->getAccessToken($apikey, $realmName);
+        // $accessToken = $this->getAccessToken($apikey, $realmName);
 
-        if ($accessToken) {
-            $postData = $this->prepareTransactionData($montant, $currencyCode, $emailAddress, $redirectUrl, $cancelUrl);
-            $response = $this->createOrder($outlet, $accessToken, $postData);
+        // if ($accessToken) {
+        //     $postData = $this->prepareTransactionData($montant, $currencyCode, $emailAddress, $redirectUrl, $cancelUrl);
+        //     $response = $this->createOrder($outlet, $accessToken, $postData);
 
-            if ($response && isset($response['_links']['payment']['href'])) {
-                return redirect($response['_links']['payment']['href']);
-            }
-        }
+        //     if ($response && isset($response['_links']['payment']['href'])) {
+        //         return redirect($response['_links']['payment']['href']);
+        //     }
+        // }
 
-        // Gérer les cas d'erreur de manière appropriée
-        return response()->json(['error' => 'Unable to process payment'], 500);
-    }
-
-    public function FunctionName()
-    {
-        // Définir le montant et la nature en fonction du type de paiement
-        $montant = 100;
-        $type = 'gold';
-        $nature = 'STANDART GOlD';
-
-        // Entrez votre clé API ici
-        $apikey = 'ZGU3NmY1YTgtYWZmYy00NWNjLWI1ZGItYTI1NzQzMzMwMDBhOmJjMjQwYjllLTY5YmEtNDVlYy1hZWZhLTU4YTliNTQ3OTdjZQ==';
-        $ch = curl_init();
-        // prod api access token link
-        // https://api-gateway.orabankml.ngenius-payments.com/identity/auth/access-token
-        // Obtenir un token d'accès depuis l'API
-
-        curl_setopt($ch, CURLOPT_URL, 'https://api-gateway.sandbox.ngenius-payments.com/identity/auth/access-token');
-        curl_setopt($ch, CURLOPT_HTTPHEADER, [
-            'accept: application/vnd.ni-identity.v1+json',
-            'authorization: Basic '.$apikey,
-            'content-type: application/vnd.ni-identity.v1+json',
-        ]);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch, CURLOPT_POST, 1);
-        curl_setopt($ch, CURLOPT_POSTFIELDS, '{"realmName":"OBMaliSandbox"}');
-
-        $output = json_decode(curl_exec($ch));
-        $access_token = $output->access_token;
-        // dd($access_token);
-
-        // Préparer les données de la transaction
-        $postData = [
-            'action' => 'PURCHASE',
-            'emailAddress' => 'customer@test.com',
-            'amount' => [
-                'currencyCode' => 'XOF',
-                'value' => $montant,
-            ],
-            'merchantAttributes' => [
-                'redirectUrl' => 'https://mysite.com/redirect',
-                'cancelUrl' => 'https://myshop.com/basket',
-                'cancelText' => 'Default Continue Shopping',
-            ],
-        ];
-
-        $outlet = 'af106601-8e01-41b5-bbb9-6b7fc82b71e5';
-        $token = $access_token;
-        $json = json_encode($postData);
-
-        $ch2 = curl_init();
-
-        // prod create order link
-        // https://api-gateway.orabankml.ngenius-payments.com/transactions/outlets/'.$outlet.'/orders
-        curl_setopt($ch2, CURLOPT_URL, 'https://api-gateway.sandbox.ngenius-payments.com/transactions/outlets/'.$outlet.'/orders');
-        curl_setopt($ch2, CURLOPT_HTTPHEADER, [
-            'Authorization: Bearer '.$token,
-            'Content-Type: application/vnd.ni-payment.v2+json',
-            'Accept: application/vnd.ni-payment.v2+json',
-        ]);
-        curl_setopt($ch2, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch2, CURLOPT_POST, 1);
-        curl_setopt($ch2, CURLOPT_POSTFIELDS, $json);
-
-        $output2 = json_decode(curl_exec($ch2));
-        // Extraire l'URL de paiement et la référence de la commande
-        $paymentHref = $output2->_links->payment->href;
-        $orderReference = $output2->_embedded->payment[0]->orderReference;
-
-        return redirect($paymentHref);
-        // echo $orderReference.' <br>';
-        // echo $paymentHref.' <br>';
+        // // Gérer les cas d'erreur de manière appropriée
+        // return response()->json(['error' => 'Unable to process payment'], 500);
     }
 
     /**
@@ -316,6 +249,18 @@ class OrderController extends Controller
             // Gérer les cas d'erreur de manière appropriée
             return response()->json(['error' => 'Unable to process payment'], 500);
         });
+    }
+
+    public function invoice(int $id)
+    {
+        $order = Order::with('client', 'products')->withSum('products as totaux', 'order_product.montant')->findOrFail($id);
+
+        return view('invoice', compact(['order']));
+    }
+
+    public function valid(Order $order)
+    {
+        return Inertia::render('Validate', compact('order'));
     }
 
     /**

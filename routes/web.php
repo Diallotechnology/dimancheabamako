@@ -93,6 +93,8 @@ Route::controller(SitemapController::class)->group(function () {
 });
 
 Route::get('users/order', [OrderController::class, 'processPayment']);
+Route::get('order/invoice/{id}', [OrderController::class, 'invoice'])->name('order.invoice');
+Route::get('order/validate/{id}', [OrderController::class, 'invoice'])->name('order.invoice');
 Route::inertia('order/validate', 'Validate')->name('order.validate');
 // Route::get('test', function () {
 //     Artisan::call('optimize:clear');

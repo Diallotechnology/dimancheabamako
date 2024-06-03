@@ -35,7 +35,9 @@ const props = defineProps({
         default: () => ({}),
     },
 });
+
 onMounted(() => {
+    // window.location.replace(route("dashboard"));
     /*Sale statistics Chart*/
     if ($("#myChart").length) {
         var ctx = document.getElementById("myChart").getContext("2d");

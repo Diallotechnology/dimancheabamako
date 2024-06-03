@@ -1,7 +1,7 @@
 <script setup>
 import Layout from "@/Shared/Layout.vue";
 import { AddToCard } from "@/helper";
-import { onMounted, ref } from "vue";
+import { ref } from "vue";
 import Cart from "@/Shared/Cart.vue";
 import { Head } from "@inertiajs/vue3";
 import { Thumbs, Navigation, FreeMode } from "swiper/modules";

@@ -58,6 +58,14 @@ class Product extends Model
 
     }
 
+    public function getMontant(): float|int
+    {
+        // Récupération du taux de conversion et du symbole de devise en fonction de la locale de la session
+        $tauxConversion = session('locale') === 'fr' ? Devise::whereType('EUR')->value('taux') : Devise::whereType('USD')->value('taux');
+
+        return number_format($this->pivot->montant / $tauxConversion, 2);
+    }
+
     public function getPrixFinalAttribute(): string
     {
         $deviseSymbole = session('locale') === 'fr' ? '€' : '$';

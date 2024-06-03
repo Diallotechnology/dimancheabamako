@@ -64,6 +64,22 @@ class Order extends Model
         return Carbon::parse($date)->format('d/m/Y H:i:s');
     }
 
+    public function getShipping(): float|int
+    {
+        // Récupération du taux de conversion et du symbole de devise en fonction de la locale de la session
+        $tauxConversion = session('locale') === 'fr' ? Devise::whereType('EUR')->value('taux') : Devise::whereType('USD')->value('taux');
+
+        return number_format($this->shipping / $tauxConversion, 2);
+    }
+
+    public function getTaux(): int
+    {
+        // Récupération du taux de conversion et du symbole de devise en fonction de la locale de la session
+        $tauxConversion = session('locale') === 'fr' ? Devise::whereType('EUR')->value('taux') : Devise::whereType('USD')->value('taux');
+
+        return $tauxConversion;
+    }
+
     public function generateId(string $prefix_type)
     {
         $currentYear = Carbon::today()->format('Y');

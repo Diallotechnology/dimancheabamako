@@ -23,9 +23,7 @@
         "vue3-toastify": "^0.2.1"
     },
     "dependencies": {
-        "@splidejs/vue-splide": "^0.6.12",
         "swiper": "^11.1.4",
-        "tiny-slider": "^2.9.4",
         "vue-tel-input": "^8.3.1"
     }
 }
