@@ -27,7 +27,7 @@ class OrderFactory extends Factory
             'ville' => fake()->city(),
             'poids' => rand(1, 5),
             'shipping' => rand(15000, 50000),
-            'payment' => fake()->randomElement(['Mastercard', 'Visa', 'Paypal']),
+            // 'payment' => fake()->randomElement(['Mastercard', 'Visa', 'Paypal']),
         ];
     }
 }

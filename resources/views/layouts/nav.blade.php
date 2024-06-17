@@ -62,7 +62,7 @@
                                             </a>
                                             <a href="
                                                    {{ route('language', 'en')}}
-                                                "><img src="{{ asset('assets/imgs/theme/flag-fr.png') }}"
+                                                "><img src="{{ asset('assets/imgs/theme/flag-us.png') }}"
                                                     alt="flag-us" />
                                                 English
                                             </a>
@@ -192,9 +192,7 @@
                 <nav>
                     <ul class="mobile-menu">
                         <li>
-                            <a :class="{
-                                    active: route().current('home'),
-                                }" :href="route('home')">Accueil</a>
+                            <a href="{{ route('home') }}">Accueil</a>
                         </li>
 
                         <li class="menu-item-has-children">
@@ -207,13 +205,13 @@
                         </li>
 
                         <li>
-                            <a :href="route('about')" @click="closeSidebar()">A propos</a>
+                            <a href="{{ route('about') }}">A propos</a>
                         </li>
                         <li>
-                            <a :href="route('livraison')" @click="closeSidebar()">Livraison</a>
+                            <a href="{{ route('livraison') }}">Livraison</a>
                         </li>
                         <li>
-                            <a :href="route('contact')" @click="closeSidebar()">Contact</a>
+                            <a href="{{ route('contact') }}">Contact</a>
                         </li>
                         <li class="menu-item-has-children">
                             <span class="menu-expand"></span><a href="#">Language</a>
@@ -235,8 +233,8 @@
             </div>
             <div class="mobile-social-icon">
                 <h5 class="mb-15 text-grey-4">Follow Us</h5>
-                <a href="#"><img v-bind:src="'/assets/imgs/theme/icons/icon-facebook.svg'" alt="" /></a>
-                <a href="#"><img v-bind:src="'/assets/imgs/theme/icons/icon-instagram.svg'" alt="" /></a>
+                <a href="#"><img src="{{ asset('assets/imgs/theme/icons/icon-facebook.svg') }}" alt="facebook" /></a>
+                <a href="#"><img src="{{ asset('assets/imgs/theme/icons/icon-instagram.svg') }}" alt="instagram" /></a>
             </div>
         </div>
     </div>

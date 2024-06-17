@@ -24,7 +24,7 @@ return new class extends Migration
             $table->string('ville');
             $table->string('poids');
             $table->string('shipping');
-            $table->string('payment')->nullable();
+            // $table->string('payment')->nullable();
             $table->string('commentaire')->nullable();
             $table->string('etat')->default(OrderEnum::SAVE);
             $table->timestamps();
