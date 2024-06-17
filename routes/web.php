@@ -19,6 +19,8 @@ use App\Http\Controllers\SlideController;
 use App\Http\Controllers\TransportController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\ZoneController;
+use App\Livewire\Panier;
+use App\Livewire\Product;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Route;
 
@@ -63,14 +65,15 @@ Route::prefix('admin')->middleware('auth')->group(function () {
 
 Route::resource('order', OrderController::class)->only('store');
 Route::controller(CartController::class)->group(function () {
-    Route::get('panier', 'index')->name('cart.index');
-    Route::get('count', 'GetCount')->name('cart.count');
-    Route::get('trans/{id?}', 'GetTrans')->name('cart.trans');
-    Route::get('cart/trans', 'GetTransport')->name('cart.transport');
-    Route::get('cart/shipping/{country}/{transid}', 'GetShipping')->name('cart.shipping');
-    Route::get('cart/{product}', 'store')->name('cart.store');
-    Route::get('cart/update/{cart}/{qte}', 'update')->name('cart.update');
-    Route::delete('cart/delete/{id}', 'destroy')->name('cart.destroy');
+    // Route::get('panier', 'index')->name('cart.index');
+    // Route::get('count', 'GetCount')->name('cart.count');
+    // Route::get('devise', 'GetDevise')->name('cart.devise');
+    // Route::get('trans/{id?}', 'GetTrans')->name('cart.trans');
+    // Route::get('cart/trans', 'GetTransport')->name('cart.transport');
+    // Route::get('cart/shipping/{country}/{transid}', 'GetShipping')->name('cart.shipping');
+    // Route::get('cart/{product}', 'store')->name('cart.store');
+    // Route::get('cart/update/{cart}/{qte}', 'update')->name('cart.update');
+    // Route::delete('cart/delete/{id}', 'destroy')->name('cart.destroy');
 });
 Route::controller(LinkController::class)->group(function () {
     Route::get('/', 'home')->name('home');
@@ -79,23 +82,25 @@ Route::controller(LinkController::class)->group(function () {
     Route::get('getcategory', 'getCategory')->name('getCategory');
     Route::get('shop/show/{product}', 'shopshow')->name('shop.show');
 });
+Route::get('/shoplist', Product::class)->name('shop');
+Route::get('/panier', Panier::class)->name('panier');
 Route::post('contact/mail', ContactController::class)->name('contact.email');
-Route::inertia('contact', 'Contact')->name('contact');
-Route::inertia('about', 'About')->name('about');
-Route::inertia('livraison', 'Livraison')->name('livraison');
+Route::view('contact', 'contact')->name('contact');
+Route::view('about', 'about')->name('about');
+Route::view('livraison', 'livraison')->name('livraison');
 
 Route::controller(SitemapController::class)->group(function () {
     Route::get('sitemap/index', 'index')->name('sitemap.index');
     Route::get('sitemap/page', 'page')->name('sitemap.page');
     Route::get('sitemap/category', 'category')->name('sitemap.category');
     Route::get('sitemap/product', 'product')->name('sitemap.product');
-
 });
 
 Route::get('users/order', [OrderController::class, 'processPayment']);
-Route::get('order/invoice/{id}', [OrderController::class, 'invoice'])->name('order.invoice');
-Route::get('order/validate/{id}', [OrderController::class, 'invoice'])->name('order.invoice');
-Route::inertia('order/validate', 'Validate')->name('order.validate');
+Route::controller(OrderController::class)->group(function () {
+    Route::get('order/invoice/{id}', 'invoice')->name('order.invoice');
+    Route::get('order/validate/{ref}', 'valid')->name('order.validate');
+});
 // Route::get('test', function () {
 //     Artisan::call('optimize:clear');
 //     Artisan::call('db:wipe');

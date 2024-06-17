@@ -20,6 +20,11 @@ const props = defineProps({
         required: true,
         default: 0,
     },
+    link: {
+        type: String,
+        // required: false,
+        default: "",
+    },
     TotalQuantity: {
         type: Number,
         required: true,
@@ -38,6 +43,7 @@ const trans = ref([]);
 const page = usePage();
 const locale = page.props.locale === "fr" ? "fr-FR" : "en-US";
 const currency = page.props.locale === "fr" ? "EUR" : "USD";
+
 const totalFormat = new Intl.NumberFormat(locale, {
     style: "currency",
     currency: currency,
@@ -84,7 +90,6 @@ const getShipping = async () => {
             } else {
                 shipping.value = res.data;
                 form.livraison = res.data.id;
-                console.log(form.livraison);
             }
         })
         .catch(function (error) {
@@ -154,14 +159,14 @@ const decrement = async (produitId) => {
             console.log(error.response);
         });
 };
+
 const submit = () => {
     form.post(route("order.store"), {
-        onSuccess: () => {
+        onSuccess: (response) => {
             form.reset();
-            notify("Commande effectué avec success !", true);
         },
-        onError: () => {
-            notify(false);
+        onError: (errors) => {
+            notify(errors.message || "Une erreur s'est produite", false);
         },
     });
 };
@@ -209,14 +214,14 @@ const submit = () => {
                                             <div
                                                 class="border radius d-inline-flex"
                                             >
-                                                <button
+                                                <!-- <button
                                                     class="btn btn-small"
                                                     @click.prevent="
                                                         decrement(item.id)
                                                     "
                                                 >
                                                     <i class="fi-rs-minus"></i>
-                                                </button>
+                                                </button> -->
 
                                                 <input
                                                     type="number"
@@ -227,14 +232,14 @@ const submit = () => {
                                                     class="qty-val form-control"
                                                     style="max-width: 80px"
                                                 />
-                                                <button
+                                                <!-- <button
                                                     class="btn btn-small"
                                                     @click.prevent="
                                                         increment(item.id)
                                                     "
                                                 >
                                                     <i class="fi-rs-plus"></i>
-                                                </button>
+                                                </button> -->
                                             </div>
                                         </td>
 
@@ -270,6 +275,7 @@ const submit = () => {
                         </div>
                     </div>
                     <div class="col-md-4 order-1">
+                        <h5>NB : Le paiement sera effectué en CFA (XOF).</h5>
                         <div
                             v-show="Object.keys(props.items).length > 0"
                             class="table-responsive order_table text-center sticky-top"
@@ -520,33 +526,6 @@ const submit = () => {
                                 ></textarea>
                             </div>
                             <div class="col-md-4">
-                                <div
-                                    class="bt-1 border-color-1 mt-30 mb-30"
-                                ></div>
-                                <div class="payment_method">
-                                    <div class="mb-25">
-                                        <h5>Moyen de Paiment</h5>
-                                    </div>
-                                    <div class="payment_option">
-                                        <div class="custome-radio">
-                                            <input
-                                                class="form-check-input"
-                                                v-model="form.payment"
-                                                type="radio"
-                                                id="exampleRadios3"
-                                                checked
-                                            />
-                                            <label
-                                                class="form-check-label"
-                                                for="exampleRadios3"
-                                                data-bs-toggle="collapse"
-                                                data-target="#bankTranfer"
-                                                aria-controls="bankTranfer"
-                                                >Direct Bank Transfer</label
-                                            >
-                                        </div>
-                                    </div>
-                                </div>
                                 <button
                                     :class="{ 'opacity-25': form.processing }"
                                     :disabled="form.processing"

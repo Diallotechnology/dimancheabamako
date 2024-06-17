@@ -73,7 +73,7 @@ class OrderController extends Controller
             'merchantAttributes' => [
                 'redirectUrl' => $redirectUrl,
                 'cancelUrl' => $cancelUrl,
-                'cancelText' => 'Default Continue Shopping',
+                'cancelText' => session('locale') === 'fr' ? 'Continuer mes achats' : 'Continue Shopping',
             ],
         ];
     }
@@ -98,31 +98,32 @@ class OrderController extends Controller
 
     public function processPayment()
     {
-        $test = Order::find(1);
-        Mail::to('contact@dimancheabamako.com')->send(new OrderMail($test));
-        // $montant = 100;
-        // $currencyCode = 'XOF';
-        // $emailAddress = 'customer@test.com';
-        // $redirectUrl = 'https://mysite.com/redirect';
-        // $cancelUrl = route('home');
+        // $test = Order::find(1);
+        // $test2 = Mail::to('test@gmail.com')->send(new OrderMail($test));
+        // dd($test2);
+        $montant = 100;
+        $currencyCode = 'XOF';
+        $emailAddress = 'customer@test.com';
+        $redirectUrl = 'https://mysite.com/redirect';
+        $cancelUrl = route('home');
 
-        // $apikey = 'ZGU3NmY1YTgtYWZmYy00NWNjLWI1ZGItYTI1NzQzMzMwMDBhOmJjMjQwYjllLTY5YmEtNDVlYy1hZWZhLTU4YTliNTQ3OTdjZQ==';
-        // $realmName = 'OBMaliSandbox';
-        // $outlet = 'af106601-8e01-41b5-bbb9-6b7fc82b71e5';
+        $apikey = 'ZGU3NmY1YTgtYWZmYy00NWNjLWI1ZGItYTI1NzQzMzMwMDBhOmJjMjQwYjllLTY5YmEtNDVlYy1hZWZhLTU4YTliNTQ3OTdjZQ==';
+        $realmName = 'OBMaliSandbox';
+        $outlet = 'af106601-8e01-41b5-bbb9-6b7fc82b71e5';
 
-        // $accessToken = $this->getAccessToken($apikey, $realmName);
+        $accessToken = $this->getAccessToken($apikey, $realmName);
 
-        // if ($accessToken) {
-        //     $postData = $this->prepareTransactionData($montant, $currencyCode, $emailAddress, $redirectUrl, $cancelUrl);
-        //     $response = $this->createOrder($outlet, $accessToken, $postData);
+        if ($accessToken) {
+            $postData = $this->prepareTransactionData($montant, $currencyCode, $emailAddress, $redirectUrl, $cancelUrl);
+            $response = $this->createOrder($outlet, $accessToken, $postData);
 
-        //     if ($response && isset($response['_links']['payment']['href'])) {
-        //         return redirect($response['_links']['payment']['href']);
-        //     }
-        // }
+            if ($response && isset($response['_links']['payment']['href'])) {
+                return redirect($response['_links']['payment']['href']);
+            }
+        }
 
-        // // Gérer les cas d'erreur de manière appropriée
-        // return response()->json(['error' => 'Unable to process payment'], 500);
+        // Gérer les cas d'erreur de manière appropriée
+        return response()->json(['error' => 'Unable to process payment'], 500);
     }
 
     /**
@@ -130,24 +131,18 @@ class OrderController extends Controller
      */
     public function store(StoreOrderRequest $request)
     {
-        DB::transaction(function () use ($request) {
+        $link = '';
+        $transactionSucceeded = false;
+        $user = auth()->check() ? auth()->user()->id : session('user_id', '');
 
-            $user = '';
-            if (! auth()->check()) {
-                if (session()->has('user_id')) {
-                    $user = session()->get('user_id');
-                }
-            } else {
-                $user = auth()->user()->id;
-            }
+        if (CartFacade::session($user)->getContent()->count() == 0) {
+            return response()->json([
+                'message' => 'Panier vide!',
+                'type' => true,
+            ]);
+        }
 
-            if (CartFacade::session($user)->getContent()->count() == 0) {
-                return response()->json([
-                    'message' => 'Panier vide!',
-                    'type' => true,
-                ]);
-            }
-
+        DB::transaction(function () use ($request, $user, &$link, &$transactionSucceeded) {
             if ($request->password && ! empty($request->password)) {
                 User::firstOrCreate(['email' => $request->email], [
                     'name' => $request->prenom,
@@ -165,13 +160,17 @@ class OrderController extends Controller
                 'contact' => $request->contact,
                 'pays' => $pays->nom,
             ]);
+
             // get user cart content
             $panier = CartFacade::session($user);
             // get product poids sum
             $totalWeight = $panier->getContent()->pluck('attributes')->sum('poids');
             $shipping = Shipping::findOrFail($request->livraison);
+
             // register client order infos
             $data = new Order([
+                'trans_ref' => uniqid(),
+                'reference' => uniqid(),
                 'payment' => $request->payment,
                 'adresse' => $request->adresse,
                 'postal' => $request->postal,
@@ -180,26 +179,22 @@ class OrderController extends Controller
                 'poids' => $totalWeight.' Kg',
                 'shipping' => $shipping->montant,
                 'transport_id' => $request->transport_id,
-                'commentaire' => $pays->commentaire,
+                'commentaire' => $request->commentaire,
             ]);
+
             // save client order infos
             $order = $client->orders()->save($data);
 
             // Variable pour suivre si une erreur de stock est survenue
             $erreurStockInsuffisant = false;
 
-            // dd($panier);
             // add pivot table value
-            $panier->getContent()->each(function ($product) use ($order, $erreurStockInsuffisant) {
+            $panier->getContent()->each(function ($product) use ($order, &$erreurStockInsuffisant) {
                 if ($product->quantity > $product->associatedModel->stock) {
                     // Indique qu'une erreur s'est produite
                     $erreurStockInsuffisant = true;
 
-                    // Arrête l'itération de la boucle
-                    return response()->json([
-                        'message' => "Quantité demandée d'un produit non disponible!!",
-                        'type' => \false,
-                    ]);
+                    return false; // Arrête l'itération de la boucle
                 } else {
                     $order->products()->attach($product->associatedModel->id, [
                         'quantity' => $product->quantity,
@@ -218,8 +213,8 @@ class OrderController extends Controller
                 return back();
             }
 
-            // generate payement link
-            $montant = $shipping->montant + $panier->getTotal();
+            // generate payment link
+            $montant = intval($panier->getTotal()) + $shipping->montant;
             $currencyCode = 'XOF';
             $emailAddress = $request->email;
             $redirectUrl = route('order.validate');
@@ -230,25 +225,26 @@ class OrderController extends Controller
             $outlet = 'af106601-8e01-41b5-bbb9-6b7fc82b71e5';
 
             $accessToken = $this->getAccessToken($apikey, $realmName);
-
             if ($accessToken) {
                 $postData = $this->prepareTransactionData($montant, $currencyCode, $emailAddress, $redirectUrl, $cancelUrl);
                 $response = $this->createOrder($outlet, $accessToken, $postData);
-
                 if ($response && isset($response['_links']['payment']['href'])) {
+                    $link = $response['_links']['payment']['href'];
                     // save temporaly order
                     $order->trans_ref = $response['reference'];
                     $order->save();
                     // Supprime le contenu du panier utilisateur
                     CartFacade::session($user)->clear();
-
-                    return redirect($response['_links']['payment']['href']);
+                    $transactionSucceeded = true;
                 }
             }
-
-            // Gérer les cas d'erreur de manière appropriée
-            return response()->json(['error' => 'Unable to process payment'], 500);
         });
+
+        if ($transactionSucceeded && $link) {
+            return redirect()->away($link);
+        } else {
+            return response()->json(['error' => 'Unable to process payment'], 500);
+        }
     }
 
     public function invoice(int $id)
@@ -258,9 +254,11 @@ class OrderController extends Controller
         return view('invoice', compact(['order']));
     }
 
-    public function valid(Order $order)
+    public function valid(string $ref)
     {
-        return Inertia::render('Validate', compact('order'));
+        dd($ref);
+
+        return view('Validate', compact('order'));
     }
 
     /**

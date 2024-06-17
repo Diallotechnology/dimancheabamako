@@ -36,10 +36,10 @@ class Product extends Model
         return $query->where('stock', '>=', 1);
     }
 
-    public function getPrixFinal(): float|int
+    public function getPrixFinal(): int
     {
         // Récupération du taux de conversion et du symbole de devise en fonction de la locale de la session
-        $tauxConversion = session('locale') === 'fr' ? Devise::whereType('EUR')->value('taux') : Devise::whereType('USD')->value('taux');
+        // $tauxConversion = session('locale') === 'fr' ? Devise::whereType('EUR')->value('taux') : Devise::whereType('USD')->value('taux');
 
         // Si une promotion est associée au produit, calculer le prix avec réduction
         if ($this->promotions->isNotEmpty()) {
@@ -47,13 +47,13 @@ class Product extends Model
             $prix = $this->prix * (1 - $promo->reduction / 100);
 
             // Conversion du prix en devise locale et formatage
-            $prixFormat = number_format($prix / $tauxConversion, 2);
+            // $prixFormat = number_format($prix / $tauxConversion, 2);
 
             // Retour du prix formaté avec devise
-            return $prixFormat;
+            return $prix;
         } else {
-
-            return number_format($this->prix / $tauxConversion, 2);
+            return $this->prix;
+            // return number_format($this->prix / $tauxConversion, 2);
         }
 
     }
@@ -68,11 +68,25 @@ class Product extends Model
 
     public function getPrixFinalAttribute(): string
     {
-        $deviseSymbole = session('locale') === 'fr' ? '€' : '$';
+        // Récupération du taux de conversion et du symbole de devise en fonction de la locale de la session
+        $tauxConversion = session('locale') === 'fr' ? Devise::whereType('EUR')->value('taux') : Devise::whereType('USD')->value('taux');
         // Conversion du prix en devise locale et formatage
-        $prixFormat = $this->getPrixFinal();
+        $deviseSymbole = session('locale') === 'fr' ? '€' : '$';
+        // Si une promotion est associée au produit, calculer le prix avec réduction
+        if ($this->promotions->isNotEmpty()) {
+            $promo = $this->promotions()->first();
+            $prix = $this->prix * (1 - $promo->reduction / 100);
 
-        return $prixFormat.' '.$deviseSymbole;
+            // Conversion du prix en devise locale et formatage
+            $prixFormat = number_format($prix / $tauxConversion, 2);
+
+            // Retour du prix formaté avec devise
+            return $prixFormat.' '.$deviseSymbole;
+        } else {
+            return number_format($this->prix / $tauxConversion, 2).' '.$deviseSymbole;
+        }
+
+        // return $prixFormat.' '.$deviseSymbole;
     }
 
     public function getPrixPromoAttribute(): string
@@ -168,7 +182,9 @@ class Product extends Model
 
     public function getCoverAttribute(): string
     {
-        return Storage::url($this->attributes['cover']);
+
+        return asset('assets/imgs/shop/product-2-2.jpg');
+        // return Storage::url($this->attributes['cover']);
     }
 
     public function DocLink(): string

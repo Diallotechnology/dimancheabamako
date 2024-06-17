@@ -18,13 +18,13 @@ return new class extends Migration
             $table->foreignId('country_id')->constrained()->cascadeOnUpdate()->cascadeOnDelete();
             $table->foreignId('transport_id')->constrained()->cascadeOnUpdate()->cascadeOnDelete();
             $table->string('reference')->nullable()->unique();
-            $table->string('trans_ref')->unique();
+            $table->string('trans_ref')->nullable()->unique();
             $table->string('adresse');
             $table->string('postal')->nullable();
             $table->string('ville');
             $table->string('poids');
             $table->string('shipping');
-            $table->string('payment');
+            $table->string('payment')->nullable();
             $table->string('commentaire')->nullable();
             $table->string('etat')->default(OrderEnum::SAVE);
             $table->timestamps();

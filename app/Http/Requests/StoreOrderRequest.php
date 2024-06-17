@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rules;
 
@@ -37,5 +38,15 @@ class StoreOrderRequest extends FormRequest
             'commentaire' => 'nullable|string',
             'password' => 'nullable|string',
         ];
+    }
+
+    protected function prepareForValidation()
+    {
+        $this->merge(['payment' => 'Visa']);
+    }
+
+    protected function failedValidation(Validator $validator)
+    {
+        // return toastr()->error('la validation a echoué verifiez vos informations!');
     }
 }

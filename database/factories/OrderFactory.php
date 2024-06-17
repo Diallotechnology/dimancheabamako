@@ -21,6 +21,7 @@ class OrderFactory extends Factory
             'country_id' => rand(1, 10),
             'transport_id' => rand(1, 2),
             'reference' => uniqid(),
+            'trans_ref' => uniqid(),
             'adresse' => fake()->streetAddress(),
             'postal' => fake()->postcode(),
             'ville' => fake()->city(),

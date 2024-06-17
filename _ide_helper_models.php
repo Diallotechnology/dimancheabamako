@@ -146,6 +146,7 @@ namespace App\Models{
  * @property int $country_id
  * @property int $transport_id
  * @property string|null $reference
+ * @property string $trans_ref
  * @property string $adresse
  * @property string|null $postal
  * @property string $ville
@@ -177,6 +178,7 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder|Order wherePostal($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Order whereReference($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Order whereShipping($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Order whereTransRef($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Order whereTransportId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Order whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Order whereVille($value)

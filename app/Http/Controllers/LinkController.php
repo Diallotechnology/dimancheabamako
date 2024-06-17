@@ -27,7 +27,8 @@ class LinkController extends Controller
 
         $slide = Slide::all();
 
-        return Inertia::render('Home', \compact('popular', 'latest', 'slide'));
+        return view('index', \compact('popular', 'latest', 'slide'));
+        // return Inertia::render('Home', \compact('popular', 'latest', 'slide'));
     }
 
     public function langchange(string $lang)
@@ -54,7 +55,8 @@ class LinkController extends Controller
         $categorie = Category::all();
         $desc = $category ? $category->description : '';
 
-        return Inertia::render('Shop/Index', compact('categorie', 'filter', 'rows', 'desc'));
+        // return \view('Shop/Index', compact('categorie', 'filter', 'rows', 'desc'));
+        // return Inertia::render('Shop/Index', compact('categorie', 'filter', 'rows', 'desc'));
     }
 
     public function getCategory()

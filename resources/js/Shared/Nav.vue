@@ -447,22 +447,7 @@ onUnmounted(() => {
                     /></a>
                     <a href="#"
                         ><img
-                            v-bind:src="'/assets/imgs/theme/icons/icon-twitter.svg'"
-                            alt=""
-                    /></a>
-                    <a href="#"
-                        ><img
                             v-bind:src="'/assets/imgs/theme/icons/icon-instagram.svg'"
-                            alt=""
-                    /></a>
-                    <a href="#"
-                        ><img
-                            v-bind:src="'/assets/imgs/theme/icons/icon-pinterest.svg'"
-                            alt=""
-                    /></a>
-                    <a href="#"
-                        ><img
-                            v-bind:src="'/assets/imgs/theme/icons/icon-youtube.svg'"
                             alt=""
                     /></a>
                 </div>

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Country;
+use App\Models\Devise;
 use App\Models\Product;
 use App\Models\Shipping;
 use Darryldecode\Cart\Facades\CartFacade;
@@ -39,7 +40,8 @@ class CartController extends Controller
         // get total qte
         $TotalQuantity = CartFacade::session($this->get_userid())->getTotalQuantity();
         // get total price
-        $Total = CartFacade::session($this->get_userid())->getTotal();
+        $tauxConversion = session('locale') === 'fr' ? Devise::whereType('EUR')->value('taux') : Devise::whereType('USD')->value('taux');
+        $Total = floatval(number_format(CartFacade::session($this->get_userid())->getTotal() / $tauxConversion, 2));
         $totalWeight = $items->pluck('attributes')->sum('poids');
         $country = Country::all('nom', 'id');
 
@@ -49,6 +51,17 @@ class CartController extends Controller
     /**
      * Show the form for creating a new resource.
      */
+    public function GetDevise(): int
+    {
+        if (session('locale') === 'fr') {
+            $taux = Devise::whereType('EUR')->value('taux');
+        } elseif (session('locale') === 'en') {
+            $taux = Devise::whereType('USD')->value('taux');
+        }
+
+        return $taux;
+    }
+
     public function GetCount(): int
     {
         return CartFacade::session($this->get_userid())->getContent()->count();
