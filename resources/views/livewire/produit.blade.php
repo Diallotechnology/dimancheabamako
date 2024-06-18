@@ -15,12 +15,10 @@
                         </div>
                         <div class="sidebar-widget widget_search mb-50">
                             <div class="search-form">
-                                <form action="#">
-                                    <div>
-                                        <input v-model="search" type="text" placeholder="Recherche..."
-                                            class="form-control" />
-                                    </div>
-                                </form>
+                                <div>
+                                    <input wire:model.live.debounce.200ms="search" type="text"
+                                        placeholder="Recherche..." class="form-control" />
+                                </div>
                             </div>
                         </div>
                     </div>

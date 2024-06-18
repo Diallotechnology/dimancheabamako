@@ -21,7 +21,7 @@
                             </thead>
                             <tbody>
                                 @forelse ($items as $item)
-                                <tr :key="$item->id">
+                                <tr wire:key="{{ $item->id }}">
                                     <td class="image product-thumbnail">
                                         <img src="
                                                 {{ $item->associatedModel->cover }}

@@ -21,6 +21,7 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\ZoneController;
 use App\Livewire\Panier;
 use App\Livewire\Product;
+use App\Livewire\Produit;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Route;
 
@@ -82,7 +83,8 @@ Route::controller(LinkController::class)->group(function () {
     Route::get('getcategory', 'getCategory')->name('getCategory');
     Route::get('shop/show/{product}', 'shopshow')->name('shop.show');
 });
-Route::get('/shoplist', Product::class)->name('shop');
+Route::get('/shoplist', Produit::class)->name('shop');
+// Route::get('/produit/show/{product}', Produit::class)->name('shop.show');
 Route::get('/panier', Panier::class)->name('panier');
 Route::post('contact/mail', ContactController::class)->name('contact.email');
 Route::view('contact', 'contact')->name('contact');

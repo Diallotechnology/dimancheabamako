@@ -66,13 +66,13 @@ class LinkController extends Controller
 
     public function shopshow(Product $product)
     {
-        $product->append(['prix_promo', 'prix_format', 'reduction']);
+        // $product->append(['prix_promo', 'prix_format', 'reduction']);
         $product->load('images');
 
         $rows = Product::where('categorie_id', $product->categorie_id)->ByStock()->take(4)->get();
-        $rows->append(['prix_promo', 'prix_format', 'reduction']);
+        // $rows->append(['prix_promo', 'prix_format', 'reduction']);
         $category = Category::all();
 
-        return Inertia::render('Shop/Show', compact('product', 'rows', 'category'));
+        return view('product-show', compact('product', 'rows', 'category'));
     }
 }
