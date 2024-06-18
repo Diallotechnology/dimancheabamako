@@ -53,8 +53,7 @@ class Panier extends Component
             $this->shipping = Shipping::whereZoneId($pays->zone_id)
                 ->whereTransportId($this->transport_id)
                 ->whereRelation('poids', function ($query) use ($totalWeight) {
-                    $query->where('min', '<=', $totalWeight)
-                        ->where('max', '>=', $totalWeight);
+                    $query->where('min', '<=', $totalWeight)->where('max', '>=', $totalWeight);
                 })->firstOrFail();
 
         } catch (ModelNotFoundException $e) {
@@ -65,17 +64,8 @@ class Panier extends Component
         }
     }
 
-    public function deleteProduct(int $id)
-    {
-        $product = CartFacade::session($this->get_userid())->get($id);
-        CartFacade::session($this->get_userid())->remove($product->id);
-
-        return $this->alert(
-            'success', 'Produit supprimer du panier avec success!',
-        );
-    }
-
     #[On('productUpdate')]
+    #[On('productDelete')]
     public function render()
     {
         // get panier content

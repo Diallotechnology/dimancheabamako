@@ -1,3 +1,6 @@
+@php
+$cat = App\Models\Category::all();
+@endphp
 <header class="header-area header-style-1 header-height-2">
     <div class="header-middle header-middle-ptb-1 d-none d-lg-block">
         <div id="google_translate_element"></div>
@@ -13,25 +16,13 @@
                                 <li>
                                     <a class="language-dropdown-active" href="#">
                                         <i class="fi-rs-euro"></i>
-                                        {{
-                                        session('locale') === "fr"
-                                        ? "Euro"
-                                        : "Dollar"
-                                        }}
+                                        {{ session('locale') === "fr" ? "Euro" : "Dollar" }}
                                         <i class="fi-rs-angle-small-down"></i>
                                     </a>
                                     <ul class="language-dropdown">
                                         <li>
-                                            <a href="
-                                                    {{ route('language', 'fr') }}
-                                                ">
-                                                Euro
-                                            </a>
-                                            <a href="
-                                                    {{ route('language', 'fr') }}
-                                                ">
-                                                Dollars
-                                            </a>
+                                            <a href="{{ route('language', 'fr') }}">Euro</a>
+                                            <a href="{{ route('language', 'fr') }}">Dollars</a>
                                         </li>
                                     </ul>
                                 </li>
@@ -39,31 +30,17 @@
                                 <li>
                                     <a class="language-dropdown-active" href="#">
                                         <i class="fi-rs-world"></i>
-                                        {{
-                                        session('locale') === "fr"
-                                        ? "Français"
-                                        : "English"
-                                        }}
+                                        {{ session('locale') === "fr" ? "Français" : "English" }}
                                         <i class="fi-rs-angle-small-down"></i>
                                     </a>
                                     <ul class="language-dropdown">
                                         <li>
-                                            <a v-on:click="
-                                                    selectElement(
-                                                        'goog-te-combo',
-                                                        'fr'
-                                                    )
-                                                " href="
-                                                    {{ route('language', 'fr') }}
-                                                "><img src="{{ asset('assets/imgs/theme/flag-fr.png') }}"
-                                                    alt="flag-us" />
-
+                                            <a href="{{ route('language', 'fr') }}">
+                                                <img src="{{ asset('assets/imgs/theme/flag-fr.png') }}" alt="flag-us" />
                                                 Français
                                             </a>
-                                            <a href="
-                                                   {{ route('language', 'en')}}
-                                                "><img src="{{ asset('assets/imgs/theme/flag-us.png') }}"
-                                                    alt="flag-us" />
+                                            <a href="{{ route('language', 'en')}}">
+                                                <img src="{{ asset('assets/imgs/theme/flag-us.png') }}" alt="flag-us" />
                                                 English
                                             </a>
                                         </li>
@@ -112,30 +89,21 @@
                     <div class="main-menu main-menu-padding-1 main-menu-lh-2 d-none d-lg-block">
                         <nav>
                             <ul>
-                                <li>
-                                    <a href="{{ route('home') }}">Accueil</a>
-
-                                </li>
+                                <x-nav-link url='home' name="Accueil" />
                                 <li>
                                     <a href="">Categorie
                                         <i class="fi-rs-angle-down"></i></a>
                                     <ul class="sub-menu">
-                                        {{-- <li v-for="row in rows" :key="row.id">
-                                            <a :href="
-                                                    route('shop', row.id)
-                                                ">{{ row.nom }}</a>
-                                        </li> --}}
+                                        @foreach($cat as $row)
+                                        <li>
+                                            <a href="{{ route('shop', $row->id) }}">{{ $row->nom }}</a>
+                                        </li>
+                                        @endforeach
                                     </ul>
                                 </li>
-                                <li>
-                                    <a href="{{ route('about') }}">A propos</a>
-                                </li>
-                                <li>
-                                    <a href="{{ route('livraison') }}">Livraison</a>
-                                </li>
-                                <li>
-                                    <a href="{{ route('contact') }}">Contact</a>
-                                </li>
+                                <x-nav-link url='about' name="A propos" />
+                                <x-nav-link url='livraison' name="Livraison" />
+                                <x-nav-link url='contact' name="Contact" />
                             </ul>
                         </nav>
                     </div>
@@ -191,28 +159,20 @@
                 <!-- mobile menu start -->
                 <nav>
                     <ul class="mobile-menu">
-                        <li>
-                            <a href="{{ route('home') }}">Accueil</a>
-                        </li>
-
+                        <x-nav-link url='home' name="Accueil" />
                         <li class="menu-item-has-children">
                             <span class="menu-expand"></span><a href="#">Categories</a>
                             <ul class="dropdown">
-                                {{-- <li v-for="row in rows" :key="row.id">
-                                    <a @click="closeSidebar()" :href="route('shop', row.id)">{{ row.nom }}</a>
-                                </li> --}}
+                                <li>
+                                    @foreach($cat as $row)
+                                    <a href="{{ route('shop', $row->id) }}">{{ $row->nom }}</a>
+                                    @endforeach
+                                </li>
                             </ul>
                         </li>
-
-                        <li>
-                            <a href="{{ route('about') }}">A propos</a>
-                        </li>
-                        <li>
-                            <a href="{{ route('livraison') }}">Livraison</a>
-                        </li>
-                        <li>
-                            <a href="{{ route('contact') }}">Contact</a>
-                        </li>
+                        <x-nav-link url='about' name="A propos" />
+                        <x-nav-link url='livraison' name="Livraison" />
+                        <x-nav-link url='contact' name="Contact" />
                         <li class="menu-item-has-children">
                             <span class="menu-expand"></span><a href="#">Language</a>
                             <ul class="dropdown">
@@ -228,7 +188,7 @@
             </div>
             <div class="mobile-header-info-wrap mobile-header-border">
                 <div class="single-mobile-header-info">
-                    <a href="#">(+01) - 2345 - 6789 </a>
+                    <a href="#">+223 66 03 51 54 </a>
                 </div>
             </div>
             <div class="mobile-social-icon">

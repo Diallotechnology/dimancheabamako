@@ -16,7 +16,7 @@
                     </div>
                     @if ($news == true)
                     <div class="product-badges product-badges-position product-badges-mrg">
-                        <span class="new">Nouveauté</span>
+                        <span class="new">{{ GoogleTranslate::trans("Nouveauté", session('locale')) }}</span>
                     </div>
                     @endif
                     @if ($hot == true)
@@ -41,9 +41,9 @@
                             {{ $item->nom }}
                         </a>
                     </h2>
-                    <span>Taille {{ $item->taille }}</span>
+                    <span>{{ GoogleTranslate::trans("Taille " {{ $item->taille }}, session('locale')) }}</span>
                     <br />
-                    <span v-show="item.color">Couleur {{ $item->color }}</span>
+                    <span v-show="item.color">{{ GoogleTranslate::trans("Couleur " {{ $item->color }}, session('locale')) }}</span>
                     <div class="product-price">
                         <span>
                             {{
@@ -61,7 +61,7 @@
                     <div class="product-action-1 show">
                         <button type="button" aria-label="Acheté" class="action-btn" wire:click='add({{ $item->id }})'>
                             <i class="fi-rs-shopping-bag-add"></i>
-                            Acheté
+                            {{ GoogleTranslate::trans("Acheté", session('locale')) }}
                         </button>
                     </div>
                 </div>

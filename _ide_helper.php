@@ -22091,6 +22091,7 @@ namespace  {
             class View extends \Illuminate\Support\Facades\View {}
             class Vite extends \Illuminate\Support\Facades\Vite {}
             class Countries extends \Monarobase\CountryList\CountryListFacade {}
+            class GoogleTranslate extends \Stichoza\GoogleTranslate\GoogleTranslate {}
             class Cart extends \Darryldecode\Cart\Facades\CartFacade {}
             class Livewire extends \Livewire\Livewire {}
             class Flare extends \Spatie\LaravelIgnition\Facades\Flare {}

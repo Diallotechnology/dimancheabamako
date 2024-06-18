@@ -5,8 +5,7 @@
                 <div class="col-md-12">
                     <div class="mb-20">
                         <h4>
-                            Panier
-                            {{ $items->count() }} element
+                            Panier {{ $items->count() }} element
                         </h4>
                     </div>
                     <div class="table-responsive order_table text-center">
@@ -23,26 +22,17 @@
                                 @forelse ($items as $item)
                                 <tr wire:key="{{ $item->id }}">
                                     <td class="image product-thumbnail">
-                                        <img src="
-                                                {{ $item->associatedModel->cover }}
-                                            " alt="#" />
-                                        <h5>
-                                            {{ $item->name }}
-                                        </h5>
+                                        <img src="{{ $item->associatedModel->cover }}" alt="cover" />
+                                        <h5>{{ $item->name }}</h5>
                                     </td>
                                     <td class="text-center" data-title="Stock">
                                         <div class="border radius d-inline-flex">
                                             <livewire:update :row="$item" :key="$item->id" />
                                         </div>
                                     </td>
-                                    <td>
-                                        {{ $item->associatedModel->prix_final }}
-                                    </td>
+                                    <td>{{ $item->associatedModel->prix_final }}</td>
                                     <td class="action" data-title="Remove">
-                                        <button wire:click="deleteProduct({{ $item->id }})"
-                                            class="btn-small btn-danger text-white">
-                                            <i class="fi-rs-trash"></i>
-                                        </button>
+                                        <livewire:delete :id="$item->id" :key="$item->id" />
                                     </td>
                                 </tr>
                                 @empty

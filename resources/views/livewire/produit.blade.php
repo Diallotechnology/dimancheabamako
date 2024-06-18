@@ -28,9 +28,7 @@
                             <div class="product-img-action-wrap">
                                 <div class="product-img product-img-zoom">
                                     <div class="product-img-inner">
-                                        <a href="
-                                                {{ route('shop.show', $row->id) }}
-                                            ">
+                                        <a href="{{ route('shop.show', $row->id) }}">
                                             <img class="default-img" src="{{ $row->cover }}" alt="produit image" />
                                             <img class="hover-img" src="{{ $row->cover }}" alt="produit image hover" />
                                         </a>
@@ -72,21 +70,21 @@
                                 <p class="mt-15">
                                     Categorie: {{ $row->categorie->nom }}
                                     <br />
-                                    Taille: {{ $row->taille }} <br />
+                                    {{ GoogleTranslate::trans("Taille: ".$row->taille, session('locale')) }} <br />
                                 </p>
 
                                 <div class="product-action-1 show">
                                     <button type="button" aria-label="Acheté" class="action-btn"
                                         wire:click='add({{ $row->id }})'>
                                         <i class="fi-rs-shopping-bag-add"></i>
-                                        Acheté
+                                        {{ GoogleTranslate::trans("Acheté", session('locale')) }}
                                     </button>
                                 </div>
                             </div>
                         </div>
                         @empty
                         <h4 class="text-center my-5">
-                            Aucun produit disponible
+                            {{ GoogleTranslate::trans("Aucun produit disponible", session('locale')) }}
                         </h4>
                         @endforelse
                     </div>
@@ -114,7 +112,6 @@
             </div>
         </div>
     </section>
-
 </div>
 @script
 <script>

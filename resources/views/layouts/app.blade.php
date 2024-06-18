@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en-US">
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 
 <head>
     <meta charset="utf-8">
@@ -76,14 +76,16 @@
                 <div class="modal-body">
                     <div class="cart-action text-center m-3">
                         <h4 class="my-3">
-                            Produit ajouter au panier avec success!
+                            {{ GoogleTranslate::trans("Produit ajouter au panier avec success!", session('locale')) }}
                         </h4>
-                        <a class="btn mr-10 mb-sm-15" href="{{ route('panier') }}"><i
-                                class="fi-rs-shuffle mr-10"></i>Finaliser ma
-                            commande</a>
-                        <a class="btn" aria-label="Close" href="{{ route('home') }}"><i
-                                class="fi-rs-shopping-bag mr-10"></i>Continue
-                            Shopping</a>
+                        <a class="btn mr-10 mb-sm-15" href="{{ route('panier') }}">
+                            <i class="fi-rs-shuffle mr-10"></i>
+                                {{ GoogleTranslate::trans("Finaliser ma commande", session('locale')) }}
+                        </a>
+                        <a class="btn" aria-label="Close" href="{{ route('home') }}">
+                            <i class="fi-rs-shopping-bag mr-10"></i>
+                            {{ GoogleTranslate::trans("Continue Shopping", session('locale')) }}
+                        </a>
                     </div>
                 </div>
             </div>
