@@ -13,7 +13,7 @@ trait CartAction
 {
     use LivewireAlert;
 
-    private function get_userid(): string
+    private function get_userid(): string|int
     {
         if (! auth()->check()) {
             if (session()->has('user_id')) {

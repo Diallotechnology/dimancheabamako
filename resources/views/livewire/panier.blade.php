@@ -58,7 +58,13 @@
                             <tr>
                                 <th>Livraison</th>
                                 <td>
-                                    <em>{{ $shipping ? $shipping->montant_devise : '' }}</em>
+                                    <em>
+                                        @isset($shipping)
+                                        {{ session('locale') === 'fr' ? $shipping->montant_devise.' €' :
+                                        $shipping->montant_devise.' $'
+                                        }}
+                                        @endisset
+                                    </em>
                                 </td>
                             </tr>
                             <tr>
@@ -121,8 +127,8 @@
                                     <label class="text-uppercase form-label">Pays de livraison</label>
                                     <select class="form-select" required name="country_id" wire:model.live='country_id'
                                         wire:change='GetTrans'>
-                                        <option selected disabled value="">
-                                            selectionner
+                                        <option selected value="">
+                                            selectionner un pays
                                         </option>
                                         @foreach ($country as $item)
                                         <option value="{{ $item->id }}">
@@ -141,7 +147,7 @@
                                     <label class="text-uppercase form-label">Transporteur</label>
                                     <select class="form-select" required name="transport_id" wire:change="GetShipping()"
                                         wire:model.live='transport_id'>
-                                        <option selected disabled value="">
+                                        <option selected value="">
                                             selectionner un transporteur
                                         </option>
                                         @foreach ($trans as $item)
@@ -149,8 +155,6 @@
                                             {{ $item->nom }}
                                         </option>
                                         @endforeach
-                                        <option value="hhh">hhh</option>
-
                                     </select>
                                 </div>
                             </div>

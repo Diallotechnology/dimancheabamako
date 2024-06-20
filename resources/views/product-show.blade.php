@@ -1,66 +1,4 @@
 <x-app-layout>
-    <style>
-        .swiper {
-            width: 100%;
-            height: 100%;
-        }
-
-        .swiper-slide {
-            text-align: center;
-            font-size: 18px;
-            background: #fff;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-
-        .swiper-slide img {
-            display: block;
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-
-        .swiper {
-            width: 100%;
-            height: 300px;
-            margin-left: auto;
-            margin-right: auto;
-        }
-
-        .swiper-slide {
-            background-size: cover;
-            background-position: center;
-        }
-
-        .mySwiper2 {
-            height: 80%;
-            width: 100%;
-        }
-
-        .mySwiper {
-            height: 20%;
-            box-sizing: border-box;
-            padding: 10px 0;
-        }
-
-        .mySwiper .swiper-slide {
-            width: 25%;
-            height: 100%;
-            opacity: 0.4;
-        }
-
-        .mySwiper .swiper-slide-thumb-active {
-            opacity: 1;
-        }
-
-        .swiper-slide img {
-            display: block;
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-    </style>
     <section class="mt-50 mb-50">
         <div class="container">
             <div class="row">
@@ -68,44 +6,25 @@
                     <div class="product-detail accordion-detail mb-4">
                         <div class="row mb-50">
                             <div class="col-md-6 col-sm-12 col-xs-12">
-                                {{-- <swiper :modules="[Thumbs]" :thumbs="{ swiper: thumbsSwiper }">
-                                    <swiper-slide v-for="row in product.images" :key="row"><img v-bind:src="row.chemin"
-                                            alt="product image" /></swiper-slide>
-                                </swiper>
-
-                                <swiper :modules="[Thumbs]" watch-slides-progress @swiper="setThumbsSwiper"
-                                    :spaceBetween="10" :slidesPerView="4" :freeMode="true" :watchSlidesProgress="true">
-                                    <swiper-slide v-for="row in product.images" :key="row"><img v-bind:src="row.chemin"
-                                            alt="product image" /></swiper-slide>
-                                </swiper> --}}
                                 <div style="--swiper-navigation-color: #fff; --swiper-pagination-color: #fff"
                                     class="swiper mySwiper2">
                                     <div class="swiper-wrapper">
+                                        @foreach ($product->images as $row)
                                         <div class="swiper-slide">
-                                            <img src="https://swiperjs.com/demos/images/nature-1.jpg" />
+                                            <img src="{{ $row->chemin }}" />
                                         </div>
-                                        <div class="swiper-slide">
-                                            <img src="https://swiperjs.com/demos/images/nature-2.jpg" />
-                                        </div>
-                                        <div class="swiper-slide">
-                                            <img src="https://swiperjs.com/demos/images/nature-3.jpg" />
-                                        </div>
+                                        @endforeach
                                     </div>
                                     <div class="swiper-button-next"></div>
                                     <div class="swiper-button-prev"></div>
                                 </div>
                                 <div thumbsSlider="" class="swiper mySwiper">
                                     <div class="swiper-wrapper">
+                                        @foreach ($product->images as $row)
                                         <div class="swiper-slide">
-                                            <img src="https://swiperjs.com/demos/images/nature-1.jpg" />
+                                            <img src="{{ $row->chemin }}" />
                                         </div>
-                                        <div class="swiper-slide">
-                                            <img src="https://swiperjs.com/demos/images/nature-2.jpg" />
-                                        </div>
-                                        <div class="swiper-slide">
-                                            <img src="https://swiperjs.com/demos/images/nature-3.jpg" />
-                                        </div>
-
+                                        @endforeach
                                     </div>
                                 </div>
                                 <!-- End Gallery -->

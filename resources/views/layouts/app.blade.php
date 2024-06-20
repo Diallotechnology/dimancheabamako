@@ -30,41 +30,75 @@
     <meta name="twitter:image" content="{{ asset('assets/imgs/theme/logo_meta_tag.png') }}">
     <!-- Favicon -->
     <link rel="shortcut icon" type="image/x-icon" href="{{ asset('assets/imgs/theme/favicon.svg') }}">
-    <title>E-commerce Dimanche à Bamako - Vente de Bazin, Getzner Magnum, Boubou et Robes</title>
+    <title>{{ $title ?? 'E-commerce Dimanche à Bamako - Vente de Bazin, Getzner Magnum, Boubou et Robes' }}</title>
 
     <link href="{{ asset('assets/css/main.css') }}" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
-
-    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
-    <script>
-        var swiper = new Swiper(".mySwiper", {
-      spaceBetween: 10,
-      slidesPerView: 4,
-      freeMode: true,
-      watchSlidesProgress: true,
-    });
-    var swiper2 = new Swiper(".mySwiper2", {
-      spaceBetween: 10,
-      navigation: {
-        nextEl: ".swiper-button-next",
-        prevEl: ".swiper-button-prev",
-      },
-      thumbs: {
-        swiper: swiper,
-      },
-    });
-    </script>
-    {{-- @routes --}}
-    {{-- @vite(['resources/js/app.js', "resources/js/Pages/{$page['component']}.vue"]) --}}
-    {{--
-    <link href="{{ asset('build/assets/app-C5SX0j15.css') }}" rel="stylesheet" /> --}}
-    {{-- <script type="module" src="{{ asset('build/assets/app-AmYcn-z2.js')}}"></script> --}}
-
-    {{-- @inertiaHead --}}
 </head>
 
 <body>
-    {{-- @inertia --}}
+    <style>
+        .swiper {
+            width: 100%;
+            height: 100%;
+        }
+
+        .swiper-slide {
+            text-align: center;
+            font-size: 18px;
+            background: #fff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .swiper-slide img {
+            display: block;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .swiper {
+            width: 100%;
+            height: 300px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .swiper-slide {
+            background-size: cover;
+            background-position: center;
+        }
+
+        .mySwiper2 {
+            height: 80%;
+            width: 100%;
+        }
+
+        .mySwiper {
+            height: 20%;
+            box-sizing: border-box;
+            padding: 10px 0;
+        }
+
+        .mySwiper .swiper-slide {
+            width: 25%;
+            height: 100%;
+            opacity: 0.4;
+        }
+
+        .mySwiper .swiper-slide-thumb-active {
+            opacity: 1;
+        }
+
+        .swiper-slide img {
+            display: block;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+    </style>
 
     @include('layouts.nav')
     <!-- Quick view -->
@@ -76,15 +110,19 @@
                 <div class="modal-body">
                     <div class="cart-action text-center m-3">
                         <h4 class="my-3">
-                            {{ GoogleTranslate::trans("Produit ajouter au panier avec success!", session('locale')) }}
+                            {{-- {{ GoogleTranslate::trans("Produit ajouter au panier avec success!", session('locale'))
+                            }} --}}
+                            Produit ajouter au panier avec success!
                         </h4>
                         <a class="btn mr-10 mb-sm-15" href="{{ route('panier') }}">
                             <i class="fi-rs-shuffle mr-10"></i>
-                                {{ GoogleTranslate::trans("Finaliser ma commande", session('locale')) }}
+                            {{-- {{ GoogleTranslate::trans("Finaliser ma commande", session('locale')) }} --}}
+                            Finaliser ma commande
                         </a>
                         <a class="btn" aria-label="Close" href="{{ route('home') }}">
                             <i class="fi-rs-shopping-bag mr-10"></i>
-                            {{ GoogleTranslate::trans("Continue Shopping", session('locale')) }}
+                            {{-- {{ GoogleTranslate::trans("Continue Shopping", session('locale')) }} --}}
+                            Continue Shopping
                         </a>
                     </div>
                 </div>
@@ -173,9 +211,25 @@
     <script src="{{ asset('assets/js/plugins/isotope.js')}}"></script>
     <script src="{{ asset('assets/js/plugins/scrollup.js') }}"></script>
     <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-
+    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
     <x-livewire-alert::scripts />
     <script>
+        var swiper = new Swiper(".mySwiper", {
+      spaceBetween: 10,
+      slidesPerView: 4,
+      freeMode: true,
+      watchSlidesProgress: true,
+    });
+    var swiper2 = new Swiper(".mySwiper2", {
+      spaceBetween: 10,
+      navigation: {
+        nextEl: ".swiper-button-next",
+        prevEl: ".swiper-button-prev",
+      },
+      thumbs: {
+        swiper: swiper,
+      },
+    });
         // boostrap validation js function
 (() => {
     "use strict";

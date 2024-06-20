@@ -14,22 +14,28 @@ class Produit extends Component
 
     public string $search = '';
 
-    public string $categorie = '';
+    public string $cat = '';
 
     public function add(int $id)
     {
         return $this->store($id);
     }
 
+    public function mount(?Category $category = null)
+    {
+        // dd($category);
+        $this->cat = $category->id;
+    }
+
     public function render()
     {
-        $rows = Product::when($this->search, function ($query, $search) {
-            $query->whereAny(['nom', 'color'], 'LIKE', '%'.$search.'%');
-        })->when($this->categorie, function ($query, $category) {
-            $query->where('categorie_id', $category->id);
+        $rows = Product::ByStock()->when($this->search, function ($query) {
+            $query->whereAny(['nom', 'color'], 'LIKE', '%'.$this->search.'%');
+        })->when($this->cat, function ($query) {
+            $query->where('categorie_id', $this->cat);
         })->latest('id')->paginate(15);
-        $category = Category::all();
+        $category_list = Category::all();
 
-        return view('livewire.produit', compact('rows', 'category'));
+        return view('livewire.produit', compact('rows', 'category_list'));
     }
 }

@@ -20,7 +20,6 @@ use App\Http\Controllers\TransportController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\ZoneController;
 use App\Livewire\Panier;
-use App\Livewire\Product;
 use App\Livewire\Produit;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Route;
@@ -79,12 +78,11 @@ Route::controller(CartController::class)->group(function () {
 Route::controller(LinkController::class)->group(function () {
     Route::get('/', 'home')->name('home');
     Route::get('lang/{lang}', 'langchange')->name('language');
-    Route::get('shop/{category?}', 'shop')->name('shop');
+    // Route::get('shop/{category?}', 'shop')->name('shop');
     Route::get('getcategory', 'getCategory')->name('getCategory');
     Route::get('shop/show/{product}', 'shopshow')->name('shop.show');
 });
-Route::get('/shoplist', Produit::class)->name('shop');
-// Route::get('/produit/show/{product}', Produit::class)->name('shop.show');
+Route::get('/shop/{category?}', Produit::class)->name('shop');
 Route::get('/panier', Panier::class)->name('panier');
 Route::post('contact/mail', ContactController::class)->name('contact.email');
 Route::view('contact', 'contact')->name('contact');
@@ -101,11 +99,13 @@ Route::controller(SitemapController::class)->group(function () {
 Route::get('users/order', [OrderController::class, 'processPayment']);
 Route::controller(OrderController::class)->group(function () {
     Route::get('order/invoice/{id}', 'invoice')->name('order.invoice');
-    Route::get('order/validate/{ref}', 'valid')->name('order.validate');
+    Route::get('order/validate', 'valid')->name('order.validate');
+    Route::get('order/cancel', 'cancel')->name('order.cancel');
 });
 // Route::get('test', function () {
 //     Artisan::call('optimize:clear');
 //     Artisan::call('db:wipe');
 //     Artisan::call('migrate --seed');
 // });
+
 require __DIR__.'/auth.php';

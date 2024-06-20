@@ -54,9 +54,6 @@ class LinkController extends Controller
         $filter = Request::only('search');
         $categorie = Category::all();
         $desc = $category ? $category->description : '';
-
-        // return \view('Shop/Index', compact('categorie', 'filter', 'rows', 'desc'));
-        // return Inertia::render('Shop/Index', compact('categorie', 'filter', 'rows', 'desc'));
     }
 
     public function getCategory()
@@ -66,11 +63,8 @@ class LinkController extends Controller
 
     public function shopshow(Product $product)
     {
-        // $product->append(['prix_promo', 'prix_format', 'reduction']);
         $product->load('images');
-
         $rows = Product::where('categorie_id', $product->categorie_id)->ByStock()->take(4)->get();
-        // $rows->append(['prix_promo', 'prix_format', 'reduction']);
         $category = Category::all();
 
         return view('product-show', compact('product', 'rows', 'category'));

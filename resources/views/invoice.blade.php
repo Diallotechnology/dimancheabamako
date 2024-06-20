@@ -126,7 +126,7 @@
                                                     <div class="field grand-total">
                                                         Total <span>{{ number_format($order->totaux /
                                                             $order->getTaux(), 2) + $order->getShipping() }}
-                                                            {{ session('locale') === 'fr' ? ' €' : ' $' }}
+                                                            {{ session('locale') === 'fr' ? ' ' : ' $' }}
                                                         </span>
                                                     </div>
                                                 </div>
@@ -134,7 +134,7 @@
                                         </div>
 
                                         <div class="footer">
-                                            Copyright © 2024. Dimanche à Bamako
+                                            Copyright © {{ new Date("Y") }}. Dimanche à Bamako
                                         </div>
                                     </div>
                                 </div>

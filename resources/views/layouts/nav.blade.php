@@ -26,7 +26,6 @@ $cat = App\Models\Category::all();
                                         </li>
                                     </ul>
                                 </li>
-
                                 <li>
                                     <a class="language-dropdown-active" href="#">
                                         <i class="fi-rs-world"></i>
@@ -47,11 +46,13 @@ $cat = App\Models\Category::all();
                                     </ul>
                                 </li>
 
-                                <li v-show="user === null">
+                                @guest
+                                <li>
                                     <i class="fi-rs-user"></i>
                                     <a href="{{ route('login') }}">Se connecter</a>
                                 </li>
-                                <li v-show="user !== null" class="dropdown nav-item">
+                                @else
+                                <li class="dropdown nav-item">
                                     <a class="dropdown-toggle" data-bs-toggle="dropdown" href="#" id="dropdownAccount"
                                         aria-expanded="false">
                                         <i class="fi-rs-user" style="font-size: large"></i>
@@ -66,6 +67,8 @@ $cat = App\Models\Category::all();
                                         </a>
                                     </div>
                                 </li>
+                                @endguest
+
                             </ul>
                         </div>
 

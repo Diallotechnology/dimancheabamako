@@ -103,13 +103,13 @@ watch(search, (value) => {
                     <tr>
                         <th>#ID</th>
                         <th scope="col">Reference</th>
+                        <th scope="col">transref</th>
                         <th scope="col">Client</th>
                         <th scope="col">Adresse</th>
                         <th scope="col">shipping</th>
                         <th scope="col">Postal</th>
                         <th scope="col">Pays</th>
                         <th scope="col">Ville</th>
-                        <th scope="col">Payment</th>
                         <th scope="col">Total</th>
                         <th scope="col">Etat</th>
                         <th scope="col">Date</th>
@@ -120,6 +120,7 @@ watch(search, (value) => {
                     <tr v-for="row in rows.data" :key="row.id">
                         <td>{{ row.id }}</td>
                         <td class="fw-bold">{{ row.reference }}</td>
+                        <td class="fw-bold">{{ row.trans_ref }}</td>
                         {{
                             row.client.prenom
                         }}
@@ -145,12 +146,6 @@ watch(search, (value) => {
                         <td>{{ row.postal }}</td>
                         <td>{{ row.country.nom }}</td>
                         <td>{{ row.ville }}</td>
-                        <td>
-                            <i
-                                class="material-icons md-payment font-xxl text-muted mr-5"
-                            ></i>
-                            {{ row.payment }}
-                        </td>
                         <td>{{ Price_format.format(row.totaux) }}</td>
                         <td>{{ row.etat }}</td>
                         <td>{{ row.created_at }}</td>

@@ -70,21 +70,22 @@
                                 <p class="mt-15">
                                     Categorie: {{ $row->categorie->nom }}
                                     <br />
-                                    {{ GoogleTranslate::trans("Taille: ".$row->taille, session('locale')) }} <br />
+                                    Taille: {{ $row->taille }} <br />
                                 </p>
 
                                 <div class="product-action-1 show">
                                     <button type="button" aria-label="Acheté" class="action-btn"
                                         wire:click='add({{ $row->id }})'>
                                         <i class="fi-rs-shopping-bag-add"></i>
-                                        {{ GoogleTranslate::trans("Acheté", session('locale')) }}
+                                        {{-- {{ GoogleTranslate::trans("", session('locale')) }} --}}
+                                        Acheté
                                     </button>
                                 </div>
                             </div>
                         </div>
                         @empty
                         <h4 class="text-center my-5">
-                            {{ GoogleTranslate::trans("Aucun produit disponible", session('locale')) }}
+                            {{-- {{ GoogleTranslate::trans("Aucun produit disponible", session('locale')) }} --}}
                         </h4>
                         @endforelse
                     </div>
@@ -99,7 +100,7 @@
                             Categories
                         </h5>
                         <ul class="categories">
-                            @foreach ($category as $item)
+                            @foreach ($category_list as $row)
                             <li>
                                 <a href="{{ route('shop', $row->id) }}">
                                     {{ $row->nom }}

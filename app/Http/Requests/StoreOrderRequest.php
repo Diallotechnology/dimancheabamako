@@ -34,19 +34,13 @@ class StoreOrderRequest extends FormRequest
             'ville' => 'required|string',
             'adresse' => 'required|string',
             'postal' => 'nullable|string',
-            'payment' => 'nullable|string',
             'commentaire' => 'nullable|string',
             'password' => 'nullable|string',
         ];
     }
 
-    protected function prepareForValidation()
-    {
-        $this->merge(['payment' => 'Visa']);
-    }
-
     protected function failedValidation(Validator $validator)
     {
-        // return toastr()->error('la validation a echoué verifiez vos informations!');
+        return toastr()->error('la validation a echoué verifiez vos informations!');
     }
 }

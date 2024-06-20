@@ -98,8 +98,8 @@ class OrderController extends Controller
 
     public function processPayment()
     {
-        // $test = Order::find(1);
-        // $test2 = Mail::to('test@gmail.com')->send(new OrderMail($test));
+        $test = Order::find(1);
+        $test2 = Mail::to('test@gmail.com')->send(new OrderMail($test));
         // dd($test2);
         $montant = 100;
         $currencyCode = 'XOF';
@@ -136,10 +136,9 @@ class OrderController extends Controller
         $user = auth()->check() ? auth()->user()->id : session('user_id', '');
 
         if (CartFacade::session($user)->getContent()->count() == 0) {
-            return response()->json([
-                'message' => 'Panier vide!',
-                'type' => true,
-            ]);
+            toastr()->error('Panier vide!');
+
+            return response()->json(['message' => 'Panier vide!']);
         }
 
         DB::transaction(function () use ($request, $user, &$link, &$transactionSucceeded) {
@@ -169,9 +168,6 @@ class OrderController extends Controller
 
             // register client order infos
             $data = new Order([
-                'trans_ref' => uniqid(),
-                'reference' => uniqid(),
-                'payment' => $request->payment,
                 'adresse' => $request->adresse,
                 'postal' => $request->postal,
                 'ville' => $request->ville,
@@ -218,7 +214,7 @@ class OrderController extends Controller
             $currencyCode = 'XOF';
             $emailAddress = $request->email;
             $redirectUrl = route('order.validate');
-            $cancelUrl = route('home');
+            $cancelUrl = route('order.cancel');
 
             $apikey = 'ZGU3NmY1YTgtYWZmYy00NWNjLWI1ZGItYTI1NzQzMzMwMDBhOmJjMjQwYjllLTY5YmEtNDVlYy1hZWZhLTU4YTliNTQ3OTdjZQ==';
             $realmName = 'OBMaliSandbox';
@@ -231,8 +227,7 @@ class OrderController extends Controller
                 if ($response && isset($response['_links']['payment']['href'])) {
                     $link = $response['_links']['payment']['href'];
                     // save temporaly order
-                    $order->trans_ref = $response['reference'];
-                    $order->save();
+                    $order->update(['token' => $accessToken, 'trans_ref' => $response['reference']]);
                     // Supprime le contenu du panier utilisateur
                     CartFacade::session($user)->clear();
                     $transactionSucceeded = true;
@@ -243,7 +238,7 @@ class OrderController extends Controller
         if ($transactionSucceeded && $link) {
             return redirect()->away($link);
         } else {
-            return response()->json(['error' => 'Unable to process payment'], 500);
+            return abort(500, 'Unable to process payment');
         }
     }
 
@@ -254,11 +249,35 @@ class OrderController extends Controller
         return view('invoice', compact(['order']));
     }
 
-    public function valid(string $ref)
+    public function valid()
     {
-        dd($ref);
+        if ($_GET['ref'] && ! empty($_GET['ref'])) {
+            $order = Order::whereTransRef($_GET['ref'])->firstOrFail();
+            $order->generateId('CO');
+        }
+        // dd($order);
+        $apikey = 'ZGU3NmY1YTgtYWZmYy00NWNjLWI1ZGItYTI1NzQzMzMwMDBhOmJjMjQwYjllLTY5YmEtNDVlYy1hZWZhLTU4YTliNTQ3OTdjZQ==';
+        $outlet = 'af106601-8e01-41b5-bbb9-6b7fc82b71e5';
+        $realmName = 'OBMaliSandbox';
+        $accessToken = $this->getAccessToken($apikey, $realmName);
+        $response = Http::withToken($accessToken)->
+        withHeaders(['authorization' => 'Basic '.$apikey])
+            ->get('https://api-gateway.sandbox.ngenius-payments.com/transactions/outlets/af106601-8e01-41b5-bbb9-6b7fc82b71e5/orders/068df73d-78dd-4a86-8dae-2b70b42199cf');
 
-        return view('Validate', compact('order'));
+        // dd($response->status());
+        // Mail::to('test@exe.com')->send(new OrderMail($order));
+
+        return view('Validate');
+    }
+
+    public function cancel()
+    {
+        if ($_GET['ref'] && ! empty($_GET['ref'])) {
+            $order = Order::whereTransRef($_GET['ref'])->firstOrFail();
+            $order->delete();
+        }
+
+        return redirect('/');
     }
 
     /**
