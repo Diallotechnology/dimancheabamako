@@ -18445,6 +18445,141 @@ namespace Spatie\LaravelIgnition\Facades {
             }
     }
 
+namespace Victorybiz\LaravelTelInput {
+            /**
+     * 
+     *
+     * @see \Victorybiz\LaravelTelInput\Skeleton\SkeletonClass
+     */        class LaravelTelInputFacade {
+                    /**
+         * Get the view / contents that represent the component.
+         *
+         * @return \Illuminate\Contracts\View\View|\Closure|string 
+         * @static 
+         */        public static function render()
+        {
+                        /** @var \Victorybiz\LaravelTelInput\LaravelTelInput $instance */
+                        return $instance->render();
+        }
+                    /**
+         * Resolve the component instance with the given data.
+         *
+         * @param array $data
+         * @return static 
+         * @static 
+         */        public static function resolve($data)
+        {            //Method inherited from \Illuminate\View\Component         
+                        return \Victorybiz\LaravelTelInput\LaravelTelInput::resolve($data);
+        }
+                    /**
+         * Resolve the Blade view or view file that should be used when rendering the component.
+         *
+         * @return \Illuminate\Contracts\View\View|\Illuminate\Contracts\Support\Htmlable|\Closure|string 
+         * @static 
+         */        public static function resolveView()
+        {            //Method inherited from \Illuminate\View\Component         
+                        /** @var \Victorybiz\LaravelTelInput\LaravelTelInput $instance */
+                        return $instance->resolveView();
+        }
+                    /**
+         * Get the data that should be supplied to the view.
+         *
+         * @author Freek Van der Herten
+         * @author Brent Roose
+         * @return array 
+         * @static 
+         */        public static function data()
+        {            //Method inherited from \Illuminate\View\Component         
+                        /** @var \Victorybiz\LaravelTelInput\LaravelTelInput $instance */
+                        return $instance->data();
+        }
+                    /**
+         * Set the component alias name.
+         *
+         * @param string $name
+         * @return \Victorybiz\LaravelTelInput\LaravelTelInput 
+         * @static 
+         */        public static function withName($name)
+        {            //Method inherited from \Illuminate\View\Component         
+                        /** @var \Victorybiz\LaravelTelInput\LaravelTelInput $instance */
+                        return $instance->withName($name);
+        }
+                    /**
+         * Set the extra attributes that the component should make available.
+         *
+         * @param array $attributes
+         * @return \Victorybiz\LaravelTelInput\LaravelTelInput 
+         * @static 
+         */        public static function withAttributes($attributes)
+        {            //Method inherited from \Illuminate\View\Component         
+                        /** @var \Victorybiz\LaravelTelInput\LaravelTelInput $instance */
+                        return $instance->withAttributes($attributes);
+        }
+                    /**
+         * Determine if the component should be rendered.
+         *
+         * @return bool 
+         * @static 
+         */        public static function shouldRender()
+        {            //Method inherited from \Illuminate\View\Component         
+                        /** @var \Victorybiz\LaravelTelInput\LaravelTelInput $instance */
+                        return $instance->shouldRender();
+        }
+                    /**
+         * Get the evaluated view contents for the given view.
+         *
+         * @param string|null $view
+         * @param \Illuminate\Contracts\Support\Arrayable|array $data
+         * @param array $mergeData
+         * @return \Illuminate\Contracts\View\View 
+         * @static 
+         */        public static function view($view, $data = [], $mergeData = [])
+        {            //Method inherited from \Illuminate\View\Component         
+                        /** @var \Victorybiz\LaravelTelInput\LaravelTelInput $instance */
+                        return $instance->view($view, $data, $mergeData);
+        }
+                    /**
+         * Flush the component's cached state.
+         *
+         * @return void 
+         * @static 
+         */        public static function flushCache()
+        {            //Method inherited from \Illuminate\View\Component         
+                        \Victorybiz\LaravelTelInput\LaravelTelInput::flushCache();
+        }
+                    /**
+         * Forget the component's factory instance.
+         *
+         * @return void 
+         * @static 
+         */        public static function forgetFactory()
+        {            //Method inherited from \Illuminate\View\Component         
+                        \Victorybiz\LaravelTelInput\LaravelTelInput::forgetFactory();
+        }
+                    /**
+         * Forget the component's resolver callback.
+         *
+         * @return void 
+         * @internal 
+         * @static 
+         */        public static function forgetComponentsResolver()
+        {            //Method inherited from \Illuminate\View\Component         
+                        \Victorybiz\LaravelTelInput\LaravelTelInput::forgetComponentsResolver();
+        }
+                    /**
+         * Set the callback that should be used to resolve components within views.
+         *
+         * @param \Closure(string $component, array $data): Component  $resolver
+         * @return void 
+         * @internal 
+         * @static 
+         */        public static function resolveComponentsUsing($resolver)
+        {            //Method inherited from \Illuminate\View\Component         
+                        \Victorybiz\LaravelTelInput\LaravelTelInput::resolveComponentsUsing($resolver);
+        }
+            }
+    }
+
 namespace Yoeunes\Toastr\Facades {
             /**
      * 
@@ -22251,6 +22386,7 @@ namespace  {
             class Livewire extends \Livewire\Livewire {}
             class Flasher extends \Flasher\Laravel\Facade\Flasher {}
             class Flare extends \Spatie\LaravelIgnition\Facades\Flare {}
+            class LaravelTelInput extends \Victorybiz\LaravelTelInput\LaravelTelInputFacade {}
             class Toastr extends \Yoeunes\Toastr\Facades\Toastr {}
     }
 

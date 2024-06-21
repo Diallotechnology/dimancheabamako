@@ -1,7 +1,7 @@
 @props(['name'=>'','label'=>'','required' =>true,'disabled' => false])
 <label {{ $attributes->merge(['class' => 'form-label']) }}>{{ $label }}</label>
 
-<select name="{{ $name }}" {{ $attributes->merge(['class' => 'form-select select2']) }}
+<select name="{{ $name }}" {{ $attributes->merge(['class' => 'form-select']) }}
     value="" @required($required) {{
     $disabled ? 'disabled' : '' }} >
     <option selected disabled value="">Selectionner</option>

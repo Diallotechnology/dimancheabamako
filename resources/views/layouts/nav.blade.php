@@ -61,9 +61,15 @@ $cat = App\Models\Category::all();
                                         <a class="dropdown-item" href="#"><i
                                                 class="material-icons md-perm_identity"></i>Profil</a>
                                         <div class="dropdown-divider"></div>
-                                        <a class="dropdown-item text-danger" href="{{ route('logout') }}" method="post"
+                                        <a class="dropdown-item text-danger"
+                                            onclick="event.preventDefault(); document.getElementById('logout-form').submit();"
                                             as="button">
                                             <i class="material-icons md-exit_to_app"></i>Deconnexion
+                                            <form id="logout-form" action="{{ route('logout') }}" method="POST"
+                                                class="d-none">
+                                                @csrf
+                                                <input type="hidden" name="id" value="{{ Auth::user()->id }}">
+                                            </form>
                                         </a>
                                     </div>
                                 </li>
