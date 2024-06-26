@@ -19,7 +19,7 @@ trait CartAction
             if (session()->has('user_id')) {
                 $userId = session()->get('user_id');
             } else {
-                $userId = \uniqid();
+                $userId = uniqid();
                 session()->put('user_id', $userId);
             }
         } else {

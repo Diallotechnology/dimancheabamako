@@ -35,8 +35,6 @@ class Update extends Component
     public function update(): void
     {
 
-        // $event = $this->emit('panier_updated');
-
         $product = CartFacade::session($this->get_userid())->get($this->card['id']);
         // si qte inferieure a 1
         if ($this->quantity < 1) {
