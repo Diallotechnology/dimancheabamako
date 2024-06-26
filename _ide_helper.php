@@ -5,7 +5,7 @@
 
 /**
  * A helper file for Laravel, to provide autocomplete information to your IDE
- * Generated for Laravel 10.48.13.
+ * Generated for Laravel 10.48.14.
  *
  * This file should not be included in your code, only analyzed by your IDE!
  *
@@ -22381,7 +22381,6 @@ namespace  {
             class View extends \Illuminate\Support\Facades\View {}
             class Vite extends \Illuminate\Support\Facades\Vite {}
             class Countries extends \Monarobase\CountryList\CountryListFacade {}
-            class GoogleTranslate extends \Stichoza\GoogleTranslate\GoogleTranslate {}
             class Cart extends \Darryldecode\Cart\Facades\CartFacade {}
             class Livewire extends \Livewire\Livewire {}
             class Flasher extends \Flasher\Laravel\Facade\Flasher {}

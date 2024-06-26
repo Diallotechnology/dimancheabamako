@@ -18,7 +18,7 @@ class Order extends Model
      *
      * @var array
      */
-    protected $fillable = ['client_id', 'trans_ref', 'reference', 'adresse', 'postal', 'ville', 'country_id', 'transport_id', 'etat', 'poids', 'shipping', 'token'];
+    protected $fillable = ['client_id', 'trans_ref', 'reference', 'adresse', 'postal', 'ville', 'country_id', 'transport_id', 'etat', 'poids', 'shipping', 'trans_state'];
 
     /**
      * The relationships that should always be loaded.
@@ -80,10 +80,10 @@ class Order extends Model
         return $tauxConversion;
     }
 
-    public function generateId(string $prefix_type)
+    public function generateId()
     {
         $currentYear = Carbon::today()->format('Y');
-        $prefix = $prefix_type.$currentYear.'-';
+        $prefix = 'CO'.$currentYear.'-';
 
         return DB::transaction(function () use ($prefix) {
             // Verrouille le dernier identifiant de courrier enregistré dans la base de données pour la mise à jour

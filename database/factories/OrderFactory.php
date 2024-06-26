@@ -21,13 +21,11 @@ class OrderFactory extends Factory
             'country_id' => rand(1, 10),
             'transport_id' => rand(1, 2),
             'reference' => uniqid(),
-            'token' => uniqid(),
             'adresse' => fake()->streetAddress(),
             'postal' => fake()->postcode(),
             'ville' => fake()->city(),
             'poids' => rand(1, 5),
             'shipping' => rand(15000, 30000),
-            // 'payment' => fake()->randomElement(['Mastercard', 'Visa', 'Paypal']),
         ];
     }
 }

@@ -23,6 +23,11 @@
                         </div>
                     </div>
                     <div class="product-list mb-50">
+                        <div wire:loading class="text-center my-5">
+                            <h4 class="text-center my-5">
+                                Veuillez patientez...
+                            </h4>
+                        </div>
                         @forelse ($rows as $row)
                         <div class="product-cart-wrap">
                             <div class="product-img-action-wrap">

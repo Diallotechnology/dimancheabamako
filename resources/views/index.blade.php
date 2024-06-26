@@ -100,6 +100,7 @@
         <div class="container">
             <div class="tab-header">
                 <ul class="nav nav-tabs" id="myTab" role="tablist">
+                    @empty(!$popular)
                     <li class="nav-item" role="presentation">
                         <button class="nav-link active" id="nav-tab-two" data-bs-toggle="tab" data-bs-target="#tab-two"
                             type="button" role="tab" aria-controls="tab-two" aria-selected="false">
@@ -107,6 +108,8 @@
                             Populaire
                         </button>
                     </li>
+                    @endempty
+                    @empty(!$latest)
                     <li class="nav-item" role="presentation">
                         <button class="nav-link" id="nav-tab-three" data-bs-toggle="tab" data-bs-target="#tab-three"
                             type="button" role="tab" aria-controls="tab-three" aria-selected="false">
@@ -114,6 +117,7 @@
                             Nouveauté
                         </button>
                     </li>
+                    @endempty
                 </ul>
                 <a href="{{ route('shop') }}" class="view-more d-none d-md-flex">
                     {{-- {{ GoogleTranslate::trans("Voir tout", session('locale')) }} --}}

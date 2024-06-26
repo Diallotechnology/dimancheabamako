@@ -11,12 +11,7 @@ import Input from "@/Components/Input.vue";
 import TextArea from "@/Components/TextArea.vue";
 import InputDate from "@/Components/InputDate.vue";
 import VueSelect from "vue3-select-component";
-import VueTelInput from "vue-tel-input";
 import "vue3-select-component/dist/style.css";
-import "vue-tel-input/vue-tel-input.css";
-const globalOptions = {
-    mode: "international",
-};
 const appName = import.meta.env.VITE_APP_NAME;
 
 createInertiaApp({
@@ -36,8 +31,6 @@ createInertiaApp({
             .component("InputDate", InputDate)
             .component("Input", Input)
             .component("TextArea", TextArea)
-            .component("VueTelInput", VueTelInput)
-            .use(VueTelInput, globalOptions)
             .mount(el);
     },
     progress: {

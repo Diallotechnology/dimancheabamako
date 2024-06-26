@@ -19,13 +19,12 @@ return new class extends Migration
             $table->foreignId('transport_id')->constrained()->cascadeOnUpdate()->cascadeOnDelete();
             $table->string('reference')->nullable()->unique();
             $table->string('trans_ref')->nullable()->unique();
-            $table->longText('token')->nullable();
+            $table->string('trans_state')->nullable();
             $table->string('adresse');
             $table->string('postal')->nullable();
             $table->string('ville');
             $table->string('poids');
             $table->string('shipping');
-            // $table->string('payment')->nullable();
             $table->string('commentaire')->nullable();
             $table->string('etat')->default(OrderEnum::SAVE);
             $table->timestamps();

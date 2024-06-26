@@ -4,30 +4,33 @@
             <div class="row">
                 <div class="col-lg-7 align-self-center mb-lg-0 mb-4">
                     <div class="single-content m-5">
-                        <h4>{{ GoogleTranslate::trans("Délai et conditions de livraison", session('locale')) }}</h4>
+
+                        <h4> Délai et conditions de livraison</h4>
                         <p>
-                            {{ GoogleTranslate::trans("Les commandes passées sur ce site sont livrés
+                            Les commandes passées sur ce site sont livrés
                             par DHL avec suivi. Le délai varie selon la
                             destination. En moyenne 4 à 6 jours ouvrables
-                            entre l’achat et la livraison du colis.", session('locale')) }}
-                            
+                            entre l’achat et la livraison du colis.
+
+
                         </p>
                         <p>
-                            {{ GoogleTranslate::trans("Nous livrons en Europe, USA, Canada directement
+                            Nous livrons en Europe, USA, Canada directement
                             à votre adresse. Pour les livraisons en Afrique,
                             les colis sont à retirer dans les agences DHL
                             les plus proches. Pour cela assurez-vous avoir
-                            fournir un numéro de téléphone joignable.", session('locale')) }}
-                           
+                            fournir un numéro de téléphone joignable.
+
+
                         </p>
                         <p>
-                            {{ GoogleTranslate::trans("Excepté les USA, les autorités des différents
+                            Excepté les USA, les autorités des différents
                             pays sont susceptibles de facturer des frais de
                             douanes à l’arrivée du colis. Ces frais s’il y a
                             lieu sont entièrement à votre charge. Les
                             livraisons des colis sont garanties à 100%.
                             Toute commande non livrée sera intégralement
-                            rembourser.", session('locale')) }}
+                            rembourser.
                         </p>
 
                         <h4>Contact nous</h4>

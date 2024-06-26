@@ -22,7 +22,7 @@ $cat = App\Models\Category::all();
                                     <ul class="language-dropdown">
                                         <li>
                                             <a href="{{ route('language', 'fr') }}">Euro</a>
-                                            <a href="{{ route('language', 'fr') }}">Dollars</a>
+                                            <a href="{{ route('language', 'en') }}">Dollars</a>
                                         </li>
                                     </ul>
                                 </li>

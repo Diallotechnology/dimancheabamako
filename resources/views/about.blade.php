@@ -15,41 +15,45 @@
                         DIMANCHE A BAMAKO
                     </h2>
                     <h3 class="font-heading mb-40">
-                        {{ GoogleTranslate::trans("une entreprise dont le success est fondé sur les
+                        une entreprise dont le success est fondé sur les
                         valeurs d’honnêteté, de respect mutuel et la
-                        maîtrise technique de la chaîne de production.", session('locale')) }}
+                        maîtrise technique de la chaîne de production.
+
 
                     </h3>
                     <p>
-                        {{ GoogleTranslate::trans("Créée en 2009, DIMANCHE A BAMAKO s’est vite imposée
+                        Créée en 2009, DIMANCHE A BAMAKO s’est vite imposée
                         comme le leader de la vente en ligne de Bazin riche
                         première qualité. Implantée à Bamako dans le
                         quartier ACI 2000, nous effectuons la teinture,
-                        dessins et couture des plus beaux Bazins du marché.", session('locale')) }}
+                        dessins et couture des plus beaux Bazins du marché.
+
 
                     </p>
                     <p>
-                        {{ GoogleTranslate::trans("Notre équipe est composée de teinturières, de
+
+                        Notre équipe est composée de teinturières, de
                         dessinateurs, de peintre, de tailleurs en plus des
-                        agents commerciaux présents à la boutique.", session('locale')) }}
+                        agents commerciaux présents à la boutique.
 
                     </p>
                     <p>
-                        {{ GoogleTranslate::trans("Vous pouvez acheter les produits présentés sur la
+                        Vous pouvez acheter les produits présentés sur la
                         boutique en ligne. Au cas où l’offre en ligne ne
                         correspond pas à ce que vous vous recherchez, vous
                         pouvez entrer en contact avec nos commerciaux sur
-                        Whatsapp au +223 66 03 51 54.", session('locale')) }}
+                        Whatsapp au +223 66 03 51 54.
 
                     </p>
                     <p>
-                        {{ GoogleTranslate::trans("Notre Showroom de vente à Bamako dans le quartier
+                        Notre Showroom de vente à Bamako dans le quartier
                         d’affaire ACI 2 000 vous propose une collection
                         large et diversifiée de Bazin teinté, de Getzner
                         Magnum, de boubou et robes prêt-à-porter, des
                         brodés, wax et des accessoires pour femme. Les
                         hommes sont également à l’honneur avec des boubous 2
-                        à 3 pièces, des chemises.", session('locale')) }}
+                        à 3 pièces, des chemises.
+
                     </p>
                 </div>
                 <div class="col-lg-6">

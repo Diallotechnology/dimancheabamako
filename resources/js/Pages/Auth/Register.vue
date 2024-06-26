@@ -98,7 +98,6 @@ const submit = () => {
                     <div class="mt-3">
                         <InputLabel for="contact" value="Contact" />
 
-                        <vue-tel-input v-model="form.contact"></vue-tel-input>
                         <InputError
                             class="mt-2"
                             :message="form.errors.contact"

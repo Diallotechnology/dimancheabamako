@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Enum\OrderEnum;
 use App\Enum\RoleEnum;
 use App\Helper\DeleteAction;
+use App\Helper\OrderAPI;
 use App\Http\Requests\StoreOrderRequest;
 use App\Http\Requests\UpdateOrderRequest;
 use App\Mail\OrderMail;
@@ -14,6 +15,7 @@ use App\Models\Order;
 use App\Models\Shipping;
 use App\Models\User;
 use Darryldecode\Cart\Facades\CartFacade;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Http;
@@ -23,48 +25,13 @@ use Inertia\Inertia;
 
 class OrderController extends Controller
 {
-    use DeleteAction;
-
-    private function getOrderStatut($outlet, $reference, $apikey)
-    {
-        $response = Http::withHeaders([
-            'accept' => 'application/vnd.ni-identity.v1+json',
-            'authorization' => 'Basic '.$apikey,
-            'content-type' => 'application/vnd.ni-identity.v1+json',
-        ])->get('https://api-gateway.sandbox.ngenius-payments.com/transactions/outlets/'.$outlet.'/orders/'.$reference.'');
-
-        if ($response->successful()) {
-            return $response->json();
-        } else {
-            Log::error('Failed to get access token', ['response' => $response->json()]);
-
-            return null;
-        }
-    }
-
-    private function getAccessToken($apikey, $realmName)
-    {
-        $response = Http::withHeaders([
-            'accept' => 'application/vnd.ni-identity.v1+json',
-            'authorization' => 'Basic '.$apikey,
-            'content-type' => 'application/vnd.ni-identity.v1+json',
-        ])->post('https://api-gateway.sandbox.ngenius-payments.com/identity/auth/access-token', [
-            'realmName' => $realmName,
-        ]);
-
-        if ($response->successful()) {
-            return $response->json()['access_token'];
-        } else {
-            Log::error('Failed to get access token', ['response' => $response->json()]);
-
-            return null;
-        }
-    }
+    use DeleteAction, OrderAPI;
 
     private function prepareTransactionData($montant, $currencyCode, $emailAddress, $redirectUrl, $cancelUrl)
     {
         return [
             'action' => 'PURCHASE',
+            'language' => session('locale'),
             'emailAddress' => $emailAddress,
             'amount' => [
                 'currencyCode' => $currencyCode,
@@ -78,8 +45,9 @@ class OrderController extends Controller
         ];
     }
 
-    private function createOrder($outlet, $accessToken, $postData)
+    private function createOrder($accessToken, $postData)
     {
+        $outlet = env('NGENIUS_OUTLET_ID');
         $response = Http::withToken($accessToken)
             ->withHeaders([
                 'Content-Type' => 'application/vnd.ni-payment.v2+json',
@@ -94,36 +62,6 @@ class OrderController extends Controller
 
             return null;
         }
-    }
-
-    public function processPayment()
-    {
-        $test = Order::find(1);
-        $test2 = Mail::to('test@gmail.com')->send(new OrderMail($test));
-        // dd($test2);
-        $montant = 100;
-        $currencyCode = 'XOF';
-        $emailAddress = 'customer@test.com';
-        $redirectUrl = 'https://mysite.com/redirect';
-        $cancelUrl = route('home');
-
-        $apikey = 'ZGU3NmY1YTgtYWZmYy00NWNjLWI1ZGItYTI1NzQzMzMwMDBhOmJjMjQwYjllLTY5YmEtNDVlYy1hZWZhLTU4YTliNTQ3OTdjZQ==';
-        $realmName = 'OBMaliSandbox';
-        $outlet = 'af106601-8e01-41b5-bbb9-6b7fc82b71e5';
-
-        $accessToken = $this->getAccessToken($apikey, $realmName);
-
-        if ($accessToken) {
-            $postData = $this->prepareTransactionData($montant, $currencyCode, $emailAddress, $redirectUrl, $cancelUrl);
-            $response = $this->createOrder($outlet, $accessToken, $postData);
-
-            if ($response && isset($response['_links']['payment']['href'])) {
-                return redirect($response['_links']['payment']['href']);
-            }
-        }
-
-        // Gérer les cas d'erreur de manière appropriée
-        return response()->json(['error' => 'Unable to process payment'], 500);
     }
 
     /**
@@ -216,18 +154,14 @@ class OrderController extends Controller
             $redirectUrl = route('order.validate');
             $cancelUrl = route('order.cancel');
 
-            $apikey = 'ZGU3NmY1YTgtYWZmYy00NWNjLWI1ZGItYTI1NzQzMzMwMDBhOmJjMjQwYjllLTY5YmEtNDVlYy1hZWZhLTU4YTliNTQ3OTdjZQ==';
-            $realmName = 'OBMaliSandbox';
-            $outlet = 'af106601-8e01-41b5-bbb9-6b7fc82b71e5';
-
-            $accessToken = $this->getAccessToken($apikey, $realmName);
+            $accessToken = $this->getAccessToken();
             if ($accessToken) {
                 $postData = $this->prepareTransactionData($montant, $currencyCode, $emailAddress, $redirectUrl, $cancelUrl);
-                $response = $this->createOrder($outlet, $accessToken, $postData);
+                $response = $this->createOrder($accessToken, $postData);
                 if ($response && isset($response['_links']['payment']['href'])) {
                     $link = $response['_links']['payment']['href'];
                     // save temporaly order
-                    $order->update(['token' => $accessToken, 'trans_ref' => $response['reference']]);
+                    $order->update(['trans_ref' => $response['reference']]);
                     // Supprime le contenu du panier utilisateur
                     CartFacade::session($user)->clear();
                     $transactionSucceeded = true;
@@ -249,33 +183,63 @@ class OrderController extends Controller
         return view('invoice', compact(['order']));
     }
 
-    public function valid()
+    public function valid(Request $request)
     {
-        if ($_GET['ref'] && ! empty($_GET['ref'])) {
-            $order = Order::whereTransRef($_GET['ref'])->firstOrFail();
-            $order->generateId('CO');
-        }
-        // dd($order);
-        $apikey = 'ZGU3NmY1YTgtYWZmYy00NWNjLWI1ZGItYTI1NzQzMzMwMDBhOmJjMjQwYjllLTY5YmEtNDVlYy1hZWZhLTU4YTliNTQ3OTdjZQ==';
-        $outlet = 'af106601-8e01-41b5-bbb9-6b7fc82b71e5';
-        $realmName = 'OBMaliSandbox';
-        $accessToken = $this->getAccessToken($apikey, $realmName);
-        $response = Http::withToken($accessToken)->
-        withHeaders(['authorization' => 'Basic '.$apikey])
-            ->get('https://api-gateway.sandbox.ngenius-payments.com/transactions/outlets/af106601-8e01-41b5-bbb9-6b7fc82b71e5/orders/068df73d-78dd-4a86-8dae-2b70b42199cf');
+        $orderReference = $request->query('ref');
 
-        // dd($response->status());
-        // Mail::to('test@exe.com')->send(new OrderMail($order));
+        if (! $orderReference) {
+            Log::error('No order reference provided');
+
+            return view('Validate');
+        }
+
+        try {
+            $order = Order::whereTransRef($orderReference)->firstOrFail();
+        } catch (\Exception $e) {
+            Log::error('Order not found', ['reference' => $orderReference, 'error' => $e->getMessage()]);
+
+            return view('Validate');
+        }
+
+        $responseData = $this->getOrderStatut($order->trans_ref);
+
+        if ($responseData) {
+            DB::beginTransaction();
+
+            try {
+                if (isset($responseData['_embedded']['payment'][0]['state'])) {
+                    $paymentState = $responseData['_embedded']['payment'][0]['state'];
+                    if ($paymentState === 'PURCHASED') {
+                        $order->updateOrFail(['trans_state' => $paymentState]);
+                        $order->generateId();
+                        // Mail::to('test@exe.com')->send(new OrderMail($order));
+                    }
+                } else {
+                    Log::warning("The 'state' key was not found in the transaction", ['response' => $responseData]);
+                }
+
+                DB::commit();
+            } catch (\Exception $e) {
+                DB::rollBack();
+                Log::error('Failed to update order or send mail', ['order' => $order->trans_ref, 'error' => $e->getMessage()]);
+
+                return view('Validate');
+            }
+        } else {
+            Log::error('Failed to retrieve order status', ['reference' => $order->trans_ref]);
+        }
 
         return view('Validate');
     }
 
-    public function cancel()
+    public function cancel(Request $request)
     {
-        if ($_GET['ref'] && ! empty($_GET['ref'])) {
-            $order = Order::whereTransRef($_GET['ref'])->firstOrFail();
+        $orderReference = $request->query('ref');
+        if ($orderReference && ! empty($orderReference)) {
+            $order = Order::whereTransRef($orderReference)->firstOrFail();
             $order->delete();
         }
+        toastr()->success('Commande annuler avec success!');
 
         return redirect('/');
     }

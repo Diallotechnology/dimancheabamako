@@ -18,7 +18,6 @@
         "laravel/tinker": "^2.8",
         "livewire/livewire": "^3.5",
         "monarobase/country-list": "^3.5",
-        "stichoza/google-translate-php": "^5.1",
         "tightenco/ziggy": "^1.0",
         "victorybiz/laravel-tel-input": "^1.6",
         "yoeunes/toastr": "^2.3"

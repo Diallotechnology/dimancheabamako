@@ -4,13 +4,6 @@ import { AddToCard } from "@/helper";
 import { ref } from "vue";
 import Cart from "@/Shared/Cart.vue";
 import { Head } from "@inertiajs/vue3";
-import { Thumbs, Navigation, FreeMode } from "swiper/modules";
-import { Swiper, SwiperSlide } from "swiper/vue";
-
-import "swiper/css";
-import "swiper/css/free-mode";
-import "swiper/css/navigation";
-import "swiper/css/thumbs";
 
 const props = defineProps({
     product: {
@@ -29,10 +22,6 @@ const props = defineProps({
         default: () => ({}),
     },
 });
-const thumbsSwiper = ref(null);
-const setThumbsSwiper = (swiper) => {
-    thumbsSwiper.value = swiper;
-};
 </script>
 <template>
     <Head title="{{ product.resume }}" />

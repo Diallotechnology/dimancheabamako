@@ -146,13 +146,13 @@ namespace App\Models{
  * @property int $country_id
  * @property int $transport_id
  * @property string|null $reference
- * @property string $trans_ref
+ * @property string|null $trans_ref
+ * @property string|null $token
  * @property string $adresse
  * @property string|null $postal
  * @property string $ville
  * @property string $poids
  * @property string $shipping
- * @property string $payment
  * @property string|null $commentaire
  * @property string $etat
  * @property string $created_at
@@ -173,11 +173,11 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder|Order whereCreatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Order whereEtat($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Order whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Order wherePayment($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Order wherePoids($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Order wherePostal($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Order whereReference($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Order whereShipping($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Order whereToken($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Order whereTransRef($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Order whereTransportId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Order whereUpdatedAt($value)

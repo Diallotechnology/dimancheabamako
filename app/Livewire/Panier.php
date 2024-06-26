@@ -26,6 +26,11 @@ class Panier extends Component
 
     public $trans = [];
 
+    public function updatedCountryid()
+    {
+        $this->trans = [];
+    }
+
     public function GetTrans()
     {
         // get country
