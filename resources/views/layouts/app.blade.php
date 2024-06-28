@@ -33,6 +33,8 @@
     <title>{{ $title ?? 'E-commerce Dimanche à Bamako - Vente de Bazin, Getzner Magnum, Boubou et Robes' }}</title>
 
     <link href="{{ asset('assets/css/main.css') }}" rel="stylesheet" />
+    {{--
+    <link href="{{ asset('build/assets/app-YaJoXqX7.css') }}" rel="stylesheet" /> --}}
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
 </head>
 
@@ -110,18 +112,14 @@
                 <div class="modal-body">
                     <div class="cart-action text-center m-3">
                         <h4 class="my-3">
-                            {{-- {{ GoogleTranslate::trans("Produit ajouter au panier avec success!", session('locale'))
-                            }} --}}
                             Produit ajouter au panier avec success!
                         </h4>
                         <a class="btn mr-10 mb-sm-15" href="{{ route('panier') }}">
                             <i class="fi-rs-shuffle mr-10"></i>
-                            {{-- {{ GoogleTranslate::trans("Finaliser ma commande", session('locale')) }} --}}
                             Finaliser ma commande
                         </a>
                         <a class="btn" aria-label="Close" href="{{ route('home') }}">
                             <i class="fi-rs-shopping-bag mr-10"></i>
-                            {{-- {{ GoogleTranslate::trans("Continue Shopping", session('locale')) }} --}}
                             Continue Shopping
                         </a>
                     </div>

@@ -249,6 +249,6 @@ class AdminController extends Controller
     {
         $token = Str::random(60);
         Artisan::call("down --secret='$token'");
-        Mail::to('contact@dimancheabamako.com')->send(new MaintenanceMail($token));
+        Mail::to('topmariage.mali@gmail.com')->send(new MaintenanceMail($token));
     }
 }

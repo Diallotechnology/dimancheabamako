@@ -102,14 +102,13 @@ watch(search, (value) => {
                 <thead>
                     <tr>
                         <th>#ID</th>
-                        <th scope="col">Reference</th>
-                        <th scope="col">transref</th>
+                        <th scope="col">Facture N°</th>
+                        <th scope="col">transaction</th>
                         <th scope="col">Client</th>
                         <th scope="col">Adresse</th>
                         <th scope="col">shipping</th>
                         <th scope="col">Postal</th>
-                        <th scope="col">Pays</th>
-                        <th scope="col">Ville</th>
+                        <th scope="col">Pays/Ville</th>
                         <th scope="col">Total</th>
                         <th scope="col">Etat</th>
                         <th scope="col">Date</th>
@@ -120,7 +119,13 @@ watch(search, (value) => {
                     <tr v-for="row in rows.data" :key="row.id">
                         <td>{{ row.id }}</td>
                         <td class="fw-bold">{{ row.reference }}</td>
-                        <td class="fw-bold">{{ row.trans_ref }}</td>
+                        <td class="fw-bold">
+                            {{ row.trans_ref }} <br />
+                            <span
+                                class="badge rounded-pill alert-success text-success"
+                                >{{ row.trans_state }}</span
+                            >
+                        </td>
                         {{
                             row.client.prenom
                         }}
@@ -135,23 +140,27 @@ watch(search, (value) => {
                         {{
                             row.client.contact
                         }}
-
                         <td>{{ row.adresse }}</td>
                         <td>
                             {{ row.transport.nom }} <br />
-                            {{ row.poids }} <br />{{
+                            {{ row.poids }}Kg <br />{{
                                 Price_format.format(row.shipping)
                             }}
                         </td>
                         <td>{{ row.postal }}</td>
-                        <td>{{ row.country.nom }}</td>
-                        <td>{{ row.ville }}</td>
+                        <td>{{ row.country.nom }} <br />{{ row.ville }}</td>
                         <td>{{ Price_format.format(row.totaux) }}</td>
-                        <td>{{ row.etat }}</td>
+                        <td>
+                            <span
+                                class="badge rounded-pill alert-success text-success"
+                            >
+                                {{ row.etat }}
+                            </span>
+                        </td>
                         <td>{{ row.created_at }}</td>
                         <td>
                             <ButtonShow :href="route('order.show', row.id)" />
-                            <ButtonEdit :href="route('order.edit', row.id)" />
+                            <!-- <ButtonEdit :href="route('order.edit', row.id)" /> -->
                             <ButtonDelete
                                 :url="route('order.destroy', row.id)"
                             />

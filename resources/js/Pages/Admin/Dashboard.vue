@@ -172,7 +172,7 @@ onMounted(() => {
                             <th scope="col">Postal</th>
                             <th scope="col">Pays</th>
                             <th scope="col">Ville</th>
-                            <th scope="col">Payment</th>
+                            <th scope="col">Transaction</th>
                             <th scope="col">Total</th>
                             <th scope="col">Etat</th>
                             <th scope="col">Date</th>
@@ -195,10 +195,7 @@ onMounted(() => {
                             <td>{{ row.country.nom }}</td>
                             <td>{{ row.ville }}</td>
                             <td>
-                                <i
-                                    class="material-icons md-payment font-xxl text-muted mr-5"
-                                ></i>
-                                {{ row.payment }}
+                                {{ row.trans_ref }} <br />{{ row.trans_state }}
                             </td>
                             <td>{{ Price_format.format(row.totaux) }}</td>
                             <td>{{ row.etat }}</td>

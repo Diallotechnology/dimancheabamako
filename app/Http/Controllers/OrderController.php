@@ -14,6 +14,7 @@ use App\Models\Country;
 use App\Models\Order;
 use App\Models\Shipping;
 use App\Models\User;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Darryldecode\Cart\Facades\CartFacade;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -180,6 +181,9 @@ class OrderController extends Controller
     {
         $order = Order::with('client', 'products')->withSum('products as totaux', 'order_product.montant')->findOrFail($id);
 
+        // $pdf = Pdf::loadView('invoice', $order);
+
+        // return $pdf->download('invoice.pdf');
         return view('invoice', compact(['order']));
     }
 
@@ -190,7 +194,7 @@ class OrderController extends Controller
         if (! $orderReference) {
             Log::error('No order reference provided');
 
-            return view('Validate');
+            return view('validate');
         }
 
         try {
@@ -198,7 +202,7 @@ class OrderController extends Controller
         } catch (\Exception $e) {
             Log::error('Order not found', ['reference' => $orderReference, 'error' => $e->getMessage()]);
 
-            return view('Validate');
+            return view('validate');
         }
 
         $responseData = $this->getOrderStatut($order->trans_ref);
@@ -211,8 +215,10 @@ class OrderController extends Controller
                     $paymentState = $responseData['_embedded']['payment'][0]['state'];
                     if ($paymentState === 'PURCHASED') {
                         $order->updateOrFail(['trans_state' => $paymentState]);
-                        $order->generateId();
-                        // Mail::to('test@exe.com')->send(new OrderMail($order));
+                        if ($order->reference == null) {
+                            $order->generateId();
+                        }
+                        Mail::to($order->client->email)->send(new OrderMail($order));
                     }
                 } else {
                     Log::warning("The 'state' key was not found in the transaction", ['response' => $responseData]);
@@ -223,13 +229,13 @@ class OrderController extends Controller
                 DB::rollBack();
                 Log::error('Failed to update order or send mail', ['order' => $order->trans_ref, 'error' => $e->getMessage()]);
 
-                return view('Validate');
+                return view('validate');
             }
         } else {
             Log::error('Failed to retrieve order status', ['reference' => $order->trans_ref]);
         }
 
-        return view('Validate');
+        return view('validate');
     }
 
     public function cancel(Request $request)

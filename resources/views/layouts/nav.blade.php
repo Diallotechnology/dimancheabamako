@@ -21,8 +21,8 @@ $cat = App\Models\Category::all();
                                     </a>
                                     <ul class="language-dropdown">
                                         <li>
-                                            <a href="{{ route('language', 'fr') }}">Euro</a>
-                                            <a href="{{ route('language', 'en') }}">Dollars</a>
+                                            {{-- <a href="{{ route('language', 'fr') }}">Euro</a> --}}
+                                            {{-- <a href="{{ route('language', 'en') }}">Dollars</a> --}}
                                         </li>
                                     </ul>
                                 </li>
@@ -34,11 +34,11 @@ $cat = App\Models\Category::all();
                                     </a>
                                     <ul class="language-dropdown">
                                         <li>
-                                            <a href="{{ route('language', 'fr') }}">
+                                            <a href="{{ route('change_language', ['locale' => 'fr']) }}">
                                                 <img src="{{ asset('assets/imgs/theme/flag-fr.png') }}" alt="flag-us" />
                                                 Français
                                             </a>
-                                            <a href="{{ route('language', 'en')}}">
+                                            <a href="{{ route('change_language', ['locale' => 'en']) }}">
                                                 <img src="{{ asset('assets/imgs/theme/flag-us.png') }}" alt="flag-us" />
                                                 English
                                             </a>
@@ -98,9 +98,9 @@ $cat = App\Models\Category::all();
                     <div class="main-menu main-menu-padding-1 main-menu-lh-2 d-none d-lg-block">
                         <nav>
                             <ul>
-                                <x-nav-link url='home' name="Accueil" />
+                                <x-nav-link url='home' name="messages.home" />
                                 <li>
-                                    <a href="">Categorie
+                                    <a href="">{{ __('messages.category') }}
                                         <i class="fi-rs-angle-down"></i></a>
                                     <ul class="sub-menu">
                                         @foreach($cat as $row)
@@ -110,9 +110,9 @@ $cat = App\Models\Category::all();
                                         @endforeach
                                     </ul>
                                 </li>
-                                <x-nav-link url='about' name="A propos" />
-                                <x-nav-link url='livraison' name="Livraison" />
-                                <x-nav-link url='contact' name="Contact" />
+                                <x-nav-link url='about' name="messages.about" />
+                                <x-nav-link url='livraison' name="messages.delivery" />
+                                <x-nav-link url='contact' name="messages.contact" />
                             </ul>
                         </nav>
                     </div>
@@ -168,9 +168,9 @@ $cat = App\Models\Category::all();
                 <!-- mobile menu start -->
                 <nav>
                     <ul class="mobile-menu">
-                        <x-nav-link url='home' name="Accueil" />
+                        <x-nav-link url='home' name="messages.home" />
                         <li class="menu-item-has-children">
-                            <span class="menu-expand"></span><a href="#">Categories</a>
+                            <span class="menu-expand"></span><a href="#">{{ __('messages.category') }}</a>
                             <ul class="dropdown">
                                 <li>
                                     @foreach($cat as $row)
@@ -179,9 +179,9 @@ $cat = App\Models\Category::all();
                                 </li>
                             </ul>
                         </li>
-                        <x-nav-link url='about' name="A propos" />
-                        <x-nav-link url='livraison' name="Livraison" />
-                        <x-nav-link url='contact' name="Contact" />
+                        <x-nav-link url='about' name="messages.about" />
+                        <x-nav-link url='livraison' name="messages.delivery" />
+                        <x-nav-link url='contact' name="messages.contact" />
                         <li class="menu-item-has-children">
                             <span class="menu-expand"></span><a href="#">Language</a>
                             <ul class="dropdown">

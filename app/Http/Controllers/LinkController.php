@@ -5,8 +5,6 @@ namespace App\Http\Controllers;
 use App\Models\Category;
 use App\Models\Product;
 use App\Models\Slide;
-use Illuminate\Support\Facades\Request;
-use Inertia\Inertia;
 
 class LinkController extends Controller
 {
@@ -16,7 +14,6 @@ class LinkController extends Controller
     public function home()
     {
         $query = Product::ByStock();
-
         // Récupération des derniers produits
         $latest = $query->take(4)->latest()->get();
         // Récupération des produits populaires
@@ -28,32 +25,6 @@ class LinkController extends Controller
         $slide = Slide::all();
 
         return view('index', \compact('popular', 'latest', 'slide'));
-        // return Inertia::render('Home', \compact('popular', 'latest', 'slide'));
-    }
-
-    public function langchange(string $lang)
-    {
-        session()->put('locale', $lang);
-
-        return back();
-    }
-
-    public function shop(?Category $category = null)
-    {
-        $rows = Product::with('promotions')->ByStock()->when(Request::input('search'), function ($query, $search) {
-            $query->whereAny(['nom', 'color'], 'LIKE', '%'.$search.'%');
-        })->when($category, function ($query, $category) {
-            $query->where('categorie_id', $category->id);
-        })->latest('id')->paginate(15)->through(function ($row) {
-            $row->prix_promo = $row->getPrixPromoAttribute();
-            $row->prix_format = $row->getPrixFormatAttribute();
-            $row->reduction = $row->getReductionAttribute();
-
-            return $row;
-        });
-        $filter = Request::only('search');
-        $categorie = Category::all();
-        $desc = $category ? $category->description : '';
     }
 
     public function getCategory()

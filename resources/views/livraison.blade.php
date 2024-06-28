@@ -7,6 +7,7 @@
 
                         <h4> Délai et conditions de livraison</h4>
                         <p>
+
                             Les commandes passées sur ce site sont livrés
                             par DHL avec suivi. Le délai varie selon la
                             destination. En moyenne 4 à 6 jours ouvrables

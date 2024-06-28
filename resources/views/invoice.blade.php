@@ -33,10 +33,9 @@
                                                             <i class="material-icons md-calendar_today"></i> <b>Date:{{
                                                                 $order->created_at }}</b>
                                                         </strong>
-                                                        <strong class="">Order ID: #{{ $order->reference }}</strong>
-                                                        <strong>Payment Method: {{ $order->payment }}</strong>
+                                                        <strong class="">Facture N°: #{{ $order->reference }}</strong>
+                                                        <strong>Transaction N°: {{ $order->trans_ref }}</strong>
                                                         <strong>Transport: {{ $order->transport->nom }}</strong>
-
                                                     </div>
                                                 </div>
                                             </div>
@@ -52,7 +51,7 @@
                                                             {{ $order->client->contact }} <br>
                                                             {{ $order->client->pays }} <br>
                                                             <a href="#">
-                                                                {{ $order->email }}
+                                                                {{ $order->client->email }}
                                                             </a>
                                                         </p>
                                                     </div>
@@ -105,12 +104,6 @@
                                                     @endforelse
                                                 </div>
                                                 <div class="total text-end">
-                                                    <p class="extra-notes">
-                                                        <strong>Extra Notes</strong>
-                                                        Please send all items at the same time to shipping address by
-                                                        next week.
-                                                        Thanks a lot.
-                                                    </p>
                                                     <div class="field">
                                                         Subtotal <span>{{ number_format($order->totaux /
                                                             $order->getTaux(), 2);
@@ -126,7 +119,7 @@
                                                     <div class="field grand-total">
                                                         Total <span>{{ number_format($order->totaux /
                                                             $order->getTaux(), 2) + $order->getShipping() }}
-                                                            {{ session('locale') === 'fr' ? ' ' : ' $' }}
+                                                            {{ session('locale') === 'fr' ? ' €' : ' $' }}
                                                         </span>
                                                     </div>
                                                 </div>
@@ -134,7 +127,7 @@
                                         </div>
 
                                         <div class="footer">
-                                            Copyright © {{ new Date("Y") }}. Dimanche à Bamako
+                                            Copyright © {{ Date("Y") }}. Dimanche à Bamako
                                         </div>
                                     </div>
                                 </div>
@@ -149,7 +142,11 @@
     <script src="{{ asset('admin/assets/js/vendors/bootstrap.bundle.min.js') }}"></script>
     <script src="{{ asset('admin/assets/js/vendors/perfect-scrollbar.js') }}"></script>
     <script src="{{ asset('admin/assets/js/vendors/jquery.fullscreen.min.js') }}"></script>
-    <script src="{{ asset('admin/assets/js/vendors/chart.js') }}"></script>
+    <script>
+        (function () {
+  window.print();
+})();
+    </script>
 </body>
 
 </html>

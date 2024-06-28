@@ -27,6 +27,7 @@ class MaintenanceMail extends Mailable
     {
         return new Envelope(
             subject: 'Maintenance Mail',
+
         );
     }
 

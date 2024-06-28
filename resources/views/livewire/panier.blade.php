@@ -27,12 +27,12 @@
                                     </td>
                                     <td class="text-center" data-title="Stock">
                                         <div class="border radius d-inline-flex">
-                                            <livewire:update :row="$item" :key="$item->id" />
+                                            <livewire:update :row="$item" :key="'update-'.$item->id" />
                                         </div>
                                     </td>
                                     <td>{{ $item->associatedModel->prix_final }}</td>
                                     <td class="action" data-title="Remove">
-                                        <livewire:delete :id="$item->id" :key="$item->id" />
+                                        <livewire:delete :id="$item->id" :key="'delete-'.$item->id" />
                                     </td>
                                 </tr>
                                 @empty
@@ -83,7 +83,13 @@
                                 <th>Total</th>
                                 <td class="product-subtotal">
                                     <span class="font-xl text-brand fw-900">
-                                        {{ session('locale') === 'fr' ? $Total.' €' : $Total.' $' }}</span>
+                                        @isset($shipping)
+                                        {{ session('locale') === 'fr' ? ($Total + $shipping->montant_devise) . ' €' :
+                                        ($Total + $shipping->montant_devise) . ' $' }}
+                                        @else
+                                        {{ session('locale') === 'fr' ? $Total . ' €' : $Total . ' $' }}
+                                        @endisset
+                                    </span>
                                 </td>
                             </tr>
                         </table>
@@ -173,7 +179,8 @@
                             </div>
                         </div>
                         <div id="collapsePassword" class="form-group create-account collapse in">
-                            <x-input type="password" place="entrez votre mot de passe" label="" name="password" />
+                            <x-input type="password" :required="false" place="entrez votre mot de passe" label=""
+                                name="password" />
                         </div>
 
                         <div class="mb-20">

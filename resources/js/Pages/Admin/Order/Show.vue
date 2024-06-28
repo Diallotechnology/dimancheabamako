@@ -17,21 +17,17 @@ const props = defineProps({
 });
 const form = useForm({
     etat: props.order.etat,
-    payment: props.order.payment,
-    adresse: props.order.adresse,
-    postal: props.order.postal,
-    ville: props.order.ville,
-    pays: props.order.pays,
+    // adresse: props.order.adresse,
+    // postal: props.order.postal,
+    // ville: props.order.ville,
 });
 const submit = () => {
     form.patch(route("order.update", props.order.id), {
         onSuccess: () => {
             form.etat = props.order.etat;
-            form.payment = props.order.payment;
-            form.adresse = props.order.adresse;
-            form.postal = props.order.postal;
-            form.ville = props.order.ville;
-            form.pays = props.order.pays;
+            // form.adresse = props.order.adresse;
+            // form.postal = props.order.postal;
+            // form.ville = props.order.ville;
             notify("vente mise à jour avec success !", true);
         },
         onError: () => {
@@ -59,7 +55,7 @@ const submit = () => {
                             <b>{{ order.created_at }}</b>
                         </span>
                         <br />
-                        <small>Reference: {{ order.reference }}</small>
+                        <small>Facture N°: {{ order.reference }}</small>
                     </div>
                     <div class="col-lg-6 col-md-6 ms-auto text-md-end">
                         <form @submit.prevent="submit">
@@ -179,7 +175,7 @@ const submit = () => {
                                             <a class="itemside" href="#">
                                                 <div class="left">
                                                     <img
-                                                        src="assets/imgs/items/1.jpg"
+                                                        v-bind:src="item.cover"
                                                         width="40"
                                                         height="40"
                                                         class="img-xs"
@@ -240,17 +236,19 @@ const submit = () => {
                     <div class="col-lg-1"></div>
                     <div class="col-lg-4">
                         <div class="box shadow-sm bg-light">
-                            <h6 class="mb-15">Payment info</h6>
+                            <h6 class="mb-15">Transaction info</h6>
                             <p>
                                 <img
-                                    src="assets/imgs/card-brands/2.png"
+                                    v-bind:src="'/admin/assets/imgs/card-brands/2.png'"
                                     class="border"
                                     height="20"
                                 />
-                                {{ order.payment }} **** **** 4768
+                                {{ order.trans_ref }}
+                                {{ order.trans_state }}
                                 <br />
-                                Contact: {{ order.client.contact }}
                             </p>
+                            <h6 class="mb-15">Commentaire</h6>
+                            <p>{{ order.commentaire }}</p>
                         </div>
                     </div>
                     <!-- col// -->

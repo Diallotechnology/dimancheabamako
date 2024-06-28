@@ -31,7 +31,6 @@ class Panier extends Component
         $this->transport_id = '';
     }
 
-    #[On('Test')]
     public function GetTrans()
     {
         // get country

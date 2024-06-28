@@ -96,7 +96,7 @@ onMounted(() => {
                         >
                             <img
                                 class="img-xs rounded-circle"
-                                v-bind:src="'/admin/assets/imgs/people/avatar2.jpg'"
+                                src="https://ui-avatars.com/api/?background=random&bold=true&name={{ user.name }}"
                                 alt="User"
                         /></a>
                         <div
