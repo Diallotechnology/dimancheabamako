@@ -21,8 +21,8 @@ $cat = App\Models\Category::all();
                                     </a>
                                     <ul class="language-dropdown">
                                         <li>
-                                            {{-- <a href="{{ route('language', 'fr') }}">Euro</a> --}}
-                                            {{-- <a href="{{ route('language', 'en') }}">Dollars</a> --}}
+                                            <a href="/lang/fr">Euro</a>
+                                            <a href="/lang/en">Dollars</a>
                                         </li>
                                     </ul>
                                 </li>
@@ -34,11 +34,11 @@ $cat = App\Models\Category::all();
                                     </a>
                                     <ul class="language-dropdown">
                                         <li>
-                                            <a href="{{ route('change_language', ['locale' => 'fr']) }}">
+                                            <a href="/lang/fr">
                                                 <img src="{{ asset('assets/imgs/theme/flag-fr.png') }}" alt="flag-us" />
                                                 Français
                                             </a>
-                                            <a href="{{ route('change_language', ['locale' => 'en']) }}">
+                                            <a href="/lang/en">
                                                 <img src="{{ asset('assets/imgs/theme/flag-us.png') }}" alt="flag-us" />
                                                 English
                                             </a>
@@ -49,7 +49,7 @@ $cat = App\Models\Category::all();
                                 @guest
                                 <li>
                                     <i class="fi-rs-user"></i>
-                                    <a href="{{ route('login') }}">Se connecter</a>
+                                    <a href="{{ route('login') }}">@lang('messages.login')</a>
                                 </li>
                                 @else
                                 <li class="dropdown nav-item">
@@ -64,7 +64,7 @@ $cat = App\Models\Category::all();
                                         <a class="dropdown-item text-danger"
                                             onclick="event.preventDefault(); document.getElementById('logout-form').submit();"
                                             as="button">
-                                            <i class="material-icons md-exit_to_app"></i>Deconnexion
+                                            <i class="material-icons md-exit_to_app"></i>@lang('messages.logout')
                                             <form id="logout-form" action="{{ route('logout') }}" method="POST"
                                                 class="d-none">
                                                 @csrf
@@ -185,10 +185,8 @@ $cat = App\Models\Category::all();
                         <li class="menu-item-has-children">
                             <span class="menu-expand"></span><a href="#">Language</a>
                             <ul class="dropdown">
-                                <li><a href="#">English</a></li>
-                                <li><a href="#">French</a></li>
-                                <li><a href="#">German</a></li>
-                                <li><a href="#">Spanish</a></li>
+                                <li><a href="/lang/en">English</a></li>
+                                <li><a href="/lang/fr">French</a></li>
                             </ul>
                         </li>
                     </ul>

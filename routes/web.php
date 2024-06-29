@@ -65,7 +65,6 @@ Route::prefix('admin')->middleware('auth')->group(function () {
 Route::resource('order', OrderController::class)->only('store');
 Route::controller(LinkController::class)->group(function () {
     Route::get('/', 'home')->name('home');
-    // Route::get('lang/{lang}', 'langchange')->name('language');
     Route::get('getcategory', 'getCategory')->name('getCategory');
     Route::get('shop/show/{product}', 'shopshow')->name('shop.show');
 });
@@ -75,13 +74,6 @@ Route::post('contact/mail', ContactController::class)->name('contact.email');
 Route::view('contact', 'contact')->name('contact');
 Route::view('about', 'about')->name('about');
 Route::view('livraison', 'livraison')->name('livraison');
-
-Route::get('lang/{locale}', function ($locale) {
-    Session::put('locale', $locale);
-    App::setLocale($locale);
-
-    return back();
-})->name('change_language');
 
 Route::controller(SitemapController::class)->group(function () {
     Route::get('sitemap/index', 'index')->name('sitemap.index');
@@ -96,6 +88,16 @@ Route::controller(OrderController::class)->group(function () {
     Route::get('order/validate', 'valid')->name('order.validate');
     Route::get('order/cancel', 'cancel')->name('order.cancel');
 });
+
+Route::get('lang/{lang}', function ($lang) {
+    if (in_array($lang, ['en', 'fr'])) {
+        App::setLocale($lang);
+        Session::put('locale', $lang);
+        // dd(Session::get('locale'));
+    }
+
+    return back();
+})->name('change_language');
 // Route::get('test', function () {
 //     Artisan::call('optimize:clear');
 //     Artisan::call('db:wipe');

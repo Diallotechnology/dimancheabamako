@@ -5,17 +5,17 @@
                 <div class="col-md-12">
                     <div class="mb-20">
                         <h4>
-                            Panier {{ $items->count() }} element
+                            @lang('messages.cart') {{ $items->count() }} element(s)
                         </h4>
                     </div>
                     <div class="table-responsive order_table text-center">
                         <table class="table">
                             <thead>
                                 <tr>
-                                    <th>Produit</th>
-                                    <th>Quantité</th>
-                                    <th>Prix unitaire</th>
-                                    <th>Action</th>
+                                    <th>@lang('messages.product')</th>
+                                    <th>@lang('messages.quantity')</th>
+                                    <th>@lang('messages.unit_price')</th>
+                                    <th>@lang('messages.action')</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -37,7 +37,7 @@
                                 </tr>
                                 @empty
                                 <h4 class="text-center my-5">
-                                    Aucun produit dans le panier
+                                    @lang('messages.no_products_in_cart')
                                 </h4>
                                 @endforelse
                             </tbody>
@@ -46,17 +46,17 @@
                     </div>
                 </div>
                 <div @class(['col-md-4 order-1', 'd-none'=> $items->count() == 0])>
-                    <h5>NB : Le paiement sera effectué en CFA (XOF).</h5>
+                    <h5>@lang('messages.payment_note')</h5>
                     <div class="table-responsive order_table text-center sticky-top">
                         <table class="table">
                             <tr>
-                                <th>Poids Total</th>
+                                <th>@lang('messages.total_weight')</th>
                                 <td>
                                     <em>{{ $totalWeight }}</em>
                                 </td>
                             </tr>
                             <tr>
-                                <th>Livraison</th>
+                                <th>@lang('messages.shipping')</th>
                                 <td>
                                     <em>
                                         @isset($shipping)
@@ -68,13 +68,13 @@
                                 </td>
                             </tr>
                             <tr>
-                                <th>Delai de Livraison</th>
+                                <th>@lang('messages.delivery_time')</th>
                                 <td>
-                                    <em>4 à 7 jours</em>
+                                    <em>@lang('messages.delivery_days')</em>
                                 </td>
                             </tr>
                             <tr>
-                                <th>Total Quantity</th>
+                                <th>@lang('messages.total_quantity')</th>
                                 <td>
                                     <em>{{ $TotalQuantity }}</em>
                                 </td>
@@ -97,27 +97,29 @@
                 </div>
                 <div @class(['col-md-8', 'd-none'=> $items->count() == 0]) >
                     <div class="mb-25">
-                        <h4>Informations de la commande</h4>
+                        <h4>@lang('messages.order_information')</h4>
                     </div>
                     <form method="post" class="needs-validation" action="{{ route('order.store') }}" novalidate>
                         @csrf
                         <input type="hidden" name="livraison" value="{{ $shipping ? $shipping->id : '' }}">
                         <div class="row">
                             <div class="col-md-6">
-                                <x-input type="text" place="votre prenom" label="preNom" name="prenom" />
+                                <x-input type="text" place="votre prenom" :label="__('messages.first_name')"
+                                    name="prenom" />
                             </div>
                             <div class="col-md-6">
-                                <x-input type="text" place="votre nom" label="Nom" name="nom" />
+                                <x-input type="text" place="votre nom" :label="__('messages.last_name')" name="nom" />
                             </div>
                             <div class="col-md-6">
-                                <x-input type="text" place="votre adresse" label="Adresse" name="adresse" />
+                                <x-input type="text" place="votre adresse" :label="__('messages.address')"
+                                    name="adresse" />
                             </div>
                             <div class="col-md-6">
-                                <x-input type="text" place="votre ville" label="Ville" name="ville" />
+                                <x-input type="text" place="votre ville" :label="__('messages.city')" name="ville" />
                             </div>
                             <div class="col-md-6">
                                 <div class="mt-3">
-                                    <x-input type="text" place="votre contact" label="contact (avec l'indicatif)"
+                                    <x-input type="text" place="votre contact" :label="__('messages.contact_with_code')"
                                         name="contact" />
                                 </div>
                             </div>
@@ -127,14 +129,13 @@
                             <div class="col-md-6">
                                 <div class="mb-4">
                                     <p>
-                                        NB: en premier lieu, sélectionnez un
-                                        pays
+                                        @lang('messages.select_country_first')
                                     </p>
-                                    <label class="text-uppercase form-label">Pays de livraison</label>
+                                    <label class="text-uppercase form-label">@lang('messages.delivery_country')</label>
                                     <select class="form-select" required name="country_id" wire:model.live='country_id'
                                         wire:change='GetTrans'>
                                         <option selected value="">
-                                            selectionner un pays
+                                            @lang('messages.select_country')
                                         </option>
                                         @foreach ($country as $item)
                                         <option value="{{ $item->id }}">
@@ -150,11 +151,11 @@
 
                             <div class="col-md-6">
                                 <div class="mb-4">
-                                    <label class="text-uppercase form-label">Transporteur</label>
+                                    <label class="text-uppercase form-label">@lang('messages.carrier')</label>
                                     <select class="form-select" required name="transport_id" wire:change="GetShipping()"
                                         wire:model.live='transport_id'>
                                         <option selected value="">
-                                            selectionner un transporteur
+                                            @lang('messages.select_carrier')
                                         </option>
                                         @foreach ($trans as $item)
                                         <option value="{{ $item->id }}">
@@ -172,9 +173,9 @@
                                     <input class="form-check-input" type="checkbox" id="createaccount" />
                                     <label class="form-check-label label_info" data-bs-toggle="collapse"
                                         href="#collapsePassword" data-target="#collapsePassword"
-                                        aria-controls="collapsePassword" for="createaccount"><span>Souhaitez vous crée
-                                            un compte
-                                            directement?</span></label>
+                                        aria-controls="collapsePassword" for="createaccount"><span>
+                                            @lang('messages.create_account_prompt')
+                                        </span></label>
                                 </div>
                             </div>
                         </div>
@@ -185,8 +186,7 @@
 
                         <div class="mb-20">
                             <h5>
-                                Avez-vous des commentaire a ajouter a votre
-                                commande ?
+                                @lang('messages.add_comments_prompt')
                             </h5>
                         </div>
                         <div class="form-group mb-30">

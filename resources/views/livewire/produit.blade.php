@@ -75,23 +75,20 @@
                                 <p class="mt-15">
                                     Categorie: {{ $row->categorie->nom }}
                                     <br />
-                                    Taille: {{ $row->taille }} <br />
+                                    @lang('messages.size') {{ $row->taille }} <br />
+                                    @lang('messages.color') {{ $row->color }}
                                 </p>
-
                                 <div class="product-action-1 show">
-                                    <button type="button" aria-label="Acheté" class="action-btn"
+                                    <button type="button" aria-label="@lang('messages.purchased')" class="action-btn"
                                         wire:click='add({{ $row->id }})'>
                                         <i class="fi-rs-shopping-bag-add"></i>
-                                        {{-- {{ GoogleTranslate::trans("", session('locale')) }} --}}
-                                        Acheté
+                                        @lang('messages.purchased')
                                     </button>
                                 </div>
                             </div>
                         </div>
                         @empty
-                        <h4 class="text-center my-5">
-                            {{-- {{ GoogleTranslate::trans("Aucun produit disponible", session('locale')) }} --}}
-                        </h4>
+                        <h4 class="text-center my-5">@lang('messages.no_product_available')</h4>
                         @endforelse
                     </div>
                     <!--pagination-->

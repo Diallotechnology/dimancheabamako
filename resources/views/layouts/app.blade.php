@@ -112,15 +112,15 @@
                 <div class="modal-body">
                     <div class="cart-action text-center m-3">
                         <h4 class="my-3">
-                            Produit ajouter au panier avec success!
+                            @lang('messages.product_added_success')
                         </h4>
                         <a class="btn mr-10 mb-sm-15" href="{{ route('panier') }}">
                             <i class="fi-rs-shuffle mr-10"></i>
-                            Finaliser ma commande
+                            @lang('messages.finalize_order')
                         </a>
                         <a class="btn" aria-label="Close" href="{{ route('home') }}">
                             <i class="fi-rs-shopping-bag mr-10"></i>
-                            Continue Shopping
+                            @lang('messages.continue_shopping')
                         </a>
                     </div>
                 </div>

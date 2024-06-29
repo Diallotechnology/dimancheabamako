@@ -1,16 +1,14 @@
 <x-guest-layout>
     <div class="card mx-auto card-login">
         <div class="card-body">
-            <h4 class="card-title mb-4 h2">S'inscrire</h4>
+            <h4 class="card-title mb-4 h2"> @lang('messages.register')</h4>
             <form method="POST" action="{{ route('register') }}">
                 @csrf
                 <div class="row">
-
-
                     <div class="col-md-6">
                         <div class="mt-4">
                             <!-- Name -->
-                            <x-input-label for="prenom" :value="__('Prenom')" />
+                            <x-input-label for="prenom" :value="__('messages.first_name')" />
                             <x-text-input id="prenom" class="block mt-1 w-full" type="text" name="prenom"
                                 :value="old('prenom')" required autofocus autocomplete="prenom" />
                             <x-input-error :messages="$errors->get('prenom')" class="mt-2" />
@@ -19,7 +17,7 @@
                     <div class="col-md-6">
                         <div class="mt-4">
                             <!-- Name -->
-                            <x-input-label for="nom" :value="__('Nom')" />
+                            <x-input-label for="nom" :value="__('messages.last_name')" />
                             <x-text-input id="nom" class="block mt-1 w-full" type="text" name="nom" :value="old('nom')"
                                 required autofocus autocomplete="nom" />
                             <x-input-error :messages="$errors->get('nom')" class="mt-2" />
@@ -27,7 +25,7 @@
                     </div>
                     <div class="col-md-6">
                         <div class="mt-4">
-                            <x-select name="pays" label="Pays">
+                            <x-select name="pays" :label="__('messages.country')">
                                 @foreach ($pays as $row)
                                 <option value="{{ $row }}">{{ $row }}</option>
                                 @endforeach
@@ -64,7 +62,7 @@
 
                     <!-- Confirm Password -->
                     <div class="mt-4">
-                        <x-input-label for="password_confirmation" :value="__('Confirmé le mot de passe')" />
+                        <x-input-label for="password_confirmation" :value="__('messages.confirm_password')" />
 
                         <x-text-input id="password_confirmation" class="block mt-1 w-full" type="password"
                             name="password_confirmation" required autocomplete="new-password" />
@@ -73,10 +71,10 @@
                     </div>
                 </div>
                 <div class="d-flex justify-content-center my-4">
-                    <p class="me-2">Vous avez dejà un compte?</p>
+                    <p class="me-2">@lang('messages.already_have_account')</p>
                     <div>
                         <a href="{{ route('login') }}" class="underline text-end text-sm">
-                            Se connecter
+                            @lang('messages.login')
                         </a>
                     </div>
                 </div>

@@ -11,12 +11,13 @@
                         </a>
                     </div>
                     <div class="product-action-1">
-                        <a href="{{ route('shop.show', $item->id) }}" aria-label="Voir" class="action-btn hover-up">
+                        <a href="{{ route('shop.show', $item->id) }}" aria-label="@lang('messages.view')"
+                            class="action-btn hover-up">
                             <i class="fi-rs-eye"></i></a>
                     </div>
                     @if ($news == true)
                     <div class="product-badges product-badges-position product-badges-mrg">
-                        <span class="new">Nouveauté</span>
+                        <span class="new">@lang('messages.new')</span>
                     </div>
                     @endif
                     @if ($hot == true)
@@ -41,9 +42,9 @@
                             {{ $item->nom }}
                         </a>
                     </h2>
-                    <span>Taille {{ $item->taille }}</span>
+                    <span>@lang('messages.size') {{ $item->taille }}</span>
                     <br />
-                    <span>Couleur {{ $item->color }}</span>
+                    <span>@lang('messages.color') {{ $item->color }}</span>
                     <div class="product-price">
                         <span>
                             {{
@@ -61,7 +62,7 @@
                     <div class="product-action-1 show">
                         <button type="button" aria-label="Acheté" class="action-btn" wire:click='add({{ $item->id }})'>
                             <i class="fi-rs-shopping-bag-add"></i>
-                            Acheté
+                            @lang('messages.purchased')
                         </button>
                     </div>
                 </div>

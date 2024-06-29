@@ -1,6 +1,6 @@
 <div>
     <button wire:click='add()' class="button button-add-to-cart">
-        Acheté
+        @lang('messages.purchased')
     </button>
 </div>
 @script

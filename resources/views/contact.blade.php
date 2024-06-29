@@ -2,8 +2,8 @@
     <div class="page-header breadcrumb-wrap">
         <div class="container">
             <div class="breadcrumb">
-                <a href="/" rel="nofollow">Accueil</a>
-                <span></span> Pages <span></span> Contactez-nous
+                <a href="/" rel="nofollow">@lang('messages.home')</a>
+                <span></span> Pages <span></span> @lang('messages.contact_us')
             </div>
         </div>
     </div>
@@ -28,7 +28,7 @@
             <div class="row">
                 <div class="col-xl-8 col-lg-10 m-auto">
                     <div class="contact-from-area padding-20-row-col wow FadeInUp">
-                        <h3 class="mb-10 text-center">Contactez-nous</h3>
+                        <h3 class="mb-10 text-center">@lang('messages.contact_us')</h3>
 
                         @if (session('email_success'))
                         <div class="alert alert-success text-white text-center" style="background: #07bc0c"

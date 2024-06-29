@@ -8,15 +8,12 @@
                         <div class="col-lg-5 col-md-6">
                             <div class="hero-slider-content-2">
                                 <h2 class="animated fw-900">
-                                    {{-- {{ GoogleTranslate::trans($item->text_one, session('locale')) }} --}}
                                     {{ $item->text_one}}
                                 </h2>
                                 <h1 class="animated fw-900 text-brand">
-                                    {{-- {{ GoogleTranslate::trans($item->text_two, session('locale')) }} --}}
                                     {{ $item->text_two }}
                                 </h1>
                                 <p class="animated">
-                                    {{-- {{ GoogleTranslate::trans($item->paragraph, session('locale')) }} --}}
                                     {{ $item->paragraph }}
                                 </p>
                             </div>
@@ -38,58 +35,38 @@
             <div class="row">
                 <div class="col-lg-2 col-md-4 mb-md-3 mb-lg-0">
                     <div class="banner-features wow fadeIn animated hover-up">
-                        <img src="/assets/imgs/theme/icons/feature-1.png" alt="" />
-                        <h4 class="bg-1">
-                            {{-- {{ GoogleTranslate::trans('Livraison partout', session('locale')) }} --}}
-                            Livraison partout
-                        </h4>
-
+                        <img src="{{ asset('assets/imgs/theme/icons/feature-1.png') }}" alt="" />
+                        <h4 class="bg-1">@lang('messages.delivery_everywhere')</h4>
                     </div>
                 </div>
                 <div class="col-lg-2 col-md-4 mb-md-3 mb-lg-0">
                     <div class="banner-features wow fadeIn animated hover-up">
-                        <img src="/assets/imgs/theme/icons/feature-2.png" alt="" />
-                        <h4 class="bg-3">
-                            {{-- {{ GoogleTranslate::trans("Commande en ligne", session('locale')) }} --}}
-                            Commande en ligne
-                        </h4>
-
+                        <img src="{{ asset('assets/imgs/theme/icons/feature-2.png') }}" alt="" />
+                        <h4 class="bg-3">@lang('messages.online_order')</h4>
                     </div>
                 </div>
                 <div class="col-lg-2 col-md-4 mb-md-3 mb-lg-0">
                     <div class="banner-features wow fadeIn animated hover-up">
-                        <img src="/assets/imgs/theme/icons/feature-3.png" alt="" />
-                        <h4 class="bg-2">
-                            {{-- {{ GoogleTranslate::trans("Économiser de l'argent", session('locale')) }} --}}
-                            Économiser de l'argent
-                        </h4>
+                        <img src="{{ asset('assets/imgs/theme/icons/feature-3.png') }}" alt="" />
+                        <h4 class="bg-2">@lang('messages.save_money')</h4>
                     </div>
                 </div>
                 <div class="col-lg-2 col-md-4 mb-md-3 mb-lg-0">
                     <div class="banner-features wow fadeIn animated hover-up">
-                        <img src="/assets/imgs/theme/icons/feature-4.png" alt="" />
-                        <h4 class="bg-4">
-                            {{-- {{ GoogleTranslate::trans("Promotions", session('locale')) }} --}}
-                            Promotions
-                        </h4>
+                        <img src="{{ asset('assets/imgs/theme/icons/feature-4.png') }}" alt="" />
+                        <h4 class="bg-4">Promotions</h4>
                     </div>
                 </div>
                 <div class="col-lg-2 col-md-4 mb-md-3 mb-lg-0">
                     <div class="banner-features wow fadeIn animated hover-up">
-                        <img src="/assets/imgs/theme/icons/feature-5.png" alt="" />
-                        <h4 class="bg-5">
-                            {{-- {{ GoogleTranslate::trans("Bon shopping", session('locale')) }} --}}
-                            Bon shopping
-                        </h4>
+                        <img src="{{ asset('assets/imgs/theme/icons/feature-5.png') }}" alt="" />
+                        <h4 class="bg-5">@lang('messages.happy_shopping')</h4>
                     </div>
                 </div>
                 <div class="col-lg-2 col-md-4 mb-md-3 mb-lg-0">
                     <div class="banner-features wow fadeIn animated hover-up">
-                        <img src="/assets/imgs/theme/icons/feature-6.png" alt="" />
-                        <h4 class="bg-6">
-                            {{-- {{ GoogleTranslate::trans("24/7 Support", session('locale')) }} --}}
-                            24/7 Support
-                        </h4>
+                        <img src="{{ asset('assets/imgs/theme/icons/feature-6.png') }}" alt="" />
+                        <h4 class="bg-6">24/7 Support</h4>
                     </div>
                 </div>
             </div>
@@ -104,8 +81,7 @@
                     <li class="nav-item" role="presentation">
                         <button class="nav-link active" id="nav-tab-two" data-bs-toggle="tab" data-bs-target="#tab-two"
                             type="button" role="tab" aria-controls="tab-two" aria-selected="false">
-                            {{-- {{ GoogleTranslate::trans("Populaire", session('locale')) }} --}}
-                            Populaire
+                            @lang('messages.popular')
                         </button>
                     </li>
                     @endempty
@@ -113,15 +89,13 @@
                     <li class="nav-item" role="presentation">
                         <button class="nav-link" id="nav-tab-three" data-bs-toggle="tab" data-bs-target="#tab-three"
                             type="button" role="tab" aria-controls="tab-three" aria-selected="false">
-                            {{-- {{ GoogleTranslate::trans("Nouveauté", session('locale')) }} --}}
-                            Nouveauté
+                            @lang('messages.new')
                         </button>
                     </li>
                     @endempty
                 </ul>
                 <a href="{{ route('shop') }}" class="view-more d-none d-md-flex">
-                    {{-- {{ GoogleTranslate::trans("Voir tout", session('locale')) }} --}}
-                    Voir tout
+                    @lang('messages.view_all')
                     <i class="fi-rs-angle-double-small-right"></i>
                 </a>
             </div>

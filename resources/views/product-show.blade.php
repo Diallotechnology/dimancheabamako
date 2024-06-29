@@ -73,12 +73,12 @@
                                     <div class="product_sort_info font-xs mb-30">
                                         <ul>
                                             <li class="mb-10">
-                                                <i class="fi-rs-crown mr-5"></i>Taille:
+                                                <i class="fi-rs-crown mr-5"></i>@lang('messages.size'):
                                                 {{ $product->taille }}
                                             </li>
 
                                             <li>
-                                                En stock:
+                                                @lang('messages.in_stock'):
                                                 {{
                                                 $product->stock > 1
                                                 ? "OUI"
@@ -102,7 +102,7 @@
                             <ul class="nav nav-tabs text-uppercase">
                                 <li class="nav-item">
                                     <a class="nav-link active" id="Description-tab" data-bs-toggle="tab"
-                                        href="#Description">Description du produit</a>
+                                        href="#Description">@lang('messages.product_description')</a>
                                 </li>
                             </ul>
                             <div class="tab-content shop_info_tab entry-main-content">

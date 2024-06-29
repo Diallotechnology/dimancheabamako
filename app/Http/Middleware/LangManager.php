@@ -17,13 +17,10 @@ class LangManager
      */
     public function handle(Request $request, Closure $next): Response
     {
-        // Vérifiez si la langue est définie dans la session
-        if (Session::has('locale')) {
-            App::setLocale(Session::get('locale'));
-        } else {
-            // Définir la langue par défaut si aucune langue n'est définie dans la session
-            App::setLocale(config('app.locale'));
-        }
+        // Vérifiez si la langue est définie dans la requête
+        $locale = Session::get('locale') ?? 'fr';
+        Session::put('locale', $locale);
+        App::setLocale($locale);
 
         return $next($request);
     }
