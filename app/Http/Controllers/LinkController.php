@@ -24,7 +24,7 @@ class LinkController extends Controller
 
         $slide = Slide::all();
 
-        return view('index', \compact('popular', 'latest', 'slide'));
+        return view('index', compact('popular', 'latest', 'slide'));
     }
 
     public function getCategory()

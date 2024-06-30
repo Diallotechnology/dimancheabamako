@@ -1,5 +1,6 @@
 <?php
 
+use App\Enum\RoleEnum;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\ClientController;
@@ -24,42 +25,48 @@ use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Route;
 
 Route::prefix('admin')->middleware('auth')->group(function () {
+    Route::middleware('role:'.RoleEnum::ADMIN->value)->group(function () {
+        Route::resource('client', ClientController::class)->except('index', 'create');
+        Route::resource('user', UserController::class)->except('index', 'create');
+        Route::get('product/{product}/{data}', [ProductController::class, 'favoris'])->name('product.favoris');
+        Route::resource('image', ImageController::class)->except('index', 'create', 'show', 'store');
+        Route::resource('promotion', PromotionController::class)->except('index');
+        Route::resource('transport', TransportController::class)->except('index', 'create');
+        Route::resource('zone', ZoneController::class)->except('index', 'create');
+        Route::resource('country', CountryController::class)->except('index', 'create');
+        Route::resource('shipping', ShippingController::class)->except('index', 'create');
+        Route::resource('poid', PoidsController::class)->except('index', 'create', 'show');
+        Route::resource('devise', DeviseController::class)->except('index', 'create', 'show', 'store');
+        Route::get('transport/{transport}', [TransportController::class, 'get_trans_zone'])->name('transport.zone');
+        Route::resource('slide', SlideController::class)->except('index', 'create');
 
-    Route::resource('client', ClientController::class)->except('index', 'create');
-    Route::resource('user', UserController::class)->except('index', 'create');
-    Route::resource('order', OrderController::class)->except('index', 'create');
-    Route::resource('product', ProductController::class)->except('index', 'create');
-    Route::get('product/{product}/{data}', [ProductController::class, 'favoris'])->name('product.favoris');
-    Route::resource('category', CategoryController::class)->except('index', 'create', 'show');
-    Route::resource('image', ImageController::class)->except('index', 'create', 'show', 'store');
-    Route::resource('promotion', PromotionController::class)->except('index');
-    Route::resource('transport', TransportController::class)->except('index', 'create');
-    Route::resource('zone', ZoneController::class)->except('index', 'create');
-    Route::resource('country', CountryController::class)->except('index', 'create');
-    Route::resource('shipping', ShippingController::class)->except('index', 'create');
-    Route::resource('poid', PoidsController::class)->except('index', 'create', 'show');
-    Route::resource('devise', DeviseController::class)->except('index', 'create', 'show', 'store');
-    Route::get('transport/{transport}', [TransportController::class, 'get_trans_zone'])->name('transport.zone');
-    Route::resource('slide', SlideController::class)->except('index', 'create');
-
-    Route::controller(AdminController::class)->group(function () {
-        Route::get('dashboard', 'dashboard')->name('dashboard');
-        Route::get('order', 'order')->name('order');
-        Route::get('product', 'product')->name('product');
-        Route::get('category', 'category')->name('category');
-        Route::get('user', 'user')->name('user');
-        Route::get('customer', 'customer')->name('user.client');
-        Route::get('client', 'client')->name('client');
-        Route::get('promotion', 'promotion')->name('promotion');
-        Route::get('zone', 'zone')->name('zone');
-        Route::get('country', 'country')->name('pays');
-        Route::get('transport', 'transport')->name('transport');
-        Route::get('shipping', 'shipping')->name('shipping');
-        Route::get('poids', 'poids')->name('poids');
-        Route::get('devise', 'devise')->name('devise');
-        Route::get('slide', 'slide')->name('slide');
-        Route::get('maintenance', 'maintenance')->name('maintenance');
+        Route::controller(AdminController::class)->group(function () {
+            Route::get('user', 'user')->name('user');
+            Route::get('customer', 'customer')->name('user.client');
+            Route::get('client', 'client')->name('client');
+            Route::get('promotion', 'promotion')->name('promotion');
+            Route::get('zone', 'zone')->name('zone');
+            Route::get('country', 'country')->name('pays');
+            Route::get('transport', 'transport')->name('transport');
+            Route::get('shipping', 'shipping')->name('shipping');
+            Route::get('poids', 'poids')->name('poids');
+            Route::get('devise', 'devise')->name('devise');
+            Route::get('slide', 'slide')->name('slide');
+            Route::get('maintenance', 'maintenance')->name('maintenance');
+        });
     });
+    Route::middleware('role:'.RoleEnum::SECRTETAIRE->value)->group(function () {
+        Route::resource('order', OrderController::class)->except('index', 'create');
+        Route::resource('category', CategoryController::class)->except('index', 'create', 'show');
+        Route::resource('product', ProductController::class)->except('index', 'create');
+        Route::controller(AdminController::class)->group(function () {
+            Route::get('dashboard', 'dashboard')->name('dashboard');
+            Route::get('order', 'order')->name('order');
+            Route::get('product', 'product')->name('product');
+            Route::get('category', 'category')->name('category');
+        });
+    });
+
 });
 
 Route::resource('order', OrderController::class)->only('store');
@@ -82,7 +89,6 @@ Route::controller(SitemapController::class)->group(function () {
     Route::get('sitemap/product', 'product')->name('sitemap.product');
 });
 
-Route::get('users/order', [OrderController::class, 'processPayment']);
 Route::controller(OrderController::class)->group(function () {
     Route::get('order/invoice/{id}', 'invoice')->name('order.invoice');
     Route::get('order/validate', 'valid')->name('order.validate');
@@ -93,11 +99,11 @@ Route::get('lang/{lang}', function ($lang) {
     if (in_array($lang, ['en', 'fr'])) {
         App::setLocale($lang);
         Session::put('locale', $lang);
-        // dd(Session::get('locale'));
     }
 
     return back();
 })->name('change_language');
+
 // Route::get('test', function () {
 //     Artisan::call('optimize:clear');
 //     Artisan::call('db:wipe');

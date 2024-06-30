@@ -19,6 +19,7 @@ use App\Models\User;
 use App\Models\Zone;
 use Countries;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Request;
@@ -247,8 +248,18 @@ class AdminController extends Controller
 
     public function maintenance()
     {
-        $token = Str::random(60);
-        Artisan::call("down --secret='$token'");
-        Mail::to('topmariage.mali@gmail.com')->send(new MaintenanceMail($token));
+
+        if (App::isDownForMaintenance()) {
+            Artisan::call('up');
+            $msg = 'Le mode maintenance a été désactivé avec succès!';
+        } else {
+            $token = Str::random(60);
+            Artisan::call("down --secret='$token'");
+            $msg = 'Le mode maintenance a été activer avec succès!';
+            Mail::to('topmariage.mali@gmail.com')->send(new MaintenanceMail($token));
+        }
+
+        // return response()->json(['message' => $msg]);
+        // return back()->with('message', $msg);
     }
 }

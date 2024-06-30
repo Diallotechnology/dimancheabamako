@@ -43,7 +43,10 @@ return [
             'visibility' => 'public',
             'throw' => false,
         ],
-
+        'framework' => [
+            'driver' => 'local',
+            'root' => storage_path('framework'),
+        ],
         's3' => [
             'driver' => 's3',
             'key' => env('AWS_ACCESS_KEY_ID'),
