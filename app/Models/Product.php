@@ -182,9 +182,7 @@ class Product extends Model
 
     public function getCoverAttribute(): string
     {
-
-        return asset('assets/imgs/shop/product-2-2.jpg');
-        // return Storage::url($this->attributes['cover']);
+        return Storage::url($this->attributes['cover']);
     }
 
     public function DocLink(): string

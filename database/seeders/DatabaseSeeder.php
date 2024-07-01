@@ -48,23 +48,23 @@ class DatabaseSeeder extends Seeder
             'image' => 'slide/image/slider-3.png',
         ]);
         Zone::factory()->hasCountries(5)->create(['nom' => 'Afrique']);
-        Zone::factory()->hasCountries(5)->create(['nom' => 'Europe']);
-        Zone::factory()->hasCountries(5)->create(['nom' => 'Asie']);
+        // Zone::factory()->hasCountries(5)->create(['nom' => 'Europe']);
+        // Zone::factory()->hasCountries(5)->create(['nom' => 'Asie']);
         Transport::factory()->hasZones(2)->create(['nom' => 'DHL']);
         Transport::factory()->hasZones(2)->create(['nom' => 'FeDEX']);
         Poids::factory()->create(['min' => '1', 'max' => '2']);
         Poids::factory()->create(['min' => '3', 'max' => '4']);
-        Poids::factory()->create(['min' => '5', 'max' => '7']);
-        Poids::factory()->create(['min' => '8', 'max' => '10']);
-        Shipping::factory(20)->create();
-        User::factory(30)->create();
+        // Poids::factory()->create(['min' => '5', 'max' => '7']);
+        // Poids::factory()->create(['min' => '8', 'max' => '10']);
+        Shipping::factory(10)->create();
+        User::factory(10)->create();
         Category::factory(5)->create();
         Client::factory(30)->create();
         Product::factory(30)->hasImages(3)->create();
-        Promotion::factory(5)->hasProducts(10)->create();
-        Order::factory(30)->hasAttached(
-            Product::factory(10)->hasImages(3)->count(4),
-            ['montant' => rand(50000, 100000), 'quantity' => rand(1, 10)]
-        )->create();
+        // Promotion::factory(5)->hasProducts(10)->create();
+        // Order::factory(30)->hasAttached(
+        //     Product::factory(10)->hasImages(3)->count(4),
+        //     ['montant' => rand(50000, 100000), 'quantity' => rand(1, 10)]
+        // )->create();
     }
 }

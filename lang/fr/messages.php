@@ -70,4 +70,6 @@ return [
     'address' => 'Adresse',
     'city' => 'Ville',
     'contact_with_code' => 'Contact (avec l\'indicatif)',
+    'bazin_sale' => 'Vente de Bazin teinté, de Getzner Magnum, de boubou et robes prêt-à-porter, des brodés, wax et des accessoires pour femme',
+    'sunday_sale' => 'E-commerce Dimanche à Bamako - Vente de Bazin, Getzner Magnum, Boubou et Robes',
 ];

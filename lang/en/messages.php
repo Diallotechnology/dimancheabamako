@@ -70,4 +70,6 @@ return [
     'address' => 'Address',
     'city' => 'City',
     'contact_with_code' => 'Contact (with country code)',
+    'bazin_sale' => 'Sale of tinted Bazin, Getzner Magnum, ready-to-wear boubou and dresses, embroidered, wax, and accessories for women',
+    'sunday_sale' => 'E-commerce Sunday in Bamako - Sale of Bazin, Getzner Magnum, Boubou and Dresses',
 ];

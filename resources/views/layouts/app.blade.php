@@ -10,33 +10,32 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <!-- Google / Search Engine Tags -->
     <meta itemprop="name" content="Dimanche à bamako">
-    <meta itemprop="description"
-        content="E-commerce vente Bazin teinté, de Getzner Magnum, de boubou et robes prêt-à-porter, des brodés, wax et des accessoires pour femme">
+    <meta itemprop="description" content="@lang('messages.bazin_sale')">
     <meta itemprop="image" content="{{ asset('assets/imgs/theme/logo_meta_tag.png') }}">
 
     <!-- Facebook Meta Tags -->
     <meta property="og:url" content="https://www.dimancheabamako.com">
     <meta property="og:type" content="website">
     <meta property="og:title" content="Dimanche à bamako">
-    <meta property="og:description"
-        content="E-commerce vente Bazin teinté, de Getzner Magnum, de boubou et robes prêt-à-porter, des brodés, wax et des accessoires pour femme">
+    <meta property="og:description" content="@lang('messages.bazin_sale')">
     <meta property="og:image" content="{{ asset('assets/imgs/theme/logo_meta_tag.png') }}">
 
     <!-- Twitter Meta Tags -->
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="Dimanche à bamako">
-    <meta name="twitter:description"
-        content="E-commerce vente Bazin teinté, de Getzner Magnum, de boubou et robes prêt-à-porter, des brodés, wax et des accessoires pour femme">
+    <meta name="twitter:description" content="@lang('messages.bazin_sale')">
     <meta name="twitter:image" content="{{ asset('assets/imgs/theme/logo_meta_tag.png') }}">
     <!-- Favicon -->
     <link rel="shortcut icon" type="image/x-icon" href="{{ asset('assets/imgs/theme/favicon.svg') }}">
-    <title>{{ $title ?? 'E-commerce Dimanche à Bamako - Vente de Bazin, Getzner Magnum, Boubou et Robes' }}</title>
+    <title>@lang('messages.sunday_sale')</title>
+
 
     <link href="{{ asset('assets/css/main.css') }}" rel="stylesheet" />
     {{--
     <link href="{{ asset('build/assets/app-YaJoXqX7.css') }}" rel="stylesheet" /> --}}
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
 </head>
+
 
 <body>
     <style>
@@ -101,6 +100,12 @@
             object-fit: cover;
         }
     </style>
+    @if (Session::has('down_message'))
+    <div class="alert alert-info alert-dismissible text-center fade show" role="alert">
+        <strong> {{ Session::get('down_message') }}</strong>
+    </div>
+    {{ Session::forget('down_message') }}
+    @endif
 
     @include('layouts.nav')
     <!-- Quick view -->
@@ -158,10 +163,10 @@
                             </h5>
                             <div class="mobile-social-icon wow fadeIn animated mb-sm-5 mb-md-0">
                                 <a href="#"><img src="{{ asset('assets/imgs/theme/icons/icon-facebook.svg') }}"
-                                        alt="" /></a>
+                                        alt="facebook" /></a>
 
-                                <a href="#"><img src="{{ asset('assets/imgs/theme/icons/icon-facebook.svg') }}"
-                                        alt="" /></a>
+                                <a href="#"><img src="{{ asset('assets/imgs/theme/icons/icon-instagram.svg') }}"
+                                        alt="instagram" /></a>
                             </div>
                         </div>
                     </div>
@@ -415,9 +420,6 @@
     });
 
     </script>
-    {{-- <script type="text/javascript"
-        src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit">
-    </script> --}}
 </body>
 
 </html>

@@ -47,6 +47,7 @@ class HandleInertiaRequests extends Middleware
                 'user' => fn () => $request->user() ? $request->user()->only('id', 'email', 'name', 'role') : null,
             ],
             'locale' => session()->has('locale') ? session('locale') : session()->put('locale', 'fr'),
+            'flash' => session()->has('down_message') ? session('down_message') : '',
         ];
     }
 }

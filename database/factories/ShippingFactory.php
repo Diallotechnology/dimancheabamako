@@ -20,7 +20,7 @@ class ShippingFactory extends Factory
             'montant' => \rand(15000, 50000),
             'transport_id' => \rand(1, 2),
             'zone_id' => \rand(1, 2),
-            'poids_id' => \rand(1, 4),
+            'poids_id' => \rand(1, 2),
             'temps' => $this->faker->randomElement(['2 jours', '3 jours', '4 jours']),
         ];
     }

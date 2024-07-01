@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Enum\RoleEnum;
-use App\Mail\MaintenanceMail;
 use App\Models\Category;
 use App\Models\Client;
 use App\Models\Country;
@@ -21,8 +20,8 @@ use Countries;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Artisan;
-use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Request;
+use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Str;
 use Inertia\Inertia;
 
@@ -251,15 +250,16 @@ class AdminController extends Controller
 
         if (App::isDownForMaintenance()) {
             Artisan::call('up');
-            $msg = 'Le mode maintenance a été désactivé avec succès!';
+            Session::put('down_message', 'Le mode maintenance a été désactivé avec succès!');
+
+            return to_route('home');
         } else {
             $token = Str::random(60);
             Artisan::call("down --secret='$token'");
-            $msg = 'Le mode maintenance a été activer avec succès!';
-            Mail::to('topmariage.mali@gmail.com')->send(new MaintenanceMail($token));
-        }
+            Session::put('down_token', $token);
+            Session::put('down_message', 'Le mode maintenance a été activer avec succès!');
 
-        // return response()->json(['message' => $msg]);
-        // return back()->with('message', $msg);
+            return to_route('home', $token);
+        }
     }
 }
