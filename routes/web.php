@@ -21,14 +21,12 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\ZoneController;
 use App\Livewire\Panier;
 use App\Livewire\Produit;
-use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Route;
 
 Route::prefix('admin')->middleware('auth')->group(function () {
     Route::middleware('role:'.RoleEnum::ADMIN->value)->group(function () {
         Route::resource('client', ClientController::class)->except('index', 'create');
         Route::resource('user', UserController::class)->except('index', 'create');
-        Route::get('product/{product}/{data}', [ProductController::class, 'favoris'])->name('product.favoris');
         Route::resource('image', ImageController::class)->except('index', 'create', 'show', 'store');
         Route::resource('promotion', PromotionController::class)->except('index');
         Route::resource('transport', TransportController::class)->except('index', 'create');
@@ -57,6 +55,7 @@ Route::prefix('admin')->middleware('auth')->group(function () {
     });
     Route::middleware('role:'.RoleEnum::SECRTETAIRE->value)->group(function () {
         Route::resource('order', OrderController::class)->except('index', 'create');
+        Route::get('product/favoris/{data}/{product_id}', [ProductController::class, 'favoris_update'])->name('product.favori');
         Route::resource('category', CategoryController::class)->except('index', 'create', 'show');
         Route::resource('product', ProductController::class)->except('index', 'create');
         Route::controller(AdminController::class)->group(function () {
@@ -71,7 +70,7 @@ Route::prefix('admin')->middleware('auth')->group(function () {
 
 Route::resource('order', OrderController::class)->only('store');
 Route::controller(LinkController::class)->group(function () {
-    Route::get('/{token?}', 'home')->name('home');
+    Route::get('/', 'home')->name('home');
     Route::get('getcategory', 'getCategory')->name('getCategory');
     Route::get('shop/show/{product}', 'shopshow')->name('shop.show');
 });

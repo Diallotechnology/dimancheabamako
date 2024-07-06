@@ -11,7 +11,7 @@ class LinkController extends Controller
     /**
      * Display the user's profile form.
      */
-    public function home()
+    public function home(?string $token = null)
     {
         $query = Product::ByStock();
         // Récupération des derniers produits

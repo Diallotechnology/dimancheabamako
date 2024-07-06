@@ -3,12 +3,11 @@
 namespace App\Console\Commands;
 
 use App\Helper\OrderAPI;
-use App\Mail\OrderMail;
+use App\Jobs\OrderMailJob;
 use App\Models\Order;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Mail;
 
 class CheckPayment extends Command
 {
@@ -26,7 +25,7 @@ class CheckPayment extends Command
      *
      * @var string
      */
-    protected $description = 'Command description';
+    protected $description = 'check-order-payment and send email';
 
     /**
      * Execute the console command.
@@ -35,7 +34,8 @@ class CheckPayment extends Command
     {
         Order::whereNotNull('trans_ref')
             ->whereNull('reference')
-            ->where('trans_state', '!=', 'PURCHASED')
+            ->whereNull('trans_state')
+            ->whereDate('created_at', today())
             ->chunk(100, function ($orders) {
                 foreach ($orders as $order) {
                     $responseData = $this->getOrderStatut($order->trans_ref);
@@ -48,12 +48,11 @@ class CheckPayment extends Command
                                 if ($paymentState === 'PURCHASED') {
                                     $order->updateOrFail(['trans_state' => $paymentState]);
                                     $order->generateId();
-                                    Mail::to('test@exe.com')->send(new OrderMail($order));
+                                    OrderMailJob::dispatch($order);
                                 }
                             } else {
                                 Log::warning("The 'state' key was not found in the transaction");
                             }
-
                             DB::commit();
                         } catch (\Exception $e) {
                             DB::rollBack();

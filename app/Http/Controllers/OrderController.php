@@ -14,7 +14,6 @@ use App\Models\Country;
 use App\Models\Order;
 use App\Models\Shipping;
 use App\Models\User;
-use Barryvdh\DomPDF\Facade\Pdf;
 use Darryldecode\Cart\Facades\CartFacade;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -181,9 +180,6 @@ class OrderController extends Controller
     {
         $order = Order::with('client', 'products')->withSum('products as totaux', 'order_product.montant')->findOrFail($id);
 
-        // $pdf = Pdf::loadView('invoice', $order);
-
-        // return $pdf->download('invoice.pdf');
         return view('invoice', compact(['order']));
     }
 

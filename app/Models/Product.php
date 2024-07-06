@@ -38,22 +38,15 @@ class Product extends Model
 
     public function getPrixFinal(): int
     {
-        // Récupération du taux de conversion et du symbole de devise en fonction de la locale de la session
-        // $tauxConversion = session('locale') === 'fr' ? Devise::whereType('EUR')->value('taux') : Devise::whereType('USD')->value('taux');
-
         // Si une promotion est associée au produit, calculer le prix avec réduction
         if ($this->promotions->isNotEmpty()) {
             $promo = $this->promotions()->first();
             $prix = $this->prix * (1 - $promo->reduction / 100);
 
-            // Conversion du prix en devise locale et formatage
-            // $prixFormat = number_format($prix / $tauxConversion, 2);
-
             // Retour du prix formaté avec devise
             return $prix;
         } else {
             return $this->prix;
-            // return number_format($this->prix / $tauxConversion, 2);
         }
 
     }
@@ -85,8 +78,6 @@ class Product extends Model
         } else {
             return number_format($this->prix / $tauxConversion, 2).' '.$deviseSymbole;
         }
-
-        // return $prixFormat.' '.$deviseSymbole;
     }
 
     public function getPrixPromoAttribute(): string

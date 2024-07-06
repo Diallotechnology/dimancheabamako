@@ -259,7 +259,7 @@ class AdminController extends Controller
             Session::put('down_token', $token);
             Session::put('down_message', 'Le mode maintenance a été activer avec succès!');
 
-            return to_route('home', $token);
+            return redirect('/'.$token);
         }
     }
 }

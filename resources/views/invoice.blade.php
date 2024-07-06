@@ -25,12 +25,13 @@
                                                         <img src="{{ asset('assets/imgs/theme/logo.svg') }}" alt="logo"
                                                             width="70" />
                                                         <h5>Dimanche à Bamako</h5>
+                                                        <h5>ACI 2000 près de la place CAN</h5>
                                                         <h5>+223 66 03 51 54</h5>
                                                     </div>
 
                                                     <div class="col-sm-6 text-end">
                                                         <strong>
-                                                            <i class="material-icons md-calendar_today"></i> <b>Date:{{
+                                                            <i class="material-icons md-calendar_today"></i> <b>Date: {{
                                                                 $order->created_at }}</b>
                                                         </strong>
                                                         <strong class="">Facture N°: #{{ $order->reference }}</strong>
@@ -75,7 +76,7 @@
                                                     <div class="row">
                                                         <div class="col-md-3">Reference</div>
                                                         <div class="col-md-3">Description</div>
-                                                        <div class="col-md-3">Quantity</div>
+                                                        <div class="col-md-3">@lang('messages.quantity')</div>
                                                         <div class="col-md-3 text-end">Montant</div>
                                                     </div>
                                                 </div>
@@ -99,7 +100,8 @@
                                                     </div>
                                                     @empty
                                                     <td>
-                                                        <h6 class="mb-0 text-center">Aucun produit</h6>
+                                                        <h6 class="mb-0 text-center">
+                                                            @lang('messages.no_product_available')</h6>
                                                     </td>
                                                     @endforelse
                                                 </div>
@@ -144,8 +146,8 @@
     <script src="{{ asset('admin/assets/js/vendors/jquery.fullscreen.min.js') }}"></script>
     <script>
         (function () {
-  window.print();
-})();
+        window.print();
+        })();
     </script>
 </body>
 

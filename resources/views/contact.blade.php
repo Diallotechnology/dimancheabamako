@@ -30,13 +30,6 @@
                     <div class="contact-from-area padding-20-row-col wow FadeInUp">
                         <h3 class="mb-10 text-center">@lang('messages.contact_us')</h3>
 
-                        @if (session('email_success'))
-                        <div class="alert alert-success text-white text-center" style="background: #07bc0c"
-                            role="alert">
-                            {{ $email_success }}
-                        </div>
-                        @endif
-
                         <form class="contact-form-style text-center needs-validation" id="contact-form"
                             action="{{ route('contact.email') }}" method="post" novalidate>
                             @csrf

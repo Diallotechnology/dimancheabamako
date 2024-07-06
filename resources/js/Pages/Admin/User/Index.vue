@@ -19,16 +19,6 @@ const props = defineProps({
 });
 
 let search = ref(props.filter.search);
-// watch(
-//     search,
-//     debounce((value) => {
-//         router.get(
-//             "/admin/user",
-//             { search: value },
-//             { preserveState: true, replace: true }
-//         );
-//     }, 600)
-// );
 
 watch(search, (value) => {
     setTimeout(() => {
@@ -162,8 +152,12 @@ const submit = () => {
                     :message="form.errors.role"
                     label="Role (Privilège)"
                 >
-                    <option :value="1">Administrateur (Acces a tout)</option>
-                    <option :value="0">Secretaire (Acces limité)</option>
+                    <option value="Administrateur">
+                        Administrateur (Acces a tout)
+                    </option>
+                    <option value="Secretaire">
+                        Secretaire (Acces limité)
+                    </option>
                 </Select>
 
                 <div class="modal-footer">

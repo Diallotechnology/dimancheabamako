@@ -220,7 +220,6 @@ const submit = () => {
                             label="description"
                             v-model="form.description"
                             :message="form.errors.description"
-                            required
                         />
                     </div>
                     <progress

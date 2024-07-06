@@ -15,25 +15,4 @@ trait DateFormat
     {
         return Carbon::parse($date)->format('d/m/Y');
     }
-
-    // public function getDelaiFormatAttribute(): string
-    // {
-    //     return Carbon::parse($this->delai)->format('d/m/Y');
-    // }
-
-    // public function category_view(): string
-    // {
-    //     return $this->categorie ? $this->categorie->nom : '';
-    // }
-
-    // public function getPrixAttribute($prix)
-    // {
-    //     return number_format($prix, 0, ',', ' ').' CFA';
-    // }
-
-    // public function getPrixAttribute(int $prix): string
-    // {
-    //     return number_format($prix, 0, ',', ' ').' CFA';
-    // }
-
 }

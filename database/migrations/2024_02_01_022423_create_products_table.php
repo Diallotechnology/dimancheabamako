@@ -23,7 +23,7 @@ return new class extends Migration
             $table->string('color')->nullable();
             $table->string('taille')->nullable();
             $table->longText('resume');
-            $table->longText('description');
+            $table->longText('description')->nullable();
             $table->string('video')->nullable();
             $table->string('cover');
             $table->timestamps();

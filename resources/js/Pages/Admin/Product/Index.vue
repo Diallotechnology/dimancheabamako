@@ -70,6 +70,9 @@ const submit = () => {
         forceFormData: true,
         onSuccess: () => {
             form.reset();
+            form.image = [];
+            form.cover = "";
+            router.reload();
             notify("Produit ajouter avec success !", true);
         },
         onError: () => {
@@ -80,7 +83,7 @@ const submit = () => {
 const favori = (url) => {
     axios
         .get(url)
-        .then((response) => {
+        .then(() => {
             notify("Produit ajouter comme favori avec success !", true);
             router.reload();
         })
@@ -172,9 +175,9 @@ const favori = (url) => {
                                     type="button"
                                     @click.prevent="
                                         favori(
-                                            route('product.favoris', [
-                                                row.id,
+                                            route('product.favori', [
                                                 !row.favoris ? 1 : 0,
+                                                row.id,
                                             ])
                                         )
                                     "
@@ -207,7 +210,7 @@ const favori = (url) => {
                         <Input
                             input_type="text"
                             place="le nom du produit"
-                            label="nom"
+                            label="nom (Max 255 caractères)"
                             v-model="form.nom"
                             :message="form.errors.nom"
                             required
@@ -249,7 +252,7 @@ const favori = (url) => {
                         <Input
                             input_type="text"
                             place="la taille du produit"
-                            label="taille en M"
+                            label="taille en M (2M)"
                             v-model="form.taille"
                             :message="form.errors.taille"
                         />
@@ -257,7 +260,7 @@ const favori = (url) => {
                     <div class="col-md-6">
                         <Input
                             input_type="text"
-                            label="poids en Kg"
+                            label="poids en Kg (1.5)"
                             place="le poids du produit"
                             v-model="form.poids"
                             :message="form.errors.poids"
@@ -301,7 +304,6 @@ const favori = (url) => {
                                 name="cover"
                                 @input="form.cover = $event.target.files[0]"
                                 type="file"
-                                required
                             />
                             <div v-show="form.errors.cover">
                                 <p class="text-sm text-danger">
@@ -321,7 +323,6 @@ const favori = (url) => {
                                 multiple
                                 @input="form.image = $event.target.files"
                                 type="file"
-                                required
                             />
                             <div v-show="form.errors.image">
                                 <p class="text-sm text-danger">
@@ -360,7 +361,6 @@ const favori = (url) => {
                         label="description"
                         v-model="form.description"
                         :message="form.errors.description"
-                        required
                     />
                 </div>
                 <progress

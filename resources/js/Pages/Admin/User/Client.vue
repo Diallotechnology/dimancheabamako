@@ -57,19 +57,6 @@ const submit = () => {
                     Listes des utilisateurs client
                 </h2>
             </div>
-            <div>
-                <a
-                    href="#"
-                    class="btn btn-primary btn-sm rounded"
-                    type="button"
-                    data-bs-toggle="modal"
-                    data-bs-target="#exampleModal"
-                >
-                    <i class="material-icons md-plus md-18"></i>
-
-                    Nouveau</a
-                >
-            </div>
         </div>
         <div class="card mb-4">
             <header class="card-header">
@@ -127,52 +114,5 @@ const submit = () => {
             </Table>
         </div>
         <!-- card end// -->
-
-        <Modal name="Formulaire de nouveaux utilisateur">
-            <form @submit.prevent="submit">
-                <Input
-                    input_type="text"
-                    place="le nom du user"
-                    label="nom d'utilisateur"
-                    v-model="form.name"
-                    :message="form.errors.name"
-                    required
-                />
-                <Input
-                    input_type="email"
-                    place="email de utilisateur"
-                    label="email"
-                    v-model="form.email"
-                    :message="form.errors.email"
-                    required
-                />
-                <Select
-                    v-model="form.role"
-                    :message="form.errors.role"
-                    label="Role (Privilège)"
-                >
-                    <option :value="1">Administrateur (Acces a tout)</option>
-                    <option :value="0">Secretaire (Acces limité)</option>
-                </Select>
-
-                <div class="modal-footer">
-                    <button
-                        type="button"
-                        class="btn btn-danger rounded"
-                        data-bs-dismiss="modal"
-                    >
-                        Fermer
-                    </button>
-                    <button
-                        :class="{ 'opacity-25': form.processing }"
-                        :disabled="form.processing"
-                        type="submit"
-                        class="btn btn-primary rounded"
-                    >
-                        Valider
-                    </button>
-                </div>
-            </form>
-        </Modal>
     </AuthenticatedLayout>
 </template>

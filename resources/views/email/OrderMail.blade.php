@@ -1,10 +1,10 @@
 <x-mail::message>
-    Bonjour
-    <h2>Votre commande a été effectuer avec success</h2>
-    <h4>Merci pour votre achat ! </h4>
+    {{ __('messages.thank_you') }}
+    <h2>{{ __('messages.order_success') }}</h2>
+    <h4>{{ __('messages.thank_you_purchase') }} </h4>
     <x-mail::button :url="$url">
-        Telecharger la facture
+        {{ __('messages.download_invoice') }}
     </x-mail::button>
-    Thanks,<br>
+    {{ __('messages.thank_you') }},<br>
     {{ config('app.name') }}
 </x-mail::message>

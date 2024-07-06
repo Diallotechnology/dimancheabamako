@@ -101,12 +101,8 @@ const props = defineProps({
                             <td>{{ row.pays }}</td>
                             <td>{{ row.ville }}</td>
                             <td>
-                                <i
-                                    class="material-icons md-payment font-xxl text-muted mr-5"
-                                ></i>
-                                {{ row.payment }}
+                                {{ row.trans_ref }} <br />{{ row.trans_state }}
                             </td>
-
                             <td>{{ row.etat }}</td>
                             <td>{{ row.created_at }}</td>
                             <td>

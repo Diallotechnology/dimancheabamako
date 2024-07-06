@@ -12,7 +12,14 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule): void
     {
-        // $schedule->command('inspire')->hourly();
+
+        // verification paiement chaque munite
+        $schedule->command('app:check-payment')->everyThreeMinutes()->withoutOverlapping()->onOneServer()->runInBackground();
+
+        // verification des jobs
+        $schedule->command('queue:work')->everyMinute()->withoutOverlapping()->onOneServer()->runInBackground();
+
+        $schedule->command('queue:retry')->everyMinute()->withoutOverlapping()->onOneServer()->runInBackground();
     }
 
     /**

@@ -83,7 +83,7 @@ class Order extends Model
     public function generateId()
     {
         $currentYear = Carbon::today()->format('Y');
-        $prefix = 'CO'.$currentYear.'-';
+        $prefix = 'DAB'.$currentYear.'-';
 
         return DB::transaction(function () use ($prefix) {
             // Verrouille le dernier identifiant de courrier enregistré dans la base de données pour la mise à jour

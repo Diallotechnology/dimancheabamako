@@ -14,14 +14,6 @@ class ProductController extends Controller
     use DeleteAction;
 
     /**
-     * Show the form for creating a new resource.
-     */
-    public function favoris(Product $product, $data)
-    {
-        return $product->update(['favoris' => $data]);
-    }
-
-    /**
      * Store a newly created resource in storage.
      */
     public function store(StoreProductRequest $request)
@@ -70,6 +62,16 @@ class ProductController extends Controller
         $product->load('images');
 
         return Inertia::render('Admin/Product/Update', compact('product', 'category'));
+    }
+
+    /**
+     * Show the form for creating a new resource.
+     */
+    public function favoris_update(int $data, $product_id)
+    {
+        $row = Product::find($product_id);
+
+        return $row->update(['favoris' => $data]);
     }
 
     /**

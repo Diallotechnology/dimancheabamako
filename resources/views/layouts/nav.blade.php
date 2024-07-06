@@ -128,11 +128,32 @@ $cat = App\Models\Category::all();
                     <div class="header-action-2">
                         <div class="header-action-icon-2">
                             <ul class="me-4">
+                                @auth
+                                <li class="dropdown nav-item">
+                                    <a class="dropdown-toggle" data-bs-toggle="dropdown" href="#" id="dropdownAccount"
+                                        aria-expanded="false">
+                                        <i class="fi-rs-user" style="font-size: large"></i>
+                                    </a>
+                                    <div class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownAccount">
+                                        <a class="dropdown-item text-danger"
+                                            onclick="event.preventDefault(); document.getElementById('logout-form').submit();"
+                                            as="button">
+                                            <i class="material-icons md-exit_to_app"></i>@lang('messages.logout')
+                                            <form id="logout-form" action="{{ route('logout') }}" method="POST"
+                                                class="d-none">
+                                                @csrf
+                                                <input type="hidden" name="id" value="{{ Auth::user()->id }}">
+                                            </form>
+                                        </a>
+                                    </div>
+                                </li>
+                                @else
                                 <li class="mini-cart-icon">
-                                    <a :href="route('login')">
+                                    <a href="{{ route('login') }}">
                                         <i class="fi-rs-user text-dark" style="font-size: x-large"></i>
                                     </a>
                                 </li>
+                                @endauth
                             </ul>
                             @livewire('counter')
 

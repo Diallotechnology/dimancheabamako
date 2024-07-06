@@ -30,48 +30,6 @@
         </div>
         <div class="slider-arrow hero-slider-1-arrow"></div>
     </section>
-    <section class="featured section-padding position-relative">
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-2 col-md-4 mb-md-3 mb-lg-0">
-                    <div class="banner-features wow fadeIn animated hover-up">
-                        <img src="{{ asset('assets/imgs/theme/icons/feature-1.png') }}" alt="" />
-                        <h4 class="bg-1">@lang('messages.delivery_everywhere')</h4>
-                    </div>
-                </div>
-                <div class="col-lg-2 col-md-4 mb-md-3 mb-lg-0">
-                    <div class="banner-features wow fadeIn animated hover-up">
-                        <img src="{{ asset('assets/imgs/theme/icons/feature-2.png') }}" alt="" />
-                        <h4 class="bg-3">@lang('messages.online_order')</h4>
-                    </div>
-                </div>
-                <div class="col-lg-2 col-md-4 mb-md-3 mb-lg-0">
-                    <div class="banner-features wow fadeIn animated hover-up">
-                        <img src="{{ asset('assets/imgs/theme/icons/feature-3.png') }}" alt="" />
-                        <h4 class="bg-2">@lang('messages.save_money')</h4>
-                    </div>
-                </div>
-                <div class="col-lg-2 col-md-4 mb-md-3 mb-lg-0">
-                    <div class="banner-features wow fadeIn animated hover-up">
-                        <img src="{{ asset('assets/imgs/theme/icons/feature-4.png') }}" alt="" />
-                        <h4 class="bg-4">Promotions</h4>
-                    </div>
-                </div>
-                <div class="col-lg-2 col-md-4 mb-md-3 mb-lg-0">
-                    <div class="banner-features wow fadeIn animated hover-up">
-                        <img src="{{ asset('assets/imgs/theme/icons/feature-5.png') }}" alt="" />
-                        <h4 class="bg-5">@lang('messages.happy_shopping')</h4>
-                    </div>
-                </div>
-                <div class="col-lg-2 col-md-4 mb-md-3 mb-lg-0">
-                    <div class="banner-features wow fadeIn animated hover-up">
-                        <img src="{{ asset('assets/imgs/theme/icons/feature-6.png') }}" alt="" />
-                        <h4 class="bg-6">24/7 Support</h4>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
     <section class="product-tabs section-padding position-relative wow fadeIn animated">
         <div class="bg-square"></div>
         <div class="container">

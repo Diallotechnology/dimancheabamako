@@ -27,6 +27,7 @@ class ContactController extends Controller
             'message' => $request->message,
         ];
         Mail::mailer('contact')->to('contact@dimancheabamako.com')->send(new ContactMail($data));
+        toastr()->success('Votre message a été envoyer avec success!');
 
         return back();
     }

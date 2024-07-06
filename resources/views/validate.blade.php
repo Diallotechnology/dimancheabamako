@@ -4,17 +4,13 @@
             <div class="row">
                 <div class="col-md-6 m-auto">
                     <p class="mb-50"></p>
-                    <h1 class="mb-4">Opération terminée.</h1>
+                    <h1 class="mb-4">{{ __('messages.operation_completed') }}.</h1>
                     <h4 class="mb-4">
-                        Félicitations, votre commande a été effectué avec
-                        succès.
+                        {{ __('messages.order_success') }}
                     </h4>
-                    <h4 class="mb-4">
-                        Vous allez bientot recevoir un email de confirmation
-                        avec la facture.
-                    </h4>
+                    <h4 class="mb-4">{{ __('messages.email_invoice') }}</h4>
                     <a class="btn btn-default submit-auto-width font-xs hover-up" href="{{ route('home') }}">
-                        Retour à la page d'accueil
+                        {{ __('messages.back_to_home') }}
                     </a>
                 </div>
             </div>
