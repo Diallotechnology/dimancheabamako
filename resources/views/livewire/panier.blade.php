@@ -60,10 +60,13 @@
                                 <td>
                                     <em>
                                         @isset($shipping)
-                                        {{ session('locale') === 'fr' ? $shipping->montant_devise.' €' :
-                                        $shipping->montant_devise.' $'
-                                        }}
+                                        @php
+                                        $montant = is_numeric($shipping->montant_devise) ? $shipping->montant_devise :
+                                        0;
+                                        @endphp
+                                        {{ session('devise') === 'EUR' ? $montant . ' €' : $montant . ' CFA' }}
                                         @endisset
+
                                     </em>
                                 </td>
                             </tr>
@@ -84,10 +87,17 @@
                                 <td class="product-subtotal">
                                     <span class="font-xl text-brand fw-900">
                                         @isset($shipping)
-                                        {{ session('locale') === 'fr' ? ($Total + $shipping->montant_devise) . ' €' :
-                                        ($Total + $shipping->montant_devise) . ' $' }}
+                                        @php
+                                        $totalAmount = 0;
+                                        if (is_numeric($Total) && is_numeric($shipping->montant_devise)) {
+                                        $totalAmount = $Total + $shipping->montant_devise;
+                                        } else {
+                                        $totalAmount = $Total;
+                                        }
+                                        @endphp
+                                        {{ session('devise') === 'EUR' ? $totalAmount . ' €' : $totalAmount . ' CFA' }}
                                         @else
-                                        {{ session('locale') === 'fr' ? $Total . ' €' : $Total . ' $' }}
+                                        {{ session('devise') === 'EUR' ? $Total . ' €' : $Total . ' CFA' }}
                                         @endisset
                                     </span>
                                 </td>

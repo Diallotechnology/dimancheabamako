@@ -78,8 +78,12 @@ class Panier extends Component
         // get total qte
         $TotalQuantity = CartFacade::session($this->get_userid())->getTotalQuantity();
         // get total price
-        $tauxConversion = session('locale') === 'fr' ? Devise::whereType('EUR')->value('taux') : Devise::whereType('USD')->value('taux');
-        $Total = floatval(number_format(CartFacade::session($this->get_userid())->getTotal() / $tauxConversion, 2));
+        if (session('devise') === 'EUR') {
+            $tauxConversion = session('devise') === 'EUR' ? Devise::whereType('EUR')->value('taux') : '';
+            $Total = floatval(number_format(CartFacade::session($this->get_userid())->getTotal() / $tauxConversion, 2));
+        } elseif (session('devise') === 'CFA') {
+            $Total = number_format(CartFacade::session($this->get_userid())->getTotal(), 0, ',', ' ');
+        }
 
         $totalWeight = $items->pluck('attributes')->sum('poids').' Kg';
         $country = Country::all('nom', 'id');

@@ -80,7 +80,7 @@
                                             <li>
                                                 @lang('messages.in_stock'):
                                                 {{
-                                                $product->stock > 1
+                                                $product->stock >= 1
                                                 ? "OUI"
                                                 : "NON"
                                                 }}

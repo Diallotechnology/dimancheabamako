@@ -17,6 +17,8 @@ class OrderMailJob implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
+    public int $tries = 3;
+
     /**
      * Create a new job instance.
      */

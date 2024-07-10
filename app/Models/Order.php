@@ -66,16 +66,20 @@ class Order extends Model
 
     public function getShipping(): float|int
     {
-        // Récupération du taux de conversion et du symbole de devise en fonction de la locale de la session
-        $tauxConversion = session('locale') === 'fr' ? Devise::whereType('EUR')->value('taux') : Devise::whereType('USD')->value('taux');
+        if (session('devise') === 'EUR') {
+            // Récupération du taux de conversion et du symbole de devise en fonction de la locale de la session
+            $tauxConversion = session('devise') === 'EUR' ? Devise::whereType('EUR')->value('taux') : '';
 
-        return number_format($this->shipping / $tauxConversion, 2);
+            return number_format($this->shipping / $tauxConversion, 2);
+        } elseif (session('devise') === 'CFA') {
+            $this->shipping;
+        }
     }
 
     public function getTaux(): int
     {
         // Récupération du taux de conversion et du symbole de devise en fonction de la locale de la session
-        $tauxConversion = session('locale') === 'fr' ? Devise::whereType('EUR')->value('taux') : Devise::whereType('USD')->value('taux');
+        $tauxConversion = session('devise') === 'EUR' ? Devise::whereType('EUR')->value('taux') : '';
 
         return $tauxConversion;
     }

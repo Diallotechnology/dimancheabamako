@@ -39,7 +39,7 @@
                     <li class="nav-item" role="presentation">
                         <button class="nav-link active" id="nav-tab-two" data-bs-toggle="tab" data-bs-target="#tab-two"
                             type="button" role="tab" aria-controls="tab-two" aria-selected="false">
-                            @lang('messages.popular')
+                            Populaire
                         </button>
                     </li>
                     @endempty

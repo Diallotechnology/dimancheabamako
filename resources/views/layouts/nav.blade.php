@@ -16,13 +16,13 @@ $cat = App\Models\Category::all();
                                 <li>
                                     <a class="language-dropdown-active" href="#">
                                         <i class="fi-rs-euro"></i>
-                                        {{ session('locale') === "fr" ? "Euro" : "Dollar" }}
+                                        {{ session('devise') === "EUR" ? "Euro" : "CFA" }}
                                         <i class="fi-rs-angle-small-down"></i>
                                     </a>
                                     <ul class="language-dropdown">
                                         <li>
-                                            <a href="/lang/fr">Euro</a>
-                                            <a href="/lang/en">Dollars</a>
+                                            <a href="/devise/EUR">Euro</a>
+                                            <a href="/devise/CFA">CFA</a>
                                         </li>
                                     </ul>
                                 </li>
@@ -35,7 +35,7 @@ $cat = App\Models\Category::all();
                                     <ul class="language-dropdown">
                                         <li>
                                             <a href="/lang/fr">
-                                                <img src="{{ asset('assets/imgs/theme/flag-fr.png') }}" alt="flag-us" />
+                                                <img src="{{ asset('assets/imgs/theme/flag-fr.png') }}" alt="flag-fr" />
                                                 Français
                                             </a>
                                             <a href="/lang/en">
@@ -204,6 +204,13 @@ $cat = App\Models\Category::all();
                         <x-nav-link url='livraison' name="messages.delivery" />
                         <x-nav-link url='contact' name="messages.contact" />
                         <li class="menu-item-has-children">
+                            <span class="menu-expand"></span><a href="#">Devise</a>
+                            <ul class="dropdown">
+                                <li><a href="/devise/EUR">Euro</a></li>
+                                <li><a href="/devise/CFA">CFA</a></li>
+                            </ul>
+                        </li>
+                        <li class="menu-item-has-children">
                             <span class="menu-expand"></span><a href="#">Language</a>
                             <ul class="dropdown">
                                 <li><a href="/lang/en">English</a></li>
@@ -221,7 +228,8 @@ $cat = App\Models\Category::all();
             </div>
             <div class="mobile-social-icon">
                 <h5 class="mb-15 text-grey-4">Follow Us</h5>
-                <a href="#"><img src="{{ asset('assets/imgs/theme/icons/icon-facebook.svg') }}" alt="facebook" /></a>
+                <a href="http://www.facebook.com/DIMANCHEABAMAKO"><img
+                        src="{{ asset('assets/imgs/theme/icons/icon-facebook.svg') }}" alt="facebook" /></a>
                 <a href="#"><img src="{{ asset('assets/imgs/theme/icons/icon-instagram.svg') }}" alt="instagram" /></a>
             </div>
         </div>

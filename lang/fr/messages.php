@@ -54,7 +54,7 @@ return [
     'new' => 'Nouveauté',
     'color' => 'Couleur',
     'size' => 'Taille',
-    'purchased' => 'Acheté',
+    'purchased' => 'Ajouter au panier',
     'view' => 'Voir',
     'no_product_available' => 'Aucun produit disponible',
     'view_all' => 'Voir tout',
@@ -77,4 +77,9 @@ return [
     'congratulations_order' => 'Félicitations, votre commande a été effectuée avec succès.',
     'email_invoice' => 'Vous allez bientôt recevoir un email de confirmation avec la facture.',
     'operation_completed' => 'Opération terminée.',
+    'forgot_password_note' => 'Mot de passe oublié ? Pas de problème. Indiquez-nous simplement votre adresse email.',
+    'password_change_required' => 'Changement de Mot de Passe Requis',
+    'password_note' => 'NB : Utilisez au moins huit (8) caractères, mélangez majuscules, minuscules, chiffres et caractères spéciaux.',
+    'new_password' => 'Nouveau mot de passe',
+    'confirm_password' => 'Confirmez le mot de passe',
 ];

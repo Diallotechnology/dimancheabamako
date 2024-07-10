@@ -77,4 +77,9 @@ return [
     'congratulations_order' => 'Congratulations, your order has been successfully placed.',
     'email_invoice' => 'You will soon receive a confirmation email with the invoice.',
     'operation_completed' => 'Operation completed.',
+    'forgot_password_note' => 'Forgot your password? No problem. Just let us know your email address.',
+    'password_change_required' => 'Password Change Required',
+    'password_note' => 'NB: Use at least eight (8) characters, mix uppercase, lowercase, numbers, and special characters.',
+    'new_password' => 'New Password',
+    'confirm_password' => 'Confirm Password',
 ];

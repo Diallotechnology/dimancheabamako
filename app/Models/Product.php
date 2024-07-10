@@ -54,48 +54,66 @@ class Product extends Model
     public function getMontant(): float|int
     {
         // Récupération du taux de conversion et du symbole de devise en fonction de la locale de la session
-        $tauxConversion = session('locale') === 'fr' ? Devise::whereType('EUR')->value('taux') : Devise::whereType('USD')->value('taux');
+        if (session('devise') === 'EUR') {
+            $tauxConversion = session('devise') === 'EUR' ? Devise::whereType('EUR')->value('taux') : '';
 
-        return number_format($this->pivot->montant / $tauxConversion, 2);
+            return number_format($this->pivot->montant / $tauxConversion, 2);
+        } elseif (session('devise') === 'CFA') {
+            return number_format($this->pivot->montant);
+        }
     }
 
     public function getPrixFinalAttribute(): string
     {
         // Récupération du taux de conversion et du symbole de devise en fonction de la locale de la session
-        $tauxConversion = session('locale') === 'fr' ? Devise::whereType('EUR')->value('taux') : Devise::whereType('USD')->value('taux');
+        $tauxConversion = session('devise') === 'EUR' ? Devise::whereType('EUR')->value('taux') : '';
         // Conversion du prix en devise locale et formatage
-        $deviseSymbole = session('locale') === 'fr' ? '€' : '$';
+        $deviseSymbole = session('devise') === 'EUR' ? '€' : 'CFA';
         // Si une promotion est associée au produit, calculer le prix avec réduction
         if ($this->promotions->isNotEmpty()) {
             $promo = $this->promotions()->first();
             $prix = $this->prix * (1 - $promo->reduction / 100);
 
-            // Conversion du prix en devise locale et formatage
-            $prixFormat = number_format($prix / $tauxConversion, 2);
+            if (session('devise') === 'EUR') {
+                // Conversion du prix en devise locale et formatage
+                $prixFormat = number_format($prix / $tauxConversion, 2);
+            } elseif (session('devise') === 'CFA') {
+                $prixFormat = number_format($prix, 0, ',', ' ');
+            }
 
             // Retour du prix formaté avec devise
             return $prixFormat.' '.$deviseSymbole;
         } else {
-            return number_format($this->prix / $tauxConversion, 2).' '.$deviseSymbole;
+            if (session('devise') === 'EUR') {
+                // Conversion du prix en devise locale et formatage
+                $prixFormat = number_format($this->prix / $tauxConversion, 2);
+            } elseif (session('devise') === 'CFA') {
+                $prixFormat = number_format($this->prix, 0, ',', ' ');
+            }
+
+            return $prixFormat.' '.$deviseSymbole;
         }
     }
 
     public function getPrixPromoAttribute(): string
     {
         // Récupération du taux de conversion et du symbole de devise en fonction de la locale de la session
-        $tauxConversion = session('locale') === 'fr' ? Devise::whereType('EUR')->value('taux') : Devise::whereType('USD')->value('taux');
-        $deviseSymbole = session('locale') === 'fr' ? '€' : '$';
+        $tauxConversion = session('devise') === 'EUR' ? Devise::whereType('EUR')->value('taux') : '';
+        $deviseSymbole = session('devise') === 'EUR' ? '€' : 'CFA';
 
         // Si une promotion est associée au produit, calculer le prix avec réduction
         if ($this->promotions->isNotEmpty()) {
             $promo = $this->promotions()->first();
             $prix = $this->prix * (1 - $promo->reduction / 100);
 
-            // Conversion du prix en devise locale et formatage
-            $prixFormat = number_format($prix / $tauxConversion, 2);
+            if (session('devise') === 'EUR') {
+                // Conversion du prix en devise locale et formatage
+                return number_format($prix / $tauxConversion, 2).' '.$deviseSymbole;
+            } elseif (session('devise') === 'CFA') {
+                // Retour du prix formaté avec le symbole de devise
+                return $prix.' '.$deviseSymbole;
+            }
 
-            // Retour du prix formaté avec le symbole de devise
-            return $prixFormat.' '.$deviseSymbole;
         } else {
             // Sinon, le prix après réduction est zéro
             return $prix = 0;
@@ -128,21 +146,18 @@ class Product extends Model
     {
         $tauxConversion = 1; // Par défaut, aucun taux de conversion
 
-        if (session('locale') === 'fr') {
+        if (session('devise') === 'EUR') {
             $devise = Devise::whereType('EUR')->first();
             if ($devise) {
                 $tauxConversion = $devise->taux;
             }
+            $prixFormat = number_format($this->attributes['prix'] / $tauxConversion, 2);
             $deviseSymbole = '€';
-        } elseif (session('locale') === 'en') {
-            $devise = Devise::whereType('USD')->first();
-            if ($devise) {
-                $tauxConversion = $devise->taux;
-            }
-            $deviseSymbole = '$';
-        }
+        } elseif (session('devise') === 'CFA') {
 
-        $prixFormat = number_format($this->attributes['prix'] / $tauxConversion, 2);
+            $prixFormat = number_format($this->attributes['prix'], 0, ',', ' ');
+            $deviseSymbole = 'CFA';
+        }
 
         return $prixFormat.' '.$deviseSymbole;
     }

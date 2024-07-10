@@ -93,8 +93,8 @@
                                                             {{ $item->pivot->quantity }}
                                                         </div>
                                                         <div class="col-md-3 amount text-end">
-                                                            {{ session('locale') === 'fr' ?
-                                                            $item->getMontant(). ' €' : $order->getMontant().' $'
+                                                            {{ session('devise') === 'EUR' ?
+                                                            $item->getMontant(). ' €' : $order->getMontant().' CFA'
                                                             }}
                                                         </div>
                                                     </div>
@@ -107,21 +107,29 @@
                                                 </div>
                                                 <div class="total text-end">
                                                     <div class="field">
-                                                        Subtotal <span>{{ number_format($order->totaux /
-                                                            $order->getTaux(), 2);
-                                                            }}{{ session('locale') === 'fr' ? ' €' : ' $' }}</span>
-
+                                                        Subtotal <span>
+                                                            @if (session('devise') === 'EUR')
+                                                            {{ number_format($order->totaux / $order->getTaux(), 2) }} €
+                                                            @elseif (session('devise') === 'CFA')
+                                                            {{ number_format($order->totaux, 0, ',', ' ').' CFA' }}
+                                                            @endif
+                                                        </span>
                                                     </div>
                                                     <div class="field">
-                                                        Shipping <span>{{ session('locale') === 'fr' ?
-                                                            $order->getShipping(). ' €' : $order->getShipping().' $'
+                                                        Shipping <span>{{ session('devise') === 'EUR' ?
+                                                            $order->getShipping(). ' €' : $order->getShipping().' CFA'
                                                             }}</span>
                                                     </div>
 
                                                     <div class="field grand-total">
-                                                        Total <span>{{ number_format($order->totaux /
-                                                            $order->getTaux(), 2) + $order->getShipping() }}
-                                                            {{ session('locale') === 'fr' ? ' €' : ' $' }}
+                                                        Total <span>
+                                                            @if (session('devise') === 'EUR')
+                                                            {{ number_format($order->totaux / $order->getTaux(), 2) +
+                                                            $order->getShipping() }} €
+                                                            @elseif (session('devise') === 'CFA')
+                                                            {{ number_format($order->totaux + $order->getShipping(), 0,
+                                                            ',', ' ').' CFA' }}
+                                                            @endif
                                                         </span>
                                                     </div>
                                                 </div>

@@ -14,12 +14,15 @@ class Kernel extends ConsoleKernel
     {
 
         // verification paiement chaque munite
-        $schedule->command('app:check-payment')->everyThreeMinutes()->withoutOverlapping()->onOneServer()->runInBackground();
+        $schedule->command('app:check-payment')->everyMinute()
+            ->withoutOverlapping()->onOneServer()->runInBackground();
 
         // verification des jobs
-        $schedule->command('queue:work')->everyMinute()->withoutOverlapping()->onOneServer()->runInBackground();
+        $schedule->command('queue:work --stop-when-empty')->everyMinute()
+            ->withoutOverlapping()->onOneServer()->runInBackground();
 
-        $schedule->command('queue:retry')->everyMinute()->withoutOverlapping()->onOneServer()->runInBackground();
+        $schedule->command('queue:retry')->everyMinute()
+            ->withoutOverlapping()->onOneServer()->runInBackground();
     }
 
     /**

@@ -45,10 +45,15 @@ class Shipping extends Model
 
     public function getMontantDeviseAttribute(): float
     {
-        $tauxConversion = session('locale') === 'fr' ? Devise::whereType('EUR')->value('taux') : Devise::whereType('USD')->value('taux');
-        // Conversion du prix en devise locale et formatage
-        $prixFormat = number_format($this->montant / $tauxConversion, 2);
+        if (session('devise') === 'EUR') {
+            $tauxConversion = session('devise') === 'EUR' ? Devise::whereType('EUR')->value('taux') : '';
 
-        return $prixFormat;
+            // Conversion du prix en devise locale et formatage
+            return number_format($this->montant / $tauxConversion, 2);
+
+        } elseif (session('devise') === 'CFA') {
+
+            return $this->montant;
+        }
     }
 }

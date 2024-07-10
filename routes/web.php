@@ -103,10 +103,18 @@ Route::get('lang/{lang}', function ($lang) {
     return back();
 })->name('change_language');
 
-// Route::get('test', function () {
-//     Artisan::call('optimize:clear');
-//     Artisan::call('db:wipe');
-//     Artisan::call('migrate --seed');
-// });
+Route::get('devise/{devise}', function ($devise) {
+    if (in_array($devise, ['EUR', 'CFA'])) {
+        Session::put('devise', $devise);
+    }
+
+    return back();
+})->name('change_devise');
+
+Route::get('test', function () {
+    Artisan::call('optimize:clear');
+    Artisan::call('db:wipe');
+    Artisan::call('migrate');
+});
 
 require __DIR__.'/auth.php';

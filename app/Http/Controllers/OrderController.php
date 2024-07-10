@@ -8,7 +8,6 @@ use App\Helper\DeleteAction;
 use App\Helper\OrderAPI;
 use App\Http\Requests\StoreOrderRequest;
 use App\Http\Requests\UpdateOrderRequest;
-use App\Mail\OrderMail;
 use App\Models\Client;
 use App\Models\Country;
 use App\Models\Order;
@@ -16,11 +15,11 @@ use App\Models\Shipping;
 use App\Models\User;
 use Darryldecode\Cart\Facades\CartFacade;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Mail;
 use Inertia\Inertia;
 
 class OrderController extends Controller
@@ -183,53 +182,14 @@ class OrderController extends Controller
         return view('invoice', compact(['order']));
     }
 
-    public function valid(Request $request)
+    public function valid()
     {
-        $orderReference = $request->query('ref');
 
-        if (! $orderReference) {
-            Log::error('No order reference provided');
+        // Exécuter la commande schedule:run
+        // Artisan::call('schedule:run');
 
-            return view('validate');
-        }
-
-        try {
-            $order = Order::whereTransRef($orderReference)->firstOrFail();
-        } catch (\Exception $e) {
-            Log::error('Order not found', ['reference' => $orderReference, 'error' => $e->getMessage()]);
-
-            return view('validate');
-        }
-
-        $responseData = $this->getOrderStatut($order->trans_ref);
-
-        if ($responseData) {
-            DB::beginTransaction();
-
-            try {
-                if (isset($responseData['_embedded']['payment'][0]['state'])) {
-                    $paymentState = $responseData['_embedded']['payment'][0]['state'];
-                    if ($paymentState === 'PURCHASED') {
-                        $order->updateOrFail(['trans_state' => $paymentState]);
-                        if ($order->reference == null) {
-                            $order->generateId();
-                        }
-                        Mail::to($order->client->email)->send(new OrderMail($order));
-                    }
-                } else {
-                    Log::warning("The 'state' key was not found in the transaction", ['response' => $responseData]);
-                }
-
-                DB::commit();
-            } catch (\Exception $e) {
-                DB::rollBack();
-                Log::error('Failed to update order or send mail', ['order' => $order->trans_ref, 'error' => $e->getMessage()]);
-
-                return view('validate');
-            }
-        } else {
-            Log::error('Failed to retrieve order status', ['reference' => $order->trans_ref]);
-        }
+        // Optionnel : récupérer la sortie de la commande
+        // $output = Artisan::output();
 
         return view('validate');
     }

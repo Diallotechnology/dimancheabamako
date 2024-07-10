@@ -27,7 +27,7 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
         User::factory()->create(['email' => 'admin@gmail.com', 'role' => RoleEnum::ADMIN->value]);
-        Devise::factory()->create(['type' => 'USD', 'taux' => 654]);
+        // Devise::factory()->create(['type' => 'USD', 'taux' => 654]);
         Devise::factory()->create(['type' => 'EUR', 'taux' => 656]);
         Slide::factory()->create([
             'text_one' => 'Supper value deals',
