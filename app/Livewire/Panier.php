@@ -86,6 +86,7 @@ class Panier extends Component
         }
 
         $totalWeight = $items->pluck('attributes')->sum('poids').' Kg';
+
         $country = Country::all('nom', 'id');
 
         return view('livewire.panier', \compact('items', 'TotalQuantity', 'Total', 'country', 'totalWeight'));

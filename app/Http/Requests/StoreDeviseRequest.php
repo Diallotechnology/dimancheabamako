@@ -22,7 +22,6 @@ class StoreDeviseRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'type' => 'string|required',
             'taux' => 'integer|required',
         ];
     }

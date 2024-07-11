@@ -125,6 +125,9 @@
                                     name="adresse" />
                             </div>
                             <div class="col-md-6">
+                                <x-input type="text" place="votre code postal" label="Postal" name="postal" />
+                            </div>
+                            <div class="col-md-6">
                                 <x-input type="text" place="votre ville" :label="__('messages.city')" name="ville" />
                             </div>
                             <div class="col-md-6">
@@ -132,9 +135,6 @@
                                     <x-input type="text" place="votre contact" :label="__('messages.contact_with_code')"
                                         name="contact" />
                                 </div>
-                            </div>
-                            <div class="col-md-6">
-                                <x-input type="email" place="votre email" label="email" name="email" />
                             </div>
                             <div class="col-md-6">
                                 <div class="mb-4">
@@ -153,11 +153,14 @@
                                         </option>
                                         @endforeach
                                     </select>
+                                    <div class="valid-feedback"></div>
+                                    <div class="invalid-feedback">Ce champ est obligatoire.</div>
                                 </div>
                             </div>
                             <div class="col-md-6">
-                                <x-input type="text" place="votre code postal" label="Postal" name="postal" />
+                                <x-input type="email" place="votre email" label="email" name="email" />
                             </div>
+
 
                             <div class="col-md-6">
                                 <div class="mb-4">
@@ -173,6 +176,8 @@
                                         </option>
                                         @endforeach
                                     </select>
+                                    <div class="valid-feedback"></div>
+                                    <div class="invalid-feedback">Ce champ est obligatoire.</div>
                                 </div>
                             </div>
                         </div>

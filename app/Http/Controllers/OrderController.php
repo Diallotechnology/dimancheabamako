@@ -75,7 +75,12 @@ class OrderController extends Controller
         if (CartFacade::session($user)->getContent()->count() == 0) {
             toastr()->error('Panier vide!');
 
-            return response()->json(['message' => 'Panier vide!']);
+            return back();
+        }
+        if (! $request->livraison) {
+            toastr()->error("Il n'y a pas de transporteur disponible pour livrer ce colis.");
+
+            return back();
         }
 
         DB::transaction(function () use ($request, $user, &$link, &$transactionSucceeded) {
@@ -171,6 +176,8 @@ class OrderController extends Controller
         if ($transactionSucceeded && $link) {
             return redirect()->away($link);
         } else {
+            dd('ok');
+
             return abort(500, 'Unable to process payment');
         }
     }
