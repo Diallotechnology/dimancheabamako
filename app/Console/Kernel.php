@@ -20,6 +20,8 @@ class Kernel extends ConsoleKernel
         $schedule->command('queue:work --stop-when-empty')->everyTwoMinutes()->withoutOverlapping()->onOneServer()->runInBackground();
 
         $schedule->command('queue:retry')->everyTwoMinutes()->withoutOverlapping()->onOneServer()->runInBackground();
+        // delete paiement expire chaque 30mn
+        $schedule->command('app:delete-order-payment-expire')->everyThirtyMinutes()->withoutOverlapping()->onOneServer()->runInBackground();
     }
 
     /**

@@ -59,10 +59,13 @@ const submit = () => {
                         :message="form.errors.role"
                         label="Role (Privilège)"
                     >
-                        <option :value="1">
+                        <option value="Administrateur">
                             Administrateur (Acces a tout)
                         </option>
-                        <option :value="0">Secretaire (Acces limité)</option>
+                        <option value="Secretaire">
+                            Secretaire (Acces limité)
+                        </option>
+                        <option value="Client">Client</option>
                     </Select>
 
                     <div class="modal-footer">

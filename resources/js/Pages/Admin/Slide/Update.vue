@@ -25,7 +25,6 @@ const submit = () => {
             form.text_one = props.slide.text_one;
             form.text_two = props.slide.text_two;
             form.paragraph = props.slide.paragraph;
-            form.image = props.slide.image;
             notify("slide mise à jour avec success !", true);
         },
         onError: () => {

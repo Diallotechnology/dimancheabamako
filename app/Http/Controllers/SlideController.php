@@ -31,8 +31,10 @@ class SlideController extends Controller
             $filename = $request->image->hashName();
             $chemin = $request->image->storeAs('slide/image', $filename, 'public');
             $data['image'] = $chemin;
+            $slide->update($data);
+        } else {
+            $slide->update(data_forget($data, 'image'));
         }
-        $slide->update($data);
 
         return back();
     }

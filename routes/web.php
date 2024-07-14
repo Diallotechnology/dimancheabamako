@@ -113,8 +113,8 @@ Route::get('devise/{devise}', function ($devise) {
 
 Route::get('test', function () {
     Artisan::call('optimize:clear');
-    Artisan::call('db:wipe');
-    Artisan::call('migrate');
+    // Artisan::call('db:wipe');
+    // Artisan::call('migrate');
 });
 
 require __DIR__.'/auth.php';

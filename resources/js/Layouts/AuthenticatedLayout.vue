@@ -2,9 +2,9 @@
 import Nav from "@/Layouts/Nav.vue";
 
 import { Link, usePage } from "@inertiajs/vue3";
-import { onMounted, computed, ref } from "vue";
-const user = computed(() => page.props.auth.user);
+import { onMounted, computed } from "vue";
 const page = usePage();
+const user = computed(() => page.props.auth.user);
 onMounted(() => {
     $(".menu-item.has-submenu .menu-link").on("click", function (e) {
         e.preventDefault();
