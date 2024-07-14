@@ -18,7 +18,7 @@ class Delete extends Component
         $product = CartFacade::session($this->get_userid())->get($this->id);
         CartFacade::session($this->get_userid())->remove($product->id);
         $this->dispatch('productDelete');
-
+        $this->dispatch('productCount')->to(Counter::class);
         $this->alert(
             'success', 'Produit supprimer du panier avec success!',
         );

@@ -9,6 +9,52 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 
+/**
+ * 
+ *
+ * @property int $id
+ * @property int $client_id
+ * @property int $country_id
+ * @property int $transport_id
+ * @property string|null $reference
+ * @property string|null $trans_ref
+ * @property string|null $trans_state
+ * @property string $adresse
+ * @property string|null $postal
+ * @property string $ville
+ * @property string $poids
+ * @property string $shipping
+ * @property string|null $commentaire
+ * @property string $etat
+ * @property string $created_at
+ * @property Carbon|null $updated_at
+ * @property-read \App\Models\Client $client
+ * @property-read \App\Models\Country $country
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Product> $products
+ * @property-read int|null $products_count
+ * @property-read \App\Models\Transport $transport
+ * @method static \Database\Factories\OrderFactory factory($count = null, $state = [])
+ * @method static \Illuminate\Database\Eloquent\Builder|Order newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|Order newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|Order query()
+ * @method static \Illuminate\Database\Eloquent\Builder|Order whereAdresse($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Order whereClientId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Order whereCommentaire($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Order whereCountryId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Order whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Order whereEtat($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Order whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Order wherePoids($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Order wherePostal($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Order whereReference($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Order whereShipping($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Order whereTransRef($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Order whereTransState($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Order whereTransportId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Order whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Order whereVille($value)
+ * @mixin \Eloquent
+ */
 class Order extends Model
 {
     use HasFactory;

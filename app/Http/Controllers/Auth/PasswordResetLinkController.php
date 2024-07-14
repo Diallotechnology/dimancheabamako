@@ -26,7 +26,7 @@ class PasswordResetLinkController extends Controller
     public function store(Request $request): RedirectResponse
     {
         $request->validate([
-            'email' => ['required', 'email'],
+            'email' => 'required|email|exists:users,email',
         ]);
 
         return \to_route('change.password', $request->email);

@@ -10,6 +10,59 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Facades\Storage;
 
+/**
+ * 
+ *
+ * @property int $id
+ * @property int $categorie_id
+ * @property string $reference
+ * @property string $nom
+ * @property int $prix
+ * @property int $favoris
+ * @property float $poids
+ * @property int $stock
+ * @property string|null $color
+ * @property string|null $taille
+ * @property string $resume
+ * @property string|null $description
+ * @property string|null $video
+ * @property string $cover
+ * @property string $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property-read \App\Models\Category $categorie
+ * @property-read string $prix_final
+ * @property-read string $prix_format
+ * @property-read string $prix_promo
+ * @property-read int $reduction
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Image> $images
+ * @property-read int|null $images_count
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Order> $orders
+ * @property-read int|null $orders_count
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Promotion> $promotions
+ * @property-read int|null $promotions_count
+ * @method static Builder|Product byStock()
+ * @method static \Database\Factories\ProductFactory factory($count = null, $state = [])
+ * @method static Builder|Product newModelQuery()
+ * @method static Builder|Product newQuery()
+ * @method static Builder|Product query()
+ * @method static Builder|Product whereCategorieId($value)
+ * @method static Builder|Product whereColor($value)
+ * @method static Builder|Product whereCover($value)
+ * @method static Builder|Product whereCreatedAt($value)
+ * @method static Builder|Product whereDescription($value)
+ * @method static Builder|Product whereFavoris($value)
+ * @method static Builder|Product whereId($value)
+ * @method static Builder|Product whereNom($value)
+ * @method static Builder|Product wherePoids($value)
+ * @method static Builder|Product wherePrix($value)
+ * @method static Builder|Product whereReference($value)
+ * @method static Builder|Product whereResume($value)
+ * @method static Builder|Product whereStock($value)
+ * @method static Builder|Product whereTaille($value)
+ * @method static Builder|Product whereUpdatedAt($value)
+ * @method static Builder|Product whereVideo($value)
+ * @mixin \Eloquent
+ */
 class Product extends Model
 {
     use DateFormat;

@@ -7,6 +7,29 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
+/**
+ * 
+ *
+ * @property int $id
+ * @property string $nom
+ * @property string $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Country> $countries
+ * @property-read int|null $countries_count
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Shipping> $shippings
+ * @property-read int|null $shippings_count
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Transport> $transports
+ * @property-read int|null $transports_count
+ * @method static \Database\Factories\ZoneFactory factory($count = null, $state = [])
+ * @method static \Illuminate\Database\Eloquent\Builder|Zone newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|Zone newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|Zone query()
+ * @method static \Illuminate\Database\Eloquent\Builder|Zone whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Zone whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Zone whereNom($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Zone whereUpdatedAt($value)
+ * @mixin \Eloquent
+ */
 class Zone extends Model
 {
     use DateFormat;

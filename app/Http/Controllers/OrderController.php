@@ -15,53 +15,13 @@ use App\Models\Shipping;
 use App\Models\User;
 use Darryldecode\Cart\Facades\CartFacade;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Http;
-use Illuminate\Support\Facades\Log;
 use Inertia\Inertia;
 
 class OrderController extends Controller
 {
     use DeleteAction, OrderAPI;
-
-    private function prepareTransactionData($montant, $currencyCode, $emailAddress, $redirectUrl, $cancelUrl)
-    {
-        return [
-            'action' => 'PURCHASE',
-            'language' => session('locale'),
-            'emailAddress' => $emailAddress,
-            'amount' => [
-                'currencyCode' => $currencyCode,
-                'value' => $montant,
-            ],
-            'merchantAttributes' => [
-                'redirectUrl' => $redirectUrl,
-                'cancelUrl' => $cancelUrl,
-                'cancelText' => session('locale') === 'fr' ? 'Continuer mes achats' : 'Continue Shopping',
-            ],
-        ];
-    }
-
-    private function createOrder($accessToken, $postData)
-    {
-        $outlet = env('NGENIUS_OUTLET_ID');
-        $response = Http::withToken($accessToken)
-            ->withHeaders([
-                'Content-Type' => 'application/vnd.ni-payment.v2+json',
-                'Accept' => 'application/vnd.ni-payment.v2+json',
-            ])
-            ->post('https://api-gateway.sandbox.ngenius-payments.com/transactions/outlets/'.$outlet.'/orders', $postData);
-
-        if ($response->successful()) {
-            return $response->json();
-        } else {
-            Log::error('Failed to create order', ['response' => $response->json()]);
-
-            return null;
-        }
-    }
 
     /**
      * Store a newly created resource in storage.
@@ -176,28 +136,22 @@ class OrderController extends Controller
         if ($transactionSucceeded && $link) {
             return redirect()->away($link);
         } else {
-            dd('ok');
 
-            return abort(500, 'Unable to process payment');
+            return back()->abort(500, 'Unable to process payment');
         }
     }
 
-    public function invoice(int $id)
+    public function invoice(string $id)
     {
-        $order = Order::with('client', 'products')->withSum('products as totaux', 'order_product.montant')->findOrFail($id);
+        $order = Order::with('client', 'products')->withSum('products as totaux', 'order_product.montant')
+            ->where('trans_ref', $id)->where('trans_state', 'PURCHASE')
+            ->firstOrFail();
 
-        return view('invoice', compact(['order']));
+        return view('invoice', compact('order'));
     }
 
     public function valid()
     {
-
-        // Exécuter la commande schedule:run
-        // Artisan::call('schedule:run');
-
-        // Optionnel : récupérer la sortie de la commande
-        // $output = Artisan::output();
-
         return view('validate');
     }
 
@@ -207,6 +161,7 @@ class OrderController extends Controller
         if ($orderReference && ! empty($orderReference)) {
             $order = Order::whereTransRef($orderReference)->firstOrFail();
             $order->delete();
+            $this->cancelPayment($order->trans_ref);
         }
         toastr()->success('Commande annuler avec success!');
 

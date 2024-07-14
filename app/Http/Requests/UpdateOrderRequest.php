@@ -23,10 +23,6 @@ class UpdateOrderRequest extends FormRequest
     {
         return [
             'etat' => 'required|string',
-            // 'adresse' => 'required|string',
-            // 'postal' => 'required|string',
-            // 'ville' => 'required|string',
-            // 'pays' => 'required|string',
         ];
     }
 }

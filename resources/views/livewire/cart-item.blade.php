@@ -1,6 +1,6 @@
 <div>
     <div class="row product-grid-4">
-        @foreach ($items as $item)
+        @forelse ($items as $item)
         <div class="col-lg-3 col-md-4 col-12 col-sm-6" wire:key='{{ $item->id }}'>
             <div class="product-cart-wrap mb-30">
                 <div class="product-img-action-wrap">
@@ -68,8 +68,9 @@
                 </div>
             </div>
         </div>
-
-        @endforeach
+        @empty
+        <h3 class="text-center">Aucun produit</h3>
+        @endforelse
     </div>
 </div>
 @script

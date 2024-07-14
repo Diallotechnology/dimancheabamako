@@ -5,24 +5,13 @@ declare(strict_types=1);
 namespace App\Helper;
 
 use App\Models\Image;
-use App\Models\Journal;
 use Exception;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\File;
 
 trait DeleteAction
 {
-    // public function journal(string $action): void
-    // {
-    //     Journal::create([
-    //         'user_id' => Auth::user()->id,
-    //         'structure_id' => Auth::user()->structure(),
-    //         'libelle' => $action,
-    //     ]);
-    // }
-
     public function supp(Model $delete)
     {
         $delete->delete();

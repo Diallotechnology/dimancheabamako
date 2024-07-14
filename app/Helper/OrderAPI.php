@@ -9,6 +9,17 @@ use Illuminate\Support\Facades\Log;
 
 trait OrderAPI
 {
+    private function cancelPayment(string $orderReference)
+    {
+        $outlet = env('NGENIUS_OUTLET_ID');
+
+        return Http::withHeaders([
+            'Authorization' => 'Bearer '.$this->getAccessToken(),
+            'Content-Type' => 'application/vnd.ni-payment.v2+json',
+            'Accept' => 'application/vnd.ni-payment.v2+json',
+        ])->put('https://api-gateway.sandbox.ngenius-payments.com/transactions/outlets/'.$outlet.'/orders/'.$orderReference.'/cancel');
+    }
+
     private function getOrderStatut(string $reference)
     {
         $accessToken = $this->getAccessToken();
@@ -43,7 +54,44 @@ trait OrderAPI
         if ($response->successful()) {
             return $response->json()['access_token'];
         } else {
-            Log::error('Failed to get access token', ['response' => $response->json()]);
+            Log::error('Failed to get access token');
+
+            return null;
+        }
+    }
+
+    private function prepareTransactionData($montant, $currencyCode, $emailAddress, $redirectUrl, $cancelUrl)
+    {
+        return [
+            'action' => 'PURCHASE',
+            'language' => session('locale'),
+            'emailAddress' => $emailAddress,
+            'amount' => [
+                'currencyCode' => $currencyCode,
+                'value' => $montant,
+            ],
+            'merchantAttributes' => [
+                'redirectUrl' => $redirectUrl,
+                'cancelUrl' => $cancelUrl,
+                'cancelText' => session('locale') === 'fr' ? 'Continuer mes achats' : 'Continue Shopping',
+            ],
+        ];
+    }
+
+    private function createOrder($accessToken, $postData)
+    {
+        $outlet = env('NGENIUS_OUTLET_ID');
+        $response = Http::withToken($accessToken)
+            ->withHeaders([
+                'Content-Type' => 'application/vnd.ni-payment.v2+json',
+                'Accept' => 'application/vnd.ni-payment.v2+json',
+            ])
+            ->post('https://api-gateway.sandbox.ngenius-payments.com/transactions/outlets/'.$outlet.'/orders', $postData);
+
+        if ($response->successful()) {
+            return $response->json();
+        } else {
+            Log::error('Failed to create order', ['response' => $response->json()]);
 
             return null;
         }
