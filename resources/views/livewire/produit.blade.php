@@ -1,4 +1,5 @@
 <div>
+
     <section class="mt-50 mb-50">
         <div class="container">
             <div class="row">
@@ -23,13 +24,9 @@
                         </div>
                     </div>
                     <div class="product-list mb-50">
-                        <div wire:loading class="text-center my-5">
-                            <h4 class="text-center my-5">
-                                Veuillez patientez...
-                            </h4>
-                        </div>
+                        <div wire:loading class="loader"></div>
                         @forelse ($rows as $row)
-                        <div class="product-cart-wrap">
+                        <div class="product-cart-wrap" wire:loading.class="d-none">
                             <div class="product-img-action-wrap">
                                 <div class="product-img product-img-zoom">
                                     <div class="product-img-inner">

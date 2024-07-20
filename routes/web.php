@@ -21,6 +21,7 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\ZoneController;
 use App\Livewire\Panier;
 use App\Livewire\Produit;
+use App\Mail\RegisterMail;
 use Illuminate\Support\Facades\Route;
 
 Route::prefix('admin')->middleware('auth')->group(function () {
@@ -76,7 +77,9 @@ Route::controller(LinkController::class)->group(function () {
 });
 Route::get('/shop/{category?}', Produit::class)->name('shop');
 Route::get('/panier', Panier::class)->name('panier');
-Route::post('contact/mail', ContactController::class)->name('contact.email');
+Route::post('contact/mail', [ContactController::class, 'sendEmail'])->name('contact.email');
+Route::get('refresh_captcha', [ContactController::class, 'refreshCaptcha'])->name('refresh_captcha');
+Route::view('categorie', 'category')->name('category');
 Route::view('contact', 'contact')->name('contact');
 Route::view('about', 'about')->name('about');
 Route::view('livraison', 'livraison')->name('livraison');
@@ -113,6 +116,7 @@ Route::get('devise/{devise}', function ($devise) {
 
 Route::get('test', function () {
     Artisan::call('optimize:clear');
+    Mail::mailerto('salediallo61@gmail.com')->send(new RegisterMail());
     // Artisan::call('db:wipe');
     // Artisan::call('migrate');
 });

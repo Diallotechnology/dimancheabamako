@@ -2,6 +2,7 @@
 
 namespace App\Jobs;
 
+use App\Mail\OrderAlertMail;
 use App\Mail\OrderMail;
 use App\Models\Order;
 use Illuminate\Bus\Queueable;
@@ -32,6 +33,7 @@ class OrderMailJob implements ShouldQueue
      */
     public function handle(): void
     {
+        Mail::to('topmariage.mali@gmail.com')->send(new OrderAlertMail());
         Mail::to($this->order->client->email)->send(new OrderMail($this->order));
     }
 

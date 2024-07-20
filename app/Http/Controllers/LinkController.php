@@ -15,13 +15,12 @@ class LinkController extends Controller
     {
         $query = Product::ByStock();
         // Récupération des derniers produits
-        $latest = $query->take(4)->latest()->get();
+        $latest = $query->take(10)->latest()->get();
         // Récupération des produits populaires
         $popular = $query->where('favoris', 1)->get();
         // add custom attributes
         $popular->append(['prix_promo', 'prix_format', 'reduction']);
         $latest->append(['prix_promo', 'prix_format', 'reduction']);
-
         $slide = Slide::all();
 
         return view('index', compact('popular', 'latest', 'slide'));

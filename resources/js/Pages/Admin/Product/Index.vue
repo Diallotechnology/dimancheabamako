@@ -70,9 +70,9 @@ const submit = () => {
         forceFormData: true,
         onSuccess: () => {
             form.reset();
+            router.reload();
             form.image = [];
             form.cover = "";
-            router.reload();
             notify("Produit ajouter avec success !", true);
         },
         onError: () => {

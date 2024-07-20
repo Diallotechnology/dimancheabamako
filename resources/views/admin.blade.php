@@ -4,14 +4,17 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-
     <title inertia>{{ config('app.name') }}</title>
     <link href="{{ asset('admin/assets/css/main.css') }}" rel="stylesheet" type="text/css" />
     @routes
     @vite(['resources/js/app.js', "resources/js/Pages/{$page['component']}.vue"])
     {{--
     <link href="{{ asset('build/assets/app-YaJoXqX7.css') }}" rel="stylesheet" /> --}}
+<<<<<<< Updated upstream
     {{-- <script type="module" src="{{ asset('build/assets/app-CJxz4X__.js')}}"></script> --}}
+=======
+    {{-- <script type="module" src="{{ asset('build/assets/app-Dv_XY2EW.js')}}"></script> --}}
+>>>>>>> Stashed changes
     @inertiaHead
 </head>
 

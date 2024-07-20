@@ -48,10 +48,10 @@ return [
 
         'contact' => [
             'transport' => 'smtp',
-            'url' => env('MAIL_URL'),
-            'host' => env('MAIL_HOST', 'smtp.mailgun.org'),
-            'port' => env('MAIL_PORT', 587),
-            'encryption' => env('MAIL_ENCRYPTION', 'tls'),
+            'url' => env('MAIL_CONTACT_URL'),
+            'host' => env('MAIL_CONTACT_HOST', 'smtp.mailgun.org'),
+            'port' => env('MAIL_CONTACT_PORT', 587),
+            'encryption' => env('MAIL_CONTACT_ENCRYPTION', 'tls'),
             'username' => env('MAIL_CONTACT_USERNAME'),
             'password' => env('MAIL_CONTACT_PASSWORD'),
             'timeout' => null,

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Mail\ContactMail;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
 
@@ -11,7 +12,7 @@ class ContactController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function __invoke(Request $request)
+    public function sendEmail(Request $request)
     {
         // validate fields
         $request->validate([
@@ -19,7 +20,7 @@ class ContactController extends Controller
             'email' => 'required|email',
             'subject' => 'required|string',
             'message' => 'required|string',
-        ]);
+        ], ['captcha.captcha' => 'Invalide captcha code.']);
         $data = [
             'name' => $request->name,
             'email' => $request->email,
@@ -30,5 +31,10 @@ class ContactController extends Controller
         toastr()->success('Votre message a été envoyer avec success!');
 
         return back();
+    }
+
+    public function refreshCaptcha(): JsonResponse
+    {
+        return response()->json(['captcha' => captcha_img()]);
     }
 }

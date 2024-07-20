@@ -9,14 +9,14 @@
     </div>
     <section class="section-border pt-50 pb-50">
         <div class="container">
-            <!-- <div id="map-panes" class="leaflet-map mb-50"></div> -->
+
             <div class="row">
                 <div class="col-md-6 mx-auto">
                     <h4 class="mb-15 text-brand">Boutique</h4>
                     ACI 2 000<br />
                     <abbr title="Phone">Phone:</abbr> +223 66 03 51 54<br />
-                    <abbr title="Email">Email: </abbr>contact@dimancheabamako.com<br />
-                    <a
+
+                    <a href="" target="_blank"
                         class="btn btn-outline btn-sm btn-brand-outline font-weight-bold text-brand bg-white text-hover-white mt-20 border-radius-5 btn-shadow-brand hover-up">
                         <i class="fi-rs-marker mr-10"></i> Voir sur map</a>
                 </div>
@@ -65,6 +65,20 @@
                                         <div class='invalid-feedback'>Ce champ est
                                             obligatoire.</div>
                                     </div>
+                                    <div class="col-md-6 mx-auto">
+                                        <div class="captcha">
+                                            <span>{!! captcha_img() !!}</span>
+                                            <button type="button" class="btn btn-success btn-refresh"><i
+                                                    class="fi-rs-refresh"></i></button>
+                                        </div>
+                                        <input id="captcha" required type="text" class="form-control my-2"
+                                            placeholder="Enter Captcha" name="captcha">
+                                        @if ($errors->has('captcha'))
+                                        <span class="help-block">
+                                            <strong>{{ $errors->first('captcha') }}</strong>
+                                        </span>
+                                        @endif
+                                    </div>
                                     <button class="submit submit-auto-width" type="submit">
                                         Envoyé
                                     </button>
@@ -77,4 +91,15 @@
             </div>
         </div>
     </section>
+    <script type="text/javascript">
+        $(".btn-refresh").click(function(){
+      $.ajax({
+         type:'GET',
+         url:'/refresh_captcha',
+         success:function(data){
+            $(".captcha span").html(data.captcha);
+         }
+      });
+    });
+    </script>
 </x-app-layout>

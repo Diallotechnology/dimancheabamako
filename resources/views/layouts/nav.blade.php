@@ -190,16 +190,7 @@ $cat = App\Models\Category::all();
                 <nav>
                     <ul class="mobile-menu">
                         <x-nav-link url='home' name="messages.home" />
-                        <li class="menu-item-has-children">
-                            <span class="menu-expand"></span><a href="#">{{ __('messages.category') }}</a>
-                            <ul class="dropdown">
-                                <li>
-                                    @foreach($cat as $row)
-                                    <a href="{{ route('shop', $row->id) }}">{{ $row->nom }}</a>
-                                    @endforeach
-                                </li>
-                            </ul>
-                        </li>
+                        <x-nav-link url='category' name="messages.category" />
                         <x-nav-link url='about' name="messages.about" />
                         <x-nav-link url='livraison' name="messages.delivery" />
                         <x-nav-link url='contact' name="messages.contact" />

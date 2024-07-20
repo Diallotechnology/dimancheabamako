@@ -4,9 +4,9 @@ namespace App\Http\Controllers\Auth;
 
 use App\Enum\RoleEnum;
 use App\Http\Controllers\Controller;
+use App\Jobs\RegisterMailJob;
 use App\Models\Client;
 use App\Models\User;
-use App\Providers\RouteServiceProvider;
 use Countries;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\RedirectResponse;
@@ -46,7 +46,7 @@ class RegisteredUserController extends Controller
         ]);
 
         $user = User::create([
-            'name' => $request->name,
+            'name' => $request->prenom,
             'email' => $request->email,
             'role' => RoleEnum::CUSTOMER->value,
             'password' => Hash::make($request->password),
@@ -61,9 +61,11 @@ class RegisteredUserController extends Controller
         ]);
 
         event(new Registered($user));
+        RegisterMailJob::dispatch($user);
 
         Auth::login($user);
+        toastr()->success('Votre inscription a été valider avec success!');
 
-        return redirect(RouteServiceProvider::HOME);
+        return redirect('/');
     }
 }

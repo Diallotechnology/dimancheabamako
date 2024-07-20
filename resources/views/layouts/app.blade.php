@@ -99,6 +99,25 @@
             height: 100%;
             object-fit: cover;
         }
+
+        .loader {
+            width: fit-content;
+            font-weight: bold;
+            font-family: monospace;
+            font-size: 30px;
+            clip-path: inset(0 3ch 0 0);
+            animation: l4 1s steps(4) infinite;
+        }
+
+        .loader:before {
+            content: "Loading..."
+        }
+
+        @keyframes l4 {
+            to {
+                clip-path: inset(0 -1ch 0 0)
+            }
+        }
     </style>
     @if (Session::has('down_message'))
     <div class="alert alert-info alert-dismissible text-center fade show" role="alert">
@@ -220,6 +239,7 @@
     <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
     <x-livewire-alert::scripts />
+    @yield('js')
     <script>
         var swiper = new Swiper(".mySwiper", {
       spaceBetween: 10,
@@ -366,12 +386,6 @@
                 }
             }
         }
-    });
-
-    /*--- language currency active ----*/
-    $(".mobile-language-active").on("click", function (e) {
-        e.preventDefault();
-        $(".lang-dropdown-active").slideToggle(900);
     });
 
     /*-----------------------
