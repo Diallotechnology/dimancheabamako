@@ -27,27 +27,20 @@ const props = defineProps({
     },
 });
 
-const filters = ref({
-    search: props.filter.search,
-    cat: props.filter.cat,
-});
-
-watch(filters, (value) => {
+let search = ref(props.filter.search);
+const Reset = () => {
+    search.value = "";
+};
+watch(search, (value) => {
     setTimeout(() => {
         router.get(
             "/admin/product",
-            { filters: value },
+            { search: value },
             { preserveState: true, replace: true }
         );
     }, 600);
 });
-const SelectFilter = () => {
-    router.get(
-        "/admin/product",
-        { cat: filters.cat.value },
-        { preserveState: true, replace: true }
-    );
-};
+
 const form = useForm({
     categorie_id: "",
     reference: "",
@@ -121,17 +114,17 @@ const favori = (url) => {
                     <div class="col-lg-4 col-md-6 me-auto">
                         <input
                             type="text"
-                            v-model="filters.search"
+                            v-model="search"
                             placeholder="Recherche..."
                             class="form-control"
                         />
                     </div>
-                    <div class="col-6 col-md-3">
-                        <Select2
-                            v-model="filters.cat"
-                            :data="category"
-                            label=""
-                        />
+                    <div class="col-auto">
+                        <button @click="Reset" class="btn btn-danger rounded">
+                            Reset<i
+                                class="material-icons md-delete_forever md-18"
+                            ></i>
+                        </button>
                     </div>
                 </div>
             </header>
@@ -151,13 +144,18 @@ const favori = (url) => {
                             <div class="info-wrap">
                                 <p class="title">{{ row.nom }}</p>
                                 <p class="title">
+                                    Reférence {{ row.reference }}
+                                </p>
+                                <p class="title">
                                     Categorie {{ row.categorie.nom }}
                                 </p>
                                 <p class="title">Couleur {{ row.color }}</p>
-                                <p class="title">Taille {{ row.taille }}</p>
+                                <p class="title">Taille {{ row.taille }} M</p>
                                 <p class="title">Poids {{ row.poids }} Kg</p>
                                 <p class="title">Stock {{ row.stock }}</p>
-                                <p class="title">favori {{ row.favoris }}</p>
+                                <p class="title">
+                                    Favoris {{ row.favoris ? "Oui" : "Non" }}
+                                </p>
                                 <div class="price mb-2">
                                     {{ Price_format.format(row.prix) }}
                                 </div>
@@ -197,6 +195,9 @@ const favori = (url) => {
                         <!-- card-product  end// -->
                     </div>
                 </div>
+                <h4 class="text-center my-3" v-if="rows.data.length === 0">
+                    Aucun element
+                </h4>
                 <!-- row.// -->
             </div>
             <!-- card-body end// -->

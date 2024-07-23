@@ -19,6 +19,9 @@ const props = defineProps({
 });
 
 let search = ref(props.filter.search);
+const Reset = () => {
+    search.value = "";
+};
 watch(search, (value) => {
     setTimeout(() => {
         router.get(
@@ -60,6 +63,13 @@ watch(search, (value) => {
                             placeholder="Recherche..."
                             class="form-control"
                         />
+                    </div>
+                    <div class="col-auto">
+                        <button @click="Reset" class="btn btn-danger rounded">
+                            Reset<i
+                                class="material-icons md-delete_forever md-18"
+                            ></i>
+                        </button>
                     </div>
                 </div>
             </header>

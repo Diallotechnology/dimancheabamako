@@ -86,7 +86,7 @@ class OrderController extends Controller
             // Variable pour suivre si une erreur de stock est survenue
             $erreurStockInsuffisant = false;
 
-            // add pivot table value
+            // // add pivot table value without updating stock
             $panier->getContent()->each(function ($product) use ($order, &$erreurStockInsuffisant) {
                 if ($product->quantity > $product->associatedModel->stock) {
                     // Indique qu'une erreur s'est produite
@@ -137,7 +137,7 @@ class OrderController extends Controller
             return redirect()->away($link);
         } else {
 
-            return back()->abort(500, 'Unable to process payment');
+            return abort(500, 'Unable to process payment');
         }
     }
 

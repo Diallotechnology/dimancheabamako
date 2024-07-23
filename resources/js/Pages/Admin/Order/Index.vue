@@ -1,13 +1,11 @@
 <script setup>
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 import { Head, router } from "@inertiajs/vue3";
-import ButtonEdit from "@/Components/ButtonEdit.vue";
 import ButtonDelete from "@/Components/ButtonDelete.vue";
 import Table from "@/Components/Table.vue";
 import { Price_format } from "@/helper";
 import { ref, watch } from "vue";
 import ButtonShow from "@/Components/ButtonShow.vue";
-
 const props = defineProps({
     rows: {
         type: Object,
@@ -22,16 +20,26 @@ const props = defineProps({
         default: () => ({}),
     },
 });
-
 let search = ref(props.filter.search);
-// let etat = ref(props.filter.etat);
 let date = ref(props.filter.date);
-let client_id = ref(props.filter.client_id);
+const Reset = () => {
+    date.value = "";
+    search.value = "";
+};
 watch(search, (value) => {
     setTimeout(() => {
         router.get(
             "/admin/order",
             { search: value },
+            { preserveState: true, replace: true }
+        );
+    }, 600);
+});
+watch(date, (value) => {
+    setTimeout(() => {
+        router.get(
+            "/admin/order",
+            { date: value },
             { preserveState: true, replace: true }
         );
     }, 600);
@@ -59,42 +67,19 @@ watch(search, (value) => {
                         />
                     </div>
                     <div class="col-md-2 col-6">
-                        <input type="date" value="" class="form-control" />
+                        <input
+                            type="date"
+                            value=""
+                            v-model="date"
+                            class="form-control"
+                        />
                     </div>
-                    <div class="col-md-2 col-6">
-                        <div class="custom_select">
-                            <select
-                                class="form-select select-nice"
-                                v-model="client_id"
-                            >
-                                <option selected>Client</option>
-                                <option
-                                    v-for="row in client"
-                                    :key="row.id"
-                                    :value="row.id"
-                                >
-                                    {{ row.nom }}
-                                </option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="col-md-2 col-6">
-                        <div class="custom_select">
-                            <!-- <Select2
-                                v-model="etat"
-                                :options="[{ id: 'Paid', value: 'Paid' }]"
-                            /> -->
-                            <!-- <select
-                                class="form-select select-nice"
-                                v-model="etat"
-                            >
-                                <option value="" selected>Etat</option>
-                                <option>All</option>
-                                <option>Paid</option>
-                                <option>Chargeback</option>
-                                <option>Refund</option>
-                            </select> -->
-                        </div>
+                    <div class="col-auto">
+                        <button @click="Reset" class="btn btn-danger rounded">
+                            Reset<i
+                                class="material-icons md-delete_forever md-18"
+                            ></i>
+                        </button>
                     </div>
                 </div>
             </header>

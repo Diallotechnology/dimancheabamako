@@ -1,7 +1,6 @@
 <script setup>
 import Pagination from "./Pagination.vue";
 import { defineProps } from "vue";
-import { Link } from "@inertiajs/vue3";
 const props = defineProps({
     rows: {
         required: false,
@@ -18,8 +17,8 @@ const props = defineProps({
                 <table class="table table-hover align-middle table-nowrap mb-0">
                     <slot />
                 </table>
-                <h4 class="text-center my-3" v-if="!rows && !rows.length > 0">
-                    Aucun elements
+                <h4 class="text-center my-3" v-if="rows.data.length === 0">
+                    Aucun element
                 </h4>
             </div>
             <Pagination :pagination="rows" />

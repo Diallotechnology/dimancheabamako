@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Log;
 
 trait OrderAPI
 {
+    // https://api-gateway.orabankml.ngenius-payments.com
     private function cancelPayment(string $orderReference)
     {
         $outlet = env('NGENIUS_OUTLET_ID');

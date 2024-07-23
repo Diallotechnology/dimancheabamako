@@ -9,7 +9,7 @@
             </NavLink>
 
             <NavLink :active="route().current('category')">
-                <Link class="menu-link" :href="route('category')">
+                <Link class="menu-link" :href="route('categor')">
                     <i class="icon material-icons md-store"></i>
                     <span class="text">Categories</span>
                 </Link>

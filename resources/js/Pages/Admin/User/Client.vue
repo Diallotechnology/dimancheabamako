@@ -4,7 +4,6 @@ import { Head, router, useForm } from "@inertiajs/vue3";
 import ButtonEdit from "@/Components/ButtonEdit.vue";
 import ButtonDelete from "@/Components/ButtonDelete.vue";
 import Table from "@/Components/Table.vue";
-import Modal from "@/Components/Modal.vue";
 import notify from "@/helper";
 import { ref, watch } from "vue";
 const props = defineProps({
@@ -19,10 +18,13 @@ const props = defineProps({
 });
 
 let search = ref(props.filter.search);
+const Reset = () => {
+    search.value = "";
+};
 watch(search, (value) => {
     setTimeout(() => {
         router.get(
-            "/admin/user/client",
+            "/admin/customer",
             { search: value },
             { preserveState: true, replace: true }
         );
@@ -68,6 +70,13 @@ const submit = () => {
                             placeholder="Recherche..."
                             class="form-control"
                         />
+                    </div>
+                    <div class="col-auto">
+                        <button @click="Reset" class="btn btn-danger rounded">
+                            Reset<i
+                                class="material-icons md-delete_forever md-18"
+                            ></i>
+                        </button>
                     </div>
                 </div>
             </header>

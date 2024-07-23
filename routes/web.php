@@ -63,7 +63,7 @@ Route::prefix('admin')->middleware('auth')->group(function () {
             Route::get('dashboard', 'dashboard')->name('dashboard');
             Route::get('order', 'order')->name('order');
             Route::get('product', 'product')->name('product');
-            Route::get('category', 'category')->name('category');
+            Route::get('categor', 'category')->name('categor');
         });
     });
 
@@ -116,7 +116,7 @@ Route::get('devise/{devise}', function ($devise) {
 
 Route::get('test', function () {
     Artisan::call('optimize:clear');
-    Mail::mailerto('salediallo61@gmail.com')->send(new RegisterMail());
+    // Mail::mailerto('salediallo61@gmail.com')->send(new RegisterMail());
     // Artisan::call('db:wipe');
     // Artisan::call('migrate');
 });

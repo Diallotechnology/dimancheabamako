@@ -2,7 +2,6 @@
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 import { Head } from "@inertiajs/vue3";
 import ButtonEdit from "@/Components/ButtonEdit.vue";
-import ButtonDelete from "@/Components/ButtonDelete.vue";
 import Table from "@/Components/Table.vue";
 
 const props = defineProps({
@@ -41,9 +40,6 @@ const props = defineProps({
                         <td>{{ row.created_at }}</td>
                         <td>
                             <ButtonEdit :href="route('devise.edit', row.id)" />
-                            <ButtonDelete
-                                :url="route('devise.destroy', row.id)"
-                            />
                         </td>
                     </tr>
                 </tbody>

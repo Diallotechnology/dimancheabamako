@@ -46,13 +46,13 @@ class AdminController extends Controller
 
     public function product()
     {
-        $rows = Product::when(Request::input('filters.search'), function ($query, $search) {
-
-            $query->whereAny(['nom', 'color', 'prix', 'taille', 'reference', 'poids'], 'like', '%'.$search.'%');
-        })->when(Request::input('filters.cat'), function ($query, $cat) {
-            $query->where('categorie_id', $cat);
+        $rows = Product::when(Request::input('search'), function ($query, $search) {
+            $query->whereAny(['nom', 'color', 'prix', 'taille', 'reference', 'poids'], 'LIKE', '%'.$search.'%')
+                ->orWhereHas('categorie', function ($query) use ($search) {
+                    $query->where('nom', 'LIKE', '%'.$search.'%');
+                });
         })->latest('id')->paginate(10)->withQueryString();
-        $filter = Request::only('filters.search', 'filters.cat');
+        $filter = Request::only('search');
         $category = Category::all()->map(function ($row) {
             return [
                 'label' => "$row->nom", 'value' => "$row->id",
@@ -64,16 +64,17 @@ class AdminController extends Controller
 
     public function order()
     {
-        $rows = Order::withSum('products as totaux', 'order_product.montant')->with('transport', 'client')->when(Request::input('search'), function ($query, $search) {
-            $query->whereAny(['reference', 'adresse', 'ville', 'pays', 'payment', 'postal'], 'LIKE', '%'.$search.'%');
-        })->when(Request::input('etat'), function ($query, $etat) {
-            $query->where('etat', $etat);
-        })->when(Request::input('client_id'), function ($query, $client_id) {
-            $query->where('client_id', $client_id);
-        })->when(Request::input('date'), function ($query, $date) {
-            $query->whereDate('created_at', '=', $date);
-        })->latest('id')->paginate(10)->withQueryString();
-        $filter = Request::only('search', 'etat', 'client_id', 'date');
+        $rows = Order::withSum('products as totaux', 'order_product.montant')->with('transport', 'client')
+            ->when(Request::input('search'), function ($query, $search) {
+                $query->whereAny(['reference', 'adresse', 'ville', 'postal', 'trans_state', 'trans_ref', 'etat', 'created_at'], 'LIKE', '%'.$search.'%')
+                    ->orWhereHas('client', function ($query) use ($search) {
+                        $query->whereAny(['nom', 'prenom', 'email'], 'LIKE', '%'.$search.'%');
+                    });
+            })
+            ->when(Request::input('date'), function ($query, $date) {
+                $query->whereDate('created_at', '=', $date);
+            })->latest('id')->paginate(10)->withQueryString();
+        $filter = Request::only('search', 'date');
         $client = Client::all();
 
         return Inertia::render('Admin/Order/Index', compact('rows', 'filter', 'client'));
@@ -177,11 +178,16 @@ class AdminController extends Controller
 
     public function shipping()
     {
-        $rows = Shipping::with('zone', 'transport', 'poids')->when(Request::input('search'), function ($query, $search) {
-            $query->where('nom', 'like', '%'.$search.'%');
-        })->latest('id')->get()->groupBy('transport.nom');
-
         $filter = Request::only('search');
+        $rows = Shipping::with('zone', 'transport', 'poids')
+            ->when(Request::input('search'), function ($query, $search) {
+                $query->whereAny(['temps', 'montant'], 'LIKE', '%'.$search.'%')
+                    ->orWhereHas('transport', function ($query) use ($search) {
+                        $query->where('nom', 'LIKE', '%'.$search.'%');
+                    });
+            })
+            ->latest('id')->get()->groupBy('transport.nom');
+
         $poids = Poids::all()->map(function ($row) {
             return [
                 'label' => "$row->min à $row->max Kg", 'value' => "$row->id",
