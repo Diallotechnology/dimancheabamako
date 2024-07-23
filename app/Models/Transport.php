@@ -8,8 +8,6 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 /**
- * 
- *
  * @property int $id
  * @property string $nom
  * @property string $created_at
@@ -20,6 +18,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property-read int|null $shippings_count
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Zone> $zones
  * @property-read int|null $zones_count
+ *
  * @method static \Database\Factories\TransportFactory factory($count = null, $state = [])
  * @method static \Illuminate\Database\Eloquent\Builder|Transport newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Transport newQuery()
@@ -28,6 +27,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @method static \Illuminate\Database\Eloquent\Builder|Transport whereId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Transport whereNom($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Transport whereUpdatedAt($value)
+ *
  * @mixin \Eloquent
  */
 class Transport extends Model

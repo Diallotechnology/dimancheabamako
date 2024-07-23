@@ -33,7 +33,7 @@ class OrderMailJob implements ShouldQueue
      */
     public function handle(): void
     {
-        Mail::to('topmariage.mali@gmail.com')->send(new OrderAlertMail());
+        Mail::to('topmariage.mali@gmail.com')->send(new OrderAlertMail);
         Mail::to($this->order->client->email)->send(new OrderMail($this->order));
     }
 

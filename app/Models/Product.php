@@ -11,8 +11,6 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Facades\Storage;
 
 /**
- * 
- *
  * @property int $id
  * @property int $categorie_id
  * @property string $reference
@@ -40,6 +38,7 @@ use Illuminate\Support\Facades\Storage;
  * @property-read int|null $orders_count
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Promotion> $promotions
  * @property-read int|null $promotions_count
+ *
  * @method static Builder|Product byStock()
  * @method static \Database\Factories\ProductFactory factory($count = null, $state = [])
  * @method static Builder|Product newModelQuery()
@@ -61,6 +60,7 @@ use Illuminate\Support\Facades\Storage;
  * @method static Builder|Product whereTaille($value)
  * @method static Builder|Product whereUpdatedAt($value)
  * @method static Builder|Product whereVideo($value)
+ *
  * @mixin \Eloquent
  */
 class Product extends Model

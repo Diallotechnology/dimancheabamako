@@ -2,12 +2,15 @@
 
 namespace App\Http\Controllers;
 
+use App\Helper\OrderAPI;
 use App\Models\Category;
 use App\Models\Product;
 use App\Models\Slide;
 
 class LinkController extends Controller
 {
+    use OrderAPI;
+
     /**
      * Display the user's profile form.
      */

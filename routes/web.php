@@ -21,7 +21,6 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\ZoneController;
 use App\Livewire\Panier;
 use App\Livewire\Produit;
-use App\Mail\RegisterMail;
 use Illuminate\Support\Facades\Route;
 
 Route::prefix('admin')->middleware('auth')->group(function () {
@@ -72,6 +71,7 @@ Route::prefix('admin')->middleware('auth')->group(function () {
 Route::resource('order', OrderController::class)->only('store');
 Route::controller(LinkController::class)->group(function () {
     Route::get('/', 'home')->name('home');
+    Route::get('/test2', 'FunctionName')->name('FunctionName');
     Route::get('getcategory', 'getCategory')->name('getCategory');
     Route::get('shop/show/{product}', 'shopshow')->name('shop.show');
 });
@@ -113,9 +113,10 @@ Route::get('devise/{devise}', function ($devise) {
 
     return back();
 })->name('change_devise');
-
 Route::get('test', function () {
-    Artisan::call('optimize:clear');
+
+    // Artisan::call('optimize:clear');
+
     // Mail::mailerto('salediallo61@gmail.com')->send(new RegisterMail());
     // Artisan::call('db:wipe');
     // Artisan::call('migrate');

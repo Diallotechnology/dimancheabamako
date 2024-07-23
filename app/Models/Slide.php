@@ -7,8 +7,6 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Storage;
 
 /**
- * 
- *
  * @property int $id
  * @property string $text_one
  * @property string $text_two
@@ -16,6 +14,7 @@ use Illuminate\Support\Facades\Storage;
  * @property string $image
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
+ *
  * @method static \Database\Factories\SlideFactory factory($count = null, $state = [])
  * @method static \Illuminate\Database\Eloquent\Builder|Slide newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Slide newQuery()
@@ -27,6 +26,7 @@ use Illuminate\Support\Facades\Storage;
  * @method static \Illuminate\Database\Eloquent\Builder|Slide whereTextOne($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Slide whereTextTwo($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Slide whereUpdatedAt($value)
+ *
  * @mixin \Eloquent
  */
 class Slide extends Model

@@ -5,6 +5,7 @@ namespace App\Console\Commands;
 use App\Helper\OrderAPI;
 use App\Models\Order;
 use Illuminate\Console\Command;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
@@ -43,8 +44,17 @@ class DeleteOrderPaymentExpire extends Command
 
                         try {
                             if (isset($responseData['_embedded']['payment'][0]['state'])) {
+                                // Parse the createDateTime
+                                $createDateTime = Carbon::parse($responseData['createDateTime']);
+
+                                // Get the current time
+                                $currentTime = Carbon::now();
+
+                                // Calculate the time difference in hours
+                                $hoursDifference = $currentTime->diffInMinutes($createDateTime);
                                 $paymentState = $responseData['_embedded']['payment'][0]['state'];
-                                if ($paymentState !== 'PURCHASED') {
+                                if ($hoursDifference >= 5 && $paymentState !== 'PURCHASED') {
+                                    $this->cancelPaymentLink($order->trans_ref);
                                     $order->delete();
                                 }
                             } else {

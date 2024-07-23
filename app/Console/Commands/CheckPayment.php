@@ -4,10 +4,12 @@ namespace App\Console\Commands;
 
 use App\Helper\OrderAPI;
 use App\Jobs\OrderMailJob;
+use App\Mail\CancelOrderMail;
 use App\Models\Order;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
 
 class CheckPayment extends Command
 {
@@ -48,6 +50,19 @@ class CheckPayment extends Command
                                 if ($paymentState === 'PURCHASED') {
                                     $order->updateOrFail(['trans_state' => $paymentState]);
                                     $order->generateId();
+                                    // Mettre à jour les stocks ici
+                                    $order->products->each(function ($product) use ($order) {
+                                        // Vérifier le stock et mettre à jour
+                                        if ($product->stock >= $product->pivot->quantity) {
+                                            $product->decrement('stock', $product->pivot->quantity);
+                                        } else {
+                                            // Gérer l'erreur de stock insuffisant ici, si nécessaire
+                                            // Envoyer un email au client
+                                            Mail::to($order->client->email)->send(new CancelOrderMail($order));
+                                            $order->delete();
+
+                                        }
+                                    });
                                     OrderMailJob::dispatch($order);
                                 }
                             } else {

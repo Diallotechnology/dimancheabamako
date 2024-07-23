@@ -161,7 +161,7 @@ class OrderController extends Controller
         if ($orderReference && ! empty($orderReference)) {
             $order = Order::whereTransRef($orderReference)->firstOrFail();
             $order->delete();
-            $this->cancelPayment($order->trans_ref);
+            $this->cancelPaymentLink($order->trans_ref);
         }
         toastr()->success('Commande annuler avec success!');
 

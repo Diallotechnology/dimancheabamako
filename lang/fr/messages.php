@@ -82,4 +82,8 @@ return [
     'password_note' => 'NB : Utilisez au moins huit (8) caractères, mélangez majuscules, minuscules, chiffres et caractères spéciaux.',
     'new_password' => 'Nouveau mot de passe',
     'confirm_password' => 'Confirmez le mot de passe',
+    'out_of_stock_subject' => 'Produit épuisé - Nous nous excusons pour le désagrément',
+    'out_of_stock_message' => 'Nous vous informons que l\'un des produits que vous avez commandés est malheureusement épuisé. Nous nous excusons pour ce désagrément.',
+    'refund_message' => 'Vous serez intégralement remboursé pour ce produit. Le montant sera crédité sur votre compte dans les prochains jours.',
+    'apology_message' => 'Nous vous prions de bien vouloir accepter nos excuses pour ce contretemps. Si vous avez des questions ou si vous souhaitez discuter des alternatives, n\'hésitez pas à nous contacter.',
 ];

@@ -13,6 +13,19 @@ trait OrderAPI
     private function cancelPayment(string $orderReference)
     {
         $outlet = env('NGENIUS_OUTLET_ID');
+        $responseData = $this->getOrderStatut('835f64ee-50b4-4f90-a4ae-f09c6fd1bd8e');
+        $payment = $responseData['_embedded']['payment'][0]['reference'];
+
+        return Http::withHeaders([
+            'Authorization' => 'Bearer '.$this->getAccessToken(),
+            'Content-Type' => 'application/vnd.ni-payment.v2+json',
+            'Accept' => 'application/vnd.ni-payment.v2+json',
+        ])->put('https://api-gateway.sandbox.ngenius-payments.com/transactions/outlets/'.$outlet.'/orders/'.$orderReference.'/payments/'.$payment.'/cancel');
+    }
+
+    private function cancelPaymentLink(string $orderReference)
+    {
+        $outlet = env('NGENIUS_OUTLET_ID');
 
         return Http::withHeaders([
             'Authorization' => 'Bearer '.$this->getAccessToken(),

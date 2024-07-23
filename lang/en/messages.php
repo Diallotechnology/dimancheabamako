@@ -82,4 +82,8 @@ return [
     'password_note' => 'NB: Use at least eight (8) characters, mix uppercase, lowercase, numbers, and special characters.',
     'new_password' => 'New Password',
     'confirm_password' => 'Confirm Password',
+    'out_of_stock_subject' => 'Product Out of Stock - We Apologize for the Inconvenience',
+    'out_of_stock_message' => 'We regret to inform you that one of the products you ordered is unfortunately out of stock. We apologize for this inconvenience.',
+    'refund_message' => 'You will be fully refunded for this product. The amount will be credited to your account within the next few days.',
+    'apology_message' => 'We kindly ask for your understanding. If you have any questions or wish to discuss alternatives, please do not hesitate to contact us.',
 ];
