@@ -136,7 +136,6 @@ class OrderController extends Controller
         if ($transactionSucceeded && $link) {
             return redirect()->away($link);
         } else {
-
             return abort(500, 'Unable to process payment');
         }
     }

@@ -4,11 +4,13 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\LoginRequest;
+use App\Http\Requests\UpdateUserProfilRequest;
 use App\Models\User;
 use App\Providers\RouteServiceProvider;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\View\View;
 
 class AuthenticatedSessionController extends Controller
@@ -45,6 +47,22 @@ class AuthenticatedSessionController extends Controller
         }
     }
 
+    public function update(UpdateUserProfilRequest $request, User $user)
+    {
+        if (! empty($request->password_confirmation) and ! empty($request->password)) {
+            $user->forceFill([
+                'password' => Hash::make($request->password),
+                'email' => $request->email,
+                'name' => $request->name,
+            ])->save();
+        } else {
+            $user->update(['email' => $request->email, 'name' => $request->name]);
+        }
+        toastr()->success('Profil mise à jour avec success!');
+
+        return back();
+    }
+
     /**
      * Destroy an authenticated session.
      */
@@ -56,6 +74,6 @@ class AuthenticatedSessionController extends Controller
 
         $request->session()->regenerateToken();
 
-        return \to_route('login');
+        return to_route('login');
     }
 }

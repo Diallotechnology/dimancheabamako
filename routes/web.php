@@ -21,6 +21,7 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\ZoneController;
 use App\Livewire\Panier;
 use App\Livewire\Produit;
+use App\Mail\RegisterMail;
 use Illuminate\Support\Facades\Route;
 
 Route::prefix('admin')->middleware('auth')->group(function () {
@@ -115,9 +116,9 @@ Route::get('devise/{devise}', function ($devise) {
 })->name('change_devise');
 Route::get('test', function () {
 
-    // Artisan::call('optimize:clear');
+    Artisan::call('optimize:clear');
 
-    // Mail::mailerto('salediallo61@gmail.com')->send(new RegisterMail());
+    Mail::mailerto('salediallo61@gmail.com')->send(new RegisterMail('sale diallo'));
     // Artisan::call('db:wipe');
     // Artisan::call('migrate');
 });

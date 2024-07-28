@@ -33,6 +33,7 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder|Category whereNom($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Category wherePromo($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Category whereUpdatedAt($value)
+ * @mixin \Eloquent
  */
 	class Category extends \Eloquent {}
 }
@@ -63,6 +64,7 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder|Client wherePays($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Client wherePrenom($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Client whereUpdatedAt($value)
+ * @mixin \Eloquent
  */
 	class Client extends \Eloquent {}
 }
@@ -88,6 +90,7 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder|Country whereNom($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Country whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Country whereZoneId($value)
+ * @mixin \Eloquent
  */
 	class Country extends \Eloquent {}
 }
@@ -110,6 +113,7 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder|Devise whereTaux($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Devise whereType($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Devise whereUpdatedAt($value)
+ * @mixin \Eloquent
  */
 	class Devise extends \Eloquent {}
 }
@@ -133,6 +137,7 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder|Image whereId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Image whereProductId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Image whereUpdatedAt($value)
+ * @mixin \Eloquent
  */
 	class Image extends \Eloquent {}
 }
@@ -156,7 +161,7 @@ namespace App\Models{
  * @property string|null $commentaire
  * @property string $etat
  * @property string $created_at
- * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property Carbon|null $updated_at
  * @property-read \App\Models\Client $client
  * @property-read \App\Models\Country $country
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Product> $products
@@ -182,6 +187,7 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder|Order whereTransportId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Order whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Order whereVille($value)
+ * @mixin \Eloquent
  */
 	class Order extends \Eloquent {}
 }
@@ -206,6 +212,7 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder|Poids whereMax($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Poids whereMin($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Poids whereUpdatedAt($value)
+ * @mixin \Eloquent
  */
 	class Poids extends \Eloquent {}
 }
@@ -225,7 +232,7 @@ namespace App\Models{
  * @property string|null $color
  * @property string|null $taille
  * @property string $resume
- * @property string $description
+ * @property string|null $description
  * @property string|null $video
  * @property string $cover
  * @property string $created_at
@@ -241,27 +248,28 @@ namespace App\Models{
  * @property-read int|null $orders_count
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Promotion> $promotions
  * @property-read int|null $promotions_count
- * @method static \Illuminate\Database\Eloquent\Builder|Product byStock()
+ * @method static Builder|Product byStock()
  * @method static \Database\Factories\ProductFactory factory($count = null, $state = [])
- * @method static \Illuminate\Database\Eloquent\Builder|Product newModelQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|Product newQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|Product query()
- * @method static \Illuminate\Database\Eloquent\Builder|Product whereCategorieId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Product whereColor($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Product whereCover($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Product whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Product whereDescription($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Product whereFavoris($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Product whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Product whereNom($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Product wherePoids($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Product wherePrix($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Product whereReference($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Product whereResume($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Product whereStock($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Product whereTaille($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Product whereUpdatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Product whereVideo($value)
+ * @method static Builder|Product newModelQuery()
+ * @method static Builder|Product newQuery()
+ * @method static Builder|Product query()
+ * @method static Builder|Product whereCategorieId($value)
+ * @method static Builder|Product whereColor($value)
+ * @method static Builder|Product whereCover($value)
+ * @method static Builder|Product whereCreatedAt($value)
+ * @method static Builder|Product whereDescription($value)
+ * @method static Builder|Product whereFavoris($value)
+ * @method static Builder|Product whereId($value)
+ * @method static Builder|Product whereNom($value)
+ * @method static Builder|Product wherePoids($value)
+ * @method static Builder|Product wherePrix($value)
+ * @method static Builder|Product whereReference($value)
+ * @method static Builder|Product whereResume($value)
+ * @method static Builder|Product whereStock($value)
+ * @method static Builder|Product whereTaille($value)
+ * @method static Builder|Product whereUpdatedAt($value)
+ * @method static Builder|Product whereVideo($value)
+ * @mixin \Eloquent
  */
 	class Product extends \Eloquent {}
 }
@@ -277,7 +285,7 @@ namespace App\Models{
  * @property string $debut
  * @property string $fin
  * @property string $created_at
- * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property Carbon|null $updated_at
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Product> $products
  * @property-read int|null $products_count
  * @method static \Database\Factories\PromotionFactory factory($count = null, $state = [])
@@ -292,6 +300,7 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder|Promotion whereNom($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Promotion whereReduction($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Promotion whereUpdatedAt($value)
+ * @mixin \Eloquent
  */
 	class Promotion extends \Eloquent {}
 }
@@ -324,6 +333,7 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder|Shipping whereTransportId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Shipping whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Shipping whereZoneId($value)
+ * @mixin \Eloquent
  */
 	class Shipping extends \Eloquent {}
 }
@@ -350,6 +360,7 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder|Slide whereTextOne($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Slide whereTextTwo($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Slide whereUpdatedAt($value)
+ * @mixin \Eloquent
  */
 	class Slide extends \Eloquent {}
 }
@@ -376,6 +387,7 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder|Transport whereId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Transport whereNom($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Transport whereUpdatedAt($value)
+ * @mixin \Eloquent
  */
 	class Transport extends \Eloquent {}
 }
@@ -390,7 +402,7 @@ namespace App\Models{
  * @property \Illuminate\Support\Carbon|null $email_verified_at
  * @property mixed $password
  * @property int $change_password
- * @property \App\Enum\RoleEnum $role
+ * @property RoleEnum $role
  * @property int $etat
  * @property string|null $remember_token
  * @property string $created_at
@@ -414,6 +426,7 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder|User whereRememberToken($value)
  * @method static \Illuminate\Database\Eloquent\Builder|User whereRole($value)
  * @method static \Illuminate\Database\Eloquent\Builder|User whereUpdatedAt($value)
+ * @mixin \Eloquent
  */
 	class User extends \Eloquent {}
 }
@@ -440,6 +453,7 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder|Zone whereId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Zone whereNom($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Zone whereUpdatedAt($value)
+ * @mixin \Eloquent
  */
 	class Zone extends \Eloquent {}
 }

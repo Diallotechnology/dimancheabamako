@@ -13,6 +13,7 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules;
 use Illuminate\View\View;
@@ -44,28 +45,39 @@ class RegisteredUserController extends Controller
             'email' => 'required|string|lowercase|email|max:255|unique:'.User::class,
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
         ]);
+        $transactionSucceeded = false;
 
-        $user = User::create([
-            'name' => $request->prenom,
-            'email' => $request->email,
-            'role' => RoleEnum::CUSTOMER->value,
-            'password' => Hash::make($request->password),
-        ]);
+        DB::transaction(function () use ($request, &$transactionSucceeded) {
 
-        Client::create([
-            'prenom' => $request->prenom,
-            'nom' => $request->nom,
-            'contact' => $request->contact,
-            'email' => $request->email,
-            'pays' => $request->pays,
-        ]);
+            $user = User::create([
+                'name' => $request->prenom.' '.$request->nom,
+                'email' => $request->email,
+                'role' => RoleEnum::CUSTOMER->value,
+                'password' => Hash::make($request->password),
+            ]);
 
-        event(new Registered($user));
-        RegisterMailJob::dispatch($user);
+            Client::create([
+                'prenom' => $request->prenom,
+                'nom' => $request->nom,
+                'contact' => $request->contact,
+                'email' => $request->email,
+                'pays' => $request->pays,
+            ]);
 
-        Auth::login($user);
-        toastr()->success('Votre inscription a été valider avec success!');
+            event(new Registered($user));
+            RegisterMailJob::dispatch($user);
+            Auth::login($user);
+            $transactionSucceeded = true;
+        });
+        if ($transactionSucceeded) {
+            toastr()->success('Votre inscription a été valider avec success!');
 
-        return redirect('/');
+            return redirect('/');
+        } else {
+            toastr()->error('Votre inscription a echoué verifiez vos informations!.');
+
+            return back();
+        }
+
     }
 }

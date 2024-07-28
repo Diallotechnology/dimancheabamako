@@ -1,7 +1,20 @@
 <x-mail::message>
-    Salut
-    <h2>Bienvenue sur Dimanche à Bamako</h2>
-    <h4>Votre compte a été crée avec success</h4>
+    Salut {{ $name }}
+    <h4>Nous sommes ravis de vous accueillir dans la famille Dimanche à Bamako!</h4>
+    <p>Merci de vous être inscrit sur notre site. Nous sommes déterminés à vous offrir les meilleurs tissus et services
+        pour tous vos projets d'habillement.</p>
+    <x-mail::button url="http://dimancheabamako.com">
+        Visitez notre boutique
+    </x-mail::button>
+    <p>
+        Si vous avez des questions ou besoin d'assistance, notre équipe est à votre disposition. Vous pouvez nous
+        contacter par e-mail à contact <a href="http://dimancheabamako.com">dimancheabamako.com</a> ou par
+        téléphone/whatsapp au +223 66 03 51 54.
+    </p>
+    <p>Nous vous souhaitons une agréable expérience de shopping !</p>
+    <p>Cordialement,</p>
+    <p>Service client</p>
     Merci,<br>
+    <img src="{{ $message->embed('assets/imgs/theme/logo-sm.svg') }}" alt="logo">
     {{ config('app.name') }}
 </x-mail::message>

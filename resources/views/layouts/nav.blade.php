@@ -1,6 +1,11 @@
 @php
 $cat = App\Models\Category::all();
 @endphp
+<style>
+    .dropdown-menu.show {
+        inset: -39px 41px auto auto !important;
+    }
+</style>
 <header class="header-area header-style-1 header-height-2">
     <div class="header-middle header-middle-ptb-1 d-none d-lg-block">
         <div id="google_translate_element"></div>
@@ -58,7 +63,7 @@ $cat = App\Models\Category::all();
                                         <i class="fi-rs-user" style="font-size: large"></i>
                                     </a>
                                     <div class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownAccount">
-                                        <a class="dropdown-item" href="#"><i
+                                        <a class="dropdown-item" href="{{ route('profil') }}"><i
                                                 class="material-icons md-perm_identity"></i>Profil</a>
                                         <div class="dropdown-divider"></div>
                                         <a class="dropdown-item text-danger"
@@ -135,6 +140,8 @@ $cat = App\Models\Category::all();
                                         <i class="fi-rs-user" style="font-size: large"></i>
                                     </a>
                                     <div class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownAccount">
+                                        <a class="dropdown-item" href="{{ route('profil') }}"><i
+                                                class="material-icons md-perm_identity"></i>Profil</a>
                                         <a class="dropdown-item text-danger"
                                             onclick="event.preventDefault(); document.getElementById('logout-form').submit();"
                                             as="button">
@@ -145,6 +152,7 @@ $cat = App\Models\Category::all();
                                                 <input type="hidden" name="id" value="{{ Auth::user()->id }}">
                                             </form>
                                         </a>
+
                                     </div>
                                 </li>
                                 @else
