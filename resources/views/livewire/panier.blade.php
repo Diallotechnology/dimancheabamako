@@ -1,4 +1,8 @@
 <div>
+    @php
+    $client = Auth::check() ? App\Models\Client::where('email', Auth::user()->email)->first() : null;
+    @endphp
+
     <section class="mt-50 mb-50">
         <div class="container">
             <div class="row">
@@ -108,6 +112,59 @@
                 <div @class(['col-md-8', 'd-none'=> $items->count() == 0]) >
                     <div class="mb-25">
                         <h4>@lang('messages.order_information')</h4>
+                        @guest
+                        <h5 class="py-2">@lang('messages.already_have_account')</h5>
+                        <a href="#" data-bs-toggle="modal" data-bs-target="#exampleModal" data-bs-whatever="@fat"
+                            class="btn btn-small">@lang('messages.login') <i class="fi-rs-arrow-right"></i></a>
+                        @endguest
+                        <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel"
+                            aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false" wire:ignore.self>
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h1 class="modal-title fs-5" id="exampleModalLabel">Se connecter</h1>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                            aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body">
+
+                                        <form method="POST" wire:submit.prevent="login_submit">
+                                            @csrf
+                                            <div class="mb-3">
+                                                <x-input-label :value="__('Email')" />
+                                                <x-text-input wire:model='email' class="block mt-1 w-full" type="email"
+                                                    name="email" :value="old('email')" required autofocus
+                                                    autocomplete="username" />
+                                                @error('email')
+                                                <span class="error text-sm text-danger">{{ $message }}</span>
+                                                @enderror
+                                            </div>
+                                            <div class="mb-3">
+                                                <x-input-label :value="__('Password')" />
+
+                                                <x-text-input wire:model='password' class="block mt-1 w-full"
+                                                    type="password" name="password" required
+                                                    autocomplete="current-password" />
+                                                @error('password')
+                                                <span class="text-sm text-danger">{{ $message }}</span>
+                                                @enderror
+                                            </div>
+                                            <div class="mb-3 row">
+                                                <span wire:loading
+                                                    class="col-md-3 offset-md-5 text-brand">Processing...</span>
+                                            </div>
+                                            <div class="modal-footer">
+
+                                                <button type="button" class="btn btn-secondary"
+                                                    data-bs-dismiss="modal">Fermer</button>
+                                                <button type="submit" class="btn btn-primary">Valider</button>
+                                            </div>
+                                        </form>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
                     </div>
                     <form method="post" class="needs-validation" action="{{ route('order.store') }}" novalidate>
                         @csrf
@@ -115,25 +172,32 @@
                         <div class="row">
                             <div class="col-md-6">
                                 <x-input type="text" place="votre prenom" :label="__('messages.first_name')"
-                                    name="prenom" />
+                                    name="prenom" value="{{ $client ? $client->prenom : '' }}" />
                             </div>
                             <div class="col-md-6">
-                                <x-input type="text" place="votre nom" :label="__('messages.last_name')" name="nom" />
+                                <x-input type="text" place="votre nom" value="{{ $client ? $client->nom : '' }}"
+                                    :label="__('messages.last_name')" name="nom" />
                             </div>
                             <div class="col-md-6">
-                                <x-input type="text" place="votre adresse" :label="__('messages.address')"
-                                    name="adresse" />
+                                <x-input type="text" place="votre adresse"
+                                    value="{{ $client ? $client->latestorder()->adresse : '' }}"
+                                    :label="__('messages.address')" name="adresse" />
                             </div>
                             <div class="col-md-6">
-                                <x-input type="text" place="votre code postal" label="Postal" name="postal" />
+                                <x-input type="text" place="votre code postal"
+                                    value="{{ $client ? $client->latestorder()->postal : '' }}" label="Postal"
+                                    name="postal" />
                             </div>
                             <div class="col-md-6">
-                                <x-input type="text" place="votre ville" :label="__('messages.city')" name="ville" />
+                                <x-input type="text" place="votre ville"
+                                    value="{{ $client ? $client->latestorder()->ville : '' }}"
+                                    :label="__('messages.city')" name="ville" />
                             </div>
                             <div class="col-md-6">
                                 <div class="mt-3">
-                                    <x-input type="text" place="votre contact" :label="__('messages.contact_with_code')"
-                                        name="contact" />
+                                    <x-input type="text" place="votre contact"
+                                        value="{{ $client ? $client->contact : '' }}"
+                                        :label="__('messages.contact_with_code')" name="contact" />
                                 </div>
                             </div>
                             <div class="col-md-6">
@@ -158,10 +222,9 @@
                                 </div>
                             </div>
                             <div class="col-md-6">
-                                <x-input type="email" place="votre email" label="email" name="email" />
+                                <x-input type="email" place="votre email" label="email"
+                                    value="{{ $client ? $client->email : '' }}" name="email" />
                             </div>
-
-
                             <div class="col-md-6">
                                 <div class="mb-4">
                                     <label class="text-uppercase form-label">@lang('messages.carrier')</label>
@@ -182,6 +245,7 @@
                             </div>
                         </div>
 
+                        @guest
                         <div class="form-group">
                             <div class="checkbox">
                                 <div class="custome-checkbox">
@@ -198,6 +262,7 @@
                             <x-input type="password" :required="false" place="entrez votre mot de passe" label=""
                                 name="password" />
                         </div>
+                        @endguest
 
                         <div class="mb-20">
                             <h5>

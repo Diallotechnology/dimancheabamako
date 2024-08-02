@@ -51,4 +51,14 @@ class Client extends Model
     {
         return $this->hasMany(Order::class);
     }
+
+    /**
+     * Get the latest order for the Client.
+     *
+     * @return Order|null
+     */
+    public function latestorder()
+    {
+        return $this->hasOne(Order::class)->latestOfMany()->first();
+    }
 }

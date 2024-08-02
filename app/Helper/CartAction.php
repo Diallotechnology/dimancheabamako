@@ -13,20 +13,34 @@ trait CartAction
 {
     use LivewireAlert;
 
-    private function get_userid(): string|int
+    private function get_userid(): string
     {
         if (! auth()->check()) {
-            if (session()->has('user_id')) {
+            // Utilisateur non authentifié
+            if (! empty(session('user_id'))) {
+                // Utiliser l'identifiant de session existant
                 $userId = session()->get('user_id');
             } else {
+                // Générer un UUID pour le panier
                 $userId = uniqid();
                 session()->put('user_id', $userId);
             }
         } else {
-            $userId = auth()->user()->id;
+            // Utilisateur authentifié
+            $userId = (string) auth()->user()->id;
+            session()->put('user_id', $userId);
         }
 
         return $userId;
+    }
+
+    private function cart_clear(): void
+    {
+        if (! empty(session('user_id'))) {
+            // Utiliser l'identifiant de session existant
+            $userId = session()->get('user_id');
+            CartFacade::session($userId)->clear();
+        }
     }
 
     public function store(int $id)

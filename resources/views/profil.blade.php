@@ -1,4 +1,7 @@
 <x-app-layout>
+    @php
+    $client = App\Models\Client::where('email',Auth::user()->email)->first();
+    @endphp
     <section class="section-padding">
         <div class="container pt-25">
             <div class="row">
@@ -44,6 +47,19 @@
                                     </div>
                                 </div>
                             </form>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card mb-3 mb-lg-0">
+                        <div class="card-header">
+                            <h5 class="mb-0">Address</h5>
+                        </div>
+                        <div class="card-body">
+                            <address>{{ $client->prenom }} {{ $client->nom }}<br>{{ $client->email
+                                }}<br>{{ $client->contact }}
+                            </address>
+                            <p>{{ $client->pays }}</p>
                         </div>
                     </div>
                 </div>

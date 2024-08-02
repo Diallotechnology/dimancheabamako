@@ -6,6 +6,7 @@ use App\Helper\OrderAPI;
 use App\Jobs\OrderMailJob;
 use App\Mail\CancelOrderMail;
 use App\Models\Order;
+use Darryldecode\Cart\Facades\CartFacade;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -29,6 +30,15 @@ class CheckPayment extends Command
      */
     protected $description = 'check-order-payment and send email';
 
+    private function cart_clear(): void
+    {
+        if (! empty(session('user_id'))) {
+            // Utiliser l'identifiant de session existant
+            $userId = session()->get('user_id');
+            CartFacade::session($userId)->clear();
+        }
+    }
+
     /**
      * Execute the console command.
      */
@@ -37,19 +47,16 @@ class CheckPayment extends Command
         Order::whereNotNull('trans_ref')
             ->whereNull('reference')
             ->whereNull('trans_state')
-            ->whereDate('created_at', today())
             ->chunk(100, function ($orders) {
                 foreach ($orders as $order) {
                     $responseData = $this->getOrderStatut($order->trans_ref);
                     if ($responseData) {
                         DB::beginTransaction();
-
                         try {
                             if (isset($responseData['_embedded']['payment'][0]['state'])) {
                                 $paymentState = $responseData['_embedded']['payment'][0]['state'];
                                 if ($paymentState === 'PURCHASED') {
                                     $order->updateOrFail(['trans_state' => $paymentState]);
-                                    $order->generateId();
                                     // Mettre à jour les stocks ici
                                     $order->products->each(function ($product) use ($order) {
                                         // Vérifier le stock et mettre à jour
@@ -60,9 +67,9 @@ class CheckPayment extends Command
                                             // Envoyer un email au client
                                             Mail::to($order->client->email)->send(new CancelOrderMail($order));
                                             $order->delete();
-
                                         }
                                     });
+                                    $order->generateId();
                                     OrderMailJob::dispatch($order);
                                 }
                             } else {

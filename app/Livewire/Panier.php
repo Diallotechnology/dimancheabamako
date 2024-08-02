@@ -8,8 +8,10 @@ use App\Models\Devise;
 use App\Models\Shipping;
 use Darryldecode\Cart\Facades\CartFacade;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Support\Facades\Auth;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Livewire\Attributes\On;
+use Livewire\Attributes\Validate;
 use Livewire\Component;
 
 class Panier extends Component
@@ -25,6 +27,34 @@ class Panier extends Component
     public $shipping;
 
     public $trans = [];
+
+    #[Validate('required|email')]
+    public $email;
+
+    #[Validate('required')]
+    public $password;
+
+    public function login_submit()
+    {
+        $this->validate();
+
+        $credentials = [
+            'email' => $this->email,
+            'password' => $this->password,
+        ];
+
+        if (Auth::attempt($credentials)) {
+            $this->alert(
+                'success', 'Connexion reussi',
+            );
+
+            return $this->redirectRoute('panier');
+        }
+
+        $this->alert(
+            'warning', __('auth.failed'),
+        );
+    }
 
     public function updatingCountryid()
     {

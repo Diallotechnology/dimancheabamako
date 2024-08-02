@@ -37,7 +37,13 @@ class AuthenticatedSessionController extends Controller
 
             return redirect()->route('change.password', ['email' => $user->email]);
         } else {
+            // Save the 'user_id' from the session if it exists
+            $key = ! empty($request->session()->get('user_id')) ? $request->session()->get('user_id') : null;
+            $cart = $request->session()->get($key.'_cart_items');
             $request->session()->regenerate();
+            if ($key) {
+                session()->put(['user_id' => $key, $key.'_cart_items' => $cart]);
+            }
             if ($request->user()->isClient()) {
                 return redirect()->intended('/');
             } else {
@@ -68,12 +74,25 @@ class AuthenticatedSessionController extends Controller
      */
     public function destroy(Request $request): RedirectResponse
     {
+        // Log out the user from the 'web' guard
         Auth::guard('web')->logout();
 
+        // Save the 'user_id' from the session if it exists
+        $key = ! empty($request->session()->get('user_id')) ? $request->session()->get('user_id') : null;
+        $cart = $request->session()->get($key.'_cart_items');
+        // Invalidate the session
         $request->session()->invalidate();
 
+        // Regenerate the CSRF token
         $request->session()->regenerateToken();
 
+        // dd($key);
+        // Restore the 'user_id' to the session if it was present
+        if ($key) {
+            session()->put(['user_id' => $key, $key.'_cart_items' => $cart]);
+        }
+
+        // Redirect to the login route
         return to_route('login');
     }
 }

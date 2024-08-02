@@ -35,7 +35,6 @@ class DeleteOrderPaymentExpire extends Command
         Order::whereNotNull('trans_ref')
             ->whereNull('reference')
             ->whereNull('trans_state')
-            ->whereDate('created_at', today())
             ->chunk(100, function ($orders) {
                 foreach ($orders as $order) {
                     $responseData = $this->getOrderStatut($order->trans_ref);
@@ -43,23 +42,20 @@ class DeleteOrderPaymentExpire extends Command
                         DB::beginTransaction();
 
                         try {
-                            if (isset($responseData['_embedded']['payment'][0]['state'])) {
-                                // Parse the createDateTime
-                                $createDateTime = Carbon::parse($responseData['createDateTime']);
+                            // Parse the createDateTime
+                            $createDateTime = Carbon::parse($responseData['createDateTime']);
 
-                                // Get the current time
-                                $currentTime = Carbon::now();
+                            // Get the current time
+                            $currentTime = Carbon::now();
 
-                                // Calculate the time difference in hours
-                                $hoursDifference = $currentTime->diffInMinutes($createDateTime);
-                                $paymentState = $responseData['_embedded']['payment'][0]['state'];
-                                if ($hoursDifference >= 5 && $paymentState !== 'PURCHASED') {
-                                    $this->cancelPaymentLink($order->trans_ref);
-                                    $order->delete();
-                                }
-                            } else {
-                                Log::warning("The 'state' key was not found in the transaction");
+                            // Calculate the time difference in minutes
+                            $minutesDifference = $currentTime->diffInMinutes($createDateTime);
+                            $paymentState = $responseData['_embedded']['payment'][0]['state'];
+                            if ($minutesDifference >= 5 && $paymentState !== 'PURCHASED') {
+                                $this->cancelPaymentLink($order->trans_ref);
+                                $order->delete();
                             }
+
                             DB::commit();
                         } catch (\Exception $e) {
                             DB::rollBack();

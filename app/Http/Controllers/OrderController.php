@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Enum\OrderEnum;
 use App\Enum\RoleEnum;
+use App\Helper\CartAction;
 use App\Helper\DeleteAction;
 use App\Helper\OrderAPI;
 use App\Http\Requests\StoreOrderRequest;
@@ -15,13 +16,15 @@ use App\Models\Shipping;
 use App\Models\User;
 use Darryldecode\Cart\Facades\CartFacade;
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Log;
 use Inertia\Inertia;
 
 class OrderController extends Controller
 {
-    use DeleteAction, OrderAPI;
+    use CartAction, DeleteAction, OrderAPI;
 
     /**
      * Store a newly created resource in storage.
@@ -98,16 +101,13 @@ class OrderController extends Controller
                         'quantity' => $product->quantity,
                         'montant' => $product->price * $product->quantity,
                     ]);
-
-                    // Update product stock in DB
-                    $stock = $product->associatedModel->stock - $product->quantity;
-                    // Get product id and update quantity in DB
-                    $product->associatedModel->update(['stock' => $stock]);
                 }
             });
 
             // Si une erreur de stock est survenue, annule la transaction
             if ($erreurStockInsuffisant) {
+                toastr()->error("La quantité d'un produit est non disponible.");
+
                 return back();
             }
 
@@ -126,8 +126,6 @@ class OrderController extends Controller
                     $link = $response['_links']['payment']['href'];
                     // save temporaly order
                     $order->update(['trans_ref' => $response['reference']]);
-                    // Supprime le contenu du panier utilisateur
-                    CartFacade::session($user)->clear();
                     $transactionSucceeded = true;
                 }
             }
@@ -143,14 +141,58 @@ class OrderController extends Controller
     public function invoice(string $id)
     {
         $order = Order::with('client', 'products')->withSum('products as totaux', 'order_product.montant')
-            ->where('trans_ref', $id)->where('trans_state', 'PURCHASE')
+            ->where('trans_ref', $id)->where('trans_state', 'PURCHASED')
             ->firstOrFail();
 
         return view('invoice', compact('order'));
     }
 
+    public function FunctionName()
+    {
+        Order::whereNotNull('trans_ref')
+            ->whereNull('reference')
+            ->whereNull('trans_state')
+            ->whereDate('created_at', today())
+            ->chunk(100, function ($orders) {
+                foreach ($orders as $order) {
+                    $responseData = $this->getOrderStatut($order->trans_ref);
+                    if ($responseData) {
+                        DB::beginTransaction();
+
+                        try {
+
+                            // Parse the createDateTime
+                            $createDateTime = Carbon::parse($responseData['createDateTime']);
+
+                            // Get the current time
+                            $currentTime = Carbon::now();
+
+                            // Calculate the time difference in hours
+                            $hoursDifference = $currentTime->diffInMinutes($createDateTime);
+                            $paymentState = $responseData['_embedded']['payment'][0]['state'];
+                            if ($hoursDifference >= 5 && $paymentState !== 'PURCHASED') {
+                                $this->cancelPaymentLink($order->trans_ref);
+                                $order->delete();
+                            }
+                            DB::commit();
+                        } catch (\Exception $e) {
+                            DB::rollBack();
+                            Log::error('Failed to update order or send mail', ['order' => $order->trans_ref, 'error' => $e->getMessage()]);
+                        }
+                    } else {
+                        Log::error('Failed to retrieve order status', ['reference' => $order->trans_ref]);
+                    }
+                }
+            });
+
+        dd('ok');
+    }
+
     public function valid()
     {
+        request()->fullUrlWithQuery(['ref' => null]);
+        $this->cart_clear();
+
         return view('validate');
     }
 
@@ -162,9 +204,12 @@ class OrderController extends Controller
             $order->delete();
             $this->cancelPaymentLink($order->trans_ref);
         }
-        toastr()->success('Commande annuler avec success!');
 
-        return redirect('/');
+        $this->cart_clear();
+        toastr()->success('Commande annulée avec succès!');
+
+        // Redirect to the home page or a URL without the 'ref' parameter
+        return redirect()->route('home');
     }
 
     /**

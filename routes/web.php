@@ -21,7 +21,6 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\ZoneController;
 use App\Livewire\Panier;
 use App\Livewire\Produit;
-use App\Mail\RegisterMail;
 use Illuminate\Support\Facades\Route;
 
 Route::prefix('admin')->middleware('auth')->group(function () {
@@ -96,6 +95,7 @@ Route::controller(OrderController::class)->group(function () {
     Route::get('order/invoice/{id}', 'invoice')->name('order.invoice');
     Route::get('order/validate', 'valid')->name('order.validate');
     Route::get('order/cancel', 'cancel')->name('order.cancel');
+    Route::get('order/test', 'FunctionName');
 });
 
 Route::get('lang/{lang}', function ($lang) {
@@ -117,10 +117,7 @@ Route::get('devise/{devise}', function ($devise) {
 Route::get('test', function () {
 
     Artisan::call('optimize:clear');
-
-    Mail::mailerto('salediallo61@gmail.com')->send(new RegisterMail('sale diallo'));
-    // Artisan::call('db:wipe');
-    // Artisan::call('migrate');
+    // Mail::mailerto('salediallo61@gmail.com')->send(new RegisterMail('sale diallo'));
 });
 
 require __DIR__.'/auth.php';

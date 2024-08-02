@@ -40,7 +40,7 @@ class OrderMail extends Mailable
     {
         return new Content(
             markdown: 'email.OrderMail',
-            with: ['url' => route('order.invoice', $this->order)]
+            with: ['url' => route('order.invoice', $this->order->trans_ref)]
         );
     }
 
