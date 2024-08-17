@@ -8,6 +8,7 @@ use App\Models\Client;
 use App\Models\Country;
 use App\Models\Devise;
 use App\Models\Order;
+use App\Models\PayLink;
 use App\Models\Poids;
 use App\Models\Product;
 use App\Models\Promotion;
@@ -96,6 +97,17 @@ class AdminController extends Controller
         $rows = Slide::latest('id')->get();
 
         return Inertia::render('Admin/Slide/Index', compact('rows'));
+    }
+
+    public function paylink()
+    {
+        $filter = Request::only('search');
+        $rows = PayLink::when(Request::input('search'), function ($query, $search) {
+            $query->whereAny(['name', 'montant', 'contact'], 'LIKE', '%'.$search.'%');
+        })->latest('id')->paginate(10)
+            ->withQueryString();
+
+        return Inertia::render('Admin/Paybylink/Index', compact('rows'));
     }
 
     public function client()

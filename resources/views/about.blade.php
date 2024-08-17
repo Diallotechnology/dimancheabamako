@@ -21,7 +21,7 @@
                     <p>@lang('messages.showroom_description')</p>
                 </div>
                 <div class="col-lg-6">
-                    <img src="{{ asset('assets/imgs/theme/about.png') }}" alt="about" />
+                    <img src="{{ asset('assets/imgs/theme/about.jpg') }}" alt="about" />
                 </div>
             </div>
         </div>

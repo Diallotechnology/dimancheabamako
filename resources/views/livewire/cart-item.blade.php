@@ -32,6 +32,9 @@
                 </div>
                 <div class="product-content-wrap">
                     <div class="product-category">
+                        Ref: {{ $item->reference }}
+                    </div>
+                    <div class="product-category">
                         <a href="{{ route('shop.show', $item->id) }}">
                             Categorie:
                             {{ $item->categorie->nom }}

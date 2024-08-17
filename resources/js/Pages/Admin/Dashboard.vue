@@ -180,7 +180,7 @@ onMounted(() => {
                         </tr>
                     </thead>
                     <tbody>
-                        <tr v-for="row in lastorder" :key="row.id">
+                        <tr v-for="row in lastorder.data" :key="row.id">
                             <td>{{ row.id }}</td>
                             <td class="fw-bold">{{ row.reference }}</td>
                             <td>
@@ -212,4 +212,3 @@ onMounted(() => {
         </div>
     </AuthenticatedLayout>
 </template>
-@/helper

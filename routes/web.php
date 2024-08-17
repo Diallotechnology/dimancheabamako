@@ -10,6 +10,7 @@ use App\Http\Controllers\DeviseController;
 use App\Http\Controllers\ImageController;
 use App\Http\Controllers\LinkController;
 use App\Http\Controllers\OrderController;
+use App\Http\Controllers\PayLinkController;
 use App\Http\Controllers\PoidsController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\PromotionController;
@@ -34,8 +35,10 @@ Route::prefix('admin')->middleware('auth')->group(function () {
         Route::resource('country', CountryController::class)->except('index', 'create');
         Route::resource('shipping', ShippingController::class)->except('index', 'create');
         Route::resource('poid', PoidsController::class)->except('index', 'create', 'show');
+        Route::resource('paylink', PayLinkController::class)->except('index', 'create', 'show');
         Route::resource('devise', DeviseController::class)->except('index', 'create', 'show', 'store');
         Route::get('transport/{transport}', [TransportController::class, 'get_trans_zone'])->name('transport.zone');
+        Route::get('paylink/{paylink}/regenerate', [PayLinkController::class, 'regenerate'])->name('paylink.regenerate');
         Route::resource('slide', SlideController::class)->except('index', 'create');
 
         Route::controller(AdminController::class)->group(function () {
@@ -51,6 +54,7 @@ Route::prefix('admin')->middleware('auth')->group(function () {
             Route::get('devise', 'devise')->name('devise');
             Route::get('slide', 'slide')->name('slide');
             Route::get('maintenance', 'maintenance')->name('maintenance');
+            Route::get('paylink', 'paylink')->name('paylink');
         });
     });
     Route::middleware('role:'.RoleEnum::SECRTETAIRE->value)->group(function () {
@@ -95,7 +99,6 @@ Route::controller(OrderController::class)->group(function () {
     Route::get('order/invoice/{id}', 'invoice')->name('order.invoice');
     Route::get('order/validate', 'valid')->name('order.validate');
     Route::get('order/cancel', 'cancel')->name('order.cancel');
-    Route::get('order/test', 'FunctionName');
 });
 
 Route::get('lang/{lang}', function ($lang) {
@@ -114,10 +117,4 @@ Route::get('devise/{devise}', function ($devise) {
 
     return back();
 })->name('change_devise');
-Route::get('test', function () {
-
-    Artisan::call('optimize:clear');
-    // Mail::mailerto('salediallo61@gmail.com')->send(new RegisterMail('sale diallo'));
-});
-
 require __DIR__.'/auth.php';

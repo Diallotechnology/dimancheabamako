@@ -197,6 +197,35 @@ namespace App\Models{
  * 
  *
  * @property int $id
+ * @property string|null $trans_ref
+ * @property string|null $trans_state
+ * @property string $name
+ * @property string $contact
+ * @property string $lien
+ * @property int $montant
+ * @property string $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @method static \Illuminate\Database\Eloquent\Builder|PayLink newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|PayLink newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|PayLink query()
+ * @method static \Illuminate\Database\Eloquent\Builder|PayLink whereContact($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|PayLink whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|PayLink whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|PayLink whereLien($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|PayLink whereMontant($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|PayLink whereName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|PayLink whereTransRef($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|PayLink whereTransState($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|PayLink whereUpdatedAt($value)
+ */
+	class PayLink extends \Eloquent {}
+}
+
+namespace App\Models{
+/**
+ * 
+ *
+ * @property int $id
  * @property float $min
  * @property float $max
  * @property string $created_at

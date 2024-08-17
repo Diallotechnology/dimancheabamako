@@ -27,6 +27,12 @@
                     <span class="text">Ventes</span>
                 </Link>
             </NavLink>
+            <NavLink :active="route().current('paylink')">
+                <Link class="menu-link" :href="route('paylink')">
+                    <i class="icon material-icons md-payment"></i>
+                    <span class="text">Paybylink</span>
+                </Link>
+            </NavLink>
             <div v-if="user.role === 'Administrateur'">
                 <NavLink :active="route().current('promotion')">
                     <Link class="menu-link" :href="route('promotion')">

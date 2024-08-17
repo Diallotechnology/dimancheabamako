@@ -20,7 +20,7 @@ class Panier extends Component
 
     public int $qte = 1;
 
-    public int $country_id;
+    public int $country_id = 0;
 
     public $transport_id;
 
@@ -119,6 +119,6 @@ class Panier extends Component
 
         $country = Country::all('nom', 'id');
 
-        return view('livewire.panier', \compact('items', 'TotalQuantity', 'Total', 'country', 'totalWeight'));
+        return view('livewire.panier', compact('items', 'TotalQuantity', 'Total', 'country', 'totalWeight'));
     }
 }

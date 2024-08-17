@@ -25,7 +25,7 @@ class ContactMail extends Mailable
     {
         return new Envelope(
             subject: $this->data['subject'],
-            from: new Address('contact@dimancheabamako.com', 'dimancheabamako'),
+            from: new Address('contact@dimancheabamako.com', 'Dimanche à Bamako'),
 
         );
     }

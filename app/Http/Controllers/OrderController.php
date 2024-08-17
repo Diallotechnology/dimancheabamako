@@ -9,6 +9,7 @@ use App\Helper\DeleteAction;
 use App\Helper\OrderAPI;
 use App\Http\Requests\StoreOrderRequest;
 use App\Http\Requests\UpdateOrderRequest;
+use App\Jobs\RegisterMailJob;
 use App\Models\Client;
 use App\Models\Country;
 use App\Models\Order;
@@ -16,10 +17,8 @@ use App\Models\Shipping;
 use App\Models\User;
 use Darryldecode\Cart\Facades\CartFacade;
 use Illuminate\Http\Request;
-use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Log;
 use Inertia\Inertia;
 
 class OrderController extends Controller
@@ -48,12 +47,15 @@ class OrderController extends Controller
 
         DB::transaction(function () use ($request, $user, &$link, &$transactionSucceeded) {
             if ($request->password && ! empty($request->password)) {
-                User::firstOrCreate(['email' => $request->email], [
+                $new_user = User::firstOrCreate(['email' => $request->email], [
                     'name' => $request->prenom,
                     'email' => $request->email,
                     'role' => RoleEnum::CUSTOMER->value,
+                    'change_password' => true,
                     'password' => Hash::make($request->password),
                 ]);
+                // send register mail
+                RegisterMailJob::dispatch($new_user);
             }
 
             $pays = Country::findOrFail($request->country_id);
@@ -145,47 +147,6 @@ class OrderController extends Controller
             ->firstOrFail();
 
         return view('invoice', compact('order'));
-    }
-
-    public function FunctionName()
-    {
-        Order::whereNotNull('trans_ref')
-            ->whereNull('reference')
-            ->whereNull('trans_state')
-            ->whereDate('created_at', today())
-            ->chunk(100, function ($orders) {
-                foreach ($orders as $order) {
-                    $responseData = $this->getOrderStatut($order->trans_ref);
-                    if ($responseData) {
-                        DB::beginTransaction();
-
-                        try {
-
-                            // Parse the createDateTime
-                            $createDateTime = Carbon::parse($responseData['createDateTime']);
-
-                            // Get the current time
-                            $currentTime = Carbon::now();
-
-                            // Calculate the time difference in hours
-                            $hoursDifference = $currentTime->diffInMinutes($createDateTime);
-                            $paymentState = $responseData['_embedded']['payment'][0]['state'];
-                            if ($hoursDifference >= 5 && $paymentState !== 'PURCHASED') {
-                                $this->cancelPaymentLink($order->trans_ref);
-                                $order->delete();
-                            }
-                            DB::commit();
-                        } catch (\Exception $e) {
-                            DB::rollBack();
-                            Log::error('Failed to update order or send mail', ['order' => $order->trans_ref, 'error' => $e->getMessage()]);
-                        }
-                    } else {
-                        Log::error('Failed to retrieve order status', ['reference' => $order->trans_ref]);
-                    }
-                }
-            });
-
-        dd('ok');
     }
 
     public function valid()
