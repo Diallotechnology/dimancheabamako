@@ -13,7 +13,7 @@ trait OrderAPI
     private function cancelPayment(string $orderReference)
     {
         $outlet = env('NGENIUS_OUTLET_ID');
-        $responseData = $this->getOrderStatut('835f64ee-50b4-4f90-a4ae-f09c6fd1bd8e');
+        $responseData = $this->getOrderStatut($orderReference);
         $payment = $responseData['_embedded']['payment'][0]['reference'];
 
         return Http::withHeaders([
@@ -74,11 +74,11 @@ trait OrderAPI
         }
     }
 
-    private function prepareTransactionData($montant, $currencyCode, $emailAddress, $redirectUrl, $cancelUrl)
+    private function prepareTransactionData($montant, $currencyCode, $emailAddress, $redirectUrl, $cancelUrl, $lang = null)
     {
         return [
             'action' => 'PURCHASE',
-            'language' => session('locale'),
+            'language' => $lang ?? session('locale'),
             'emailAddress' => $emailAddress,
             'amount' => [
                 'currencyCode' => $currencyCode,

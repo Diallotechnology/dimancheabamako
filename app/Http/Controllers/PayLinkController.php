@@ -17,6 +17,7 @@ class PayLinkController extends Controller
      */
     public function store(StorePayLinkRequest $request)
     {
+
         $montant = $request->montant;
         $currencyCode = 'XOF';
         $emailAddress = '';
@@ -25,7 +26,7 @@ class PayLinkController extends Controller
 
         $accessToken = $this->getAccessToken();
         if ($accessToken) {
-            $postData = $this->prepareTransactionData($montant, $currencyCode, $emailAddress, $redirectUrl, $cancelUrl);
+            $postData = $this->prepareTransactionData($montant, $currencyCode, $emailAddress, $redirectUrl, $cancelUrl, 'fr');
             $response = $this->createOrder($accessToken, $postData);
             if ($response && isset($response['_links']['payment']['href'])) {
                 $link = $response['_links']['payment']['href'];

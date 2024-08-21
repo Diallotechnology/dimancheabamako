@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands;
 
+use App\Helper\OrderAPI;
 use App\Models\PayLink;
 use Illuminate\Console\Command;
 use Illuminate\Support\Carbon;
@@ -10,6 +11,8 @@ use Illuminate\Support\Facades\Log;
 
 class DeletePayByLink extends Command
 {
+    use OrderAPI;
+
     /**
      * The name and signature of the console command.
      *
@@ -35,6 +38,7 @@ class DeletePayByLink extends Command
             ->chunk(100, function ($orders) {
                 foreach ($orders as $order) {
                     $responseData = $this->getOrderStatut($order->trans_ref);
+                    // dd($responseData);
                     if ($responseData) {
                         DB::beginTransaction();
 
@@ -46,11 +50,11 @@ class DeletePayByLink extends Command
                             $currentTime = Carbon::now();
 
                             // Calculate the time difference in minutes
-                            $minutesDifference = $currentTime->diffInHours($createDateTime);
+                            $minutesDifference = $currentTime->diffInMinutes($createDateTime);
                             $paymentState = $responseData['_embedded']['payment'][0]['state'];
-                            if ($minutesDifference >= 2 && $paymentState !== 'PURCHASED') {
+                            if ($minutesDifference >= 5 && $paymentState !== 'PURCHASED') {
                                 $this->cancelPaymentLink($order->trans_ref);
-                                $order->update(['etat' => 'Expire']);
+                                $order->updateOrFail(['etat' => 'Expire']);
                             }
 
                             DB::commit();

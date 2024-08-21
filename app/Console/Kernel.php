@@ -15,16 +15,16 @@ class Kernel extends ConsoleKernel
 
         // verification paiement chaque munite
         $schedule->command('app:check-payment')->everyMinute()->withoutOverlapping()->onOneServer()->runInBackground();
-        // verification paiement chaque 5 munites
-        $schedule->command('app:check-pay-by-link')->everyFiveMinutes()->withoutOverlapping()->onOneServer()->runInBackground();
+        // verification paiement chaque 3 munites
+        $schedule->command('app:check-pay-by-link')->everyTwoMinutes()->withoutOverlapping()->onOneServer()->runInBackground();
 
         // verification des jobs
         $schedule->command('queue:work --stop-when-empty')->everyMinute()->withoutOverlapping()->onOneServer()->runInBackground();
 
         $schedule->command('queue:retry')->everyTwoMinutes()->withoutOverlapping()->onOneServer()->runInBackground();
-        // delete paiement expire chaque 5mn
+        // delete paiement expire chaque 3mn
         $schedule->command('app:delete-order-payment-expire')->everyTwoMinutes()->withoutOverlapping()->onOneServer()->runInBackground();
-        // delete paiement expire chaque 5mn
+        // delete paiement expire chaque 3mn
         $schedule->command('app:delete-pay-by-link')->everyTwoMinutes()->withoutOverlapping()->onOneServer()->runInBackground();
     }
 

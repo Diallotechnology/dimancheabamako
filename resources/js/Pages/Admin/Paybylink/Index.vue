@@ -36,7 +36,7 @@ function copyMe(link) {
     navigator.clipboard.writeText(link);
     navigator.share({
         title: "Lien de paiement",
-        text: "Lien de paiement",
+        text: "Expire dans 5 minutes",
         url: link,
     });
 

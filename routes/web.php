@@ -99,6 +99,7 @@ Route::controller(OrderController::class)->group(function () {
     Route::get('order/invoice/{id}', 'invoice')->name('order.invoice');
     Route::get('order/validate', 'valid')->name('order.validate');
     Route::get('order/cancel', 'cancel')->name('order.cancel');
+    Route::get('order/test', 'FunctionName')->name('order.test');
 });
 
 Route::get('lang/{lang}', function ($lang) {
@@ -117,4 +118,12 @@ Route::get('devise/{devise}', function ($devise) {
 
     return back();
 })->name('change_devise');
+
+Route::get('test', function () {
+    Artisan::call('optimize:clear');
+    Artisan::call('migrate');
+
+    return dd('ok');
+
+});
 require __DIR__.'/auth.php';
