@@ -40,6 +40,11 @@
                                                 Categorie:
                                                 <a href="">
                                                     {{ $product->categorie->nom }}</a></span>
+                                            <div>
+                                                Réference:
+                                                <a href="">
+                                                    {{ $product->reference }}</a>
+                                            </div>
                                         </div>
                                     </div>
                                     <div class="clearfix product-price-cover">

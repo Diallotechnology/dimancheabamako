@@ -75,7 +75,6 @@ Route::prefix('admin')->middleware('auth')->group(function () {
 Route::resource('order', OrderController::class)->only('store');
 Route::controller(LinkController::class)->group(function () {
     Route::get('/', 'home')->name('home');
-    Route::get('/test2', 'FunctionName')->name('FunctionName');
     Route::get('getcategory', 'getCategory')->name('getCategory');
     Route::get('shop/show/{product}', 'shopshow')->name('shop.show');
 });
@@ -99,7 +98,6 @@ Route::controller(OrderController::class)->group(function () {
     Route::get('order/invoice/{id}', 'invoice')->name('order.invoice');
     Route::get('order/validate', 'valid')->name('order.validate');
     Route::get('order/cancel', 'cancel')->name('order.cancel');
-    Route::get('order/test', 'FunctionName')->name('order.test');
 });
 
 Route::get('lang/{lang}', function ($lang) {

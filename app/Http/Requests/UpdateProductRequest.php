@@ -29,7 +29,7 @@ class UpdateProductRequest extends FormRequest
             'nom' => 'required|string',
             'color' => 'nullable|string',
             'taille' => 'nullable|string',
-            'description' => 'required',
+            'description' => 'nullable',
             'resume' => 'required',
             'poids' => 'required|string',
             'favoris' => 'required|boolean',

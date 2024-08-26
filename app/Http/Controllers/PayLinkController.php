@@ -56,7 +56,7 @@ class PayLinkController extends Controller
             if ($response && isset($response['_links']['payment']['href'])) {
                 $link = $response['_links']['payment']['href'];
                 // save temporaly order
-                $paylink->update(['lien' => $link, 'trans_ref' => $response['reference']]);
+                $paylink->update(['lien' => $link, 'trans_ref' => $response['reference'], 'etat' => 'Pending']);
 
             }
         }
