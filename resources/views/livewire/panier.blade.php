@@ -1,6 +1,11 @@
 <div>
     @php
-    $client = Auth::check() ? App\Models\Client::where('email', Auth::user()->email)->first() : null;
+    if (Auth::check() and Auth::user()->isClient()) {
+    $client = App\Models\Client::where('email', Auth::user()->email)->first();
+    } else {
+    $client = null;
+    }
+
     @endphp
 
     <section class="mt-50 mb-50">
