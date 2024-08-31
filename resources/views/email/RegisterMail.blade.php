@@ -14,7 +14,6 @@
     <p>Nous vous souhaitons une agréable expérience de shopping !</p>
     <p>Cordialement,</p>
     <p>Service client</p>
-    <img src="{{ $message->embed(asset('assets/imgs/theme/logo_meta_tag.png')) }}" width="100" alt="logo">
     Merci,<br>
     {{ config('app.name') }}
 </x-mail::message>

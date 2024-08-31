@@ -61,6 +61,7 @@ class Update extends Component
                     'relative' => false,
                     'value' => $this->quantity,
                 ],
+                'attributes' => ['poids' => $this->quantity * $product->associatedModel->poids],
             ]);
         }
         $this->dispatch('productUpdate');
