@@ -203,6 +203,7 @@ namespace App\Models{
  * @property string $contact
  * @property string $lien
  * @property int $montant
+ * @property string $etat
  * @property string $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @method static \Illuminate\Database\Eloquent\Builder|PayLink newModelQuery()
@@ -210,6 +211,7 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder|PayLink query()
  * @method static \Illuminate\Database\Eloquent\Builder|PayLink whereContact($value)
  * @method static \Illuminate\Database\Eloquent\Builder|PayLink whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|PayLink whereEtat($value)
  * @method static \Illuminate\Database\Eloquent\Builder|PayLink whereId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|PayLink whereLien($value)
  * @method static \Illuminate\Database\Eloquent\Builder|PayLink whereMontant($value)
