@@ -6,6 +6,7 @@ use App\Mail\ContactMail;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Validator;
 
 class ContactController extends Controller
 {
@@ -15,12 +16,15 @@ class ContactController extends Controller
     public function sendEmail(Request $request)
     {
         // validate fields
-        $request->validate([
+        Validator::make($request->all(), [
             'name' => 'required|string',
             'email' => 'required|email',
             'subject' => 'required|string',
             'message' => 'required|string',
-        ], ['captcha.captcha' => 'Invalide captcha code.']);
+            'captcha' => 'required|captcha',
+        ], [
+            'captcha.captcha' => __('messages.captcha'),
+        ])->validate();
         $data = [
             'name' => $request->name,
             'email' => $request->email,
@@ -33,8 +37,8 @@ class ContactController extends Controller
         return back();
     }
 
-    public function refreshCaptcha(): JsonResponse
-    {
-        return response()->json(['captcha' => captcha_img()]);
-    }
+    // public function refreshCaptcha(): JsonResponse
+    // {
+    //     return response()->json(['captcha' => captcha_img()]);
+    // }
 }

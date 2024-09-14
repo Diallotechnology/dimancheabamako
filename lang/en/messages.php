@@ -86,4 +86,8 @@ return [
     'out_of_stock_message' => 'We regret to inform you that one of the products you ordered is unfortunately out of stock. We apologize for this inconvenience.',
     'refund_message' => 'You will be fully refunded for this product. The amount will be credited to your account within the next few days.',
     'apology_message' => 'We kindly ask for your understanding. If you have any questions or wish to discuss alternatives, please do not hesitate to contact us.',
+    'verification_email_resent' => 'A new verification link has been sent to the email address you provided during registration.',
+    'thanks_for_signing_up' => 'Thanks for signing up! Before getting started, could you verify your email address by clicking on the link we just emailed to you?',
+    'didnt_receive_email' => 'If you didn\'t receive the email, we will gladly send you another.',
+    'captcha' => 'The captcha is incorrect, please try again.',
 ];

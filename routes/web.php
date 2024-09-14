@@ -25,7 +25,7 @@ use App\Livewire\Produit;
 use App\Mail\RegisterMail;
 use Illuminate\Support\Facades\Route;
 
-Route::prefix('admin')->middleware('auth')->group(function () {
+Route::prefix('admin')->middleware('auth', 'verified')->group(function () {
     Route::middleware('role:'.RoleEnum::ADMIN->value)->group(function () {
         Route::resource('client', ClientController::class)->except('index', 'create');
         Route::resource('user', UserController::class)->except('index', 'create');
@@ -82,7 +82,7 @@ Route::controller(LinkController::class)->group(function () {
 Route::get('/shop/{category?}', Produit::class)->name('shop');
 Route::get('/panier', Panier::class)->name('panier');
 Route::post('contact/mail', [ContactController::class, 'sendEmail'])->name('contact.email');
-Route::get('refresh_captcha', [ContactController::class, 'refreshCaptcha'])->name('refresh_captcha');
+// Route::get('refresh_captcha', [ContactController::class, 'refreshCaptcha'])->name('refresh_captcha');
 Route::view('categorie', 'category')->name('category');
 Route::view('contact', 'contact')->name('contact');
 Route::view('about', 'about')->name('about');

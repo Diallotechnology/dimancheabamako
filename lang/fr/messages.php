@@ -86,4 +86,8 @@ return [
     'out_of_stock_message' => 'Nous vous informons que l\'un des produits que vous avez commandés est malheureusement épuisé. Nous nous excusons pour ce désagrément.',
     'refund_message' => 'Vous serez intégralement remboursé pour ce produit. Le montant sera crédité sur votre compte dans les prochains jours.',
     'apology_message' => 'Nous vous prions de bien vouloir accepter nos excuses pour ce contretemps. Si vous avez des questions ou si vous souhaitez discuter des alternatives, n\'hésitez pas à nous contacter.',
+    'verification_email_resent' => 'Un nouveau lien de vérification a été envoyé à l\'adresse e-mail que vous avez fournie lors de l\'inscription.',
+    'thanks_for_signing_up' => 'Merci pour votre inscription ! Avant de commencer, pourriez-vous vérifier votre adresse e-mail en cliquant sur le lien que nous venons de vous envoyer ?',
+    'didnt_receive_email' => 'Si vous n\'avez pas reçu l\'e-mail, nous vous enverrons volontiers un autre.',
+    'captcha' => 'Le captcha est incorrect, veuillez réessayer.',
 ];

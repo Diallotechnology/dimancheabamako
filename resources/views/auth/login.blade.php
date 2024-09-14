@@ -24,6 +24,7 @@
 
                     <x-input-error :messages="$errors->get('password')" class="mt-2" />
                 </div>
+
                 <div class="mb-3">
                     @if (Route::has('password.request'))
                     <a href="{{ route('password.request') }}" class="float-end font-sm text-muted">
@@ -47,4 +48,5 @@
             </form>
         </div>
     </div>
+
 </x-guest-layout>

@@ -27,7 +27,7 @@ class RegisteredUserController extends Controller
     {
         $pays = new Collection(Countries::getList('fr'));
 
-        return view('auth.register', \compact('pays'));
+        return view('auth.register', compact('pays'));
     }
 
     /**
@@ -44,7 +44,8 @@ class RegisteredUserController extends Controller
             'contact' => 'required|string|max:100',
             'email' => 'required|string|lowercase|email|max:255|unique:'.User::class,
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
-        ]);
+            'captcha' => 'required|captcha',
+        ], ['captcha.captcha' => __('messages.captcha')]);
         $transactionSucceeded = false;
 
         DB::transaction(function () use ($request, &$transactionSucceeded) {

@@ -65,41 +65,19 @@
                                         <div class='invalid-feedback'>Ce champ est
                                             obligatoire.</div>
                                     </div>
-                                    <div class="col-md-6 mx-auto">
-                                        <div class="captcha">
-                                            <span>{!! captcha_img() !!}</span>
-                                            <button type="button" class="btn btn-success btn-refresh"><i
-                                                    class="fi-rs-refresh"></i></button>
-                                        </div>
-                                        <input id="captcha" required type="text" class="form-control my-2"
-                                            placeholder="Enter Captcha" name="captcha">
-                                        @if ($errors->has('captcha'))
-                                        <span class="help-block">
-                                            <strong>{{ $errors->first('captcha') }}</strong>
-                                        </span>
-                                        @endif
-                                    </div>
-                                    <button class="submit submit-auto-width" type="submit">
+
+                                    <x-captcha />
+                                    <button class="submit submit-auto-width mt-1" name="check" type="submit">
                                         Envoyé
                                     </button>
                                 </div>
                             </div>
-                        </form>
-                        <p class="form-messege"></p>
                     </div>
+                    </form>
+                    <p class="form-messege"></p>
                 </div>
             </div>
         </div>
+        </div>
     </section>
-    <script type="text/javascript">
-        $(".btn-refresh").click(function(){
-      $.ajax({
-         type:'GET',
-         url:'/refresh_captcha',
-         success:function(data){
-            $(".captcha span").html(data.captcha);
-         }
-      });
-    });
-    </script>
 </x-app-layout>

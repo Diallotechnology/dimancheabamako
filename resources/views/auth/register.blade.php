@@ -70,6 +70,7 @@
                         <x-input-error :messages="$errors->get('password_confirmation')" class="mt-2" />
                     </div>
                 </div>
+                <x-captcha />
                 <div class="d-flex justify-content-center my-4">
                     <p class="me-2">@lang('messages.already_have_account')</p>
                     <div>
@@ -86,4 +87,15 @@
             </form>
         </div>
     </div>
+    <script type="text/javascript">
+        $(".btn-refresh").click(function(){
+      $.ajax({
+         type:'GET',
+         url:'/refresh_captcha',
+         success:function(data){
+            $(".captcha span").html(data.captcha);
+         }
+      });
+    });
+    </script>
 </x-guest-layout>

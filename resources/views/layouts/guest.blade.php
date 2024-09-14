@@ -38,6 +38,7 @@
   window.intlTelInput(input, {
     utilsScript: "https://cdn.jsdelivr.net/npm/intl-tel-input@23.1.0/build/js/utils.js",
   });
+
     </script>
 </body>
 
