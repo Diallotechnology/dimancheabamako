@@ -119,11 +119,11 @@ Route::get('devise/{devise}', function ($devise) {
 })->name('change_devise');
 
 Route::get('test', function () {
-    Mail::to('salediallo61@gmail.com')->send(new RegisterMail('test'));
+    // Mail::to('salediallo61@gmail.com')->send(new RegisterMail('test'));
     // Artisan::call('optimize:clear');
     // Artisan::call('migrate');
 
-    return dd('ok');
+    // return dd('ok');
 
 });
 require __DIR__.'/auth.php';

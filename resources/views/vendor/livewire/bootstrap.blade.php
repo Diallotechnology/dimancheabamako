@@ -1,11 +1,22 @@
 @php
 if (! isset($scrollTo)) {
-$scrollTo = 'body';
+    $scrollTo = 'body';
 }
 
 $scrollIntoViewJsSnippet = ($scrollTo !== false)
-? <<<JS (\$el.closest('{$scrollTo}') || document.querySelector('{$scrollTo}')).scrollIntoView() JS : '' ; @endphp <div>
+    ? <<<JS
+       (\$el.closest('{$scrollTo}') || document.querySelector('{$scrollTo}')).scrollIntoView()
+    JS
+    : '';
+@endphp
 
+
+<div>
+    <style>
+        .page-link {
+            color: black;
+        }
+    </style>
     @if ($paginator->hasPages())
     <nav class="d-flex justify-items-center justify-content-between">
         <div class="d-flex justify-content-between flex-fill d-sm-none">

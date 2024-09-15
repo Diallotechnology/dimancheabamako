@@ -90,4 +90,7 @@ return [
     'thanks_for_signing_up' => 'Merci pour votre inscription ! Avant de commencer, pourriez-vous vérifier votre adresse e-mail en cliquant sur le lien que nous venons de vous envoyer ?',
     'didnt_receive_email' => 'Si vous n\'avez pas reçu l\'e-mail, nous vous enverrons volontiers un autre.',
     'captcha' => 'Le captcha est incorrect, veuillez réessayer.',
+    'verify_email_address' => 'Vérifiez votre adresse e-mail',
+    'click_to_verify_email' => 'Cliquez sur le bouton ci-dessous pour vérifier votre adresse e-mail.',
+    'check_spam' => 'Pensez à vérifier dans les spams.',
 ];

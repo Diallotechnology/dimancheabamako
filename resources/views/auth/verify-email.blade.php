@@ -7,6 +7,7 @@
     <div class="mb-4 font-medium text-sm text-success">
         {{ __('messages.verification_email_resent') }}
     </div>
+    <p>NB:{{ __('messages.check_spam') }}</p>
     @endif
 
     <div class="mt-4 flex items-center justify-between">
