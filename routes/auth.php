@@ -57,6 +57,9 @@ Route::middleware('auth')->group(function () {
 
     Route::post('logout', [AuthenticatedSessionController::class, 'destroy'])
         ->name('logout');
+
+});
+Route::middleware('auth', 'check.email.verified')->group(function () {
     Route::view('profil', 'profil')->name('profil');
     Route::put('profil/update/{user}', [AuthenticatedSessionController::class, 'update'])
         ->name('profil.update');

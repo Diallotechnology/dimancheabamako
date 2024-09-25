@@ -73,34 +73,33 @@ Route::prefix('admin')->middleware('auth', 'verified')->group(function () {
 
 });
 
-Route::resource('order', OrderController::class)->only('store');
-Route::controller(LinkController::class)->group(function () {
-    Route::get('/', 'home')->name('home');
-    Route::get('getcategory', 'getCategory')->name('getCategory');
-    Route::get('shop/show/{product}', 'shopshow')->name('shop.show');
-});
-Route::get('/shop/{category?}', Produit::class)->name('shop');
-Route::get('/panier', Panier::class)->name('panier');
-Route::post('contact/mail', [ContactController::class, 'sendEmail'])->name('contact.email');
-// Route::get('refresh_captcha', [ContactController::class, 'refreshCaptcha'])->name('refresh_captcha');
-Route::view('categorie', 'category')->name('category');
-Route::view('contact', 'contact')->name('contact');
-Route::view('about', 'about')->name('about');
-Route::view('livraison', 'livraison')->name('livraison');
+Route::middleware(['check.email.verified'])->group(function () {
+    Route::resource('order', OrderController::class)->only('store');
+    Route::controller(LinkController::class)->group(function () {
+        Route::get('/', 'home')->name('home');
+        Route::get('getcategory', 'getCategory')->name('getCategory');
+        Route::get('shop/show/{product}', 'shopshow')->name('shop.show');
+    });
+    Route::get('/shop/{category?}', Produit::class)->name('shop');
+    Route::get('/panier', Panier::class)->name('panier');
+    Route::post('contact/mail', [ContactController::class, 'sendEmail'])->name('contact.email');
+    Route::view('categorie', 'category')->name('category');
+    Route::view('contact', 'contact')->name('contact');
+    Route::view('about', 'about')->name('about');
+    Route::view('livraison', 'livraison')->name('livraison');
 
+    Route::controller(OrderController::class)->group(function () {
+        Route::get('order/invoice/{id}', 'invoice')->name('order.invoice');
+        Route::get('order/validate', 'valid')->name('order.validate');
+        Route::get('order/cancel', 'cancel')->name('order.cancel');
+    });
+});
 Route::controller(SitemapController::class)->group(function () {
     Route::get('sitemap/index', 'index')->name('sitemap.index');
     Route::get('sitemap/page', 'page')->name('sitemap.page');
     Route::get('sitemap/category', 'category')->name('sitemap.category');
     Route::get('sitemap/product', 'product')->name('sitemap.product');
 });
-
-Route::controller(OrderController::class)->group(function () {
-    Route::get('order/invoice/{id}', 'invoice')->name('order.invoice');
-    Route::get('order/validate', 'valid')->name('order.validate');
-    Route::get('order/cancel', 'cancel')->name('order.cancel');
-});
-
 Route::get('lang/{lang}', function ($lang) {
     if (in_array($lang, ['en', 'fr'])) {
         App::setLocale($lang);

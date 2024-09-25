@@ -26,6 +26,9 @@ class Kernel extends ConsoleKernel
         $schedule->command('app:delete-order-payment-expire')->everyTwoMinutes()->withoutOverlapping()->onOneServer()->runInBackground();
         // delete paiement expire chaque 3mn
         $schedule->command('app:delete-pay-by-link')->everyTwoMinutes()->withoutOverlapping()->onOneServer()->runInBackground();
+
+        //verification user email not verified
+        $schedule->command('app:delete-user-not-verify')->everyThirtyMinutes()->withoutOverlapping()->onOneServer()->runInBackground();
     }
 
     /**
