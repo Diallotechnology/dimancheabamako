@@ -4,32 +4,11 @@
 <head>
     <meta charset="utf-8">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
-    <meta name="description"
-        content="E-commerce Dimanche à Bamako - Vente de Bazin teinté, Getzner Magnum, boubou et robes prêt-à-porter, brodés, wax et accessoires pour femme. Trouvez tout ce dont vous avez besoin ici.">
-
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <!-- Google / Search Engine Tags -->
-    <meta itemprop="name" content="Dimanche à bamako">
-    <meta itemprop="description" content="@lang('messages.bazin_sale')">
-    <meta itemprop="image" content="{{ asset('assets/imgs/theme/logo_meta_tag.png') }}">
-
-    <!-- Facebook Meta Tags -->
-    <meta property="og:url" content="https://www.dimancheabamako.com">
-    <meta property="og:type" content="website">
-    <meta property="og:title" content="Dimanche à bamako">
-    <meta property="og:description" content="@lang('messages.bazin_sale')">
-    <meta property="og:image" content="{{ asset('assets/imgs/theme/logo_meta_tag.png') }}">
-
-    <!-- Twitter Meta Tags -->
-    <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="Dimanche à bamako">
-    <meta name="twitter:description" content="@lang('messages.bazin_sale')">
-    <meta name="twitter:image" content="{{ asset('assets/imgs/theme/logo_meta_tag.png') }}">
+    {{ $metadata }}
     <!-- Favicon -->
     <link rel="shortcut icon" type="image/x-icon" href="{{ asset('assets/imgs/theme/favicon.svg') }}">
-    <title>@lang('messages.sunday_sale')</title>
-
-
+    <title>{{ $title ?? __('messages.sunday_sale') }}</title>
     <link href="{{ asset('assets/css/main.css') }}" rel="stylesheet" />
     {{--
     <link href="{{ asset('build/assets/app-YaJoXqX7.css') }}" rel="stylesheet" /> --}}
@@ -355,7 +334,7 @@
         subMenuItem.style.display = "none";
     });
 
-    // Gestion de l'événement de clic sur les éléments du menu
+    // Gestion de l'��vénement de clic sur les éléments du menu
     offCanvasNav.addEventListener("click", function (event) {
         var target = event.target;
 

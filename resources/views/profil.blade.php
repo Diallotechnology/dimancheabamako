@@ -2,68 +2,73 @@
     @php
     $client = App\Models\Client::where('email',Auth::user()->email)->first();
     @endphp
-    <section class="section-padding">
-        <div class="container pt-25">
-            <div class="row">
-                <div class="col-md-8 m-auto">
-                    <div class="card">
-                        <div class="card-header">
-                            <h5>Details du compte</h5>
-                        </div>
-                        <div class="card-body">
-                            <form method="post" class="needs-validation"
-                                action="{{ route('profil.update',Auth::user()) }}" novalidate>
-                                @csrf
-                                @method('PUT')
-                                <div class="row">
-                                    <div class="form-group col-md-12">
+    <x-slot:title>
+        Profil
+        </x-slot>
+        <section class="section-padding">
+            <div class="container pt-25">
+                <div class="row">
+                    <div class="col-md-8 m-auto">
+                        <div class="card">
+                            <div class="card-header">
+                                <h5>Details du compte</h5>
+                            </div>
+                            <div class="card-body">
+                                <form method="post" class="needs-validation"
+                                    action="{{ route('profil.update',Auth::user()) }}" novalidate>
+                                    @csrf
+                                    @method('PUT')
+                                    <div class="row">
+                                        <div class="form-group col-md-12">
 
-                                        <x-input type="text" place="votre nom d'utilisateur" label="Username *"
-                                            name="name" value="{{ Auth::user()->name }}" />
-                                    </div>
-                                    <div class="form-group col-md-12">
-                                        <x-input type="email" place="votre email" label="Email" name="email"
-                                            value="{{ Auth::user()->email }}" />
-                                    </div>
-                                    <div class="form-group col-md-12">
-                                        <x-input-label for="password" :value="__('messages.new_password')" />
+                                            <x-input type="text" place="votre nom d'utilisateur" label="Username *"
+                                                name="name" value="{{ Auth::user()->name }}" />
+                                        </div>
+                                        <div class="form-group col-md-12">
+                                            <x-input type="email" place="votre email" label="Email" name="email"
+                                                value="{{ Auth::user()->email }}" />
+                                        </div>
+                                        <div class="form-group col-md-12">
+                                            <x-input-label for="password" :value="__('messages.new_password')" />
 
-                                        <x-text-input id="password" class="block mt-1 w-full" type="password"
-                                            name="password" autocomplete="new-password" />
+                                            <x-text-input id="password" class="block mt-1 w-full" type="password"
+                                                name="password" autocomplete="new-password" />
 
-                                        <x-input-error :messages="$errors->get('password')" class="mt-2" />
-                                    </div>
-                                    <div class="form-group col-md-12">
-                                        <x-input-label for="password_confirmation"
-                                            :value="__('messages.confirm_password')" />
+                                            <x-input-error :messages="$errors->get('password')" class="mt-2" />
+                                        </div>
+                                        <div class="form-group col-md-12">
+                                            <x-input-label for="password_confirmation"
+                                                :value="__('messages.confirm_password')" />
 
-                                        <x-text-input id="password_confirmation" class="block mt-1 w-full"
-                                            type="password" name="password_confirmation" autocomplete="new-password" />
+                                            <x-text-input id="password_confirmation" class="block mt-1 w-full"
+                                                type="password" name="password_confirmation"
+                                                autocomplete="new-password" />
 
-                                        <x-input-error :messages="$errors->get('password_confirmation')" class="mt-2" />
+                                            <x-input-error :messages="$errors->get('password_confirmation')"
+                                                class="mt-2" />
+                                        </div>
+                                        <div class="col-md-12">
+                                            <button type="submit" class="btn btn-fill-out submit">Enregistré</button>
+                                        </div>
                                     </div>
-                                    <div class="col-md-12">
-                                        <button type="submit" class="btn btn-fill-out submit">Enregistré</button>
-                                    </div>
-                                </div>
-                            </form>
+                                </form>
+                            </div>
                         </div>
                     </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="card mb-3 mb-lg-0">
-                        <div class="card-header">
-                            <h5 class="mb-0">Address</h5>
-                        </div>
-                        <div class="card-body">
-                            <address>{{ $client->prenom }} {{ $client->nom }}<br>{{ $client->email
-                                }}<br>{{ $client->contact }}
-                            </address>
-                            <p>{{ $client->pays }}</p>
+                    <div class="col-md-4">
+                        <div class="card mb-3 mb-lg-0">
+                            <div class="card-header">
+                                <h5 class="mb-0">Address</h5>
+                            </div>
+                            <div class="card-body">
+                                <address>{{ $client->prenom }} {{ $client->nom }}<br>{{ $client->email
+                                    }}<br>{{ $client->contact }}
+                                </address>
+                                <p>{{ $client->pays }}</p>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
-    </section>
+        </section>
 </x-app-layout>

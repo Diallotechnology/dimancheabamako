@@ -14,7 +14,7 @@ class Produit extends Component
 
     public string $search = '';
 
-    public string $cat = '';
+    public Category $cat;
 
     public function add(int $id)
     {
@@ -23,8 +23,7 @@ class Produit extends Component
 
     public function mount(?Category $category = null)
     {
-        // dd($category);
-        $this->cat = $category->id;
+        $this->cat = $category;
     }
 
     public function render()
@@ -32,9 +31,9 @@ class Produit extends Component
         $rows = Product::ByStock()->when($this->search, function ($query) {
             $query->whereAny(['nom', 'color'], 'LIKE', '%'.$this->search.'%');
         })->when($this->cat, function ($query) {
-            $query->where('categorie_id', $this->cat);
+            $query->where('categorie_id', $this->cat->id);
         })->latest('id')->paginate(15);
-        $category_list = Category::all();
+        $category_list = Category::select('id', 'nom')->get();
 
         return view('livewire.produit', compact('rows', 'category_list'));
     }

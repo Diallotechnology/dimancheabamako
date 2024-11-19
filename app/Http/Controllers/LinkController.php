@@ -16,7 +16,7 @@ class LinkController extends Controller
      */
     public function home(?string $token = null)
     {
-        $query = Product::ByStock();
+        $query = Product::query()->ByStock();
         // Récupération des derniers produits
         $latest = $query->take(10)->latest()->get();
         // Récupération des produits populaires
@@ -31,14 +31,14 @@ class LinkController extends Controller
 
     public function getCategory()
     {
-        return Category::all(['id', 'nom']);
+        return Category::select('id', 'nom')->get();
     }
 
     public function shopshow(Product $product)
     {
-        $product->load('images');
+        $product->loadMissing('images', 'categorie');
         $rows = Product::where('categorie_id', $product->categorie_id)->ByStock()->take(4)->get();
-        $category = Category::all();
+        $category = Category::select('id', 'nom')->get();
 
         return view('product-show', compact('product', 'rows', 'category'));
     }

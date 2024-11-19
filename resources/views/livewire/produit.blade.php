@@ -1,117 +1,143 @@
 <div>
 
-    <section class="mt-50 mb-50">
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-9">
-                    <div class="shop-product-fillter style-2">
-                        <div class="totall-product">
-                            <h4 class="mb-3"></h4>
-                            <p>
-                                <strong class="text-brand">{{
-                                    $rows->total()
-                                    }}</strong>
-                                elements
-                            </p>
-                        </div>
-                        <div class="sidebar-widget widget_search mb-50">
-                            <div class="search-form">
-                                <div>
-                                    <input wire:model.live.debounce.200ms="search" type="text"
-                                        placeholder="Recherche..." class="form-control" />
+    <x-slot:metadata>
+        <meta name="description" content="E-commerce Dimanche à Bamako - {{ $cat->nom }}">
+        <meta name="keywords" content="{{ $cat->nom }}, Bazin, Getzner, boubou, robes, prêt-à-porter, accessoires">
+        <!-- Google / Search Engine Tags -->
+        <meta itemprop="name" content="Dimanche à bamako {{ $cat->nom }}">
+        <meta itemprop="description" content="@lang('messages.bazin_sale')">
+        <meta itemprop="image" content="{{ asset('assets/imgs/theme/logo_meta_tag.png') }}">
+
+        <!-- Facebook Meta Tags -->
+        <meta property="og:url" content="https://www.dimancheabamako.com">
+        <meta property="og:type" content="website">
+        <meta property="og:title" content="Dimanche à bamako {{ $cat->nom }}">
+        <meta property="og:description" content="@lang('messages.bazin_sale')">
+        <meta property="og:image" content="{{ asset('assets/imgs/theme/logo_meta_tag.png') }}">
+
+        <!-- Twitter Meta Tags -->
+        <meta name="twitter:card" content="summary_large_image">
+        <meta name="twitter:title" content="Dimanche à bamako {{ $cat->nom }}">
+        <meta name="twitter:description" content="@lang('messages.bazin_sale')">
+        <meta name="twitter:image" content="{{ asset('assets/imgs/theme/logo_meta_tag.png') }}">
+        </x-slot>
+        <x-slot:title>
+            Categorie {{ $cat->nom }}
+            </x-slot>
+            <section class="mt-50 mb-50">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-lg-9">
+                            <div class="shop-product-fillter style-2">
+                                <div class="totall-product">
+                                    <h4 class="mb-3"></h4>
+                                    <p>
+                                        <strong class="text-brand">{{
+                                            $rows->total()
+                                            }}</strong>
+                                        elements
+                                    </p>
                                 </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="product-list mb-50">
-                        <div wire:loading class="loader"></div>
-                        @forelse ($rows as $row)
-                        <div class="product-cart-wrap" wire:loading.class="d-none">
-                            <div class="product-img-action-wrap">
-                                <div class="product-img product-img-zoom">
-                                    <div class="product-img-inner">
-                                        <a href="{{ route('shop.show', $row->id) }}">
-                                            <img class="default-img" src="{{ $row->cover }}" alt="produit image" />
-                                            <img class="hover-img" src="{{ $row->cover }}" alt="produit image hover" />
-                                        </a>
+                                <div class="sidebar-widget widget_search mb-50">
+                                    <div class="search-form">
+                                        <div>
+                                            <input wire:model.live.debounce.200ms="search" type="text"
+                                                placeholder="Recherche..." class="form-control" />
+                                        </div>
                                     </div>
                                 </div>
-                                <div class="product-action-1">
-                                    <a href="{{ route('shop.show', $row->id) }}" aria-label="Voir"
-                                        class="action-btn hover-up">
-                                        <i class="fi-rs-eye"></i></a>
-                                </div>
-                                <div class="product-badges product-badges-position product-badges-mrg">
-                                    <span class="hot">{{
-                                        $row->reduction > 0
-                                        ? "Bon plan -"
-                                        .$row->reduction.
-                                        "%"
-                                        : "hot"
-                                        }}</span>
-                                </div>
                             </div>
-                            <div class="product-content-wrap">
-                                <h2>
-                                    <a href="{{ route('shop.show', $row->id) }}">{{ $row->nom }}</a>
-                                </h2>
-                                <div class="product-price">
-                                    <span>
-                                        {{
-                                        $row->reduction > 0
-                                        ? $row->prix_promo
-                                        : $row->prix_format
-                                        }}
-                                    </span>
-                                    @if ($row->reduction > 0)
-                                    <span class="old-price">
-                                        {{ $row->prix_format }}
-                                    </span>
-                                    @endif
+                            <div class="product-list mb-50">
+                                <div wire:loading class="loader"></div>
+                                @forelse ($rows as $row)
+                                <div class="product-cart-wrap" wire:loading.class="d-none">
+                                    <div class="product-img-action-wrap">
+                                        <div class="product-img product-img-zoom">
+                                            <div class="product-img-inner">
+                                                <a href="{{ route('shop.show', $row->id) }}">
+                                                    <img class="default-img" src="{{ $row->cover }}"
+                                                        alt="{{ $row->nom }}" />
+                                                    <img class="hover-img" src="{{ $row->cover }}"
+                                                        alt="{{ $row->nom }}" />
+                                                </a>
+                                            </div>
+                                        </div>
+                                        <div class="product-action-1">
+                                            <a href="{{ route('shop.show', $row->id) }}" aria-label="Voir"
+                                                class="action-btn hover-up">
+                                                <i class="fi-rs-eye"></i></a>
+                                        </div>
+                                        <div class="product-badges product-badges-position product-badges-mrg">
+                                            <span class="hot">{{
+                                                $row->reduction > 0
+                                                ? "Bon plan -"
+                                                .$row->reduction.
+                                                "%"
+                                                : "hot"
+                                                }}</span>
+                                        </div>
+                                    </div>
+                                    <div class="product-content-wrap">
+                                        <h2>
+                                            <a href="{{ route('shop.show', $row->id) }}">{{ $row->nom }}</a>
+                                        </h2>
+                                        <div class="product-price">
+                                            <span>
+                                                {{
+                                                $row->reduction > 0
+                                                ? $row->prix_promo
+                                                : $row->prix_format
+                                                }}
+                                            </span>
+                                            @if ($row->reduction > 0)
+                                            <span class="old-price">
+                                                {{ $row->prix_format }}
+                                            </span>
+                                            @endif
+                                        </div>
+                                        <p class="mt-15">
+                                            Categorie: {{ $row->categorie->nom }}
+                                            <br />
+                                            @lang('messages.size') {{ $row->taille }} <br />
+                                            @lang('messages.color') {{ $row->color }}
+                                        </p>
+                                        <div class="product-action-1 show">
+                                            <button type="button" aria-label="@lang('messages.purchased')"
+                                                class="action-btn" wire:click='add({{ $row->id }})'>
+                                                <i class="fi-rs-shopping-bag-add"></i>
+                                                @lang('messages.purchased')
+                                            </button>
+                                        </div>
+                                    </div>
                                 </div>
-                                <p class="mt-15">
-                                    Categorie: {{ $row->categorie->nom }}
-                                    <br />
-                                    @lang('messages.size') {{ $row->taille }} <br />
-                                    @lang('messages.color') {{ $row->color }}
-                                </p>
-                                <div class="product-action-1 show">
-                                    <button type="button" aria-label="@lang('messages.purchased')" class="action-btn"
-                                        wire:click='add({{ $row->id }})'>
-                                        <i class="fi-rs-shopping-bag-add"></i>
-                                        @lang('messages.purchased')
-                                    </button>
-                                </div>
+                                @empty
+                                <h4 class="text-center my-5">@lang('messages.no_product_available')</h4>
+                                @endforelse
+                            </div>
+                            <!--pagination-->
+                            @if($rows)
+                            {{ $rows->links() }}
+                            @endif
+                        </div>
+                        <div class="col-lg-3 primary-sidebar sticky-sidebar">
+                            <div class="widget-category mb-30">
+                                <h5 class="section-title style-1 mb-30 wow fadeIn animated">
+                                    Categories
+                                </h5>
+                                <ul class="categories">
+                                    @foreach ($category_list as $row)
+                                    <li>
+                                        <a href="{{ route('shop', $row->id) }}">
+                                            {{ $row->nom }}
+                                        </a>
+                                    </li>
+                                    @endforeach
+                                </ul>
                             </div>
                         </div>
-                        @empty
-                        <h4 class="text-center my-5">@lang('messages.no_product_available')</h4>
-                        @endforelse
-                    </div>
-                    <!--pagination-->
-                    @if($rows)
-                    {{ $rows->links() }}
-                    @endif
-                </div>
-                <div class="col-lg-3 primary-sidebar sticky-sidebar">
-                    <div class="widget-category mb-30">
-                        <h5 class="section-title style-1 mb-30 wow fadeIn animated">
-                            Categories
-                        </h5>
-                        <ul class="categories">
-                            @foreach ($category_list as $row)
-                            <li>
-                                <a href="{{ route('shop', $row->id) }}">
-                                    {{ $row->nom }}
-                                </a>
-                            </li>
-                            @endforeach
-                        </ul>
                     </div>
                 </div>
-            </div>
-        </div>
-    </section>
+            </section>
 </div>
 @script
 <script>

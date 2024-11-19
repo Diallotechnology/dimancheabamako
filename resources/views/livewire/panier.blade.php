@@ -31,7 +31,7 @@
                                 @forelse ($items as $item)
                                 <tr wire:key="{{ $item->id }}">
                                     <td class="image product-thumbnail">
-                                        <img src="{{ $item->associatedModel->cover }}" alt="cover" />
+                                        <img src="{{ $item->associatedModel->cover }}" alt="{{ $item->name }}" />
                                         <h5>{{ $item->name }}</h5>
                                     </td>
                                     <td class="text-center" data-title="Stock">

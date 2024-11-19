@@ -178,7 +178,7 @@ class OrderController extends Controller
      */
     public function show(Order $order)
     {
-        $order->load('client', 'products')->loadSum('products as totaux', 'order_product.montant');
+        $order->loadMissing('client', 'products')->loadSum('products as totaux', 'order_product.montant');
 
         $state = OrderEnum::cases();
 

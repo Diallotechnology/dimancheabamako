@@ -6,8 +6,8 @@
                 <div class="product-img-action-wrap">
                     <div class="product-img product-img-zoom">
                         <a href="{{ route('shop.show', $item->id) }}">
-                            <img class="default-img" src="{{ $item->cover }}" alt="produit image" />
-                            <img class="hover-img" src="{{ $item->cover }}" alt="produit image hover" />
+                            <img class="default-img" src="{{ $item->cover }}" alt="{{ $item->nom }}" />
+                            <img class="hover-img" src="{{ $item->cover }}" alt="{{ $item->nom }}" />
                         </a>
                     </div>
                     <div class="product-action-1">
