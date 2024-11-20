@@ -5,10 +5,10 @@
     <meta charset="utf-8">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    {{ $metadata }}
+    {{ $metadata ?? '' }}
     <!-- Favicon -->
     <link rel="shortcut icon" type="image/x-icon" href="{{ asset('assets/imgs/theme/favicon.svg') }}">
-    <title>{{ $title ?? __('messages.sunday_sale') }}</title>
+    <title>{{ $title ?? __('messages.home').' '. __('messages.sunday_sale') }}</title>
     <link href="{{ asset('assets/css/main.css') }}" rel="stylesheet" />
     {{--
     <link href="{{ asset('build/assets/app-YaJoXqX7.css') }}" rel="stylesheet" /> --}}

@@ -21,9 +21,12 @@ class Produit extends Component
         return $this->store($id);
     }
 
-    public function mount(?Category $category = null)
+    public function mount(Category $category, string $slug)
     {
         $this->cat = $category;
+        if ($category->nom !== $slug) {
+            return redirect()->route('shop', ['category' => $category->id, 'slug' => $category->nom]);
+        }
     }
 
     public function render()

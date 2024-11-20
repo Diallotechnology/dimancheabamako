@@ -78,9 +78,9 @@ Route::middleware(['check.email.verified'])->group(function () {
     Route::controller(LinkController::class)->group(function () {
         Route::get('/', 'home')->name('home');
         Route::get('getcategory', 'getCategory')->name('getCategory');
-        Route::get('shop/show/{product}', 'shopshow')->name('shop.show');
+        Route::get('shop/show/{id}-{slug}', 'product_detail')->name('shop.show');
     });
-    Route::get('/shop/{category?}', Produit::class)->name('shop');
+    Route::get('/shop/{category}-{slug}', Produit::class)->name('shop');
     Route::get('/panier', Panier::class)->name('panier');
     Route::post('contact/mail', [ContactController::class, 'sendEmail'])->name('contact.email');
     Route::view('categorie', 'category')->name('category');

@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 
 /**
  * @property int $id
@@ -87,6 +88,16 @@ class Product extends Model
     public function scopeByStock(Builder $query): Builder
     {
         return $query->where('stock', '>=', 1);
+    }
+
+    // Automatically generate slug
+    public static function boot()
+    {
+        parent::boot();
+
+        static::saving(function ($produit) {
+            $produit->slug = Str::slug($produit->nom, '-');
+        });
     }
 
     public function getPrixFinal(): int
@@ -242,6 +253,7 @@ class Product extends Model
     public function getCoverAttribute(): string
     {
         return Storage::url($this->attributes['cover']);
+        // return asset('admin/assets/imgs/theme/logo.svg');
     }
 
     public function DocLink(): string

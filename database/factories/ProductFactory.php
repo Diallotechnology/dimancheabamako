@@ -20,6 +20,7 @@ class ProductFactory extends Factory
             'categorie_id' => rand(1, 5),
             'reference' => uniqid(),
             'nom' => $this->faker->sentence(1),
+            'slug' => $this->faker->sentence(1),
             'prix' => rand(15000, 50000),
             'poids' => rand(1, 5),
             'stock' => rand(15, 50),

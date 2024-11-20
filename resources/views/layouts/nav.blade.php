@@ -110,7 +110,8 @@ $cat = App\Models\Category::all();
                                     <ul class="sub-menu">
                                         @foreach($cat as $row)
                                         <li>
-                                            <a href="{{ route('shop', $row->id) }}">{{ $row->nom }}</a>
+                                            <a href="{{ route('shop', ['category'=>$row->id,'slug'=>$row->nom]) }}">{{
+                                                $row->nom }}</a>
                                         </li>
                                         @endforeach
                                     </ul>

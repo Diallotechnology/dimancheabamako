@@ -1,10 +1,11 @@
 <x-app-layout>
     <x-slot:metadata>
         <meta name="description"
-            content="E-commerce Dimanche à Bamako - Vente de Bazin teinté, Getzner Magnum, boubou et robes prêt-à-porter.">
+            content="E-commerce Dimanche à Bamako - Vente de Bazin riche teinté, Getzner Magnum, boubou et robes Prêt à porter Femme et hommmes, Brodés et Wax, Ordinateurs et perlage, Siri ou Taq" />
+        <meta name="author" content="Dimanche à Bamako" />
 
-        <meta name="keywords" content="Bazin, Getzner, boubou, robes, prêt-à-porter, accessoires, Bamako">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="keywords"
+            content="Bazin riche, Getzner, boubou, robes, prêt-à-porter, accessoires, Bamako,Brodés, Wax">
         <!-- Google / Search Engine Tags -->
         <meta itemprop="name" content="Dimanche à bamako">
         <meta itemprop="description" content="@lang('messages.bazin_sale')">
@@ -74,7 +75,7 @@
                             </button>
                         </li>
                     </ul>
-                    <a href="{{ route('shop') }}" class="view-more d-none d-md-flex">
+                    <a href="{{ route('category') }}" class="view-more d-none d-md-flex">
                         @lang('messages.view_all')
                         <i class="fi-rs-angle-double-small-right"></i>
                     </a>

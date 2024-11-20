@@ -301,6 +301,8 @@ namespace App\Models{
  * @method static Builder|Product whereUpdatedAt($value)
  * @method static Builder|Product whereVideo($value)
  * @mixin \Eloquent
+ * @property string|null $slug
+ * @method static \Illuminate\Database\Eloquent\Builder|Product whereSlug($value)
  */
 	class Product extends \Eloquent {}
 }
@@ -459,7 +461,7 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder|User whereUpdatedAt($value)
  * @mixin \Eloquent
  */
-	class User extends \Eloquent {}
+	class User extends \Eloquent implements \Illuminate\Contracts\Auth\MustVerifyEmail {}
 }
 
 namespace App\Models{

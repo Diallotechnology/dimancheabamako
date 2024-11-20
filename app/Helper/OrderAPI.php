@@ -9,7 +9,10 @@ use Illuminate\Support\Facades\Log;
 
 trait OrderAPI
 {
+    // https://api-gateway.sandbox.ngenius-payments.com
     // https://api-gateway.orabankml.ngenius-payments.com
+    protected string $base = 'https://api-gateway.orabankml.ngenius-payments.com';
+
     private function cancelPayment(string $orderReference)
     {
         $outlet = env('NGENIUS_OUTLET_ID');
@@ -20,7 +23,7 @@ trait OrderAPI
             'Authorization' => 'Bearer '.$this->getAccessToken(),
             'Content-Type' => 'application/vnd.ni-payment.v2+json',
             'Accept' => 'application/vnd.ni-payment.v2+json',
-        ])->put('https://api-gateway.orabankml.ngenius-payments.com/transactions/outlets/'.$outlet.'/orders/'.$orderReference.'/payments/'.$payment.'/cancel');
+        ])->put($this->base.'/transactions/outlets/'.$outlet.'/orders/'.$orderReference.'/payments/'.$payment.'/cancel');
     }
 
     private function cancelPaymentLink(string $orderReference)
@@ -31,7 +34,7 @@ trait OrderAPI
             'Authorization' => 'Bearer '.$this->getAccessToken(),
             'Content-Type' => 'application/vnd.ni-payment.v2+json',
             'Accept' => 'application/vnd.ni-payment.v2+json',
-        ])->put('https://api-gateway.orabankml.ngenius-payments.com/transactions/outlets/'.$outlet.'/orders/'.$orderReference.'/cancel');
+        ])->put($this->base.'/transactions/outlets/'.$outlet.'/orders/'.$orderReference.'/cancel');
     }
 
     private function getOrderStatut(string $reference)
@@ -39,7 +42,7 @@ trait OrderAPI
         $accessToken = $this->getAccessToken();
         $outlet = env('NGENIUS_OUTLET_ID');
         // L'URL de l'API pour récupérer les détails de la commande
-        $url = 'https://api-gateway.orabankml.ngenius-payments.com/transactions/outlets/'.$outlet.'/orders/'.$reference;
+        $url = $this->base.'/transactions/outlets/'.$outlet.'/orders/'.$reference;
         $response = Http::withHeaders([
             'Authorization' => 'Bearer '.$accessToken,
             'Content-Type' => 'application/vnd.ni-payment.v2+json',
@@ -61,7 +64,7 @@ trait OrderAPI
             'accept' => 'application/vnd.ni-identity.v1+json',
             'authorization' => 'Basic '.env('NGENIUS_API_KEY'),
             'content-type' => 'application/vnd.ni-identity.v1+json',
-        ])->post('https://api-gateway.orabankml.ngenius-payments.com/identity/auth/access-token', [
+        ])->post($this->base.'/identity/auth/access-token', [
             'realmName' => env('NGENIUS_REALM_NAME'),
         ]);
 
@@ -100,7 +103,7 @@ trait OrderAPI
                 'Content-Type' => 'application/vnd.ni-payment.v2+json',
                 'Accept' => 'application/vnd.ni-payment.v2+json',
             ])
-            ->post('https://api-gateway.orabankml.ngenius-payments.com/transactions/outlets/'.$outlet.'/orders', $postData);
+            ->post($this->base.'/transactions/outlets/'.$outlet.'/orders', $postData);
 
         if ($response->successful()) {
             return $response->json();

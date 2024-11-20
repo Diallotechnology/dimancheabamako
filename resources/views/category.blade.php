@@ -15,12 +15,13 @@
         </div>
         <section class="section-padding">
             <div class="container pt-25">
+                <h2 class="mb-3">Explorez nos categories de produits</h2>
                 <div class="row">
                     <ul class="dropdown" style="list-style: inside;">
                         @foreach($cat as $row)
                         <li>
                             <a class="text-black-50 cat" style="font-size: x-large"
-                                href="{{ route('shop', $row->id) }}">{{
+                                href="{{ route('shop', ['category'=>$row->id,'slug'=>$row->nom]) }}">{{
                                 $row->nom }}</a>
                         </li>
                         @endforeach

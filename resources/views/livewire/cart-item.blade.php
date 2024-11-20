@@ -5,14 +5,14 @@
             <div class="product-cart-wrap mb-30">
                 <div class="product-img-action-wrap">
                     <div class="product-img product-img-zoom">
-                        <a href="{{ route('shop.show', $item->id) }}">
+                        <a href="{{ route('shop.show', ['id' => $item->id, 'slug' => $item->slug]) }}">
                             <img class="default-img" src="{{ $item->cover }}" alt="{{ $item->nom }}" />
                             <img class="hover-img" src="{{ $item->cover }}" alt="{{ $item->nom }}" />
                         </a>
                     </div>
                     <div class="product-action-1">
-                        <a href="{{ route('shop.show', $item->id) }}" aria-label="@lang('messages.view')"
-                            class="action-btn hover-up">
+                        <a href="{{ route('shop.show',  ['id' => $item->id, 'slug' => $item->slug]) }}"
+                            aria-label="@lang('messages.view')" class="action-btn hover-up">
                             <i class="fi-rs-eye"></i></a>
                     </div>
                     @if ($news == true)
@@ -35,13 +35,13 @@
                         Ref: {{ $item->reference }}
                     </div>
                     <div class="product-category">
-                        <a href="{{ route('shop.show', $item->id) }}">
+                        <a href="{{ route('shop.show',  ['id' => $item->id, 'slug' => $item->slug]) }}">
                             Categorie:
                             {{ $item->categorie->nom }}
                         </a>
                     </div>
                     <h2>
-                        <a href="{{ route('shop.show', $item->id) }}">
+                        <a href="{{ route('shop.show',  ['id' => $item->id, 'slug' => $item->slug]) }}">
                             {{ $item->nom }}
                         </a>
                     </h2>
