@@ -23,6 +23,7 @@ use App\Http\Controllers\ZoneController;
 use App\Livewire\Panier;
 use App\Livewire\Produit;
 use App\Mail\RegisterMail;
+use App\Models\Product;
 use Illuminate\Support\Facades\Route;
 
 Route::prefix('admin')->middleware('auth', 'verified')->group(function () {
@@ -119,10 +120,15 @@ Route::get('devise/{devise}', function ($devise) {
 
 Route::get('test', function () {
     // Mail::to('salediallo61@gmail.com')->send(new RegisterMail('test'));
-    // Artisan::call('optimize:clear');
-    // Artisan::call('migrate');
+    Artisan::call('optimize:clear');
+    Artisan::call('migrate');
 
-    // return dd('ok');
+    $up = Product::all();
+    foreach ($up as $product) {
+        $product->updateQuietly(['slug' => Str::slug($product->nom, '-')]);
+    }
+
+    return dd('ok');
 
 });
 require __DIR__.'/auth.php';

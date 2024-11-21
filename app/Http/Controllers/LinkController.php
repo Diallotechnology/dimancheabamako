@@ -2,21 +2,18 @@
 
 namespace App\Http\Controllers;
 
-use App\Helper\OrderAPI;
-use App\Livewire\Produit;
 use App\Models\Category;
 use App\Models\Product;
 use App\Models\Slide;
 
 class LinkController extends Controller
 {
-    use OrderAPI;
-
     /**
      * Display the user's profile form.
      */
     public function home(?string $token = null)
     {
+
         $query = Product::query()->ByStock();
         // Récupération des derniers produits
         $latest = $query->take(10)->latest()->get();
