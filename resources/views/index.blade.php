@@ -1,29 +1,66 @@
 <x-app-layout>
     <x-slot:metadata>
-        <meta name="description"
-            content="E-commerce Dimanche à Bamako - Vente de Bazin riche teinté, Getzner Magnum, boubou et robes Prêt à porter Femme et hommmes, Brodés et Wax, Ordinateurs et perlage, Siri ou Taq" />
+        <!-- Meta Description -->
+        <meta name="description" content="Dimanche à Bamako : {{ __('messages.bazin_sale') }}" />
+
+        <!-- Meta Author -->
         <meta name="author" content="Dimanche à Bamako" />
 
+        <!-- Meta Keywords -->
         <meta name="keywords"
-            content="Bazin riche, Getzner, boubou, robes, prêt-à-porter, accessoires, Bamako,Brodés, Wax">
+            content="Bazin riche, Getzner Magnum, boubou, robes, prêt-à-porter, accessoires, mode africaine, Bamako, brodés, Wax, perlage, Siri, Taq" />
+
         <!-- Google / Search Engine Tags -->
-        <meta itemprop="name" content="Dimanche à bamako">
-        <meta itemprop="description" content="@lang('messages.bazin_sale')">
+        <meta itemprop="name" content="Dimanche à Bamako - E-commerce">
+        <meta itemprop="description"
+            content="Boutique en ligne de référence à Bamako pour Bazin riche teinté, Getzner Magnum, vêtements prêt-à-porter et plus encore.">
         <meta itemprop="image" content="{{ asset('assets/imgs/theme/logo_meta_tag.png') }}">
 
         <!-- Facebook Meta Tags -->
         <meta property="og:url" content="https://www.dimancheabamako.com">
         <meta property="og:type" content="website">
-        <meta property="og:title" content="Dimanche à bamako">
-        <meta property="og:description" content="@lang('messages.bazin_sale')">
+        <meta property="og:title" content="Dimanche à Bamako - E-commerce pour Bazin, Getzner et prêt-à-porter">
+        <meta property="og:description"
+            content="Découvrez Dimanche à Bamako : une large sélection de Bazin, Getzner, robes, boubous et accessoires de mode africaine. Qualité et service premium.">
         <meta property="og:image" content="{{ asset('assets/imgs/theme/logo_meta_tag.png') }}">
 
         <!-- Twitter Meta Tags -->
         <meta name="twitter:card" content="summary_large_image">
-        <meta name="twitter:title" content="Dimanche à bamako">
-        <meta name="twitter:description" content="@lang('messages.bazin_sale')">
+        <meta name="twitter:title" content="Dimanche à Bamako - Mode et Bazin en ligne">
+        <meta name="twitter:description"
+            content="Achetez en ligne votre Bazin riche teinté, Getzner, prêt-à-porter, accessoires, brodés et Wax. Livraison rapide et sécurisée.">
         <meta name="twitter:image" content="{{ asset('assets/imgs/theme/logo_meta_tag.png') }}">
+        <script type="application/ld+json">
+            {
+                "@context": "https://schema.org",
+                "@type": "Store",
+                "name": "Dimanche à Bamako",
+                "description": "Boutique en ligne pour Bazin riche teinté, Getzner Magnum, boubous, robes prêt-à-porter, brodés, Wax et accessoires à Bamako.",
+                "url": "https://www.dimancheabamako.com",
+                "logo": "{{ asset('assets/imgs/theme/logo_meta_tag.png') }}",
+                "image": "{{ asset('assets/imgs/theme/logo_meta_tag.png') }}",
+                "address": {
+                    "@type": "PostalAddress",
+                    "streetAddress": "Rue de l'E-commerce, Bamako",
+                    "addressLocality": "Bamako",
+                    "addressCountry": "ML"
+                },
+                "telephone": "+223 20 00 00 00",
+                "sameAs": [
+                    "https://www.facebook.com/dimancheabamako",
+                    "https://twitter.com/dimancheabamako",
+                    "https://www.instagram.com/dimancheabamako"
+                ],
+                "openingHours": "Mo-Fr 09:00-18:00",
+                "currenciesAccepted": "XOF,EUR",
+                "paymentAccepted": ["Cash", "Credit Card", "Mobile Payment"],
+                "priceRange": "$$"
+            }
+        </script>
+
         </x-slot>
+
+
         <section class="home-slider position-relative pt-50">
             <div class="hero-slider-1 dot-style-1 dot-style-1-position-1">
                 @foreach ($slide as $item)

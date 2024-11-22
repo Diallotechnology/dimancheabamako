@@ -63,7 +63,7 @@ return [
     'address' => 'Address',
     'city' => 'City',
     'contact_with_code' => 'Contact (with country code)',
-    'bazin_sale' => 'Sale of tinted Bazin, Getzner Magnum, ready-to-wear boubou and dresses, embroidered, wax, and accessories for women',
+    'bazin_sale' => 'Your online store for the sale of dyed Bazin riche, Getzner Magnum, boubous, ready-to-wear dresses for women and men, embroidered fabrics, Wax, computers, and beadwork. Discover high-quality products at the best prices.',
     'sunday_sale' => 'E-commerce Sunday in Bamako - Sale of Bazin, Getzner Magnum, Boubou and Dresses',
     'invoice_order_subject' => 'Invoice for your order on Dimanche à Bamako',
     'download_invoice' => 'Download the invoice',

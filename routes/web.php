@@ -125,7 +125,19 @@ Route::get('test', function () {
 
     $up = Product::all();
     foreach ($up as $product) {
-        $product->updateQuietly(['slug' => Str::slug($product->nom, '-')]);
+        // Générer un slug unique
+        $baseSlug = Str::slug($product->nom, '-');
+        $slug = $baseSlug;
+        $counter = 1;
+
+        // Vérifier et rendre le slug unique si nécessaire
+        while (Product::where('slug', $slug)->where('id', '!=', $product->id)->exists()) {
+            $slug = $baseSlug.'-'.$counter;
+            $counter++;
+        }
+
+        // Mettre à jour le slug sans déclencher d'événements
+        $product->updateQuietly(['slug' => $slug]);
     }
 
     return dd('ok');

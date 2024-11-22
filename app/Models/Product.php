@@ -91,12 +91,27 @@ class Product extends Model
     }
 
     // Automatically generate slug
-    public static function boot()
+    protected static function boot()
     {
         parent::boot();
 
-        static::saving(function ($produit) {
-            $produit->slug = Str::slug($produit->nom, '-');
+        // Générer ou mettre à jour le slug avant la sauvegarde
+        static::saving(function ($product) {
+            // Vérifier si le champ 'nom' a été modifié
+            if ($product->isDirty('nom')) {
+                // Générer un slug de base
+                $baseSlug = Str::slug($product->nom, '-');
+                $slug = $baseSlug;
+                $counter = 1;
+
+                // Vérifier l'unicité du slug
+                while (self::where('slug', $slug)->where('id', '!=', $product->id)->exists()) {
+                    $slug = $baseSlug.'-'.$counter;
+                    $counter++;
+                }
+
+                $product->slug = $slug;
+            }
         });
     }
 
