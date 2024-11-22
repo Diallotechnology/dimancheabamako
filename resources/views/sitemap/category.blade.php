@@ -5,7 +5,7 @@
 
     @foreach ($category as $row)
     <url>
-        <loc>{{ route('shop',$row->id) }}</loc>
+        <loc>{{ route('shop',['category'=>$row->id,'slug'=>Str::slug($row->nom, '-')]) }}</loc>
         <lastmod>{{ $row->updated_at->tz('UTC')->toAtomString() }}</lastmod>
         <changefreq>monthly</changefreq>
         <priority>0.8</priority>

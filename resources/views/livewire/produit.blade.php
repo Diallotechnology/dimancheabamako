@@ -165,7 +165,8 @@
                             <ul class="categories">
                                 @foreach ($category_list as $row)
                                 <li>
-                                    <a href="{{ route('shop', ['category'=>$row->id,'slug'=>$row->nom]) }}">
+                                    <a
+                                        href="{{ route('shop', ['category'=>$row->id,'slug'=>Str::slug($row->nom, '-')]) }}">
                                         {{ $row->nom }}
                                     </a>
                                 </li>
