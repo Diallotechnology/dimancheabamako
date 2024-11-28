@@ -44,45 +44,48 @@ class CheckPayment extends Command
      */
     public function handle()
     {
+
+        // Ajouter un verrou pour les enregistrements sélectionnés
         Order::whereNotNull('trans_ref')
             ->whereNull('reference')
             ->whereNull('trans_state')
             ->chunk(100, function ($orders) {
                 foreach ($orders as $order) {
-                    $responseData = $this->getOrderStatut($order->trans_ref);
-                    if ($responseData) {
-                        DB::beginTransaction();
-                        try {
+                    DB::transaction(function () use ($order) {
+                        // Verrouiller l'enregistrement pour éviter les modifications concurrentes
+                        $order = Order::where('id', $order->id)->lockForUpdate()->first();
+
+                        $responseData = $this->getOrderStatut($order->trans_ref);
+                        if ($responseData) {
                             if (isset($responseData['_embedded']['payment'][0]['state'])) {
                                 $paymentState = $responseData['_embedded']['payment'][0]['state'];
                                 if ($paymentState === 'PURCHASED') {
-                                    $order->updateOrFail(['trans_state' => $paymentState]);
-                                    // Mettre à jour les stocks ici
+                                    $order->update(['trans_state' => $paymentState]);
+
+                                    // Mettre à jour les stocks
                                     $order->products->each(function ($product) use ($order) {
-                                        // Vérifier le stock et mettre à jour
                                         if ($product->stock >= $product->pivot->quantity) {
                                             $product->decrement('stock', $product->pivot->quantity);
                                         } else {
-                                            // Gérer l'erreur de stock insuffisant ici, si nécessaire
-                                            // Envoyer un email au client
+                                            // Gérer l'erreur de stock insuffisant
                                             Mail::to($order->client->email)->send(new CancelOrderMail($order));
                                             $order->delete();
+
+                                            return; // Terminer le traitement de cette commande
                                         }
                                     });
+
+                                    // Générer un ID et envoyer un mail
                                     $order->generateId();
                                     OrderMailJob::dispatch($order);
                                 }
                             } else {
                                 Log::warning("The 'state' key was not found in the transaction");
                             }
-                            DB::commit();
-                        } catch (\Exception $e) {
-                            DB::rollBack();
-                            Log::error('Failed to update order or send mail', ['order' => $order->trans_ref, 'error' => $e->getMessage()]);
+                        } else {
+                            Log::error('Failed to retrieve order status', ['reference' => $order->trans_ref]);
                         }
-                    } else {
-                        Log::error('Failed to retrieve order status', ['reference' => $order->trans_ref]);
-                    }
+                    });
                 }
             });
     }
