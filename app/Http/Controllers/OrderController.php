@@ -113,7 +113,7 @@ class OrderController extends Controller
                 return back();
             }
 
-            // generate payment link
+            // Générer le lien de paiement
             $montant = intval($panier->getTotal()) + $shipping->montant;
             $currencyCode = 'XOF';
             $emailAddress = $request->email;
@@ -122,11 +122,18 @@ class OrderController extends Controller
 
             $accessToken = $this->getAccessToken();
             if ($accessToken) {
-                $postData = $this->prepareTransactionData($montant, $currencyCode, $emailAddress, $redirectUrl, $cancelUrl);
-                $response = $this->createOrder($accessToken, $postData);
+                $postData = $this->prepareTransactionData(
+                    $montant,
+                    $currencyCode,
+                    $emailAddress,
+                    $redirectUrl,
+                    $cancelUrl
+                );
+
+                $response = $this->createOrder($postData, $accessToken);
+
                 if ($response && isset($response['_links']['payment']['href'])) {
                     $link = $response['_links']['payment']['href'];
-                    // save temporaly order
                     $order->update(['trans_ref' => $response['reference']]);
                     $transactionSucceeded = true;
                 }

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Helper;
 
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 
@@ -11,55 +12,16 @@ trait OrderAPI
 {
     // https://api-gateway.sandbox.ngenius-payments.com
     // https://api-gateway.orabankml.ngenius-payments.com
-    protected string $base = 'https://api-gateway.orabankml.ngenius-payments.com';
 
-    private function cancelPayment(string $orderReference)
+    protected string $base = 'https://api-gateway.sandbox.ngenius-payments.com';
+
+    private function getAccessToken(): string
     {
-        $outlet = env('NGENIUS_OUTLET_ID');
-        $responseData = $this->getOrderStatut($orderReference);
-        $payment = $responseData['_embedded']['payment'][0]['reference'];
-
-        return Http::withHeaders([
-            'Authorization' => 'Bearer '.$this->getAccessToken(),
-            'Content-Type' => 'application/vnd.ni-payment.v2+json',
-            'Accept' => 'application/vnd.ni-payment.v2+json',
-        ])->put($this->base.'/transactions/outlets/'.$outlet.'/orders/'.$orderReference.'/payments/'.$payment.'/cancel');
-    }
-
-    private function cancelPaymentLink(string $orderReference)
-    {
-        $outlet = env('NGENIUS_OUTLET_ID');
-
-        return Http::withHeaders([
-            'Authorization' => 'Bearer '.$this->getAccessToken(),
-            'Content-Type' => 'application/vnd.ni-payment.v2+json',
-            'Accept' => 'application/vnd.ni-payment.v2+json',
-        ])->put($this->base.'/transactions/outlets/'.$outlet.'/orders/'.$orderReference.'/cancel');
-    }
-
-    private function getOrderStatut(string $reference)
-    {
-        $accessToken = $this->getAccessToken();
-        $outlet = env('NGENIUS_OUTLET_ID');
-        // L'URL de l'API pour récupérer les détails de la commande
-        $url = $this->base.'/transactions/outlets/'.$outlet.'/orders/'.$reference;
-        $response = Http::withHeaders([
-            'Authorization' => 'Bearer '.$accessToken,
-            'Content-Type' => 'application/vnd.ni-payment.v2+json',
-            'Accept' => 'application/vnd.ni-payment.v2+json',
-        ])->get($url);
-
-        if ($response->successful()) {
-            return $response->json();
-        } else {
-            Log::error('Failed to get transaction details', ['reference' => $reference]);
-
-            return null;
+        $cachedToken = Cache::get('ngenius_access_token');
+        if ($cachedToken) {
+            return $cachedToken;
         }
-    }
 
-    private function getAccessToken()
-    {
         $response = Http::withHeaders([
             'accept' => 'application/vnd.ni-identity.v1+json',
             'authorization' => 'Basic '.env('NGENIUS_API_KEY'),
@@ -69,16 +31,83 @@ trait OrderAPI
         ]);
 
         if ($response->successful()) {
-            return $response->json()['access_token'];
-        } else {
-            Log::error('Failed to get access token');
+            $token = $response->json()['access_token'];
+            Cache::put('ngenius_access_token', $token, $response->json()['expires_in'] - 60);
 
-            return null;
+            return $token;
         }
+
+        Log::error('Failed to get access token');
+        throw new \Exception('Unable to obtain access token from NGENIUS API');
     }
 
-    private function prepareTransactionData($montant, $currencyCode, $emailAddress, $redirectUrl, $cancelUrl, $lang = null)
+    public function getOrderStatut(string $reference)
     {
+        $url = $this->base.'/transactions/outlets/'.env('NGENIUS_OUTLET_ID')."/orders/{$reference}";
+        $response = Http::withHeaders([
+            'Authorization' => 'Bearer '.$this->getAccessToken(),
+            'Content-Type' => 'application/vnd.ni-payment.v2+json',
+            'Accept' => 'application/vnd.ni-payment.v2+json',
+        ])->get($url);
+
+        if ($response->successful()) {
+            return $response->json();
+        }
+
+        Log::error('Failed to get transaction details', ['reference' => $reference, 'response' => $response->json()]);
+        throw new \Exception('Unable to fetch order status');
+    }
+
+    public function cancelPayment(string $orderReference)
+    {
+        $responseData = $this->getOrderStatut($orderReference);
+        $payment = $responseData['_embedded']['payment'][0]['reference'] ?? null;
+
+        if (! $payment) {
+            Log::error('Payment reference not found', ['orderReference' => $orderReference]);
+            throw new \Exception('Payment reference missing in order data');
+        }
+
+        $url = $this->base.'/transactions/outlets/'.env('NGENIUS_OUTLET_ID')."/orders/{$orderReference}/payments/{$payment}/cancel";
+        $response = Http::withHeaders([
+            'Authorization' => 'Bearer '.$this->getAccessToken(),
+            'Content-Type' => 'application/vnd.ni-payment.v2+json',
+            'Accept' => 'application/vnd.ni-payment.v2+json',
+        ])->put($url);
+
+        if ($response->successful()) {
+            return $response->json();
+        }
+
+        Log::error('Failed to cancel payment', ['orderReference' => $orderReference, 'response' => $response->json()]);
+        throw new \Exception('Unable to cancel payment');
+    }
+
+    public function cancelPaymentLink(string $orderReference)
+    {
+        $outlet = env('NGENIUS_OUTLET_ID');
+        $url = $this->base."/transactions/outlets/{$outlet}/orders/{$orderReference}/cancel";
+
+        $response = Http::withHeaders([
+            'Authorization' => 'Bearer '.$this->getAccessToken(),
+            'Content-Type' => 'application/vnd.ni-payment.v2+json',
+            'Accept' => 'application/vnd.ni-payment.v2+json',
+        ])->put($url);
+
+        if ($response->successful()) {
+            return $response->json();
+        }
+
+        Log::error('Failed to cancel payment link', ['orderReference' => $orderReference, 'response' => $response->json()]);
+        throw new \Exception('Unable to cancel payment link');
+    }
+
+    public function prepareTransactionData(int $montant, string $currencyCode, string $emailAddress, string $redirectUrl, string $cancelUrl, $lang = null): array
+    {
+        if (! is_int($montant)) {
+            throw new \InvalidArgumentException('Amount must be an integer representing the value in cents.');
+        }
+
         return [
             'action' => 'PURCHASE',
             'language' => $lang ?? session('locale'),
@@ -95,22 +124,21 @@ trait OrderAPI
         ];
     }
 
-    private function createOrder($accessToken, $postData)
+    public function createOrder(array $postData, string $token)
     {
         $outlet = env('NGENIUS_OUTLET_ID');
-        $response = Http::withToken($accessToken)
+        $response = Http::withToken($token)
             ->withHeaders([
                 'Content-Type' => 'application/vnd.ni-payment.v2+json',
                 'Accept' => 'application/vnd.ni-payment.v2+json',
             ])
-            ->post($this->base.'/transactions/outlets/'.$outlet.'/orders', $postData);
+            ->post($this->base."/transactions/outlets/{$outlet}/orders", $postData);
 
         if ($response->successful()) {
             return $response->json();
-        } else {
-            Log::error('Failed to create order', ['response' => $response->json()]);
-
-            return null;
         }
+
+        Log::error('Failed to create order', ['response' => $response->json()]);
+        throw new \Exception('Unable to create order');
     }
 }
