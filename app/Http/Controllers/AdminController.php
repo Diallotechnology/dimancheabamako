@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Enum\OrderEnum;
 use App\Enum\RoleEnum;
 use App\Models\Category;
 use App\Models\Client;
@@ -33,7 +34,7 @@ class AdminController extends Controller
         $query = Order::withSum('products as totaux', 'order_product.montant');
         $revenu = $query->whereMonth('created_at', date('m'))->get('totaux')->sum('totaux');
 
-        $order = Order::count();
+        $order = Order::whereTransState('PURCHASED')->count();
         $product = Product::count();
         $categorie = Category::count();
         $lastorder = $query->with('transport', 'client')->take(10)->latest('id')->get();
@@ -48,15 +49,16 @@ class AdminController extends Controller
     public function product()
     {
         $rows = Product::when(Request::input('search'), function ($query, $search) {
-            $query->whereAny(['nom', 'color', 'prix', 'taille', 'reference', 'poids'], 'LIKE', '%'.$search.'%')
+            $query->whereAny(['nom', 'color', 'prix', 'taille', 'reference', 'poids'], 'LIKE', '%' . $search . '%')
                 ->orWhereHas('categorie', function ($query) use ($search) {
-                    $query->where('nom', 'LIKE', '%'.$search.'%');
+                    $query->where('nom', 'LIKE', '%' . $search . '%');
                 });
         })->latest('id')->paginate(10)->withQueryString();
         $filter = Request::only('search');
         $category = Category::all()->map(function ($row) {
             return [
-                'label' => "$row->nom", 'value' => "$row->id",
+                'label' => "$row->nom",
+                'value' => "$row->id",
             ];
         });
 
@@ -67,9 +69,9 @@ class AdminController extends Controller
     {
         $rows = Order::withSum('products as totaux', 'order_product.montant')->with('transport', 'client')
             ->when(Request::input('search'), function ($query, $search) {
-                $query->whereAny(['reference', 'adresse', 'ville', 'postal', 'trans_state', 'trans_ref', 'etat', 'created_at'], 'LIKE', '%'.$search.'%')
+                $query->whereAny(['reference', 'adresse', 'ville', 'postal', 'trans_state', 'trans_ref', 'etat', 'created_at'], 'LIKE', '%' . $search . '%')
                     ->orWhereHas('client', function ($query) use ($search) {
-                        $query->whereAny(['nom', 'prenom', 'email'], 'LIKE', '%'.$search.'%');
+                        $query->whereAny(['nom', 'prenom', 'email'], 'LIKE', '%' . $search . '%');
                     });
             })
             ->when(Request::input('date'), function ($query, $date) {
@@ -84,7 +86,7 @@ class AdminController extends Controller
     public function category()
     {
         $rows = Category::when(Request::input('search'), function ($query, $search) {
-            $query->where('nom', 'like', '%'.$search.'%');
+            $query->where('nom', 'like', '%' . $search . '%');
         })->latest('id')->paginate(10)
             ->withQueryString();
         $filter = Request::only('search');
@@ -103,7 +105,7 @@ class AdminController extends Controller
     {
         $filter = Request::only('search');
         $rows = PayLink::when(Request::input('search'), function ($query, $search) {
-            $query->whereAny(['name', 'montant', 'contact'], 'LIKE', '%'.$search.'%');
+            $query->whereAny(['name', 'montant', 'contact'], 'LIKE', '%' . $search . '%');
         })->latest('id')->paginate(10)
             ->withQueryString();
 
@@ -113,12 +115,13 @@ class AdminController extends Controller
     public function client()
     {
         $rows = Client::when(Request::input('search'), function ($query, $search) {
-            $query->whereAny(['prenom', 'nom', 'email', 'contact'], 'LIKE', '%'.$search.'%');
+            $query->whereAny(['prenom', 'nom', 'email', 'contact'], 'LIKE', '%' . $search . '%');
         })->latest('id')->paginate(10)->withQueryString();
         $filter = Request::only('search');
         $country = Country::all()->map(function ($row) {
             return [
-                'label' => "$row->nom", 'value' => "$row->id",
+                'label' => "$row->nom",
+                'value' => "$row->id",
             ];
         });
 
@@ -128,7 +131,7 @@ class AdminController extends Controller
     public function promotion()
     {
         $rows = Promotion::when(Request::input('search'), function ($query, $search) {
-            $query->where('nom', 'like', '%'.$search.'%');
+            $query->where('nom', 'like', '%' . $search . '%');
         })->latest('id')->paginate(10)
             ->withQueryString()
             ->through(function ($row) {
@@ -145,7 +148,7 @@ class AdminController extends Controller
     public function zone()
     {
         $rows = Zone::with('countries')->when(Request::input('search'), function ($query, $search) {
-            $query->where('nom', 'like', '%'.$search.'%');
+            $query->where('nom', 'like', '%' . $search . '%');
         })->latest('id')->paginate(10);
         $filter = Request::only('search');
         // dd($countryNames->whereNotIn('', Country::all()));
@@ -159,7 +162,8 @@ class AdminController extends Controller
         });
         $pays = $countryNames->values()->map(function ($row) {
             return [
-                'label' => $row, 'value' => $row,
+                'label' => $row,
+                'value' => $row,
             ];
         });
 
@@ -169,19 +173,21 @@ class AdminController extends Controller
     public function country()
     {
         $rows = Country::with('zone')->when(Request::input('search'), function ($query, $search) {
-            $query->where('nom', 'like', '%'.$search.'%');
+            $query->where('nom', 'like', '%' . $search . '%');
         })->latest('id')->paginate(10);
         $filter = Request::only('search');
         $countryNames = new Collection(Countries::getList('fr'));
         $countries = $countryNames->values()->map(function ($row) {
             return [
-                'label' => $row, 'value' => $row,
+                'label' => $row,
+                'value' => $row,
             ];
         });
 
         $zone = Zone::all()->map(function ($row) {
             return [
-                'label' => "$row->nom", 'value' => "$row->id",
+                'label' => "$row->nom",
+                'value' => "$row->id",
             ];
         });
 
@@ -193,16 +199,17 @@ class AdminController extends Controller
         $filter = Request::only('search');
         $rows = Shipping::with('zone', 'transport', 'poids')
             ->when(Request::input('search'), function ($query, $search) {
-                $query->whereAny(['temps', 'montant'], 'LIKE', '%'.$search.'%')
+                $query->whereAny(['temps', 'montant'], 'LIKE', '%' . $search . '%')
                     ->orWhereHas('transport', function ($query) use ($search) {
-                        $query->where('nom', 'LIKE', '%'.$search.'%');
+                        $query->where('nom', 'LIKE', '%' . $search . '%');
                     });
             })
             ->latest('id')->get()->groupBy('transport.nom');
 
         $poids = Poids::all()->map(function ($row) {
             return [
-                'label' => "$row->min à $row->max Kg", 'value' => "$row->id",
+                'label' => "$row->min à $row->max Kg",
+                'value' => "$row->id",
             ];
         });
         $transport = Transport::all();
@@ -213,7 +220,7 @@ class AdminController extends Controller
     public function poids()
     {
         $rows = Poids::when(Request::input('search'), function ($query, $search) {
-            $query->whereAny(['min', 'max'], 'LIKE', '%'.$search.'%');
+            $query->whereAny(['min', 'max'], 'LIKE', '%' . $search . '%');
         })->latest('id')->paginate(10)
             ->withQueryString();
         $filter = Request::only('search');
@@ -231,11 +238,12 @@ class AdminController extends Controller
     public function transport()
     {
         $rows = Transport::with('zones')->when(Request::input('search'), function ($query, $search) {
-            $query->where('nom', 'like', '%'.$search.'%');
+            $query->where('nom', 'like', '%' . $search . '%');
         })->latest('id')->paginate(10)->withQueryString();
         $zone = Zone::all()->map(function ($row) {
             return [
-                'label' => "$row->nom", 'value' => "$row->id",
+                'label' => "$row->nom",
+                'value' => "$row->id",
             ];
         });
         $filter = Request::only('search');
@@ -246,7 +254,7 @@ class AdminController extends Controller
     public function user()
     {
         $rows = User::when(Request::input('search'), function ($query, $search) {
-            $query->whereAny(['name', 'email'], 'like', '%'.$search.'%');
+            $query->whereAny(['name', 'email'], 'like', '%' . $search . '%');
         })->where('role', '!=', RoleEnum::CUSTOMER->value)->latest('id')->paginate(10)->withQueryString();
         $filter = Request::only('search');
 
@@ -256,7 +264,7 @@ class AdminController extends Controller
     public function customer()
     {
         $rows = User::when(Request::input('search'), function ($query, $search) {
-            $query->whereAny(['name', 'email'], 'like', '%'.$search.'%');
+            $query->whereAny(['name', 'email'], 'like', '%' . $search . '%');
         })->where('role', RoleEnum::CUSTOMER->value)->latest('id')->paginate(10)->withQueryString();
         $filter = Request::only('search');
 
@@ -277,7 +285,7 @@ class AdminController extends Controller
             Session::put('down_token', $token);
             Session::put('down_message', 'Le mode maintenance a été activer avec succès!');
 
-            return redirect('/'.$token);
+            return redirect('/' . $token);
         }
     }
 }

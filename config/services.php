@@ -30,5 +30,11 @@ return [
         'secret' => env('AWS_SECRET_ACCESS_KEY'),
         'region' => env('AWS_DEFAULT_REGION', 'us-east-1'),
     ],
+    'ngenius' => [
+        'api_key' => env('NGENIUS_API_KEY'),
+        'outlet_id' => env('NGENIUS_OUTLET_ID'),
+        'realm_name' => env('NGENIUS_REALM_NAME'),
+        'base_url' => env('NGENIUS_BASE_URL', 'https://api-gateway.sandbox.ngenius-payments.com'),
+    ],
 
 ];

@@ -27,7 +27,7 @@ use App\Models\Product;
 use Illuminate\Support\Facades\Route;
 
 Route::prefix('admin')->middleware('auth', 'verified')->group(function () {
-    Route::middleware('role:'.RoleEnum::ADMIN->value)->group(function () {
+    Route::middleware('role:' . RoleEnum::ADMIN->value)->group(function () {
         Route::resource('client', ClientController::class)->except('index', 'create');
         Route::resource('user', UserController::class)->except('index', 'create');
         Route::resource('image', ImageController::class)->except('index', 'create', 'show', 'store');
@@ -59,7 +59,7 @@ Route::prefix('admin')->middleware('auth', 'verified')->group(function () {
             Route::get('paylink', 'paylink')->name('paylink');
         });
     });
-    Route::middleware('role:'.RoleEnum::SECRTETAIRE->value)->group(function () {
+    Route::middleware('role:' . RoleEnum::SECRTETAIRE->value)->group(function () {
         Route::resource('order', OrderController::class)->except('index', 'create');
         Route::get('product/favoris/{data}/{product_id}', [ProductController::class, 'favoris_update'])->name('product.favori');
         Route::resource('category', CategoryController::class)->except('index', 'create', 'show');
@@ -71,7 +71,6 @@ Route::prefix('admin')->middleware('auth', 'verified')->group(function () {
             Route::get('categor', 'category')->name('categor');
         });
     });
-
 });
 
 Route::middleware(['check.email.verified'])->group(function () {
@@ -120,27 +119,8 @@ Route::get('devise/{devise}', function ($devise) {
 
 Route::get('test', function () {
     // Mail::to('salediallo61@gmail.com')->send(new RegisterMail('test'));
-    Artisan::call('optimize:clear');
-    Artisan::call('migrate');
-
-    $up = Product::all();
-    foreach ($up as $product) {
-        // Générer un slug unique
-        $baseSlug = Str::slug($product->nom, '-');
-        $slug = $baseSlug;
-        $counter = 1;
-
-        // Vérifier et rendre le slug unique si nécessaire
-        while (Product::where('slug', $slug)->where('id', '!=', $product->id)->exists()) {
-            $slug = $baseSlug.'-'.$counter;
-            $counter++;
-        }
-
-        // Mettre à jour le slug sans déclencher d'événements
-        $product->updateQuietly(['slug' => $slug]);
-    }
-
-    return dd('ok');
-
+    // Artisan::call('optimize:clear');
+    // Artisan::call('migrate');
 });
-require __DIR__.'/auth.php';
+Route::get('test', [OrderController::class, 'test'])->name('test');
+require __DIR__ . '/auth.php';

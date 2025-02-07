@@ -17,17 +17,11 @@ const props = defineProps({
 });
 const form = useForm({
     etat: props.order.etat,
-    // adresse: props.order.adresse,
-    // postal: props.order.postal,
-    // ville: props.order.ville,
 });
 const submit = () => {
     form.patch(route("order.update", props.order.id), {
         onSuccess: () => {
             form.etat = props.order.etat;
-            // form.adresse = props.order.adresse;
-            // form.postal = props.order.postal;
-            // form.ville = props.order.ville;
             notify("vente mise à jour avec success !", true);
         },
         onError: () => {
@@ -38,7 +32,6 @@ const submit = () => {
 </script>
 <template>
     <Head title="Detail Vente" />
-
     <AuthenticatedLayout>
         <div class="content-header">
             <div>
@@ -55,7 +48,17 @@ const submit = () => {
                             <b>{{ order.created_at }}</b>
                         </span>
                         <br />
-                        <small>Facture N°: {{ order.reference }}</small>
+                        <small>Facture N°: {{ order.reference }}</small> <br />
+                        <small
+                            >Transaction reference: {{ order.trans_ref }}</small
+                        ><br />
+                        <small
+                            >Transaction status:
+                            <span
+                                class="badge rounded-pill alert-success text-success"
+                                >{{ order.trans_state }}</span
+                            ></small
+                        >
                     </div>
                     <div class="col-lg-6 col-md-6 ms-auto text-md-end">
                         <form @submit.prevent="submit">
@@ -80,9 +83,9 @@ const submit = () => {
                                 Valider
                             </button>
                         </form>
-                        <a class="btn btn-secondary print ms-2" href="#"
+                        <!-- <a class="btn btn-secondary print ms-2" href="#"
                             ><i class="icon material-icons md-print"></i
-                        ></a>
+                        ></a> -->
                     </div>
                 </div>
             </header>
@@ -122,8 +125,10 @@ const submit = () => {
                             <div class="text">
                                 <h6 class="mb-1">Vente info</h6>
                                 <p class="mb-1">
-                                    Shipping: {{ order.adresse }} <br />
-                                    Payement method: {{ order.payement }} <br />
+                                    Adress: {{ order.adresse }} <br />
+                                    Shipping:
+                                    {{ Price_format.format(order.shipping) }}
+                                    <br />
                                     Etat: {{ order.etat }}
                                 </p>
                             </div>
@@ -142,7 +147,8 @@ const submit = () => {
                             <div class="text">
                                 <h6 class="mb-1">Livraison infos</h6>
                                 <p class="mb-1">
-                                    Pays: {{ order.pays }} <br />
+                                    Pays: {{ order.country.nom }} <br />
+                                    Poids: {{ order.poids }} <br />
                                     Ville: {{ order.ville }}<br />
                                     Postal: {{ order.postal }}
                                 </p>
@@ -158,8 +164,9 @@ const submit = () => {
                             <table class="table">
                                 <thead>
                                     <tr>
+                                        <th width="40%">Reference</th>
                                         <th width="40%">Produit</th>
-                                        <th width="20%">PU</th>
+                                        <th width="20%">Prix Unitaire</th>
                                         <th width="20%">Quantité</th>
                                         <th width="20%" class="text-end">
                                             Total
@@ -171,6 +178,7 @@ const submit = () => {
                                         v-for="item in order.products"
                                         :key="item"
                                     >
+                                        <td>{{ item.reference }}</td>
                                         <td>
                                             <a class="itemside" href="#">
                                                 <div class="left">
@@ -187,6 +195,7 @@ const submit = () => {
                                                 </div>
                                             </a>
                                         </td>
+
                                         <td>
                                             {{ Price_format.format(item.prix) }}
                                         </td>
@@ -214,17 +223,6 @@ const submit = () => {
                                                         </p>
                                                     </dd>
                                                 </dl>
-                                                <dl class="dlist">
-                                                    <dt class="text-muted">
-                                                        Status:
-                                                    </dt>
-                                                    <dd>
-                                                        <span
-                                                            class="badge rounded-pill alert-success text-success"
-                                                            >Payment done</span
-                                                        >
-                                                    </dd>
-                                                </dl>
                                             </article>
                                         </td>
                                     </tr>
@@ -236,17 +234,6 @@ const submit = () => {
                     <div class="col-lg-1"></div>
                     <div class="col-lg-4">
                         <div class="box shadow-sm bg-light">
-                            <h6 class="mb-15">Transaction info</h6>
-                            <p>
-                                <img
-                                    v-bind:src="'/admin/assets/imgs/card-brands/2.png'"
-                                    class="border"
-                                    height="20"
-                                />
-                                {{ order.trans_ref }}
-                                {{ order.trans_state }}
-                                <br />
-                            </p>
                             <h6 class="mb-15">Commentaire</h6>
                             <p>{{ order.commentaire }}</p>
                         </div>

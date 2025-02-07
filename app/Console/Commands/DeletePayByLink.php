@@ -53,7 +53,7 @@ class DeletePayByLink extends Command
                             $minutesDifference = $currentTime->diffInMinutes($createDateTime);
                             $paymentState = $responseData['_embedded']['payment'][0]['state'];
                             if ($minutesDifference >= 5 && $paymentState !== 'PURCHASED') {
-                                $this->cancelPaymentLink($order->trans_ref);
+                                // $this->cancelPaymentLink($order->trans_ref);
                                 $order->updateOrFail(['etat' => 'Expire']);
                             }
 

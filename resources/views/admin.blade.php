@@ -10,7 +10,7 @@
     @vite(['resources/js/app.js', "resources/js/Pages/{$page['component']}.vue"])
     {{--
     <link href="{{ asset('build/assets/app-YaJoXqX7.css') }}" rel="stylesheet" /> --}}
-    {{-- <script type="module" src="{{ asset('build/assets/app-UbQXgcQ-.js')}}"></script> --}}
+    {{-- <script type="module" src="{{ asset('build/assets/app-DcSTaqeS.js')}}"></script> --}}
     @inertiaHead
 </head>
 

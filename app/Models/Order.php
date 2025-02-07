@@ -133,11 +133,11 @@ class Order extends Model
     public function generateId()
     {
         $currentYear = Carbon::today()->format('Y');
-        $prefix = 'DAB'.$currentYear.'-';
+        $prefix = 'DAB' . $currentYear . '-';
 
         return DB::transaction(function () use ($prefix) {
             // Verrouille le dernier identifiant de courrier enregistré dans la base de données pour la mise à jour
-            $lastCourrier = self::where('reference', 'like', $prefix.'%')->whereNotNull('reference')
+            $lastCourrier = self::where('reference', 'like', $prefix . '%')->whereNotNull('reference')
                 ->latest('id')
                 ->lockForUpdate()
                 ->first(['reference']);
@@ -149,7 +149,7 @@ class Order extends Model
             }
             // Incrémente le numéro de séquence et génère le nouvel identifiant de courrier
             $sequence++;
-            $newCourrierNumber = $prefix.$sequence;
+            $newCourrierNumber = $prefix . $sequence;
             // Met à jour le numéro de courrier de l'instance courante
             $this->reference = $newCourrierNumber;
             $this->save();

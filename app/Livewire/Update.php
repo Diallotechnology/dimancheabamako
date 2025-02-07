@@ -67,15 +67,6 @@ class Update extends Component
         $this->dispatch('productUpdate');
     }
 
-    public function deleteProduct()
-    {
-        $product = CartFacade::session($this->get_userid())->get($this->card['id']);
-        CartFacade::session($this->get_userid())->remove($product->id);
-
-        return $this->alert(
-            'success', 'Produit supprimer du panier avec success!',
-        );
-    }
 
     public function render()
     {

@@ -57,7 +57,7 @@ class DeleteOrderPaymentExpire extends Command
 
                                 if ($minutesDifference >= 5 && $paymentState !== 'PURCHASED') {
                                     // Annuler le lien de paiement et supprimer la commande
-                                    $this->cancelPaymentLink($order->trans_ref);
+                                    // $this->cancelPaymentLink($order->trans_ref);
                                     $order->delete();
 
                                     Log::info('Order cancelled due to timeout', [
