@@ -6,8 +6,8 @@
         "build": "vite build"
     },
     "devDependencies": {
-        "@inertiajs/vue3": "^1.0.0",
         "@flasher/flasher": "file:vendor/php-flasher/flasher/Resources",
+        "@inertiajs/vue3": "^1.0.0",
         "@types/select2": "^4.0.63",
         "@vitejs/plugin-vue": "^5.0.0",
         "@vue/server-renderer": "^3.4.0",
@@ -23,5 +23,7 @@
         "vue3-select-component": "^0.1.3",
         "vue3-toastify": "^0.2.1"
     },
-    "dependencies": {}
+    "dependencies": {
+        "intl-tel-input": "^25.12.5"
+    }
 }

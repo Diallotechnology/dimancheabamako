@@ -2,8 +2,8 @@
 <label {{ $attributes->merge(['class' => 'form-label']) }}>{{ $label }}</label>
 
 <select name="{{ $name }}" {{ $attributes->merge(['class' => 'form-select']) }}
-    value="" @required($required) {{
-    $disabled ? 'disabled' : '' }} >
+    @required($required) {{
+    $disabled ? 'disabled' : '' }} :value="old($name)" >
     <option selected disabled value="">Selectionner</option>
     {{ $slot }}
 </select>

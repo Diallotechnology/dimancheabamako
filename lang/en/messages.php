@@ -93,5 +93,14 @@ return [
     'verify_email_address' => 'Verify Email Address',
     'click_to_verify_email' => 'Click the button below to verify your email address.',
     'check_spam' => 'Remember to check your spam folder.',
+    'email' => [
+        'register' => [
+            'greeting' => 'Hello,',
+            'thanks' => 'Thank you for signing up. Click the button below to activate your account:',
+            'button' => 'Activate my account',
+            'expires' => 'This link will expire in 15 minutes.',
+            'regards' => 'Regards,',
+        ],
+    ],
 
 ];

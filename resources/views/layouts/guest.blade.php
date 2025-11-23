@@ -8,9 +8,9 @@
 
     <title>{{ $title ?? config('app.name') }}</title>
     <link href="{{ asset('assets/css/main.css') }}" rel="stylesheet" />
-    <!-- Scripts -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/intl-tel-input@23.1.0/build/css/intlTelInput.css">
-    @laravelTelInputStyles
+    {{-- <script src="https://cdn.jsdelivr.net/npm/intl-tel-input@18.1.1/build/js/utils.js"></script> --}}
+
+    @vite('resources/js/phone-input.js')
 </head>
 
 <body>
@@ -32,14 +32,7 @@
     <script src="{{ asset('assets/js/plugins/images-loaded.js')}}"></script>
     <script src="{{ asset('assets/js/plugins/isotope.js')}}"></script>
     <script src="{{ asset('assets/js/plugins/scrollup.js') }}"></script>
-    <script src="https://cdn.jsdelivr.net/npm/intl-tel-input@23.1.0/build/js/intlTelInput.min.js"></script>
-    <script>
-        const input = document.querySelector("#contact");
-  window.intlTelInput(input, {
-    utilsScript: "https://cdn.jsdelivr.net/npm/intl-tel-input@23.1.0/build/js/utils.js",
-  });
 
-    </script>
 </body>
 
 </html>

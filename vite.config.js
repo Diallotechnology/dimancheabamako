@@ -5,7 +5,10 @@ import vue from "@vitejs/plugin-vue";
 export default defineConfig({
     plugins: [
         laravel({
-            input: "resources/js/app.js",
+            input: [
+                "resources/js/app.js", // Pour Inertia admin
+                "resources/js/phone-input.js", // Pour le formulaire public
+            ],
             ssr: "resources/js/ssr.js",
             refresh: true,
         }),

@@ -93,4 +93,13 @@ return [
     'verify_email_address' => 'Vérifiez votre adresse e-mail',
     'click_to_verify_email' => 'Cliquez sur le bouton ci-dessous pour vérifier votre adresse e-mail.',
     'check_spam' => 'Pensez à vérifier dans les spams.',
+    'email' => [
+        'register' => [
+            'greeting' => 'Bonjour,',
+            'thanks' => 'Merci pour votre inscription. Cliquez sur le bouton ci-dessous pour activer votre compte :',
+            'button' => 'Activer mon compte',
+            'expires' => 'Ce lien expirera dans 15 minutes.',
+            'regards' => 'Cordialement,',
+        ],
+    ],
 ];

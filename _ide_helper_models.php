@@ -13,8 +13,6 @@
 
 namespace App\Models{
 /**
- * 
- *
  * @property int $id
  * @property string $nom
  * @property string $description
@@ -40,8 +38,6 @@ namespace App\Models{
 
 namespace App\Models{
 /**
- * 
- *
  * @property int $id
  * @property string $prenom
  * @property string $nom
@@ -71,8 +67,6 @@ namespace App\Models{
 
 namespace App\Models{
 /**
- * 
- *
  * @property int $id
  * @property int $zone_id
  * @property string $nom
@@ -97,8 +91,6 @@ namespace App\Models{
 
 namespace App\Models{
 /**
- * 
- *
  * @property int $id
  * @property string $type
  * @property int $taux
@@ -120,8 +112,6 @@ namespace App\Models{
 
 namespace App\Models{
 /**
- * 
- *
  * @property int $id
  * @property int $product_id
  * @property string $chemin
@@ -144,8 +134,6 @@ namespace App\Models{
 
 namespace App\Models{
 /**
- * 
- *
  * @property int $id
  * @property int $client_id
  * @property int $country_id
@@ -194,8 +182,6 @@ namespace App\Models{
 
 namespace App\Models{
 /**
- * 
- *
  * @property int $id
  * @property string|null $trans_ref
  * @property string|null $trans_state
@@ -206,27 +192,35 @@ namespace App\Models{
  * @property string $etat
  * @property string $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
- * @method static \Illuminate\Database\Eloquent\Builder|PayLink newModelQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|PayLink newQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|PayLink query()
- * @method static \Illuminate\Database\Eloquent\Builder|PayLink whereContact($value)
- * @method static \Illuminate\Database\Eloquent\Builder|PayLink whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|PayLink whereEtat($value)
- * @method static \Illuminate\Database\Eloquent\Builder|PayLink whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|PayLink whereLien($value)
- * @method static \Illuminate\Database\Eloquent\Builder|PayLink whereMontant($value)
- * @method static \Illuminate\Database\Eloquent\Builder|PayLink whereName($value)
- * @method static \Illuminate\Database\Eloquent\Builder|PayLink whereTransRef($value)
- * @method static \Illuminate\Database\Eloquent\Builder|PayLink whereTransState($value)
- * @method static \Illuminate\Database\Eloquent\Builder|PayLink whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|PayLink newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|PayLink newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|PayLink query()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|PayLink whereContact($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|PayLink whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|PayLink whereEtat($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|PayLink whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|PayLink whereLien($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|PayLink whereMontant($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|PayLink whereName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|PayLink whereTransRef($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|PayLink whereTransState($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|PayLink whereUpdatedAt($value)
  */
 	class PayLink extends \Eloquent {}
 }
 
 namespace App\Models{
 /**
- * 
- *
+ * @method static \Database\Factories\PendingRegistrationFactory factory($count = null, $state = [])
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|PendingRegistration newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|PendingRegistration newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|PendingRegistration query()
+ */
+	class PendingRegistration extends \Eloquent {}
+}
+
+namespace App\Models{
+/**
  * @property int $id
  * @property float $min
  * @property float $max
@@ -250,8 +244,6 @@ namespace App\Models{
 
 namespace App\Models{
 /**
- * 
- *
  * @property int $id
  * @property int $categorie_id
  * @property string $reference
@@ -302,15 +294,13 @@ namespace App\Models{
  * @method static Builder|Product whereVideo($value)
  * @mixin \Eloquent
  * @property string|null $slug
- * @method static \Illuminate\Database\Eloquent\Builder|Product whereSlug($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Product whereSlug($value)
  */
 	class Product extends \Eloquent {}
 }
 
 namespace App\Models{
 /**
- * 
- *
  * @property int $id
  * @property string $nom
  * @property string $etat
@@ -340,8 +330,6 @@ namespace App\Models{
 
 namespace App\Models{
 /**
- * 
- *
  * @property int $id
  * @property int $transport_id
  * @property int $zone_id
@@ -373,8 +361,6 @@ namespace App\Models{
 
 namespace App\Models{
 /**
- * 
- *
  * @property int $id
  * @property string $text_one
  * @property string $text_two
@@ -400,8 +386,6 @@ namespace App\Models{
 
 namespace App\Models{
 /**
- * 
- *
  * @property int $id
  * @property string $nom
  * @property string $created_at
@@ -427,8 +411,6 @@ namespace App\Models{
 
 namespace App\Models{
 /**
- * 
- *
  * @property int $id
  * @property string $name
  * @property string $email
@@ -466,8 +448,6 @@ namespace App\Models{
 
 namespace App\Models{
 /**
- * 
- *
  * @property int $id
  * @property string $nom
  * @property string $created_at

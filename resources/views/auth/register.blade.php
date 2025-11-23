@@ -4,11 +4,14 @@
         </x-slot>
         <div class="card mx-auto card-login">
             <div class="card-body">
+                <x-auth-session-status class="mb-4" :status="session('status')" />
                 <h4 class="card-title mb-4 h2"> @lang('messages.register')</h4>
                 <form method="POST" action="{{ route('register') }}">
                     @csrf
+                    <input type="text" name="website" style="display:none">
+
                     <div class="row">
-                        <div class="col-md-6">
+                        {{-- <div class="col-md-6">
                             <div class="mt-4">
                                 <!-- Name -->
                                 <x-input-label for="prenom" :value="__('messages.first_name')" />
@@ -30,21 +33,22 @@
                             <div class="mt-4">
                                 <x-select name="pays" :label="__('messages.country')">
                                     @foreach ($pays as $row)
-                                    <option value="{{ $row }}">{{ $row }}</option>
+                                    <option {{ old('pays')==$row ? 'selected' : '' }} value="{{ $row }}">{{ $row }}
+                                    </option>
                                     @endforeach
                                 </x-select>
                             </div>
-                        </div>
+                        </div> --}}
                         <div class="col-md-6">
                             <div class="mt-4">
                                 <!-- Name -->
                                 <x-input-label for="contact" :value="__('Contact')" />
-                                <input id="contact" name="contact" class="form-input block mt-1 w-full form-control"
-                                    required />
+                                <input id="contact" type="tel" name="contact"
+                                    class="form-input block mt-1 w-full form-control" required />
                                 <x-input-error :messages="$errors->get('contact')" class="mt-2" />
                             </div>
                         </div>
-                        <div class="col-md-12">
+                        {{-- <div class="col-md-12">
                             <!-- Email Address -->
                             <div class="mt-4">
                                 <x-input-label for="email" :value="__('Email')" />
@@ -71,9 +75,9 @@
                                 name="password_confirmation" required autocomplete="new-password" />
 
                             <x-input-error :messages="$errors->get('password_confirmation')" class="mt-2" />
-                        </div>
+                        </div> --}}
                     </div>
-                    <x-captcha />
+
                     <div class="d-flex justify-content-center my-4">
                         <p class="me-2">@lang('messages.already_have_account')</p>
                         <div>
@@ -90,15 +94,5 @@
                 </form>
             </div>
         </div>
-        <script type="text/javascript">
-            $(".btn-refresh").click(function(){
-      $.ajax({
-         type:'GET',
-         url:'/refresh_captcha',
-         success:function(data){
-            $(".captcha span").html(data.captcha);
-         }
-      });
-    });
-        </script>
+
 </x-guest-layout>

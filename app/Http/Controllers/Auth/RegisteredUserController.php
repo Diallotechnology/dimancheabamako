@@ -2,21 +2,28 @@
 
 namespace App\Http\Controllers\Auth;
 
-use App\Enum\RoleEnum;
-use App\Http\Controllers\Controller;
-use App\Jobs\RegisterMailJob;
-use App\Models\Client;
-use App\Models\User;
 use Countries;
-use Illuminate\Auth\Events\Registered;
-use Illuminate\Http\RedirectResponse;
-use Illuminate\Http\Request;
-use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Validation\Rules;
+use App\Models\User;
+use App\Enum\RoleEnum;
+use App\Models\Client;
 use Illuminate\View\View;
+use Illuminate\Support\Str;
+use Illuminate\Http\Request;
+use App\Jobs\RegisterMailJob;
+use Illuminate\Validation\Rules;
+use App\Rules\NotDisposableEmail;
+use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\DB;
+use App\Models\PendingRegistration;
+use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\ConfirmRegistrationMail;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Auth\Events\Registered;
+
+use function Flasher\Prime\flash;
 
 class RegisteredUserController extends Controller
 {
@@ -26,7 +33,6 @@ class RegisteredUserController extends Controller
     public function create(): View
     {
         $pays = new Collection(Countries::getList('fr'));
-
         return view('auth.register', compact('pays'));
     }
 
@@ -35,50 +41,39 @@ class RegisteredUserController extends Controller
      *
      * @throws \Illuminate\Validation\ValidationException
      */
-    public function store(Request $request): RedirectResponse
+    public function store(Request $request)
     {
         $request->validate([
             'prenom' => 'required|string|max:100',
             'nom' => 'required|string|max:100',
             'pays' => 'required|string|max:50',
-            'contact' => 'required|string|max:100',
-            'email' => 'required|string|lowercase|email|max:255|unique:'.User::class,
+            'contact' => ['required', 'phone:international'],
+            'email' => ['required', 'string', 'lowercase', 'email', 'max:255', new NotDisposableEmail()],
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
-            'captcha' => 'required|captcha',
-        ], ['captcha.captcha' => __('messages.captcha')]);
-        $transactionSucceeded = false;
+        ]);
 
-        DB::transaction(function () use ($request, &$transactionSucceeded) {
+        if ($request->filled('website')) abort(403); // honeypot anti-bots
 
-            $user = User::create([
-                'name' => $request->prenom.' '.$request->nom,
+        $token = Str::random(64);
+
+        PendingRegistration::updateOrCreate(
+            ['email' => $request->email],
+            [
+                'prenom' => $request->prenom,
+                'nom' => $request->nom,
+                'pays' => $request->pays,
+                'contact' => phone($request->contact)->formatE164(),
                 'email' => $request->email,
                 'role' => RoleEnum::CUSTOMER->value,
                 'password' => Hash::make($request->password),
-            ]);
+                'token' => $token,
+                'expires_at' => now()->addHours(2),
+            ]
+        );
 
-            Client::create([
-                'prenom' => $request->prenom,
-                'nom' => $request->nom,
-                'contact' => $request->contact,
-                'email' => $request->email,
-                'pays' => $request->pays,
-            ]);
+        // Mail::to($request->email)->send(new ConfirmRegistrationMail($token, app()->getLocale()));
 
-            event(new Registered($user));
-            RegisterMailJob::dispatch($user);
-            Auth::login($user);
-            $transactionSucceeded = true;
-        });
-        if ($transactionSucceeded) {
-            toastr()->success('Votre inscription a été valider avec success!');
-
-            return redirect('/');
-        } else {
-            toastr()->error('Votre inscription a echoué verifiez vos informations!.');
-
-            return back();
-        }
-
+        flash()->success('Un email de confirmation vous a été envoyé. verifiez votre boîte mail.');
+        return back()->with('status', 'Un email de confirmation vous a été envoyé. verifiez votre boîte mail.');
     }
 }

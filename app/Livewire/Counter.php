@@ -14,7 +14,8 @@ class Counter extends Component
     #[On('productCount')]
     public function render()
     {
-        $count = CartFacade::session($this->get_userid())->getContent()->count();
+        $count = 0;
+        // CartFacade::session($this->get_userid())->getContent()->count();
 
         return view('livewire.counter', compact('count'));
     }

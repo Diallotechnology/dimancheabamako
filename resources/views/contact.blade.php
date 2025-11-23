@@ -69,7 +69,6 @@
                                                 obligatoire.</div>
                                         </div>
 
-                                        <x-captcha />
                                         <button class="submit submit-auto-width mt-1" name="check" type="submit">
                                             Envoyé
                                         </button>

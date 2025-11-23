@@ -18,6 +18,7 @@
         "livewire/livewire": "^3.5",
         "monarobase/country-list": "^3.5",
         "php-flasher/flasher-laravel": "*",
+        "propaganistas/laravel-phone": "^6.0",
         "tightenco/ziggy": "^1.0"
     },
     "require-dev": {

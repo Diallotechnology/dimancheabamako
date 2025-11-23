@@ -13,6 +13,8 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\View\View;
 
+
+
 class AuthenticatedSessionController extends Controller
 {
     /**
@@ -39,10 +41,10 @@ class AuthenticatedSessionController extends Controller
         } else {
             // Save the 'user_id' from the session if it exists
             $key = ! empty($request->session()->get('user_id')) ? $request->session()->get('user_id') : null;
-            $cart = $request->session()->get($key.'_cart_items');
+            $cart = $request->session()->get($key . '_cart_items');
             $request->session()->regenerate();
             if ($key) {
-                session()->put(['user_id' => $key, $key.'_cart_items' => $cart]);
+                session()->put(['user_id' => $key, $key . '_cart_items' => $cart]);
             }
             if ($request->user()->isClient()) {
                 return redirect()->intended('/');
@@ -63,7 +65,7 @@ class AuthenticatedSessionController extends Controller
         } else {
             $user->update(['email' => $request->email, 'name' => $request->name]);
         }
-        toastr()->success('Profil mise à jour avec success!');
+        flash()->success('Profil mise à jour avec success!');
 
         return back();
     }
@@ -78,7 +80,7 @@ class AuthenticatedSessionController extends Controller
 
         // Save the 'user_id' from the session if it exists
         $key = ! empty($request->session()->get('user_id')) ? $request->session()->get('user_id') : null;
-        $cart = $request->session()->get($key.'_cart_items');
+        $cart = $request->session()->get($key . '_cart_items');
         // Invalidate the session
         $request->session()->invalidate();
 
@@ -88,7 +90,7 @@ class AuthenticatedSessionController extends Controller
         // dd($key);
         // Restore the 'user_id' to the session if it was present
         if ($key) {
-            session()->put(['user_id' => $key, $key.'_cart_items' => $cart]);
+            session()->put(['user_id' => $key, $key . '_cart_items' => $cart]);
         }
 
         // Redirect to the login route

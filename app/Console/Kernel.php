@@ -2,6 +2,7 @@
 
 namespace App\Console;
 
+use App\Models\PendingRegistration;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 
@@ -29,6 +30,10 @@ class Kernel extends ConsoleKernel
 
         //verification user email not verified
         $schedule->command('app:delete-user-not-verify')->everyThirtyMinutes()->withoutOverlapping()->onOneServer()->runInBackground();
+
+        $schedule->call(function () {
+            PendingRegistration::where('expires_at', '<', now())->delete();
+        })->hourly();
     }
 
     /**
@@ -36,7 +41,7 @@ class Kernel extends ConsoleKernel
      */
     protected function commands(): void
     {
-        $this->load(__DIR__.'/Commands');
+        $this->load(__DIR__ . '/Commands');
 
         require base_path('routes/console.php');
     }
