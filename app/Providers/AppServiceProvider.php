@@ -22,9 +22,6 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        LogViewer::auth(function ($request) {
-            return $request->user()->isAdmin();
-        });
 
         VerifyEmail::toMailUsing(function (object $notifiable, string $url) {
             return (new MailMessage)
@@ -32,6 +29,5 @@ class AppServiceProvider extends ServiceProvider
                 ->line(__('messages.click_to_verify_email'))
                 ->action(__('messages.verify_email_address'), $url);
         });
-
     }
 }

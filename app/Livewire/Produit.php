@@ -5,6 +5,7 @@ namespace App\Livewire;
 use App\Helper\CartAction;
 use App\Models\Category;
 use App\Models\Product;
+use Livewire\Attributes\Locked;
 use Livewire\Component;
 use Livewire\WithPagination;
 
@@ -12,6 +13,8 @@ class Produit extends Component
 {
     use CartAction, WithPagination;
 
+
+    #[Locked]
     public string $search = '';
 
     public Category $cat;
@@ -34,7 +37,7 @@ class Produit extends Component
     public function render()
     {
         $rows = Product::ByStock()->when($this->search, function ($query) {
-            $query->whereAny(['nom', 'color'], 'LIKE', '%'.$this->search.'%');
+            $query->whereAny(['nom', 'color'], 'LIKE', '%' . $this->search . '%');
         })->when($this->cat, function ($query) {
             $query->where('categorie_id', $this->cat->id);
         })->latest('id')->paginate(15);
