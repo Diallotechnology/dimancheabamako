@@ -162,7 +162,7 @@
                                 Categories
                             </h5>
                             <ul class="categories">
-                                @foreach ($category_list as $row)
+                                @foreach ($categories as $row)
                                 <li>
                                     <a
                                         href="{{ route('shop', ['category'=>$row->id,'slug'=>Str::slug($row->nom, '-')]) }}">

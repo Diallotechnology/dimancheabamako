@@ -2,19 +2,19 @@
 
 namespace App\Livewire;
 
-use App\Helper\CartAction;
-use App\Models\Category;
 use App\Models\Product;
-use Livewire\Attributes\Locked;
 use Livewire\Component;
+use App\Models\Category;
+use App\Helper\CartAction;
 use Livewire\WithPagination;
+use Livewire\Attributes\Locked;
+use App\Service\CategoryService;
+use Illuminate\Support\Facades\Cache;
 
 class Produit extends Component
 {
     use CartAction, WithPagination;
 
-
-    #[Locked]
     public string $search = '';
 
     public Category $cat;
@@ -27,22 +27,16 @@ class Produit extends Component
     public function mount(Category $category, string $slug)
     {
         $this->cat = $category;
-        // if ($category->nom !== $slug) {
-        //     // dd($slug);
-
-        //     return redirect()->route('shop', ['category' => $category->id, 'slug' => $category->nom]);
-        // }
     }
 
     public function render()
     {
-        $rows = Product::ByStock()->when($this->search, function ($query) {
+        $rows = Product::query()->with('promotions')->ByStock()->when($this->search, function ($query) {
             $query->whereAny(['nom', 'color'], 'LIKE', '%' . $this->search . '%');
         })->when($this->cat, function ($query) {
             $query->where('categorie_id', $this->cat->id);
         })->latest('id')->paginate(15);
-        $category_list = Category::select('id', 'nom')->get();
 
-        return view('livewire.produit', compact('rows', 'category_list'));
+        return view('livewire.produit', compact('rows'));
     }
 }

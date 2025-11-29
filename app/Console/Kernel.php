@@ -2,6 +2,7 @@
 
 namespace App\Console;
 
+use App\Models\Promotion;
 use App\Models\PendingRegistration;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
@@ -34,6 +35,12 @@ class Kernel extends ConsoleKernel
         $schedule->call(function () {
             PendingRegistration::where('expires_at', '<', now())->delete();
         })->hourly();
+
+        $schedule->call(function () {
+            Promotion::where('fin', '<', now())
+                ->where('etat', 'En cours')
+                ->update(['etat' => 'Expiré']);
+        })->dailyAt('00:00');
     }
 
     /**

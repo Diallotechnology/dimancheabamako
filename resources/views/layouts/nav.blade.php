@@ -1,6 +1,3 @@
-@php
-$cat = App\Models\Category::all();
-@endphp
 <style>
     .dropdown-menu.show {
         inset: -39px 41px auto auto !important;
@@ -108,7 +105,7 @@ $cat = App\Models\Category::all();
                                     <a href="">{{ __('messages.category') }}
                                         <i class="fi-rs-angle-down"></i></a>
                                     <ul class="sub-menu">
-                                        @foreach($cat as $row)
+                                        @foreach($categories as $row)
                                         <li>
                                             <a
                                                 href="{{ route('shop', ['category'=>$row->id,'slug'=>Str::slug($row->nom, '-')]) }}">{{

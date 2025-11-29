@@ -179,70 +179,78 @@ class Product extends Model
         }
     }
 
-    public function getPrixPromoAttribute(): string
-    {
-        // Récupération du taux de conversion et du symbole de devise en fonction de la locale de la session
-        $tauxConversion = session('devise') === 'EUR' ? Devise::whereType('EUR')->value('taux') : '';
-        $deviseSymbole = session('devise') === 'EUR' ? '€' : 'CFA';
+    // public function getPrixPromoAttribute()
+    // {
+    //     // Récupération du taux de conversion et du symbole de devise en fonction de la locale de la session
+    //     $tauxConversion = session('devise') === 'EUR' ? Devise::whereType('EUR')->value('taux') : '';
+    //     $deviseSymbole = session('devise') === 'EUR' ? '€' : 'CFA';
 
-        // Si une promotion est associée au produit, calculer le prix avec réduction
-        if ($this->promotions->isNotEmpty()) {
-            $promo = $this->promotions()->first();
-            $prix = $this->prix * (1 - $promo->reduction / 100);
+    //     // Si une promotion est associée au produit, calculer le prix avec réduction
+    //     if ($this->promotions->isNotEmpty()) {
+    //         $promo = $this->promotions()->first();
+    //         $prix = $this->prix * (1 - $promo->reduction / 100);
 
-            if (session('devise') === 'EUR') {
-                // Conversion du prix en devise locale et formatage
-                return number_format($prix / $tauxConversion, 2) . ' ' . $deviseSymbole;
-            } elseif (session('devise') === 'CFA') {
-                // Retour du prix formaté avec le symbole de devise
-                return $prix . ' ' . $deviseSymbole;
-            }
-        } else {
-            // Sinon, le prix après réduction est zéro
-            return $prix = 0;
-        }
-    }
+    //         if (session('devise') === 'EUR') {
+    //             // Conversion du prix en devise locale et formatage
+    //             return number_format($prix / $tauxConversion, 2) . ' ' . $deviseSymbole;
+    //         } elseif (session('devise') === 'CFA') {
+    //             // Retour du prix formaté avec le symbole de devise
+    //             return $prix . ' ' . $deviseSymbole;
+    //         }
+    //     } else {
+    //         // Sinon, le prix après réduction est zéro
+    //         return $prix = 0;
+    //     }
+    // }
+
+    // public function getReductionAttribute(): int
+    // {
+    //     // Vérifie s'il y a des promotions associées et si la première promotion est toujours valide
+    //     if ($this->promotions->isNotEmpty() && now() < $this->promotions()->first()->fin) {
+    //         // Récupère la première promotion active
+    //         $promo = $this->promotions()->first();
+
+    //         // Retourne la réduction de la promotion
+    //         return $promo->reduction;
+    //     }
+
+    //     // Si aucune promotion active n'est trouvée ou si la promotion est expirée
+    //     if ($this->promotions->isNotEmpty()) {
+    //         // Met à jour l'état de la promotion expirée
+    //         $this->promotions()->update(['etat' => 'Expiré']);
+    //     }
+
+    //     // Aucune réduction n'est applicable
+    //     return 0;
+    // }
 
     public function getReductionAttribute(): int
     {
-        // Vérifie s'il y a des promotions associées et si la première promotion est toujours valide
-        if ($this->promotions->isNotEmpty() && now() < $this->promotions()->first()->fin) {
-            // Récupère la première promotion active
-            $promo = $this->promotions()->first();
+        // utilisation de la relation déjà chargée en mémoire
+        $promo = $this->promotions
+            ->where('etat', 'En cours')
+            ->where('fin', '>=', now())
+            ->sortBy('fin')
+            ->first();
 
-            // Retourne la réduction de la promotion
-            return $promo->reduction;
-        }
-
-        // Si aucune promotion active n'est trouvée ou si la promotion est expirée
-        if ($this->promotions->isNotEmpty()) {
-            // Met à jour l'état de la promotion expirée
-            $this->promotions()->update(['etat' => 'Expiré']);
-        }
-
-        // Aucune réduction n'est applicable
-        return 0;
+        return $promo?->reduction ?? 0;
     }
+
 
     public function getPrixFormatAttribute(): string
     {
-        $tauxConversion = 1; // Par défaut, aucun taux de conversion
-
+        // EUR
         if (session('devise') === 'EUR') {
-            $devise = Devise::whereType('EUR')->first();
-            if ($devise) {
-                $tauxConversion = $devise->taux;
-            }
-            $prixFormat = number_format($this->attributes['prix'] / $tauxConversion, 2);
-            $deviseSymbole = '€';
-        } elseif (session('devise') === 'CFA') {
-
-            $prixFormat = number_format($this->attributes['prix'], 0, ',', ' ');
-            $deviseSymbole = 'CFA';
+            $taux = session('taux_eur') ?? 1;
+            $prix = number_format($this->prix / $taux, 2);
+            return "{$prix} €";
         }
 
-        return $prixFormat . ' ' . $deviseSymbole;
+        // CFA par défaut
+        $prix = number_format($this->prix, 0, ',', ' ');
+        return "{$prix} CFA";
     }
+
 
     /**
      * Get the categorie that owns the Product

@@ -3,6 +3,9 @@
 namespace App\Models;
 
 use App\Helper\DateFormat;
+use App\Service\CategoryService;
+use Illuminate\Support\Facades\App;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
@@ -46,5 +49,16 @@ class Category extends Model
     public function products(): HasMany
     {
         return $this->hasMany(Product::class);
+    }
+
+    protected static function booted(): void
+    {
+        static::saved(function () {
+            App::make(CategoryService::class)->clearCache();
+        });
+
+        static::deleted(function () {
+            App::make(CategoryService::class)->clearCache();
+        });
     }
 }

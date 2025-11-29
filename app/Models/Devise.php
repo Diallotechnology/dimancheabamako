@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Helper\DateFormat;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Database\Eloquent\Model;
 
 /**
@@ -34,4 +35,29 @@ class Devise extends Model
      * @var array
      */
     protected $fillable = ['type', 'taux'];
+
+
+    protected static function booted()
+    {
+        static::updated(function ($devise) {
+            if ($devise->type === 'EUR') {
+                Cache::forget('taux_eur');
+            }
+            session()->forget('taux_eur');
+        });
+
+        static::created(function ($devise) {
+            if ($devise->type === 'EUR') {
+                Cache::forget('taux_eur');
+            }
+            session()->forget('taux_eur');
+        });
+
+        static::deleted(function ($devise) {
+            if ($devise->type === 'EUR') {
+                Cache::forget('taux_eur');
+            }
+            session()->forget('taux_eur');
+        });
+    }
 }
