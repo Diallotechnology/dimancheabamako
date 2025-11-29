@@ -2,21 +2,22 @@
 
 namespace App\Livewire;
 
-use App\Helper\CartAction;
-use App\Models\Country;
 use App\Models\Devise;
+use App\Models\Country;
+use Livewire\Component;
 use App\Models\Shipping;
-use Darryldecode\Cart\Facades\CartFacade;
-use Illuminate\Database\Eloquent\ModelNotFoundException;
-use Illuminate\Support\Facades\Auth;
-use Jantinnerezo\LivewireAlert\LivewireAlert;
+use App\Helper\CartAction;
 use Livewire\Attributes\On;
 use Livewire\Attributes\Validate;
-use Livewire\Component;
+use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Auth;
+use Darryldecode\Cart\Facades\CartFacade;
+use Jantinnerezo\LivewireAlert\LivewireAlert;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 class Panier extends Component
 {
-    use CartAction, LivewireAlert;
+    use CartAction;
 
     public int $qte = 1;
 
@@ -34,6 +35,14 @@ class Panier extends Component
     #[Validate('required')]
     public $password;
 
+    /** @var \Illuminate\Support\Collection */
+    public Collection $items;
+    public int $count = 0;
+    public int $TotalQuantity = 0;
+    public string $Total = '0';
+    public string $totalWeight = '0';
+    public Collection $country;
+
     public function login_submit()
     {
         $this->validate();
@@ -44,16 +53,11 @@ class Panier extends Component
         ];
 
         if (Auth::attempt($credentials)) {
-            $this->alert(
-                'success', 'Connexion reussi',
-            );
+            flash()->success('Connexion reussi.');
 
             return $this->redirectRoute('panier');
         }
-
-        $this->alert(
-            'warning', __('auth.failed'),
-        );
+        flash()->success(__('auth.failed'));
     }
 
     public function updatingCountryid()
@@ -70,55 +74,65 @@ class Panier extends Component
         } else {
             $this->trans = [];
 
-            return $this->alert(
-                'warning', 'Nous ne livrons pas dans ce pays!',
-            );
+            return flash()->success('Nous ne livrons pas dans ce pays!');
         }
     }
 
-    public function GetShipping()
+    public function calculateShipping()
     {
-        // Retrieve the total weight of the products in the cart
-        $items = CartFacade::session($this->get_userid())->getContent()->sortBy('name');
-        $totalWeight = $items->pluck('attributes')->sum('poids');
-        // get zone id
-        $pays = Country::findOrFail($this->country_id);
-        try {
-            // Fetch the shipping rule based on the country ID, transport ID, and weight range
-            $this->shipping = Shipping::whereZoneId($pays->zone_id)
-                ->whereTransportId($this->transport_id)
-                ->whereRelation('poids', function ($query) use ($totalWeight) {
-                    $query->where('min', '<=', $totalWeight)->where('max', '>=', $totalWeight);
-                })->firstOrFail();
+        $shipping = $this->getShippingCost($this->country_id, $this->transport_id);
 
-        } catch (ModelNotFoundException $e) {
-            // Handle case where shipping rule is not found
-            return $this->alert(
-                'warning', 'Aucune correspondance trouvé!',
-            );
+        if (!$shipping) {
+            $this->shipping = null;
+            flash()->warning('Aucune correspondance trouvée pour le transport choisi.');
+            return;
         }
+
+        $this->shipping = $shipping;
+    }
+    // public function GetShipping()
+    // {
+    //     // Retrieve the total weight of the products in the cart
+    //     $items = $this->cart->getContent();
+    //     $totalWeight = $items->getWeight();
+    //     // get zone id
+    //     $pays = Country::findOrFail($this->country_id);
+    //     try {
+    //         // Fetch the shipping rule based on the country ID, transport ID, and weight range
+    //         $this->shipping = Shipping::whereZoneId($pays->zone_id)
+    //             ->whereTransportId($this->transport_id)
+    //             ->whereRelation('poids', function ($query) use ($totalWeight) {
+    //                 $query->where('min', '<=', $totalWeight)->where('max', '>=', $totalWeight);
+    //             })->firstOrFail();
+    //     } catch (ModelNotFoundException $e) {
+    //         // Handle case where shipping rule is not found
+    //         return flash()->warning('Aucune correspondance trouvé!');
+    //     }
+    // }
+
+
+
+    public function mount(): void
+    {
+        $this->refreshCart();
     }
 
     #[On('productUpdate')]
     #[On('productDelete')]
-    public function render()
+    public function refreshCart(): void
     {
-        // get panier content
-        $items = CartFacade::session($this->get_userid())->getContent()->sortBy('name');
-        // get total qte
-        $TotalQuantity = CartFacade::session($this->get_userid())->getTotalQuantity();
-        // get total price
+        $this->items = $this->cart->getContent();
+        $this->count = $this->cart->getCount();
+        $this->TotalQuantity = $this->cart->getTotalQuantity();
+
         if (session('devise') === 'EUR') {
-            $tauxConversion = session('devise') === 'EUR' ? Devise::whereType('EUR')->value('taux') : '';
-            $Total = floatval(number_format(CartFacade::session($this->get_userid())->getTotal() / $tauxConversion, 2));
-        } elseif (session('devise') === 'CFA') {
-            $Total = number_format(CartFacade::session($this->get_userid())->getTotal(), 0, ',', ' ');
+            $tauxConversion = Devise::whereType('EUR')->value('taux');
+            $this->Total = number_format($this->cart->getTotal() / $tauxConversion, 2, ',', ' ');
+        } else { // par défaut CFA
+            $this->Total = number_format($this->cart->getTotal(), 0, ',', ' ');
         }
 
-        $totalWeight = $items->pluck('attributes')->sum('poids').' Kg';
-
-        $country = Country::select('id', 'nom')->get();
-
-        return view('livewire.panier', compact('items', 'TotalQuantity', 'Total', 'country', 'totalWeight'));
+        $this->totalWeight = $this->getWeight(true);
+        $this->country = Country::select('id', 'nom')->get();
     }
 }

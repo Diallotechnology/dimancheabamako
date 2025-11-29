@@ -28,58 +28,58 @@ class OrderController extends Controller
     use CartAction, DeleteAction, OrderAPI;
 
 
-    public function test()
-    {
-        Order::whereNotNull('trans_ref')
-            ->whereNull('reference')
-            ->whereNull('trans_state')
-            ->chunk(100, function ($orders) {
-                foreach ($orders as $order) {
-                    DB::transaction(function () use ($order) {
-                        // Verrouiller la commande pour empêcher les accès concurrents
-                        $order = Order::where('id', $order->id)->lockForUpdate()->first();
+    // public function test()
+    // {
+    //     Order::whereNotNull('trans_ref')
+    //         ->whereNull('reference')
+    //         ->whereNull('trans_state')
+    //         ->chunk(100, function ($orders) {
+    //             foreach ($orders as $order) {
+    //                 DB::transaction(function () use ($order) {
+    //                     // Verrouiller la commande pour empêcher les accès concurrents
+    //                     $order = Order::where('id', $order->id)->lockForUpdate()->first();
 
-                        // Récupérer l'état de la commande via l'API
-                        $responseData = $this->getOrderStatut($order->trans_ref);
-                        if ($responseData) {
-                            try {
-                                // Parse `createDateTime` depuis les données reçues
-                                $createDateTime = Carbon::parse($responseData['createDateTime']);
-                                $currentTime = Carbon::now();
+    //                     // Récupérer l'état de la commande via l'API
+    //                     $responseData = $this->getOrderStatut($order->trans_ref);
+    //                     if ($responseData) {
+    //                         try {
+    //                             // Parse `createDateTime` depuis les données reçues
+    //                             $createDateTime = Carbon::parse($responseData['createDateTime']);
+    //                             $currentTime = Carbon::now();
 
-                                // Calculer la différence en minutes
-                                $minutesDifference = $currentTime->diffInMinutes($createDateTime);
+    //                             // Calculer la différence en minutes
+    //                             $minutesDifference = $currentTime->diffInMinutes($createDateTime);
 
-                                // Vérifier l'état du paiement
-                                $paymentState = $responseData['_embedded']['payment'][0]['state'] ?? null;
+    //                             // Vérifier l'état du paiement
+    //                             $paymentState = $responseData['_embedded']['payment'][0]['state'] ?? null;
 
-                                if ($minutesDifference >= 5 && $paymentState !== 'PURCHASED') {
-                                    dd($order);
-                                    // Annuler le lien de paiement et supprimer la commande
-                                    $this->cancelPaymentLink($order->trans_ref);
-                                    $order->delete();
+    //                             if ($minutesDifference >= 5 && $paymentState !== 'PURCHASED') {
+    //                                 dd($order);
+    //                                 // Annuler le lien de paiement et supprimer la commande
+    //                                 $this->cancelPaymentLink($order->trans_ref);
+    //                                 $order->delete();
 
-                                    Log::info('Order cancelled due to timeout', [
-                                        'order_id' => $order->id,
-                                        'trans_ref' => $order->trans_ref,
-                                        'minutes_elapsed' => $minutesDifference,
-                                    ]);
-                                }
-                            } catch (\Exception $e) {
-                                Log::error('Failed to process order', [
-                                    'order_id' => $order->id,
-                                    'trans_ref' => $order->trans_ref,
-                                    'error' => $e->getMessage(),
-                                ]);
-                                throw $e; // Relancer pour annuler la transaction
-                            }
-                        } else {
-                            Log::error('Failed to retrieve order status', ['trans_ref' => $order->trans_ref]);
-                        }
-                    });
-                }
-            });
-    }
+    //                                 Log::info('Order cancelled due to timeout', [
+    //                                     'order_id' => $order->id,
+    //                                     'trans_ref' => $order->trans_ref,
+    //                                     'minutes_elapsed' => $minutesDifference,
+    //                                 ]);
+    //                             }
+    //                         } catch (\Exception $e) {
+    //                             Log::error('Failed to process order', [
+    //                                 'order_id' => $order->id,
+    //                                 'trans_ref' => $order->trans_ref,
+    //                                 'error' => $e->getMessage(),
+    //                             ]);
+    //                             throw $e; // Relancer pour annuler la transaction
+    //                         }
+    //                     } else {
+    //                         Log::error('Failed to retrieve order status', ['trans_ref' => $order->trans_ref]);
+    //                     }
+    //                 });
+    //             }
+    //         });
+    // }
 
     /**
      * Store a newly created resource in storage.

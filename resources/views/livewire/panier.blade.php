@@ -16,7 +16,7 @@
                     <div class="col-md-12">
                         <div class="mb-20">
                             <h4>
-                                @lang('messages.cart') {{ $items->count() }} element(s)
+                                @lang('messages.cart') {{ $count }} element(s)
                             </h4>
                         </div>
                         <div class="table-responsive order_table text-center">
@@ -31,19 +31,20 @@
                                 </thead>
                                 <tbody>
                                     @forelse ($items as $item)
-                                    <tr wire:key="{{ $item->id }}">
+                                    <tr wire:key="{{ $item['id'] }}">
                                         <td class="image product-thumbnail">
-                                            <img src="{{ $item->associatedModel->cover }}" alt="{{ $item->name }}" />
-                                            <h5>{{ $item->name }}</h5>
+                                            <img src="{{ $item->get('attributes')->get('cover') }}"
+                                                alt="{{ $item['name'] }}" />
+                                            <h5>{{ $item['name'] }}</h5>
                                         </td>
                                         <td class="text-center" data-title="Stock">
                                             <div class="border radius d-inline-flex">
-                                                <livewire:update :row="$item" :key="'update-'.$item->id" />
+                                                <livewire:update :row="$item" :key="'update-'.$item['id']" />
                                             </div>
                                         </td>
-                                        <td>{{ $item->associatedModel->prix_final }}</td>
+                                        <td>{{ $item->get('attributes')->get('prix_final') }}</td>
                                         <td class="action" data-title="Remove">
-                                            <livewire:delete :id="$item->id" :key="'delete-'.$item->id" />
+                                            <livewire:delete :id="$item['id']" :key="'delete-'.$item['id']" />
                                         </td>
                                     </tr>
                                     @empty

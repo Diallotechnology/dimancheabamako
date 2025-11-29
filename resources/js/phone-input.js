@@ -17,11 +17,11 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
     form.addEventListener("submit", (event) => {
-        if (!iti.isValidNumber()) {
-            alert("Numéro invalide ou utils non chargé.");
-            event.preventDefault();
-            return;
-        }
+        // if (!iti.isValidNumber()) {
+        //     alert("Numéro invalide ou utils non chargé.");
+        //     event.preventDefault();
+        //     return;
+        // }
 
         const fullNumber = iti.getNumber(intlTelInputUtils.numberFormat.E164);
         console.log("Numéro envoyé :", fullNumber);

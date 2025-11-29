@@ -1,5 +1,4 @@
 <div>
-
     <x-slot:metadata>
         <!-- Meta Description -->
         <meta name="description"
@@ -34,7 +33,7 @@
         <link rel="canonical" href="{{ url()->current() }}">
 
         <!-- JSON-LD Structured Data -->
-        <script type="application/ld+json">
+        {{-- <script type="application/ld+json">
             {
             "@context": "https://schema.org",
             "@type": "ProductCollection",
@@ -46,7 +45,7 @@
                 "@type": "Brand",
                 "name": "Dimanche à Bamako"
             }
-        }
+        } --}}
         </script>
     </x-slot:metadata>
 

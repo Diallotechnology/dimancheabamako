@@ -14,7 +14,7 @@ class LinkController extends Controller
     public function home(?string $token = null)
     {
 
-        $query = Product::query()->ByStock();
+        $query = Product::query()->active()->ByStock();
         // Récupération des derniers produits
         $latest = $query->take(10)->latest()->get();
         // Récupération des produits populaires

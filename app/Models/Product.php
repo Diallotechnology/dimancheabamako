@@ -90,6 +90,12 @@ class Product extends Model
         return $query->where('stock', '>=', 1);
     }
 
+    public function scopeActive($query)
+    {
+        return $query->where('status', 1);
+    }
+
+
     // Automatically generate slug
     protected static function boot()
     {
@@ -106,7 +112,7 @@ class Product extends Model
 
                 // Vérifier l'unicité du slug
                 while (self::where('slug', $slug)->where('id', '!=', $product->id)->exists()) {
-                    $slug = $baseSlug.'-'.$counter;
+                    $slug = $baseSlug . '-' . $counter;
                     $counter++;
                 }
 
@@ -127,7 +133,6 @@ class Product extends Model
         } else {
             return $this->prix;
         }
-
     }
 
     public function getMontant(): float|int
@@ -161,7 +166,7 @@ class Product extends Model
             }
 
             // Retour du prix formaté avec devise
-            return $prixFormat.' '.$deviseSymbole;
+            return $prixFormat . ' ' . $deviseSymbole;
         } else {
             if (session('devise') === 'EUR') {
                 // Conversion du prix en devise locale et formatage
@@ -170,7 +175,7 @@ class Product extends Model
                 $prixFormat = number_format($this->prix, 0, ',', ' ');
             }
 
-            return $prixFormat.' '.$deviseSymbole;
+            return $prixFormat . ' ' . $deviseSymbole;
         }
     }
 
@@ -187,17 +192,15 @@ class Product extends Model
 
             if (session('devise') === 'EUR') {
                 // Conversion du prix en devise locale et formatage
-                return number_format($prix / $tauxConversion, 2).' '.$deviseSymbole;
+                return number_format($prix / $tauxConversion, 2) . ' ' . $deviseSymbole;
             } elseif (session('devise') === 'CFA') {
                 // Retour du prix formaté avec le symbole de devise
-                return $prix.' '.$deviseSymbole;
+                return $prix . ' ' . $deviseSymbole;
             }
-
         } else {
             // Sinon, le prix après réduction est zéro
             return $prix = 0;
         }
-
     }
 
     public function getReductionAttribute(): int
@@ -238,7 +241,7 @@ class Product extends Model
             $deviseSymbole = 'CFA';
         }
 
-        return $prixFormat.' '.$deviseSymbole;
+        return $prixFormat . ' ' . $deviseSymbole;
     }
 
     /**

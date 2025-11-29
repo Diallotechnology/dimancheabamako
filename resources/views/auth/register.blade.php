@@ -11,7 +11,7 @@
                     <input type="text" name="website" style="display:none">
 
                     <div class="row">
-                        {{-- <div class="col-md-6">
+                        <div class="col-md-6">
                             <div class="mt-4">
                                 <!-- Name -->
                                 <x-input-label for="prenom" :value="__('messages.first_name')" />
@@ -38,7 +38,7 @@
                                     @endforeach
                                 </x-select>
                             </div>
-                        </div> --}}
+                        </div>
                         <div class="col-md-6">
                             <div class="mt-4">
                                 <!-- Name -->
@@ -48,7 +48,7 @@
                                 <x-input-error :messages="$errors->get('contact')" class="mt-2" />
                             </div>
                         </div>
-                        {{-- <div class="col-md-12">
+                        <div class="col-md-12">
                             <!-- Email Address -->
                             <div class="mt-4">
                                 <x-input-label for="email" :value="__('Email')" />
@@ -75,7 +75,7 @@
                                 name="password_confirmation" required autocomplete="new-password" />
 
                             <x-input-error :messages="$errors->get('password_confirmation')" class="mt-2" />
-                        </div> --}}
+                        </div>
                     </div>
 
                     <div class="d-flex justify-content-center my-4">

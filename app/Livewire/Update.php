@@ -10,63 +10,38 @@ use Livewire\Component;
 
 class Update extends Component
 {
-    use CartAction, LivewireAlert;
-
-    public string $qte_min = '';
+    use CartAction;
 
     public int $stock = 0;
 
-    public $quantity;
+    public int|string $quantity;
 
     public Collection $card;
 
     public function mount(Collection $row): void
     {
         $this->card = $row;
-        $this->stock = $row->associatedModel->stock;
-        $this->quantity = $row->quantity;
+        $this->stock = $row['stock'];
+        $this->quantity = $row['quantity'];
     }
 
     public function updatedQuantity()
     {
-        $this->update();
-    }
+        // Quantité entrée au clavier → on convertit en entier
+        $newQuantity = (int) $this->quantity;
 
-    public function update(): void
-    {
+        $success = $this->cart->update($this->card['id'], $newQuantity);
 
-        $product = CartFacade::session($this->get_userid())->get($this->card['id']);
-        // si qte inferieure a 1
-        if ($this->quantity < 1) {
-            // qte  = 1
-            CartFacade::session($this->get_userid())->update($this->card['id'], [
-                'quantity' => [
-                    'relative' => false,
-                    'value' => 1,
-                ],
-            ]);
-            $this->alert('warning', 'Quantité minimun est de 1!');
+        if (!$success) {
+            // Rétablir la valeur correcte si quantité invalide
+            $item = $this->cart->get($this->card['id']);
+            $this->quantity = $item['quantity'];
+            flash()->warning("Quantité invalide ou stock insuffisant.");
         }
 
-        // si qte superieure au stock
-        if ($this->quantity > $product->associatedModel->stock) {
-            $this->alert('warning', 'Quantité non disponible!');
-        }
-
-        // si qte inferieure au stock et si qte > = 1
-        if ($this->quantity <= $product->associatedModel->stock and $this->quantity >= 1) {
-            // add qte demander
-            CartFacade::session($this->get_userid())->update($this->card['id'], [
-                'quantity' => [
-                    'relative' => false,
-                    'value' => $this->quantity,
-                ],
-                'attributes' => ['poids' => $this->quantity * $product->associatedModel->poids],
-            ]);
-        }
+        // Mise à jour affichage live
         $this->dispatch('productUpdate');
     }
-
 
     public function render()
     {

@@ -4,221 +4,228 @@ declare(strict_types=1);
 
 namespace App\Service;
 
-use InvalidArgumentException;
-use Illuminate\Support\Carbon;
+use App\Models\Product;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Session\SessionManager;
+use InvalidArgumentException;
 
-final class CartService
+class CartService
 {
-    private const SESSION_KEY = 'shopping_cart';
-    private const CACHE_TTL = 1440; // 24 heures en minutes
-
+    private const CACHE_TTL = 1440; // minutes (24h)
+    private ?int $userId = null;
     private SessionManager $session;
-    private int $userId;
 
     public function __construct(SessionManager $session)
     {
         $this->session = $session;
-        if (Auth::check()) {
-            $this->userId = Auth::user()->id;
-        }
+        $this->userId = Auth::id();
     }
 
     public function setUser(int $userId): self
     {
-        $this->userId = $userId ?? null;
+        $this->userId = $userId;
         return $this;
-    }
-
-    private function getSessionKey(): string
-    {
-        return $this->userId
-            ? self::SESSION_KEY . '_' . $this->userId
-            : self::SESSION_KEY;
-    }
-
-    /**
-     * Ajoute un article au panier.
-     * Vérifie que le prix et la quantité sont valides, met à jour la quantité si l'article existe déjà, et enregistre les modifications.
-     */
-    public function add(int $id, string $name, int $price, int $stock, ?array $attributes = []): Collection
-    {
-        if ($price < 0) {
-            throw new InvalidArgumentException('Le prix ne peut pas être négatif');
-        }
-        $cartItems = $this->getContent();
-
-        if (!$cartItems->has($id)) {
-            $cartItem = collect([
-                'id' => $id,
-                'name' => $name,
-                'price' => $price,
-                'quantity' => 1,
-                'stock' => $stock,
-                'attributes' => collect($attributes),
-                'total' => $price,
-                'added_at' => now(),
-                'user_id' => $this->userId,
-            ]);
-        }
-
-        $cartItems->put($id, $cartItem);
-        $this->saveCart($cartItems);
-
-        return $cartItem;
-    }
-
-    /**
-     * Met à jour la quantité d'un article existant.
-     *
-     */
-    public function update_cart(int $id, string $type): bool
-    {
-        $cartItems = $this->getContent();
-
-        if ($cartItems->has($id)) {
-            $cartItem = $cartItems->get($id);
-
-            if ($type === 'add') {
-                $quantity = $cartItem['quantity'] + 1;
-                // si qte superieure au stock
-                if ($quantity > $cartItem['stock']) {
-                    flash()->warning('Quantité non disponible!');
-                    return false;
-                }
-                $cartItem['quantity'] = $quantity;
-            } elseif ($type === 'remove') {
-                $quantity = $cartItem['quantity'] - 1;
-                if ($quantity < 1) {
-                    flash()->warning('Quantité minimun est de 1');
-                    return false;
-                }
-                $cartItem['quantity'] = $quantity;
-            }
-            $cartItem['total'] = $cartItem['price'] * $quantity;
-            $cartItem['updated_at'] = now();
-            $cartItems->put($id, $cartItem);
-            $this->saveCart($cartItems);
-            return true;
-        }
-        return false;
-    }
-
-    /**
-     * Supprime un article du panier en fonction de son identifiant.
-     */
-    public function remove(int $id): bool
-    {
-        $cartItems = $this->getContent();
-
-        if ($cartItems->has($id)) {
-            $cartItems->forget($id);
-            $this->saveCart($cartItems);
-            return true;
-        }
-
-        return false;
-    }
-
-
-    /**
-     * Vider le panier.
-     */
-    public function clear(): void
-    {
-        $this->session->forget($this->getSessionKey());
-        if (method_exists(Cache::getStore(), 'tags')) {
-            Cache::tags(['cart'])->forget($this->getCacheKey());
-        } else {
-            Cache::forget($this->getCacheKey());
-        }
-    }
-
-    /**
-     *  Recupere le contenu du panier.
-     */
-    public function getContent(): Collection
-    {
-        return collect($this->session->get($this->getSessionKey(), collect()))->map(function ($item) {
-            $item['added_at'] = Carbon::parse($item['added_at']);
-            if (isset($item['updated_at'])) {
-                $item['updated_at'] = Carbon::parse($item['updated_at']);
-            }
-            return collect($item);
-        });
-    }
-
-    /**
-     * Calcule le total du panier en additionnant les prix multipliés par les quantités.
-     */
-    public function getTotal(): int
-    {
-        return $this->getContent()->sum('total');
-    }
-
-    public function getCount(): int
-    {
-        return $this->getContent()->count();
-    }
-
-    public function getTotalQuantity(): int
-    {
-        return $this->getContent()->sum('quantity');
-    }
-
-    public function has(int $id): bool
-    {
-        return $this->getContent()->has($id);
-    }
-
-    public function get(int $id): ?Collection
-    {
-        return collect($this->getContent()->get($id));
-    }
-
-    public function search(callable $callback): Collection
-    {
-        return $this->getContent()->filter($callback);
-    }
-
-    public function sortBy(string $key, bool $descending = false): Collection
-    {
-        return $descending
-            ? $this->getContent()->sortByDesc($key)
-            : $this->getContent()->sortBy($key);
-    }
-
-    public function groupBy(string $key): Collection
-    {
-        return $this->getContent()->groupBy($key);
-    }
-
-    private function saveCart(Collection $items): void
-    {
-        $this->session->put($this->getSessionKey(), $items);
-
-        if (method_exists(Cache::getStore(), 'tags')) {
-            Cache::tags(['cart'])->put(
-                $this->getCacheKey(),
-                $items,
-                now()->addMinutes(self::CACHE_TTL)
-            );
-        } else {
-            Cache::put(
-                $this->getCacheKey(),
-                $items,
-                now()->addMinutes(self::CACHE_TTL)
-            );
-        }
     }
 
     private function getCacheKey(): string
     {
         return $this->userId
-            ? "cart_{$this->userId}"
-            : "cart_guest";
+            ? "cart_user_{$this->userId}"
+            : "cart_guest_" . $this->session->getId();
+    }
+
+    private function load(): Collection
+    {
+        return collect(Cache::get($this->getCacheKey(), []))
+            ->map(fn($item) => collect($item));
+    }
+
+    private function save(Collection $items): void
+    {
+        Cache::put($this->getCacheKey(), $items, now()->addMinutes(self::CACHE_TTL));
+    }
+
+    public function clear(): void
+    {
+        Cache::forget($this->getCacheKey());
+    }
+
+    public function mergeGuestCartToUser(int $userId): void
+    {
+        $guestKey = "cart_guest_" . $this->session->getId();
+        $userKey  = "cart_user_{$userId}";
+
+        $guestCart = Cache::get($guestKey, []);
+        $userCart  = Cache::get($userKey, []);
+
+        if (empty($guestCart)) {
+            return;
+        }
+
+        foreach ($guestCart as $productId => $itemGuest) {
+
+            // Produit désactivé → on ignore
+            if (! Product::where('id', $productId)->where('status', true)->exists()) {
+                continue;
+            }
+
+            // Si le produit existe déjà chez l'utilisateur, on cumule les quantités
+            if (isset($userCart[$productId])) {
+                $userCart[$productId]['quantity'] += $itemGuest['quantity'];
+                $userCart[$productId]['total'] =
+                    $userCart[$productId]['quantity'] * $userCart[$productId]['price'];
+            } else {
+                $userCart[$productId] = $itemGuest;
+            }
+        }
+
+        Cache::put($userKey, $userCart, now()->addMinutes(self::CACHE_TTL));
+        Cache::forget($guestKey);
+    }
+
+    /**
+     * Ajoute un produit au panier.
+     * Si le produit est déjà présent, on ne modifie pas la quantité.
+     */
+    public function add(int $id, string $name, int $price, int $stock, int|float $poids, ?array $attributes = []): Collection
+    {
+        if ($price < 0) {
+            throw new InvalidArgumentException('Le prix ne peut pas être négatif');
+        }
+
+        $items = $this->load();
+
+        // Si le produit existe déjà → on ne touche pas à la quantité, on renvoie l’item existant
+        if ($items->has($id)) {
+            return $items->get($id);
+        }
+
+        // Nouveau produit dans le panier
+        $cartItem = collect([
+            'id'         => $id,
+            'name'       => $name,
+            'price'      => $price,
+            'quantity'   => 1,
+            'stock'      => $stock,
+            'poids'      => $poids,
+            'attributes' => collect($attributes),
+            'total'      => $price,
+            'added_at'   => now(),
+            'user_id'    => $this->userId,
+        ]);
+
+        $items->put($id, $cartItem);
+        $this->save($items);
+
+        return $cartItem;
+    }
+
+    /**
+     * Met à jour la quantité (add/remove) d’un produit déjà présent.
+     */
+    public function update(int $id, int $newQuantity): bool
+    {
+        $items = $this->load();
+
+        if (!$items->has($id)) {
+            return false;
+        }
+
+        $cartItem = $items->get($id);
+
+        // quantité minimum
+        if ($newQuantity < 1) {
+            return false;
+        }
+
+        // quantité maximum par rapport au stock
+        if ($newQuantity > $cartItem['stock']) {
+            return false;
+        }
+
+        $cartItem['quantity'] = $newQuantity;
+        $cartItem['total'] = $newQuantity * $cartItem['price'];
+        $cartItem['updated_at'] = now();
+
+        $items->put($id, $cartItem);
+        $this->save($items);
+
+        return true;
+    }
+
+
+    public function remove(int $id): bool
+    {
+        $items = $this->load();
+        if (!$items->has($id)) {
+            return false;
+        }
+
+        $items->forget($id);
+        $this->save($items);
+
+        return true;
+    }
+
+
+
+    public function getContent(): Collection
+    {
+        return $this->load();
+    }
+
+    public function getTotal(): int|float
+    {
+        return $this->load()->sum('total');
+    }
+
+    public function getCount(): int
+    {
+        return $this->load()->count();
+    }
+
+    public function getTotalQuantity(): int
+    {
+        return $this->load()->sum('quantity');
+    }
+
+    public function has(int $id): bool
+    {
+        return $this->load()->has($id);
+    }
+
+    public function get(int $id): ?Collection
+    {
+        return $this->load()->get($id);
+    }
+
+    /**
+     * Recherche d’items avec callback.
+     */
+    public function search(callable $callback): Collection
+    {
+        return $this->load()->filter($callback);
+    }
+
+    /**
+     * Tri des items par clé donnée.
+     */
+    public function sortBy(string $key, bool $descending = false): Collection
+    {
+        $items = $this->load();
+
+        return $descending
+            ? $items->sortByDesc($key)
+            : $items->sortBy($key);
+    }
+
+    /**
+     * Groupement par clé.
+     */
+    public function groupBy(string $key): Collection
+    {
+        return $this->load()->groupBy($key);
     }
 }

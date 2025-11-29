@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\DB;
 use App\Models\PendingRegistration;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Auth\Events\Registered;
 use App\Http\Requests\StorePendingRegistrationRequest;
 use App\Http\Requests\UpdatePendingRegistrationRequest;
@@ -17,6 +18,8 @@ use App\Http\Requests\UpdatePendingRegistrationRequest;
 
 class PendingRegistrationController extends Controller
 {
+
+
     public function __invoke(string $token)
     {
         $pending = PendingRegistration::where('token', $token)
@@ -49,6 +52,8 @@ class PendingRegistrationController extends Controller
             RegisterMailJob::dispatch($user);
             // connexion automatique
             Auth::login($user);
+
+            CartService::make()->mergeGuestCartToUser($user->id);
 
             $pending->delete();
         });
