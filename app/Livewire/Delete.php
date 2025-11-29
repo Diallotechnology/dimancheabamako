@@ -12,9 +12,20 @@ class Delete extends Component
 
     public int $id;
 
+    public bool $isDeleting = false;
+
     public function deleteProduct()
     {
-        app(CartAction::class)->destroy($this->id);
+        $this->isDeleting = true; // disparition instantanée dans l'UI
+
+        // Suppression backend
+        $success = $this->cart->remove($this->id);
+
+        if (!$success) {
+            $this->isDeleting = false;
+            flash()->warning('Suppression impossible.');
+            return;
+        }
         $this->dispatch('productDelete');
         $this->dispatch('productCount')->to(Counter::class);
     }

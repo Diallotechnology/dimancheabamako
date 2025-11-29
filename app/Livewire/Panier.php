@@ -111,7 +111,6 @@ class Panier extends Component
     // }
 
 
-
     public function mount(): void
     {
         $this->refreshCart();

@@ -22,32 +22,7 @@ trait CartAction
     {
         $this->cart = $cart;
     }
-    private function cartSnapshot(): array
-    {
-        return [
-            'rows' => $this->cart->getContent()->values()->toArray(),
-            'total' => $this->cart->getTotal(),
-            'totalQuantity' => $this->cart->getTotalQuantity(),
-        ];
-    }
 
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update_qte(Request $request)
-    {
-        $validated = $request->validate([
-            'id' => 'required|integer',
-            'type' => 'required|string',
-        ]);
-
-        if ($this->cart->update($request->integer('id'), $validated['type'])) {
-            flash()->success('Quantité mise à jour.');
-            return;
-        }
-        return;
-    }
 
     /**
      * Remove the specified resource from storage.
@@ -100,11 +75,6 @@ trait CartAction
             ->sum();
         return  $format ? number_format($total, 2, '.', ' ') . ' kg' : $total;
     }
-
-    // public function getWeightFormatted(): string
-    // {
-    //     return number_format($this->getWeight(), 2, ',', ' ') . ' kg';
-    // }
 
     public function getShippingCost(int $countryId, int $transportId): ?Shipping
     {

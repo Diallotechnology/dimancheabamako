@@ -25,23 +25,47 @@ class Update extends Component
         $this->quantity = $row['quantity'];
     }
 
-    public function updatedQuantity()
+    public function increment()
     {
-        // Quantité entrée au clavier → on convertit en entier
+        $this->quantity++;
+
+        if ($this->quantity > $this->stock) {
+            $this->quantity = $this->stock;
+            flash()->warning("Stock insuffisant.");
+            return;
+        }
+
+        $this->applyQuantity();
+    }
+
+    public function decrement()
+    {
+        $this->quantity--;
+
+        if ($this->quantity < 1) {
+            $this->quantity = 1;
+            return;
+        }
+
+        $this->applyQuantity();
+    }
+
+
+    public function applyQuantity()
+    {
         $newQuantity = (int) $this->quantity;
 
         $success = $this->cart->update($this->card['id'], $newQuantity);
 
         if (!$success) {
-            // Rétablir la valeur correcte si quantité invalide
             $item = $this->cart->get($this->card['id']);
             $this->quantity = $item['quantity'];
             flash()->warning("Quantité invalide ou stock insuffisant.");
         }
 
-        // Mise à jour affichage live
         $this->dispatch('productUpdate');
     }
+
 
     public function render()
     {
