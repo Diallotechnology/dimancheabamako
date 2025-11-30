@@ -30,6 +30,7 @@
                                     </tr>
                                 </thead>
                                 <tbody>
+
                                     @forelse ($items as $item)
                                     <tr wire:key="{{ $item['id'] }}">
                                         <td class="image product-thumbnail">
@@ -42,9 +43,18 @@
                                                 <livewire:update :row="$item" :key="'update-'.$item['id']" />
                                             </div>
                                         </td>
-                                        <td>{{ $item->get('attributes')->get('prix_final') }}</td>
+                                        <td>
+                                            {{ number_format(
+                                            session('devise') === 'EUR'
+                                            ? ($item['price'] / session('taux_eur'))
+                                            : $item['price'],
+                                            session('devise') === 'EUR' ? 2 : 0,
+                                            ',',
+                                            ' '
+                                            ) }} {{ session('devise') === 'EUR' ? '€' : 'CFA' }}
+                                        </td>
                                         <td class="action" data-title="Remove">
-                                            <livewire:delete :id="$item['id']" :key="'delete-'.$item['id']" />
+                                            <livewire:delete :row="$item" :key="'delete-'.$item['id']" />
                                         </td>
                                     </tr>
                                     @empty
@@ -240,7 +250,7 @@
                                     <div class="mb-4">
                                         <label class="text-uppercase form-label">@lang('messages.carrier')</label>
                                         <select class="form-select" required name="transport_id"
-                                            wire:change="GetShipping()" wire:model.live='transport_id'>
+                                            wire:change="calculateShipping()" wire:model.live='transport_id'>
                                             <option selected value="">
                                                 @lang('messages.select_carrier')
                                             </option>

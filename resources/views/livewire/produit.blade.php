@@ -84,9 +84,9 @@
                             </div>
                         </div>
                         <div class="product-list mb-50">
-                            <div wire:loading class="loader"></div>
+                            <div wire:loading class="loader" wire:target="search"></div>
                             @forelse ($rows as $row)
-                            <div class="product-cart-wrap" wire:loading.class="d-none">
+                            <div class="product-cart-wrap" wire:target="search" wire:loading.class="d-none">
                                 <div class="product-img-action-wrap">
                                     <div class="product-img product-img-zoom">
                                         <div class="product-img-inner">

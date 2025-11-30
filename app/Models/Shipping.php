@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Helper\DateFormat;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
@@ -74,15 +75,27 @@ class Shipping extends Model
 
     public function getMontantDeviseAttribute(): float
     {
-        if (session('devise') === 'EUR') {
-            $tauxConversion = session('devise') === 'EUR' ? Devise::whereType('EUR')->value('taux') : '';
+        $devise = session('devise', 'CFA'); // default
+        $montant = (float) $this->montant;
 
-            // Conversion du prix en devise locale et formatage
-            return number_format($this->montant / $tauxConversion, 2);
-
-        } elseif (session('devise') === 'CFA') {
-
-            return $this->montant;
+        if ($devise === 'EUR') {
+            $taux = Cache::get('taux_eur', 1); // jamais en session
+            return round($montant / $taux, 2);
         }
+
+        // CFA
+        return $montant;
     }
+
+    // public function getMontantDeviseFormatAttribute(): string
+    // {
+    //     $montant = $this->montant_devise;
+    //     $devise = session('devise', 'CFA');
+
+    //     if ($devise === 'EUR') {
+    //         return number_format($montant, 2, ',', ' ') . ' €';
+    //     }
+
+    //     return number_format($montant, 0, ',', ' ') . ' CFA';
+    // }
 }

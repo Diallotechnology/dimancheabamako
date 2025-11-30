@@ -75,12 +75,6 @@ class Product extends Model
      */
     protected $fillable = ['categorie_id', 'reference', 'nom', 'color', 'taille', 'description', 'resume', 'poids', 'video', 'prix', 'cover', 'stock', 'favoris', 'slug'];
 
-    /**
-     * The relationships that should always be loaded.
-     *
-     * @var array
-     */
-    protected $with = ['categorie'];
 
     /**
      * Scope to get nature by structure.
@@ -90,11 +84,10 @@ class Product extends Model
         return $query->where('stock', '>=', 1);
     }
 
-    public function scopeActive($query)
+    public function scopeActive($query): Builder
     {
         return $query->where('status', 1);
     }
-
 
     // Automatically generate slug
     protected static function boot()
@@ -121,135 +114,122 @@ class Product extends Model
         });
     }
 
-    public function getPrixFinal(): int
-    {
-        // Si une promotion est associée au produit, calculer le prix avec réduction
-        if ($this->promotions->isNotEmpty()) {
-            $promo = $this->promotions()->first();
-            $prix = $this->prix * (1 - $promo->reduction / 100);
 
-            // Retour du prix formaté avec devise
-            return $prix;
-        } else {
-            return $this->prix;
+
+    public function getMontant(): string
+    {
+        $montant = $this->pivot->montant;
+        $devise = session('devise');
+
+        if ($devise === 'EUR') {
+            $taux = session('taux_eur', 1);
+            return number_format($montant / $taux, 2, ',', ' ') . ' €';
         }
+
+        return number_format($montant, 0, ',', ' ') . ' CFA';
     }
 
-    public function getMontant(): float|int
+    // Scope pour récupérer uniquement la promo active
+    public function scopeWithActivePromotions(Builder $query): Builder
     {
-        // Récupération du taux de conversion et du symbole de devise en fonction de la locale de la session
-        if (session('devise') === 'EUR') {
-            $tauxConversion = session('devise') === 'EUR' ? Devise::whereType('EUR')->value('taux') : '';
-
-            return number_format($this->pivot->montant / $tauxConversion, 2);
-        } elseif (session('devise') === 'CFA') {
-            return number_format($this->pivot->montant);
-        }
+        return $query->with([
+            'promotions' => fn($q) => $q
+                ->where('etat', 'En cours')
+                ->where('debut', '<=', now())
+                ->where('fin', '>=', now())
+                ->orderByDesc('id'),
+        ]);
     }
 
-    public function getPrixFinalAttribute(): string
+    // Helper interne : trouve la promo active SANS refaire de requêtes si déjà chargée
+    private function resolveActivePromotion(): ?Promotion
     {
-        // Récupération du taux de conversion et du symbole de devise en fonction de la locale de la session
-        $tauxConversion = session('devise') === 'EUR' ? Devise::whereType('EUR')->value('taux') : '';
-        // Conversion du prix en devise locale et formatage
-        $deviseSymbole = session('devise') === 'EUR' ? '€' : 'CFA';
-        // Si une promotion est associée au produit, calculer le prix avec réduction
-        if ($this->promotions->isNotEmpty()) {
-            $promo = $this->promotions()->first();
-            $prix = $this->prix * (1 - $promo->reduction / 100);
-
-            if (session('devise') === 'EUR') {
-                // Conversion du prix en devise locale et formatage
-                $prixFormat = number_format($prix / $tauxConversion, 2);
-            } elseif (session('devise') === 'CFA') {
-                $prixFormat = number_format($prix, 0, ',', ' ');
-            }
-
-            // Retour du prix formaté avec devise
-            return $prixFormat . ' ' . $deviseSymbole;
-        } else {
-            if (session('devise') === 'EUR') {
-                // Conversion du prix en devise locale et formatage
-                $prixFormat = number_format($this->prix / $tauxConversion, 2);
-            } elseif (session('devise') === 'CFA') {
-                $prixFormat = number_format($this->prix, 0, ',', ' ');
-            }
-
-            return $prixFormat . ' ' . $deviseSymbole;
+        if ($this->relationLoaded('promotions')) {
+            return $this->promotions->first(); // déjà filtrées via ->with()
         }
+
+        return $this->promotions()
+            ->where('etat', 'En cours')
+            ->where('debut', '<=', now())
+            ->where('fin', '>=', now())
+            ->orderByDesc('id')
+            ->first();
     }
 
-    // public function getPrixPromoAttribute()
+    /* ---------- Prix & promotions ---------- */
+
+    public function getPrixFinalBaseAttribute(): float
+    {
+        $prix = $this->prix;
+
+        if ($promo = $this->resolveActivePromotion()) {
+            $prix *= (1 - $promo->reduction / 100);
+        }
+
+        return $prix; // toujours en CFA brut
+    }
+
+    // public function getPrixFinalNumericAttribute(): float
     // {
-    //     // Récupération du taux de conversion et du symbole de devise en fonction de la locale de la session
-    //     $tauxConversion = session('devise') === 'EUR' ? Devise::whereType('EUR')->value('taux') : '';
-    //     $deviseSymbole = session('devise') === 'EUR' ? '€' : 'CFA';
+    //     $prix = $this->prix_final_base;
 
-    //     // Si une promotion est associée au produit, calculer le prix avec réduction
-    //     if ($this->promotions->isNotEmpty()) {
-    //         $promo = $this->promotions()->first();
-    //         $prix = $this->prix * (1 - $promo->reduction / 100);
-
-    //         if (session('devise') === 'EUR') {
-    //             // Conversion du prix en devise locale et formatage
-    //             return number_format($prix / $tauxConversion, 2) . ' ' . $deviseSymbole;
-    //         } elseif (session('devise') === 'CFA') {
-    //             // Retour du prix formaté avec le symbole de devise
-    //             return $prix . ' ' . $deviseSymbole;
-    //         }
-    //     } else {
-    //         // Sinon, le prix après réduction est zéro
-    //         return $prix = 0;
+    //     if (session('devise') === 'EUR') {
+    //         $taux = session('taux_eur', 1);
+    //         return round($prix / $taux, 2);
     //     }
+
+    //     return (float) $prix; // CFA
+    // }
+
+    // public function getPrixFinalAttribute(): string
+    // {
+    //     $value  = $this->prix_final_numeric;
+    //     $devise = session('devise');
+    //     $symbole = $devise === 'EUR' ? '€' : 'CFA';
+
+    //     return number_format(
+    //         $value,
+    //         $devise === 'EUR' ? 2 : 0,
+    //         ',',
+    //         ' '
+    //     ) . " $symbole";
+    // }
+
+    // public function getPrixFormatAttribute(): string
+    // {
+    //     if (session('devise') === 'EUR') {
+    //         $taux = session('taux_eur', 1);
+    //         $prix = number_format($this->prix / $taux, 2, ',', ' ');
+    //         return "{$prix} €";
+    //     }
+
+    //     $prix = number_format($this->prix, 0, ',', ' ');
+    //     return "{$prix} CFA";
     // }
 
     // public function getReductionAttribute(): int
     // {
-    //     // Vérifie s'il y a des promotions associées et si la première promotion est toujours valide
-    //     if ($this->promotions->isNotEmpty() && now() < $this->promotions()->first()->fin) {
-    //         // Récupère la première promotion active
-    //         $promo = $this->promotions()->first();
-
-    //         // Retourne la réduction de la promotion
-    //         return $promo->reduction;
-    //     }
-
-    //     // Si aucune promotion active n'est trouvée ou si la promotion est expirée
-    //     if ($this->promotions->isNotEmpty()) {
-    //         // Met à jour l'état de la promotion expirée
-    //         $this->promotions()->update(['etat' => 'Expiré']);
-    //     }
-
-    //     // Aucune réduction n'est applicable
-    //     return 0;
+    //     return $this->resolveActivePromotion()?->reduction ?? 0;
     // }
 
-    public function getReductionAttribute(): int
-    {
-        // utilisation de la relation déjà chargée en mémoire
-        $promo = $this->promotions
-            ->where('etat', 'En cours')
-            ->where('fin', '>=', now())
-            ->sortBy('fin')
-            ->first();
+    // public function getPrixPromoAttribute(): string
+    // {
+    //     $promo = $this->resolveActivePromotion();
 
-        return $promo?->reduction ?? 0;
-    }
+    //     if (! $promo) {
+    //         return $this->prix_format;
+    //     }
 
+    //     $prix = $this->prix * (1 - $promo->reduction / 100);
 
-    public function getPrixFormatAttribute(): string
-    {
-        // EUR
-        if (session('devise') === 'EUR') {
-            $taux = session('taux_eur') ?? 1;
-            $prix = number_format($this->prix / $taux, 2);
-            return "{$prix} €";
-        }
+    //     if (session('devise') === 'EUR') {
+    //         $taux = session('taux_eur', 1);
+    //         return number_format($prix / $taux, 2, ',', ' ') . ' €';
+    //     }
 
-        // CFA par défaut
-        $prix = number_format($this->prix, 0, ',', ' ');
-        return "{$prix} CFA";
-    }
+    //     return number_format($prix, 0, ',', ' ') . ' CFA';
+    // }
+
 
 
     /**

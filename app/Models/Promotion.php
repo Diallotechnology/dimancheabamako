@@ -53,6 +53,16 @@ class Promotion extends Model
         return $this->belongsToMany(Product::class);
     }
 
+    public function scopeActive($query)
+    {
+        return $query
+            ->where('etat', 'En cours')
+            ->where('debut', '<=', now())
+            ->where('fin', '>=', now());
+    }
+
+
+
     public function debutat(): string
     {
         return Carbon::parse($this->attributes['debut'])->format('d/m/Y H:i');

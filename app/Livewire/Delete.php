@@ -2,15 +2,16 @@
 
 namespace App\Livewire;
 
-use App\Helper\CartAction;
-
 use Livewire\Component;
+
+use App\Helper\CartAction;
+use Illuminate\Support\Collection;
 
 class Delete extends Component
 {
     use CartAction;
 
-    public int $id;
+    public Collection $row;
 
     public bool $isDeleting = false;
 
@@ -19,7 +20,7 @@ class Delete extends Component
         $this->isDeleting = true; // disparition instantanée dans l'UI
 
         // Suppression backend
-        $success = $this->cart->remove($this->id);
+        $success = $this->cart->remove($this->row['id']);
 
         if (!$success) {
             $this->isDeleting = false;

@@ -36,22 +36,31 @@ trait CartAction
 
     public function store(int $id)
     {
-        $product = Product::without('categorie')->findOrFail($id);
-        $product->append(['prix_final']);
-        $cartItems = $this->cart->getContent();
-        if ($cartItems->has($product->id)) {
+        $product = Product::with([
+            'promotions' => fn($q) => $q->active()->orderByDesc('id')->limit(1)
+        ])->active()
+            ->ByStock()
+            ->findOrFail($id);
+
+        if ($this->cart->has($product->id)) {
             flash()->warning('Produit existe déjà dans le panier.');
             return;
         }
+
         $this->cart->add(
-            $product->id,
-            $product->nom,
-            $product->getPrixFinal(),
-            $product->stock,
-            $product->poids,
-            $product->toArray()
+            id: $product->id,
+            name: $product->nom,
+            price: $product->prix_final_base,
+            stock: $product->stock,
+            poids: $product->poids,
+            attributes: [
+                'cover'      => $product->cover,
+                'reduction'  => $product->reduction ?? 0,
+            ]
         );
-        flash()->success('Produit ajouter au panier avec success.');
+
+        flash()->success('Produit ajouté au panier avec succès.');
+
 
         $this->dispatch('productCount')->to(Counter::class);
 

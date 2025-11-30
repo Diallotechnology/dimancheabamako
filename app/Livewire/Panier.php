@@ -10,6 +10,7 @@ use App\Helper\CartAction;
 use Livewire\Attributes\On;
 use Livewire\Attributes\Validate;
 use Illuminate\Support\Collection;
+use App\Helper\UsesProductViewModel;
 use Illuminate\Support\Facades\Auth;
 use Darryldecode\Cart\Facades\CartFacade;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
@@ -35,13 +36,10 @@ class Panier extends Component
     #[Validate('required')]
     public $password;
 
-    /** @var \Illuminate\Support\Collection */
-    public Collection $items;
     public int $count = 0;
     public int $TotalQuantity = 0;
     public string $Total = '0';
     public string $totalWeight = '0';
-    public Collection $country;
 
     public function login_submit()
     {
@@ -90,48 +88,32 @@ class Panier extends Component
 
         $this->shipping = $shipping;
     }
-    // public function GetShipping()
-    // {
-    //     // Retrieve the total weight of the products in the cart
-    //     $items = $this->cart->getContent();
-    //     $totalWeight = $items->getWeight();
-    //     // get zone id
-    //     $pays = Country::findOrFail($this->country_id);
-    //     try {
-    //         // Fetch the shipping rule based on the country ID, transport ID, and weight range
-    //         $this->shipping = Shipping::whereZoneId($pays->zone_id)
-    //             ->whereTransportId($this->transport_id)
-    //             ->whereRelation('poids', function ($query) use ($totalWeight) {
-    //                 $query->where('min', '<=', $totalWeight)->where('max', '>=', $totalWeight);
-    //             })->firstOrFail();
-    //     } catch (ModelNotFoundException $e) {
-    //         // Handle case where shipping rule is not found
-    //         return flash()->warning('Aucune correspondance trouvé!');
-    //     }
-    // }
-
 
     public function mount(): void
     {
         $this->refreshCart();
     }
-
     #[On('productUpdate')]
     #[On('productDelete')]
     public function refreshCart(): void
     {
-        $this->items = $this->cart->getContent();
-        $this->count = $this->cart->getCount();
+        $this->count         = $this->cart->getCount();
         $this->TotalQuantity = $this->cart->getTotalQuantity();
+        $this->totalWeight   = $this->getWeight(true);
 
         if (session('devise') === 'EUR') {
-            $tauxConversion = Devise::whereType('EUR')->value('taux');
-            $this->Total = number_format($this->cart->getTotal() / $tauxConversion, 2, ',', ' ');
-        } else { // par défaut CFA
+            $taux = session('taux_eur', 1);
+            $this->Total = number_format($this->cart->getTotal() / $taux, 2, ',', ' ');
+        } else {
             $this->Total = number_format($this->cart->getTotal(), 0, ',', ' ');
         }
+    }
 
-        $this->totalWeight = $this->getWeight(true);
-        $this->country = Country::select('id', 'nom')->get();
+    public function render()
+    {
+        $items = $this->cart->getContent();
+        $country = Country::select('id', 'nom')->get();
+
+        return view('livewire.panier', compact('items', 'country'));
     }
 }

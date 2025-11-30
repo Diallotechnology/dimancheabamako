@@ -2,14 +2,17 @@
 
 namespace App\Providers;
 
+use App\Models\Product;
+use App\Helper\ProductView;
+use App\Service\PriceService;
 use App\Service\CategoryService;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\ServiceProvider;
-use Opcodes\LogViewer\Facades\LogViewer;
-use Illuminate\Auth\Notifications\VerifyEmail;
-use Illuminate\Notifications\Messages\MailMessage;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -26,17 +29,26 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        if (session('devise') === 'EUR') {
-            if (session()->missing('taux_eur')) {
-                $taux = Cache::rememberForever('taux_eur', function () {
-                    return DB::table('devises')->where('type', 'EUR')->value('taux');
-                });
+        Model::automaticallyEagerLoadRelationships();
+        Model::shouldBeStrict(! app()->isProduction());
+        URL::forceHttps(app()->isProduction());
 
-                session(['taux_eur' => $taux]);
-            }
-        }
+        // Stocke en cache et en session une seule fois
+        $taux = Cache::rememberForever('taux_eur', function () {
+            return DB::table('devises')->where('type', 'EUR')->value('taux');
+        });
+
+        session(['taux_eur' => $taux]);
+
+        // Optionnel : pour Blade uniquement
+        View::share('taux_eur', $taux);
 
         View::share('categories', app(CategoryService::class)->all());
+
+        Collection::macro('forView', function () {
+            $pricing = app(PriceService::class);
+            return $this->map(fn(Product $model) => new ProductView($model, $pricing));
+        });
 
         // VerifyEmail::toMailUsing(function (object $notifiable, string $url) {
         //     return (new MailMessage)

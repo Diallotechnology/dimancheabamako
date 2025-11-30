@@ -2,24 +2,28 @@
 
 namespace App\Livewire;
 
-use App\Helper\CartAction;
-use Illuminate\Database\Eloquent\Collection;
 use Livewire\Component;
+use App\Helper\CartAction;
+use Illuminate\Support\Collection;
 
 class CartItem extends Component
 {
     use CartAction;
 
-    public Collection $items;
-
     public bool $hot = false;
-
     public bool $news = false;
 
-    public function mount($items)
+    /** @var array<int, array<string, mixed>> */
+    public array $items = [];
+
+    public function mount(array $items, bool $hot = false, bool $news = false): void
     {
+        // Livewire ne veut que des arrays / scalaires
         $this->items = $items;
+        $this->hot   = $hot;
+        $this->news  = $news;
     }
+
 
     public function add(int $id)
     {

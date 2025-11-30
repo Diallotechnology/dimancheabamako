@@ -31,7 +31,7 @@ class Produit extends Component
 
     public function render()
     {
-        $rows = Product::query()->with('promotions')->ByStock()->when($this->search, function ($query) {
+        $rows = Product::query()->with('promotions', 'categorie:id,nom')->ByStock()->when($this->search, function ($query) {
             $query->whereAny(['nom', 'color'], 'LIKE', '%' . $this->search . '%');
         })->when($this->cat, function ($query) {
             $query->where('categorie_id', $this->cat->id);

@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Category;
-use App\Models\Product;
 use App\Models\Slide;
+use App\Models\Product;
+use App\Models\Category;
+use App\Helper\ProductView;
+use App\Service\PriceService;
 
 class LinkController extends Controller
 {
@@ -13,15 +15,24 @@ class LinkController extends Controller
      */
     public function home(?string $token = null)
     {
-        $query = Product::query()->with('promotions')->active()->ByStock();
-        // Récupération des derniers produits
-        $latest = $query->take(10)->latest()->get();
-        // Récupération des produits populaires
-        $popular = $query->where('favoris', 1)->get();
-        // add custom attributes
-        $popular->append(['prix_promo', 'prix_format', 'reduction']);
-        $latest->append(['prix_promo', 'prix_format', 'reduction']);
-        $slide = Slide::all();
+        $pricing = app(PriceService::class);
+
+        $baseQuery = Product::query()
+            ->with([
+                'promotions' => fn($q) => $q->active()->orderByDesc('id'),
+                'categorie:id,nom'
+            ])
+            ->active()
+            ->ByStock();
+
+        $latestModels = (clone $baseQuery)->latest()->take(10)->get();
+        $popularModels = (clone $baseQuery)->where('favoris', 1)->get();
+
+        $latest  = ProductView::collection($latestModels, $pricing);
+        $popular = ProductView::collection($popularModels, $pricing);
+
+
+        $slide = Slide::select('id', 'text_one', 'text_two', 'paragraph', 'image')->get();
 
         return view('index', compact('popular', 'latest', 'slide'));
     }
