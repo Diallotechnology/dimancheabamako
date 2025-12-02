@@ -15,35 +15,43 @@ const props = defineProps({
         type: Object,
         default: () => ({}),
     },
-    filter: {
+    order_status: {
         type: Object,
         default: () => ({}),
     },
 });
-let search = ref(props.filter.search);
-let date = ref(props.filter.date);
-const Reset = () => {
-    date.value = "";
-    search.value = "";
+
+const filters = ref({
+    search: "",
+    date: "",
+    client: "",
+    status: "",
+});
+
+// debounce propre
+let timeout = null;
+watch(
+    filters,
+    (val) => {
+        clearTimeout(timeout);
+        timeout = setTimeout(() => {
+            router.get("/admin/order", val, {
+                preserveState: true,
+                replace: true,
+            });
+        }, 450);
+    },
+    { deep: true }
+);
+
+const resetFilters = () => {
+    filters.value = {
+        search: "",
+        date: "",
+        client: "",
+        status: "",
+    };
 };
-watch(search, (value) => {
-    setTimeout(() => {
-        router.get(
-            "/admin/order",
-            { search: value },
-            { preserveState: true, replace: true }
-        );
-    }, 600);
-});
-watch(date, (value) => {
-    setTimeout(() => {
-        router.get(
-            "/admin/order",
-            { date: value },
-            { preserveState: true, replace: true }
-        );
-    }, 600);
-});
 </script>
 
 <template>
@@ -60,22 +68,49 @@ watch(date, (value) => {
                 <div class="row gx-3">
                     <div class="col-lg-4 col-md-6 me-auto">
                         <input
-                            v-model="search"
+                            v-model="filters.search"
                             type="text"
                             placeholder="Recherche..."
                             class="form-control"
                         />
                     </div>
+                    <div class="col-md-2">
+                        <select class="form-select" v-model="filters.client">
+                            <option value="">Tous les clients</option>
+                            <option
+                                v-for="item in client"
+                                :key="item.id"
+                                :value="item.id"
+                            >
+                                {{ item.nom }}
+                            </option>
+                        </select>
+                    </div>
+                    <div class="col-md-2">
+                        <select class="form-select" v-model="filters.status">
+                            <option value="">Ventes Status</option>
+                            <option
+                                v-for="item in order_status"
+                                :key="item.id"
+                                :value="item.id"
+                            >
+                                {{ item.name }}
+                            </option>
+                        </select>
+                    </div>
+
                     <div class="col-md-2 col-6">
                         <input
                             type="date"
-                            value=""
-                            v-model="date"
+                            v-model="filters.date"
                             class="form-control"
                         />
                     </div>
                     <div class="col-auto">
-                        <button @click="Reset" class="btn btn-danger rounded">
+                        <button
+                            @click="resetFilters"
+                            class="btn btn-danger rounded"
+                        >
                             Reset<i
                                 class="material-icons md-delete_forever md-18"
                             ></i>
@@ -144,11 +179,15 @@ watch(date, (value) => {
                         </td>
                         <td>{{ row.created_at }}</td>
                         <td>
-                            <ButtonShow :href="route('order.show', row.id)" />
-                            <!-- <ButtonEdit :href="route('order.edit', row.id)" /> -->
-                            <ButtonDelete
-                                :url="route('order.destroy', row.id)"
-                            />
+                            <div class="d-flex gap-2">
+                                <ButtonShow
+                                    :href="route('order.show', row.id)"
+                                />
+                                <!-- <ButtonEdit :href="route('order.edit', row.id)" /> -->
+                                <ButtonDelete
+                                    :url="route('order.destroy', row.id)"
+                                />
+                            </div>
                         </td>
                     </tr>
                 </tbody>

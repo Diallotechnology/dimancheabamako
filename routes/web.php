@@ -65,7 +65,7 @@ Route::prefix('admin')->middleware('auth', 'verified')->group(function () {
         Route::resource('order', OrderController::class)->except('index', 'create');
         Route::get('product/favoris/{data}/{product_id}', [ProductController::class, 'favoris_update'])->name('product.favori');
         Route::resource('category', CategoryController::class)->except('index', 'create', 'show');
-        Route::resource('product', ProductController::class)->except('index', 'create');
+        Route::resource('product', ProductController::class)->except('index');
         Route::controller(AdminController::class)->group(function () {
             Route::get('dashboard', 'dashboard')->name('dashboard');
             Route::get('order', 'order')->name('order');

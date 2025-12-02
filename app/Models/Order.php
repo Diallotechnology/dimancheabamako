@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enum\ProductStatus;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -64,14 +65,11 @@ class Order extends Model
      *
      * @var array
      */
-    protected $fillable = ['client_id', 'trans_ref', 'trans_state', 'reference', 'adresse', 'postal', 'ville', 'country_id', 'transport_id', 'etat', 'poids', 'shipping'];
+    protected $fillable = ['client_id', 'trans_ref', 'trans_state', 'reference', 'adresse', 'postal', 'ville', 'country_id', 'transport_id', 'etat', 'poids', 'shipping', 'delai', 'metrage'];
 
-    /**
-     * The relationships that should always be loaded.
-     *
-     * @var array
-     */
-    protected $with = ['client', 'products', 'country'];
+
+
+
 
     /**
      * The products that belong to the Order

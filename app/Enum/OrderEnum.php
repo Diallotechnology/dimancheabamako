@@ -10,4 +10,14 @@ enum OrderEnum: string
     case EN_ATTENTE = 'En attente';
     case EN_COURS = 'En cours';
     case TERMINE = 'Terminé';
+
+    public static function all(): array
+    {
+        return array_map(function (self $role) {
+            return [
+                'id' => $role->value,
+                'name' => $role->value,
+            ];
+        }, self::cases());
+    }
 }

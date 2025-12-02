@@ -176,6 +176,10 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder|Order whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Order whereVille($value)
  * @mixin \Eloquent
+ * @property int|null $delai
+ * @property int|null $metrage
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Order whereDelai($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Order whereMetrage($value)
  */
 	class Order extends \Eloquent {}
 }
@@ -190,7 +194,7 @@ namespace App\Models{
  * @property string $lien
  * @property int $montant
  * @property string $etat
- * @property string $created_at
+ * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @method static \Illuminate\Database\Eloquent\Builder<static>|PayLink newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|PayLink newQuery()
@@ -318,8 +322,12 @@ namespace App\Models{
  * @method static Builder|Product whereVideo($value)
  * @mixin \Eloquent
  * @property string|null $slug
+ * @property int $status
+ * @property-read float $prix_final_base
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Product active()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Product whereSlug($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Product whereStatus($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Product withActivePromotions()
  */
 	class Product extends \Eloquent {}
 }
@@ -349,6 +357,7 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder|Promotion whereReduction($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Promotion whereUpdatedAt($value)
  * @mixin \Eloquent
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Promotion active()
  */
 	class Promotion extends \Eloquent {}
 }

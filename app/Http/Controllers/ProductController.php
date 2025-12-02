@@ -13,6 +13,17 @@ class ProductController extends Controller
 {
     use DeleteAction;
 
+    public function create()
+    {
+        $category = Category::select('id', 'nom')->get()->map(function ($row) {
+            return [
+                'label' => "$row->nom",
+                'value' => "$row->id",
+            ];
+        });
+        return Inertia::render('Admin/Product/Create', compact('category'));
+    }
+
     /**
      * Store a newly created resource in storage.
      */
@@ -56,7 +67,8 @@ class ProductController extends Controller
     {
         $category = Category::all()->map(function ($row) {
             return [
-                'label' => "$row->nom", 'value' => "$row->id",
+                'label' => "$row->nom",
+                'value' => "$row->id",
             ];
         });
         $product->load('images');

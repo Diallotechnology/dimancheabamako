@@ -8,7 +8,8 @@ import TextArea from "@/Components/TextArea.vue";
 import notify, { Price_format } from "@/helper";
 import Pagination from "@/Components/Pagination.vue";
 import { ref, watch } from "vue";
-import { Head, router, useForm } from "@inertiajs/vue3";
+import { Head, Link, router, useForm } from "@inertiajs/vue3";
+
 const props = defineProps({
     rows: {
         required: true,
@@ -20,59 +21,45 @@ const props = defineProps({
         type: Object,
         default: () => ({}),
     },
-    filter: {
-        required: true,
-        type: Object,
-        default: () => ({}),
-    },
 });
 
-let search = ref(props.filter.search);
-const Reset = () => {
-    search.value = "";
-};
-watch(search, (value) => {
-    setTimeout(() => {
-        router.get(
-            "/admin/product",
-            { search: value },
-            { preserveState: true, replace: true }
-        );
-    }, 600);
-});
-
-const form = useForm({
-    categorie_id: "",
-    reference: "",
-    nom: "",
+const filters = ref({
+    search: "",
+    category: "",
+    favoris: "",
+    status: "",
     color: "",
     taille: "",
-    description: "",
-    resume: "",
-    poids: "",
-    prix: "",
-    favoris: 0,
-    stock: 1,
-    cover: "",
-    image: [],
-    video: null,
+    price_min: "",
+    price_max: "",
+    sort: "",
 });
 
-const submit = () => {
-    form.post(route("product.store"), {
-        forceFormData: true,
-        onSuccess: () => {
-            form.reset();
-            router.reload();
-            form.image = [];
-            form.cover = "";
-            notify("Produit ajouter avec success !", true);
-        },
-        onError: () => {
-            notify(false);
-        },
-    });
+// debounce propre
+let timeout = null;
+watch(
+    filters,
+    (val) => {
+        clearTimeout(timeout);
+        timeout = setTimeout(() => {
+            router.get("/admin/product", val, {
+                preserveState: true,
+                replace: true,
+            });
+        }, 450);
+    },
+    { deep: true }
+);
+
+const resetFilters = () => {
+    filters.value = {
+        search: "",
+        category: "",
+        favoris: "",
+        status: "",
+    };
 };
+
 const favori = (url) => {
     axios
         .get(url)
@@ -95,32 +82,60 @@ const favori = (url) => {
                 <h2 class="content-title card-title">Liste des produits</h2>
             </div>
             <div>
-                <a
-                    href="#"
+                <Link
+                    :href="route('product.create')"
                     class="btn btn-primary btn-sm rounded"
                     type="button"
-                    data-bs-toggle="modal"
-                    data-bs-target="#exampleModal"
                 >
                     <i class="material-icons md-plus md-18"></i>
 
-                    Nouveau</a
+                    Nouveau</Link
                 >
             </div>
         </div>
         <div class="card mb-4">
             <header class="card-header">
                 <div class="row gx-3">
-                    <div class="col-lg-4 col-md-6 me-auto">
+                    <div class="col-md-4 mb-lg-0 mb-15 me-auto">
                         <input
                             type="text"
-                            v-model="search"
-                            placeholder="Recherche..."
+                            placeholder="Search..."
+                            v-model="filters.search"
                             class="form-control"
                         />
                     </div>
+                    <div class="col-md-2">
+                        <select class="form-select" v-model="filters.category">
+                            <option value="">Toutes les catégories</option>
+                            <option
+                                v-for="item in category"
+                                :key="item.id"
+                                :value="item.id"
+                            >
+                                {{ item.nom }}
+                            </option>
+                        </select>
+                    </div>
+                    <div class="col-md-2">
+                        <select class="form-select" v-model="filters.favoris">
+                            <option value="">Produits favoris</option>
+                            <option value="1">OUI</option>
+                            <option value="0">NO</option>
+                        </select>
+                    </div>
+                    <div class="col-md-2">
+                        <select class="form-select" v-model="filters.status">
+                            <option value="">Produits Status</option>
+                            <option value="1">Sur commande</option>
+                            <option value="0">Non</option>
+                        </select>
+                    </div>
+                    <div class="col-md-2"></div>
                     <div class="col-auto">
-                        <button @click="Reset" class="btn btn-danger rounded">
+                        <button
+                            @click="resetFilters"
+                            class="btn btn-danger rounded"
+                        >
                             Reset<i
                                 class="material-icons md-delete_forever md-18"
                             ></i>
@@ -128,6 +143,7 @@ const favori = (url) => {
                     </div>
                 </div>
             </header>
+
             <!-- card-header end// -->
             <div class="card-body">
                 <div
@@ -204,191 +220,6 @@ const favori = (url) => {
         </div>
         <!-- card end// -->
         <Pagination :pagination="rows" />
-        <Modal name="Formulaire de nouveau produit">
-            <form @submit.prevent="submit">
-                <div class="row">
-                    <div class="col-md-6">
-                        <Input
-                            input_type="text"
-                            place="le nom du produit"
-                            label="nom (Max 255 caractères)"
-                            v-model="form.nom"
-                            :message="form.errors.nom"
-                            required
-                        />
-                    </div>
-                    <div class="col-md-6">
-                        <Input
-                            input_type="text"
-                            place="la reference du produit"
-                            label="reference"
-                            v-model="form.reference"
-                            :message="form.errors.reference"
-                            required
-                        />
-                    </div>
-                    <div class="col-md-6">
-                        <Select2
-                            label="categorie"
-                            :message="form.errors.categorie_id"
-                        >
-                            <VueSelect
-                                placeholder="selectionner"
-                                v-model="form.categorie_id"
-                                :options="category"
-                            />
-                        </Select2>
-                    </div>
-
-                    <div class="col-md-6">
-                        <Input
-                            input_type="text"
-                            place="la couleur du produit"
-                            label="Couleur"
-                            v-model="form.color"
-                            :message="form.errors.color"
-                        />
-                    </div>
-                    <div class="col-md-6">
-                        <Input
-                            input_type="text"
-                            place="la taille du produit"
-                            label="taille en M (2M)"
-                            v-model="form.taille"
-                            :message="form.errors.taille"
-                        />
-                    </div>
-                    <div class="col-md-6">
-                        <Input
-                            input_type="text"
-                            label="poids en Kg (1.5)"
-                            place="le poids du produit"
-                            v-model="form.poids"
-                            :message="form.errors.poids"
-                            required
-                        />
-                    </div>
-                    <div class="col-md-6">
-                        <Input
-                            input_type="number"
-                            label="prix en CFA"
-                            place="le prix du produit"
-                            v-model="form.prix"
-                            :message="form.errors.prix"
-                            required
-                        />
-                    </div>
-                    <div class="col-md-6">
-                        <label for="">Favoris</label>
-                        <select v-model="form.favoris" class="form-select">
-                            <option value="1">OUI</option>
-                            <option value="0">NON</option>
-                        </select>
-                    </div>
-                    <div class="col-md-6">
-                        <Input
-                            input_type="number"
-                            label="stock"
-                            place="le stock du produit"
-                            v-model="form.stock"
-                            :message="form.errors.stock"
-                            required
-                        />
-                    </div>
-                    <div class="col-md-6">
-                        <div class="mb-4">
-                            <label class="text-uppercase form-label"
-                                >Cover (600X600)</label
-                            >
-                            <input
-                                class="form-control"
-                                name="cover"
-                                @input="form.cover = $event.target.files[0]"
-                                type="file"
-                            />
-                            <div v-show="form.errors.cover">
-                                <p class="text-sm text-danger">
-                                    {{ form.errors.cover }}
-                                </p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-6">
-                        <div class="mb-4">
-                            <label class="text-uppercase form-label"
-                                >Images du produit 600x600</label
-                            >
-                            <input
-                                class="form-control"
-                                name="image"
-                                multiple
-                                @input="form.image = $event.target.files"
-                                type="file"
-                            />
-                            <div v-show="form.errors.image">
-                                <p class="text-sm text-danger">
-                                    {{ form.errors.image }}
-                                </p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-6">
-                        <div class="mb-4">
-                            <label class="text-uppercase form-label"
-                                >Video Faculatif</label
-                            >
-                            <input
-                                class="form-control"
-                                name="video"
-                                @input="form.video = $event.target.files[0]"
-                                type="file"
-                            />
-                            <div v-show="form.errors.video">
-                                <p class="text-sm text-danger">
-                                    {{ form.errors.video }}
-                                </p>
-                            </div>
-                        </div>
-                    </div>
-                    <TextArea
-                        place="la description courte du produit"
-                        label="description courte"
-                        v-model="form.resume"
-                        :message="form.errors.resume"
-                        required
-                    />
-                    <TextArea
-                        place="la description du produit"
-                        label="description"
-                        v-model="form.description"
-                        :message="form.errors.description"
-                    />
-                </div>
-                <progress
-                    v-if="form.progress"
-                    :value="form.progress.percentage"
-                    max="100"
-                >
-                    {{ form.progress.percentage }}%
-                </progress>
-                <div class="modal-footer">
-                    <button
-                        type="button"
-                        class="btn btn-danger rounded"
-                        data-bs-dismiss="modal"
-                    >
-                        Fermer
-                    </button>
-                    <button
-                        :class="{ 'opacity-25': form.processing }"
-                        :disabled="form.processing"
-                        type="submit"
-                        class="btn btn-primary rounded"
-                    >
-                        Valider
-                    </button>
-                </div>
-            </form>
-        </Modal>
+        <Modal name="Formulaire de nouveau produit"> </Modal>
     </AuthenticatedLayout>
 </template>

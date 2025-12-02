@@ -33,6 +33,7 @@ class UpdateProductRequest extends FormRequest
             'resume' => 'required',
             'poids' => 'required|string',
             'favoris' => 'required|boolean',
+            'status' => 'required|boolean',
             'image' => 'nullable|array',
             'prix' => 'required|integer',
             'stock' => 'required|integer',

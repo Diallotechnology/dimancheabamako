@@ -1,5 +1,6 @@
 <?php
 
+use App\Enum\ProductStatus;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -11,46 +12,45 @@ return new class extends Migration
      */
     public function up(): void
     {
+        // 1️⃣ Ajout des colonnes (pas de if/hasColumn)
         Schema::table('products', function (Blueprint $table) {
-            // 1️⃣ Ajouter le champ status si non existant
-            if (!Schema::hasColumn('products', 'status')) {
-                $table->boolean('status')->default(true)->after('prix'); // ajuste la colonne selon ta structure
-            }
+            $table->boolean('status')->default(false)->after('prix');
         });
 
-        // 2️⃣ Modifier la contrainte sur categorie_id
-        // On doit supprimer la contrainte FK existante avant d'en recréer une nouvelle
-        DB::statement('ALTER TABLE products DROP FOREIGN KEY products_categorie_id_foreign');
+        // 2️⃣ Correction de la contrainte de categories
+        Schema::table('products', function (Blueprint $table) {
+            // drop constraint avec nom généré automatiquement par Laravel
+            $table->dropForeign(['categorie_id']);
+        });
 
         Schema::table('products', function (Blueprint $table) {
-            $table->foreignId('categorie_id')
-                ->nullable() // devient nullable sinon nullOnDelete ne fonctionnera pas
-                ->change();
+            $table->foreignId('categorie_id')->nullable()->change();
         });
 
         Schema::table('products', function (Blueprint $table) {
             $table->foreign('categorie_id')
                 ->references('id')->on('categories')
                 ->cascadeOnUpdate()
-                ->nullOnDelete(); // 🔥 empêche la suppression du produit lors de delete catégorie
+                ->nullOnDelete();
         });
     }
 
-    /**
-     * Reverse the migrations.
-     */
     public function down(): void
     {
-        // rollback sécurisé
+        // 1️⃣ Supprimer les colonnes ajoutées
         Schema::table('products', function (Blueprint $table) {
-            $table->dropColumn('status');
+            $table->dropColumn(['status']);
         });
 
-        // restaurer la FK en cascade si rollback
-        DB::statement('ALTER TABLE products DROP FOREIGN KEY products_categorie_id_foreign');
+        // 2️⃣ Restaurer la FK initiale
+        Schema::table('products', function (Blueprint $table) {
+            $table->dropForeign(['categorie_id']);
+        });
+
         Schema::table('products', function (Blueprint $table) {
             $table->foreignId('categorie_id')->nullable(false)->change();
         });
+
         Schema::table('products', function (Blueprint $table) {
             $table->foreign('categorie_id')
                 ->references('id')->on('categories')

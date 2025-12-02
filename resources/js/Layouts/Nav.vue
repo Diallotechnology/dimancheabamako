@@ -15,12 +15,54 @@
                 </Link>
             </NavLink>
 
-            <NavLink :active="route().current('product')">
-                <Link class="menu-link" :href="route('product')">
+            <li
+                class="menu-item has-submenu"
+                :class="{ active: route().current('product') }"
+            >
+                <a class="menu-link" href="#">
                     <i class="icon material-icons md-shopping_bag"></i>
                     <span class="text">Produits</span>
-                </Link>
-            </NavLink>
+                </a>
+
+                <div class="submenu">
+                    <Link
+                        :href="route('product', { status: 1 })"
+                        :class="{
+                            active: $page.props.ziggy?.query?.status == 1,
+                        }"
+                    >
+                        Produits sur commande
+                    </Link>
+
+                    <Link
+                        :href="route('product', { status: 0 })"
+                        :class="{
+                            active: $page.props.ziggy?.query?.status == 0,
+                        }"
+                    >
+                        Produits en stock
+                    </Link>
+
+                    <Link
+                        :href="route('product', { favoris: 1 })"
+                        :class="{
+                            active: $page.props.ziggy?.query?.favoris == 1,
+                        }"
+                    >
+                        Favoris
+                    </Link>
+
+                    <Link
+                        :href="route('product', { favoris: 0 })"
+                        :class="{
+                            active: $page.props.ziggy?.query?.favoris == 0,
+                        }"
+                    >
+                        Tous les produits
+                    </Link>
+                </div>
+            </li>
+
             <NavLink :active="route().current('order')">
                 <Link class="menu-link" :href="route('order')">
                     <i class="icon material-icons md-shopping_cart"></i>
