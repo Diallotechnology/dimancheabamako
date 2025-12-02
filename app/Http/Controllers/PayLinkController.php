@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Controllers;
 
 use App\Helper\DeleteAction;
@@ -8,7 +10,9 @@ use App\Http\Requests\StorePayLinkRequest;
 use App\Models\PayLink;
 use Inertia\Inertia;
 
-class PayLinkController extends Controller
+use function Flasher\Prime\flash;
+
+final class PayLinkController extends Controller
 {
     use DeleteAction, OrderAPI;
 
@@ -18,7 +22,7 @@ class PayLinkController extends Controller
     public function store(StorePayLinkRequest $request)
     {
 
-        $montant = $request->montant;
+        $montant = $request->integer('montant');
         $currencyCode = 'XOF';
         $emailAddress = '';
         $redirectUrl = route('home');
@@ -27,7 +31,7 @@ class PayLinkController extends Controller
         $accessToken = $this->getAccessToken();
         if ($accessToken) {
             $postData = $this->prepareTransactionData($montant, $currencyCode, $emailAddress, $redirectUrl, $cancelUrl, 'fr');
-            $response = $this->createOrder($accessToken, $postData);
+            $response = $this->createOrder($postData, $accessToken);
             if ($response && isset($response['_links']['payment']['href'])) {
                 $link = $response['_links']['payment']['href'];
                 // save temporaly order
@@ -35,7 +39,6 @@ class PayLinkController extends Controller
                 $data['lien'] = $link;
                 $data['trans_ref'] = $response['reference'];
                 PayLink::create($data);
-
             }
         }
 
@@ -52,16 +55,15 @@ class PayLinkController extends Controller
         $accessToken = $this->getAccessToken();
         if ($accessToken) {
             $postData = $this->prepareTransactionData($paylink->montant, $currencyCode, $emailAddress, $redirectUrl, $cancelUrl);
-            $response = $this->createOrder($accessToken, $postData);
+            $response = $this->createOrder($postData, $accessToken);
             if ($response && isset($response['_links']['payment']['href'])) {
                 $link = $response['_links']['payment']['href'];
                 // save temporaly order
                 $paylink->update(['lien' => $link, 'trans_ref' => $response['reference'], 'etat' => 'Pending']);
-
             }
         }
 
-        return \back();
+        flash()->success('Le lien de paiement a été régénéré avec succès.');
     }
 
     /**
@@ -87,13 +89,12 @@ class PayLinkController extends Controller
 
             $accessToken = $this->getAccessToken();
             if ($accessToken) {
-                $postData = $this->prepareTransactionData($request->montant, $currencyCode, $emailAddress, $redirectUrl, $cancelUrl);
-                $response = $this->createOrder($accessToken, $postData);
+                $postData = $this->prepareTransactionData($request->integer('montant'), $currencyCode, $emailAddress, $redirectUrl, $cancelUrl);
+                $response = $this->createOrder($postData, $accessToken);
                 if ($response && isset($response['_links']['payment']['href'])) {
                     $link = $response['_links']['payment']['href'];
                     // save temporaly order
                     $paylink->update(['lien' => $link, 'trans_ref' => $response['reference']]);
-
                 }
             }
         }

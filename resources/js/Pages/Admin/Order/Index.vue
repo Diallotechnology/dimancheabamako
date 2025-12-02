@@ -4,8 +4,9 @@ import { Head, router } from "@inertiajs/vue3";
 import ButtonDelete from "@/Components/ButtonDelete.vue";
 import Table from "@/Components/Table.vue";
 import { Price_format } from "@/helper";
-import { ref, watch } from "vue";
+import { useFilter } from "@/Composables/useFilter";
 import ButtonShow from "@/Components/ButtonShow.vue";
+
 const props = defineProps({
     rows: {
         type: Object,
@@ -21,37 +22,15 @@ const props = defineProps({
     },
 });
 
-const filters = ref({
-    search: "",
-    date: "",
-    client: "",
-    status: "",
-});
-
-// debounce propre
-let timeout = null;
-watch(
-    filters,
-    (val) => {
-        clearTimeout(timeout);
-        timeout = setTimeout(() => {
-            router.get("/admin/order", val, {
-                preserveState: true,
-                replace: true,
-            });
-        }, 450);
-    },
-    { deep: true }
-);
-
-const resetFilters = () => {
-    filters.value = {
+const { filters, resetFilters } = useFilter(
+    {
         search: "",
         date: "",
         client: "",
         status: "",
-    };
-};
+    },
+    "/admin/order"
+);
 </script>
 
 <template>

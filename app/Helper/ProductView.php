@@ -12,17 +12,17 @@ final class ProductView
     public static function fromModel(Product $product, PriceService $pricing): array
     {
         return [
-            'id'           => $product->id,
-            'slug'         => $product->slug,
-            'nom'          => $product->nom,
-            'reference'    => $product->reference,
-            'cover'        => $product->cover,
-            'taille'       => $product->taille,
-            'color'        => $product->color,
-            'categorie'    => $product->categorie?->nom,
-            'reduction'    => $product->reduction ?? 0,
-            'prix_promo'   => $pricing->formatPromo($product),   // string prêt à afficher
-            'prix_format'  => $pricing->formatBase($product),    // string prêt à afficher
+            'id' => $product->id,
+            'slug' => $product->slug,
+            'nom' => $product->nom,
+            'reference' => $product->reference,
+            'cover' => $product->cover,
+            'taille' => $product->taille,
+            'color' => $product->color,
+            'categorie' => $product->categorie?->nom,
+            'reduction' => $product->reduction ?? 0,
+            'prix_promo' => $pricing->formatPromo($product),   // string prêt à afficher
+            'prix_format' => $pricing->formatBase($product),    // string prêt à afficher
         ];
     }
 

@@ -4,25 +4,20 @@ declare(strict_types=1);
 
 namespace App\Helper;
 
+use App\Livewire\Counter;
 use App\Models\Country;
 use App\Models\Product;
 use App\Models\Shipping;
-use App\Livewire\Counter;
 use App\Service\CartService;
-use App\Rules\ValidShoppingCart;
-use Darryldecode\Cart\Facades\CartFacade;
-use Jantinnerezo\LivewireAlert\LivewireAlert;
 
 trait CartAction
 {
-
     protected CartService $cart;
 
     public function initializeCartAction(CartService $cart): void
     {
         $this->cart = $cart;
     }
-
 
     /**
      * Remove the specified resource from storage.
@@ -37,13 +32,14 @@ trait CartAction
     public function store(int $id)
     {
         $product = Product::with([
-            'promotions' => fn($q) => $q->active()->orderByDesc('id')->limit(1)
+            'promotions' => fn ($q) => $q->active()->orderByDesc('id')->limit(1),
         ])->active()
             ->ByStock()
             ->findOrFail($id);
 
         if ($this->cart->has($product->id)) {
             flash()->warning('Produit existe déjà dans le panier.');
+
             return;
         }
 
@@ -54,13 +50,12 @@ trait CartAction
             stock: $product->stock,
             poids: $product->poids,
             attributes: [
-                'cover'      => $product->cover,
-                'reduction'  => $product->reduction ?? 0,
+                'cover' => $product->cover,
+                'reduction' => $product->reduction ?? 0,
             ]
         );
 
         flash()->success('Produit ajouté au panier avec succès.');
-
 
         $this->dispatch('productCount')->to(Counter::class);
 
@@ -76,13 +71,14 @@ trait CartAction
 
                 // Convertir les chaînes avec virgule → float (1,23 → 1.23)
                 if (is_string($weight)) {
-                    $weight = floatval(str_replace(',', '.', $weight));
+                    $weight = (float) (str_replace(',', '.', $weight));
                 }
 
                 return $weight * $item['quantity'];
             })
             ->sum();
-        return  $format ? number_format($total, 2, '.', ' ') . ' kg' : $total;
+
+        return $format ? number_format($total, 2, '.', ' ').' kg' : $total;
     }
 
     public function getShippingCost(int $countryId, int $transportId): ?Shipping

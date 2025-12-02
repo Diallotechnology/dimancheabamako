@@ -4,11 +4,10 @@ import ButtonEdit from "@/Components/ButtonEdit.vue";
 import ButtonDelete from "@/Components/ButtonDelete.vue";
 import ButtonShow from "@/Components/ButtonShow.vue";
 import Modal from "@/Components/Modal.vue";
-import TextArea from "@/Components/TextArea.vue";
 import notify, { Price_format } from "@/helper";
 import Pagination from "@/Components/Pagination.vue";
-import { ref, watch } from "vue";
 import { Head, Link, router, useForm } from "@inertiajs/vue3";
+import { useFilter } from "@/Composables/useFilter";
 
 const props = defineProps({
     rows: {
@@ -23,42 +22,15 @@ const props = defineProps({
     },
 });
 
-const filters = ref({
-    search: "",
-    category: "",
-    favoris: "",
-    status: "",
-    color: "",
-    taille: "",
-    price_min: "",
-    price_max: "",
-    sort: "",
-});
-
-// debounce propre
-let timeout = null;
-watch(
-    filters,
-    (val) => {
-        clearTimeout(timeout);
-        timeout = setTimeout(() => {
-            router.get("/admin/product", val, {
-                preserveState: true,
-                replace: true,
-            });
-        }, 450);
-    },
-    { deep: true }
-);
-
-const resetFilters = () => {
-    filters.value = {
+const { filters, resetFilters } = useFilter(
+    {
         search: "",
         category: "",
         favoris: "",
         status: "",
-    };
-};
+    },
+    "/admin/product"
+);
 
 const favori = (url) => {
     axios

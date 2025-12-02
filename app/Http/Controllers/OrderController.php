@@ -1,32 +1,35 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Controllers;
 
-use App\Models\User;
-use Inertia\Inertia;
-use App\Models\Order;
-use App\Enum\RoleEnum;
-use App\Models\Client;
 use App\Enum\OrderEnum;
-use App\Models\Country;
-use App\Helper\OrderAPI;
-use App\Models\Shipping;
+use App\Enum\RoleEnum;
 use App\Helper\CartAction;
 use App\Helper\DeleteAction;
-use Illuminate\Http\Request;
-use App\Jobs\RegisterMailJob;
-use Illuminate\Support\Carbon;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Hash;
+use App\Helper\OrderAPI;
 use App\Http\Requests\StoreOrderRequest;
 use App\Http\Requests\UpdateOrderRequest;
+use App\Jobs\RegisterMailJob;
+use App\Models\Client;
+use App\Models\Country;
+use App\Models\Order;
+use App\Models\Shipping;
+use App\Models\User;
 use Darryldecode\Cart\Facades\CartFacade;
+use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Log;
+use Inertia\Inertia;
 
-class OrderController extends Controller
+use function Flasher\Prime\flash;
+
+final class OrderController extends Controller
 {
     use CartAction, DeleteAction, OrderAPI;
-
 
     // public function test()
     // {
@@ -90,7 +93,7 @@ class OrderController extends Controller
         $transactionSucceeded = false;
         $user = auth()->check() ? auth()->user()->id : session('user_id', '');
 
-        if (CartFacade::session($user)->getContent()->count() == 0) {
+        if (CartFacade::session($user)->getContent()->count() === 0) {
             toastr()->error('Panier vide!');
 
             return back();
@@ -154,23 +157,22 @@ class OrderController extends Controller
                     $erreurStockInsuffisant = true;
 
                     return false; // Arrête l'itération de la boucle
-                } else {
-                    $order->products()->attach($product->associatedModel->id, [
-                        'quantity' => $product->quantity,
-                        'montant' => $product->price * $product->quantity,
-                    ]);
                 }
+                $order->products()->attach($product->associatedModel->id, [
+                    'quantity' => $product->quantity,
+                    'montant' => $product->price * $product->quantity,
+                ]);
             });
 
             // Si une erreur de stock est survenue, annule la transaction
             if ($erreurStockInsuffisant) {
-                toastr()->error("La quantité d'un produit est non disponible.");
+                flash()->error("La quantité d'un produit est non disponible.");
 
                 return back();
             }
 
             // Générer le lien de paiement
-            $montant = intval($panier->getTotal()) + $shipping->montant;
+            $montant = (int) ($panier->getTotal()) + $shipping->montant;
             $currencyCode = 'XOF';
             $emailAddress = $request->email;
             $redirectUrl = route('order.validate');
@@ -198,9 +200,9 @@ class OrderController extends Controller
 
         if ($transactionSucceeded && $link) {
             return redirect()->away($link);
-        } else {
-            return abort(500, 'Unable to process payment');
         }
+
+        return abort(500, 'Unable to process payment');
     }
 
     public function invoice(string $id)

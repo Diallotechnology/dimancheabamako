@@ -1,20 +1,22 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Providers;
 
-use App\Models\Product;
 use App\Helper\ProductView;
-use App\Service\PriceService;
+use App\Models\Product;
 use App\Service\CategoryService;
+use App\Service\PriceService;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Facades\View;
-use Illuminate\Support\Facades\Cache;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\ServiceProvider;
 
-class AppServiceProvider extends ServiceProvider
+final class AppServiceProvider extends ServiceProvider
 {
     /**
      * Register any application services.
@@ -47,7 +49,8 @@ class AppServiceProvider extends ServiceProvider
 
         Collection::macro('forView', function () {
             $pricing = app(PriceService::class);
-            return $this->map(fn(Product $model) => new ProductView($model, $pricing));
+
+            return $this->map(fn (Product $model) => new ProductView($model, $pricing));
         });
 
         // VerifyEmail::toMailUsing(function (object $notifiable, string $url) {

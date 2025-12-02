@@ -1,25 +1,20 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Controllers;
 
 use App\Models\User;
-use App\Enum\RoleEnum;
 use App\Models\Client;
+use App\Service\CartService;
 use App\Jobs\RegisterMailJob;
 use Illuminate\Support\Facades\DB;
 use App\Models\PendingRegistration;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Cache;
 use Illuminate\Auth\Events\Registered;
-use App\Http\Requests\StorePendingRegistrationRequest;
-use App\Http\Requests\UpdatePendingRegistrationRequest;
-
 
 class PendingRegistrationController extends Controller
 {
-
-
     public function __invoke(string $token)
     {
         $pending = PendingRegistration::where('token', $token)
@@ -53,12 +48,13 @@ class PendingRegistrationController extends Controller
             // connexion automatique
             Auth::login($user);
 
-            CartService::make()->mergeGuestCartToUser($user->id);
+            app(CartService::class)->mergeGuestCartToUser($user->id);
 
             $pending->delete();
         });
 
         flash()->success('Votre compte a été activé avec succès !');
+
         return redirect('/')->with('status', 'Votre compte a été activé avec succès !');
     }
 }

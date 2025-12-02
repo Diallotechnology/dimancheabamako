@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Controllers;
 
 use App\Helper\DeleteAction;
@@ -7,7 +9,7 @@ use App\Http\Requests\StoreDeviseRequest;
 use App\Models\Devise;
 use Inertia\Inertia;
 
-class DeviseController extends Controller
+final class DeviseController extends Controller
 {
     use DeleteAction;
 

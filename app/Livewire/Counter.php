@@ -1,13 +1,14 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Livewire;
 
 use App\Helper\CartAction;
-use Darryldecode\Cart\Facades\CartFacade;
 use Livewire\Attributes\On;
 use Livewire\Component;
 
-class Counter extends Component
+final class Counter extends Component
 {
     use CartAction;
 
@@ -15,6 +16,7 @@ class Counter extends Component
     public function render()
     {
         $count = $this->cart->getCount();
+
         return view('livewire.counter', compact('count'));
     }
 }

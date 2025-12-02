@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Models;
 
 use App\Helper\DateFormat;
@@ -12,7 +14,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property float $max
  * @property string $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
- * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Shipping> $shippings
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, Shipping> $shippings
  * @property-read int|null $shippings_count
  *
  * @method static \Database\Factories\PoidsFactory factory($count = null, $state = [])
@@ -27,7 +29,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  *
  * @mixin \Eloquent
  */
-class Poids extends Model
+final class Poids extends Model
 {
     use DateFormat;
 

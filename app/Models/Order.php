@@ -1,8 +1,9 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Models;
 
-use App\Enum\ProductStatus;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -27,11 +28,11 @@ use Illuminate\Support\Facades\DB;
  * @property string $etat
  * @property string $created_at
  * @property Carbon|null $updated_at
- * @property-read \App\Models\Client $client
- * @property-read \App\Models\Country $country
- * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Product> $products
+ * @property-read Client $client
+ * @property-read Country $country
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, Product> $products
  * @property-read int|null $products_count
- * @property-read \App\Models\Transport $transport
+ * @property-read Transport $transport
  *
  * @method static \Database\Factories\OrderFactory factory($count = null, $state = [])
  * @method static \Illuminate\Database\Eloquent\Builder|Order newModelQuery()
@@ -56,7 +57,7 @@ use Illuminate\Support\Facades\DB;
  *
  * @mixin \Eloquent
  */
-class Order extends Model
+final class Order extends Model
 {
     use HasFactory;
 
@@ -66,10 +67,6 @@ class Order extends Model
      * @var array
      */
     protected $fillable = ['client_id', 'trans_ref', 'trans_state', 'reference', 'adresse', 'postal', 'ville', 'country_id', 'transport_id', 'etat', 'poids', 'shipping', 'delai', 'metrage'];
-
-
-
-
 
     /**
      * The products that belong to the Order
@@ -103,11 +100,6 @@ class Order extends Model
         return $this->belongsTo(Client::class);
     }
 
-    protected function getCreatedAtAttribute(string $date): string
-    {
-        return Carbon::parse($date)->format('d/m/Y H:i:s');
-    }
-
     public function getShipping(): float|int
     {
         if (session('devise') === 'EUR') {
@@ -115,7 +107,8 @@ class Order extends Model
             $tauxConversion = session('devise') === 'EUR' ? Devise::whereType('EUR')->value('taux') : '';
 
             return number_format($this->shipping / $tauxConversion, 2);
-        } elseif (session('devise') === 'CFA') {
+        }
+        if (session('devise') === 'CFA') {
             $this->shipping;
         }
     }
@@ -131,11 +124,11 @@ class Order extends Model
     public function generateId()
     {
         $currentYear = Carbon::today()->format('Y');
-        $prefix = 'DAB' . $currentYear . '-';
+        $prefix = 'DAB'.$currentYear.'-';
 
         return DB::transaction(function () use ($prefix) {
             // Verrouille le dernier identifiant de courrier enregistré dans la base de données pour la mise à jour
-            $lastCourrier = self::where('reference', 'like', $prefix . '%')->whereNotNull('reference')
+            $lastCourrier = self::where('reference', 'like', $prefix.'%')->whereNotNull('reference')
                 ->latest('id')
                 ->lockForUpdate()
                 ->first(['reference']);
@@ -143,16 +136,21 @@ class Order extends Model
             $sequence = 0;
             if ($lastCourrier) {
                 // Récupère le numéro de séquence de l'identifiant de courrier précédent
-                $sequence = (int) substr($lastCourrier->reference, strlen($prefix));
+                $sequence = (int) mb_substr($lastCourrier->reference, mb_strlen($prefix));
             }
             // Incrémente le numéro de séquence et génère le nouvel identifiant de courrier
             $sequence++;
-            $newCourrierNumber = $prefix . $sequence;
+            $newCourrierNumber = $prefix.$sequence;
             // Met à jour le numéro de courrier de l'instance courante
             $this->reference = $newCourrierNumber;
             $this->save();
 
             return $this;
         });
+    }
+
+    protected function getCreatedAtAttribute(string $date): string
+    {
+        return Carbon::parse($date)->format('d/m/Y H:i:s');
     }
 }

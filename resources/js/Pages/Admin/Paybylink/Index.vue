@@ -102,14 +102,18 @@ function copyMe(link) {
                     <td>{{ row.etat }}</td>
                     <td>{{ row.created_at }}</td>
                     <td>
-                        <Link
-                            :href="route('paylink.regenerate', row.id)"
-                            class="btn btn-sm font-sm rounded btn-brand m-1"
-                        >
-                            <i class="material-icons md-change_circle"></i>
-                        </Link>
-                        <ButtonEdit :href="route('paylink.edit', row.id)" />
-                        <ButtonDelete :url="route('paylink.destroy', row.id)" />
+                        <div class="d-flex">
+                            <Link
+                                :href="route('paylink.regenerate', row.id)"
+                                class="btn btn-sm font-sm rounded btn-brand m-1"
+                            >
+                                <i class="material-icons md-change_circle"></i>
+                            </Link>
+                            <ButtonEdit :href="route('paylink.edit', row.id)" />
+                            <ButtonDelete
+                                :url="route('paylink.destroy', row.id)"
+                            />
+                        </div>
                     </td>
                 </tr>
             </tbody>

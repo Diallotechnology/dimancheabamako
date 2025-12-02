@@ -1,14 +1,15 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Controllers;
 
-use App\Models\Slide;
-use App\Models\Product;
-use App\Models\Category;
 use App\Helper\ProductView;
+use App\Models\Product;
+use App\Models\Slide;
 use App\Service\PriceService;
 
-class LinkController extends Controller
+final class LinkController extends Controller
 {
     /**
      * Display the user's profile form.
@@ -19,8 +20,8 @@ class LinkController extends Controller
 
         $baseQuery = Product::query()
             ->with([
-                'promotions' => fn($q) => $q->active()->orderByDesc('id'),
-                'categorie:id,nom'
+                'promotions' => fn ($q) => $q->active()->orderByDesc('id'),
+                'categorie:id,nom',
             ])
             ->active()
             ->ByStock();
@@ -28,9 +29,8 @@ class LinkController extends Controller
         $latestModels = (clone $baseQuery)->latest()->take(10)->get();
         $popularModels = (clone $baseQuery)->where('favoris', 1)->get();
 
-        $latest  = ProductView::collection($latestModels, $pricing);
+        $latest = ProductView::collection($latestModels, $pricing);
         $popular = ProductView::collection($popularModels, $pricing);
-
 
         $slide = Slide::select('id', 'text_one', 'text_two', 'paragraph', 'image')->get();
 

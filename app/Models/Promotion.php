@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Models;
 
 use App\Helper\DateFormat;
@@ -16,7 +18,7 @@ use Illuminate\Support\Carbon;
  * @property string $fin
  * @property string $created_at
  * @property Carbon|null $updated_at
- * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Product> $products
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, Product> $products
  * @property-read int|null $products_count
  *
  * @method static \Database\Factories\PromotionFactory factory($count = null, $state = [])
@@ -34,7 +36,7 @@ use Illuminate\Support\Carbon;
  *
  * @mixin \Eloquent
  */
-class Promotion extends Model
+final class Promotion extends Model
 {
     use DateFormat;
 
@@ -60,8 +62,6 @@ class Promotion extends Model
             ->where('debut', '<=', now())
             ->where('fin', '>=', now());
     }
-
-
 
     public function debutat(): string
     {

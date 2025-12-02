@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Controllers;
 
 use App\Helper\DeleteAction;
@@ -9,7 +11,7 @@ use App\Models\Category;
 use App\Models\Product;
 use Inertia\Inertia;
 
-class ProductController extends Controller
+final class ProductController extends Controller
 {
     use DeleteAction;
 
@@ -21,6 +23,7 @@ class ProductController extends Controller
                 'value' => "$row->id",
             ];
         });
+
         return Inertia::render('Admin/Product/Create', compact('category'));
     }
 

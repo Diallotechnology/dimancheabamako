@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Models;
 
 use App\Helper\DateFormat;
@@ -12,11 +14,11 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property string $nom
  * @property string $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
- * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Country> $countries
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, Country> $countries
  * @property-read int|null $countries_count
- * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Shipping> $shippings
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, Shipping> $shippings
  * @property-read int|null $shippings_count
- * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Transport> $transports
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, Transport> $transports
  * @property-read int|null $transports_count
  *
  * @method static \Database\Factories\ZoneFactory factory($count = null, $state = [])
@@ -30,7 +32,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  *
  * @mixin \Eloquent
  */
-class Zone extends Model
+final class Zone extends Model
 {
     use DateFormat;
 

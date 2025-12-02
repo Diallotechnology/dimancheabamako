@@ -8,11 +8,13 @@ use App\Models\Category;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Cache;
 
-class CategoryService
+final class CategoryService
 {
     private const CACHE_KEY = 'categories_list';
-    private const LOCK_KEY  = 'categories_rebuild';
-    private const LOCK_TTL  = 5; // secondes
+
+    private const LOCK_KEY = 'categories_rebuild';
+
+    private const LOCK_TTL = 5; // secondes
 
     /**
      * Récupère toutes les catégories avec cache + lock sur la reconstruction.

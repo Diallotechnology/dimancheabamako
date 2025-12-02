@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Controllers;
 
 use App\Helper\DeleteAction;
@@ -7,7 +9,7 @@ use App\Models\Image;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
-class ImageController extends Controller
+final class ImageController extends Controller
 {
     use DeleteAction;
 

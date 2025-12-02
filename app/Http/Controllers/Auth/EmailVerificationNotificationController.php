@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
@@ -7,7 +9,7 @@ use App\Providers\RouteServiceProvider;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 
-class EmailVerificationNotificationController extends Controller
+final class EmailVerificationNotificationController extends Controller
 {
     /**
      * Send a new email verification notification.
@@ -17,9 +19,10 @@ class EmailVerificationNotificationController extends Controller
         if ($request->user()->hasVerifiedEmail()) {
             if ($request->user()->isClient()) {
                 return redirect()->intended('/');
-            } else {
-                return redirect()->intended(RouteServiceProvider::HOME);
             }
+
+            return redirect()->intended(RouteServiceProvider::HOME);
+
         }
 
         $request->user()->sendEmailVerificationNotification();

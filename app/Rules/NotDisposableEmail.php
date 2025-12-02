@@ -1,13 +1,15 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Rules;
 
 use Closure;
 use Illuminate\Contracts\Validation\ValidationRule;
 
-class NotDisposableEmail implements ValidationRule
+final class NotDisposableEmail implements ValidationRule
 {
-    protected array $disposableDomains = [
+    private array $disposableDomains = [
         '10minutemail.com',
         '10minutemail.net',
         'guerrillamail.com',
@@ -19,14 +21,15 @@ class NotDisposableEmail implements ValidationRule
         'trashmail.com',
         // Ajoute ici les domaines que tu observes dans tes logs
     ];
+
     /**
      * Run the validation rule.
      *
-     * @param  \Closure(string, ?string=): \Illuminate\Translation\PotentiallyTranslatedString  $fail
+     * @param  Closure(string, ?string=): \Illuminate\Translation\PotentiallyTranslatedString  $fail
      */
     public function validate(string $attribute, mixed $value, Closure $fail): void
     {
-        $domain = strtolower(substr(strrchr($value, '@'), 1));
+        $domain = mb_strtolower(mb_substr(mb_strrchr($value, '@'), 1));
 
         if (in_array($domain, $this->disposableDomains, true)) {
             $fail('Cet email semble être une adresse jetable. Veuillez utiliser une adresse email valide.');

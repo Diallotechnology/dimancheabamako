@@ -1,15 +1,18 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Console\Commands;
 
 use App\Helper\OrderAPI;
 use App\Models\Order;
+use Exception;
 use Illuminate\Console\Command;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
-class DeleteOrderPaymentExpire extends Command
+final class DeleteOrderPaymentExpire extends Command
 {
     use OrderAPI;
 
@@ -66,7 +69,7 @@ class DeleteOrderPaymentExpire extends Command
                                         'minutes_elapsed' => $minutesDifference,
                                     ]);
                                 }
-                            } catch (\Exception $e) {
+                            } catch (Exception $e) {
                                 Log::error('Failed to process order', [
                                     'order_id' => $order->id,
                                     'trans_ref' => $order->trans_ref,

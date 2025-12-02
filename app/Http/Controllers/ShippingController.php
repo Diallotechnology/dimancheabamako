@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Controllers;
 
 use App\Helper\DeleteAction;
@@ -9,7 +11,7 @@ use App\Models\Shipping;
 use App\Models\Transport;
 use Inertia\Inertia;
 
-class ShippingController extends Controller
+final class ShippingController extends Controller
 {
     use DeleteAction;
 

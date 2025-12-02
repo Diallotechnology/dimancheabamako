@@ -5,16 +5,18 @@ declare(strict_types=1);
 namespace App\Service;
 
 use App\Models\Product;
-use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Session\SessionManager;
+use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Cache;
 use InvalidArgumentException;
 
-class CartService
+final class CartService
 {
     private const CACHE_TTL = 1440; // minutes (24h)
+
     private ?int $userId = null;
+
     private SessionManager $session;
 
     public function __construct(SessionManager $session)
@@ -26,25 +28,8 @@ class CartService
     public function setUser(int $userId): self
     {
         $this->userId = $userId;
+
         return $this;
-    }
-
-    private function getCacheKey(): string
-    {
-        return $this->userId
-            ? "cart_user_{$this->userId}"
-            : "cart_guest_" . $this->session->getId();
-    }
-
-    private function load(): Collection
-    {
-        return collect(Cache::get($this->getCacheKey(), []))
-            ->map(fn($item) => collect($item));
-    }
-
-    private function save(Collection $items): void
-    {
-        Cache::put($this->getCacheKey(), $items, now()->addMinutes(self::CACHE_TTL));
     }
 
     public function clear(): void
@@ -54,11 +39,11 @@ class CartService
 
     public function mergeGuestCartToUser(int $userId): void
     {
-        $guestKey = "cart_guest_" . $this->session->getId();
-        $userKey  = "cart_user_{$userId}";
+        $guestKey = 'cart_guest_'.$this->session->getId();
+        $userKey = "cart_user_{$userId}";
 
         $guestCart = Cache::get($guestKey, []);
-        $userCart  = Cache::get($userKey, []);
+        $userCart = Cache::get($userKey, []);
 
         if (empty($guestCart)) {
             return;
@@ -104,16 +89,16 @@ class CartService
 
         // Nouveau produit dans le panier
         $cartItem = collect([
-            'id'         => $id,
-            'name'       => $name,
-            'price'      => $price,
-            'quantity'   => 1,
-            'stock'      => $stock,
-            'poids'      => $poids,
+            'id' => $id,
+            'name' => $name,
+            'price' => $price,
+            'quantity' => 1,
+            'stock' => $stock,
+            'poids' => $poids,
             'attributes' => collect($attributes),
-            'total'      => $price,
-            'added_at'   => now(),
-            'user_id'    => $this->userId,
+            'total' => $price,
+            'added_at' => now(),
+            'user_id' => $this->userId,
         ]);
 
         $items->put($id, $cartItem);
@@ -129,7 +114,7 @@ class CartService
     {
         $items = $this->load();
 
-        if (!$items->has($id)) {
+        if (! $items->has($id)) {
             return false;
         }
 
@@ -155,11 +140,10 @@ class CartService
         return true;
     }
 
-
     public function remove(int $id): bool
     {
         $items = $this->load();
-        if (!$items->has($id)) {
+        if (! $items->has($id)) {
             return false;
         }
 
@@ -168,8 +152,6 @@ class CartService
 
         return true;
     }
-
-
 
     public function getContent(): Collection
     {
@@ -227,5 +209,23 @@ class CartService
     public function groupBy(string $key): Collection
     {
         return $this->load()->groupBy($key);
+    }
+
+    private function getCacheKey(): string
+    {
+        return $this->userId
+            ? "cart_user_{$this->userId}"
+            : 'cart_guest_'.$this->session->getId();
+    }
+
+    private function load(): Collection
+    {
+        return collect(Cache::get($this->getCacheKey(), []))
+            ->map(fn ($item) => collect($item));
+    }
+
+    private function save(Collection $items): void
+    {
+        Cache::put($this->getCacheKey(), $items, now()->addMinutes(self::CACHE_TTL));
     }
 }

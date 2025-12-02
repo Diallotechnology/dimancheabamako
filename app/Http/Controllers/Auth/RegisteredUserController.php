@@ -1,31 +1,26 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Controllers\Auth;
 
-use Countries;
-use App\Models\User;
 use App\Enum\RoleEnum;
-use App\Models\Client;
-use Illuminate\View\View;
-use Illuminate\Support\Str;
-use Illuminate\Http\Request;
-use App\Jobs\RegisterMailJob;
-use Illuminate\Validation\Rules;
-use App\Rules\NotDisposableEmail;
-use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\DB;
-use App\Models\PendingRegistration;
 use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\Auth;
+use App\Mail\ConfirmRegistrationMail;
+use App\Models\PendingRegistration;
+use App\Rules\NotDisposableEmail;
+use Countries;
+use Illuminate\Http\Request;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
-use App\Mail\ConfirmRegistrationMail;
-use Illuminate\Http\RedirectResponse;
-use Illuminate\Auth\Events\Registered;
+use Illuminate\Support\Str;
+use Illuminate\Validation\Rules;
+use Illuminate\View\View;
 
 use function Flasher\Prime\flash;
 
-class RegisteredUserController extends Controller
+final class RegisteredUserController extends Controller
 {
     /**
      * Display the registration view.
@@ -33,6 +28,7 @@ class RegisteredUserController extends Controller
     public function create(): View
     {
         $pays = new Collection(Countries::getList('fr'));
+
         return view('auth.register', compact('pays'));
     }
 
@@ -52,7 +48,9 @@ class RegisteredUserController extends Controller
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
         ]);
 
-        if ($request->filled('website')) abort(403); // honeypot anti-bots
+        if ($request->filled('website')) {
+            abort(403);
+        } // honeypot anti-bots
 
         $token = Str::random(64);
 
@@ -74,6 +72,7 @@ class RegisteredUserController extends Controller
         // Mail::to($request->email)->send(new ConfirmRegistrationMail($token, app()->getLocale()));
 
         flash()->success('Un email de confirmation vous a été envoyé. verifiez votre boîte mail.');
+
         return back()->with('status', 'Un email de confirmation vous a été envoyé. verifiez votre boîte mail.');
     }
 }

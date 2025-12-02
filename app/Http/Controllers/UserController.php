@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Controllers;
 
 use App\Helper\DeleteAction;
@@ -8,7 +10,7 @@ use App\Http\Requests\UpdateUserRequest;
 use App\Models\User;
 use Inertia\Inertia;
 
-class UserController extends Controller
+final class UserController extends Controller
 {
     use DeleteAction;
 

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Controllers;
 
 use App\Helper\DeleteAction;
@@ -10,7 +12,7 @@ use Countries;
 use Illuminate\Support\Collection;
 use Inertia\Inertia;
 
-class CountryController extends Controller
+final class CountryController extends Controller
 {
     use DeleteAction;
 

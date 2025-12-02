@@ -1,14 +1,17 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Console\Commands;
 
 use App\Models\User;
+use Exception;
 use Illuminate\Console\Command;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
-class DeleteUserNotVerify extends Command
+final class DeleteUserNotVerify extends Command
 {
     /**
      * The name and signature of the console command.
@@ -49,7 +52,7 @@ class DeleteUserNotVerify extends Command
                         }
 
                         DB::commit();
-                    } catch (\Exception $e) {
+                    } catch (Exception $e) {
                         DB::rollBack();
                         Log::error('Failed to delete user', ['user' => $user->email, 'error' => $e->getMessage()]);
                     }

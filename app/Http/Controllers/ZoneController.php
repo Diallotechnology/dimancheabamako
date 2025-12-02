@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Controllers;
 
 use App\Helper\DeleteAction;
@@ -10,7 +12,7 @@ use Countries;
 use Illuminate\Support\Collection;
 use Inertia\Inertia;
 
-class ZoneController extends Controller
+final class ZoneController extends Controller
 {
     use DeleteAction;
 
@@ -66,7 +68,7 @@ class ZoneController extends Controller
         $existingPays = $zone->countries()->pluck('nom')->toArray();
 
         // Check if there are any changes in pays
-        if ($newPays != $existingPays) {
+        if ($newPays !== $existingPays) {
             // Update the related Country models
             $zone->countries()->delete(); // Remove existing related countries
             $data = [];

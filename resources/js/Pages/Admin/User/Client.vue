@@ -5,31 +5,17 @@ import ButtonEdit from "@/Components/ButtonEdit.vue";
 import ButtonDelete from "@/Components/ButtonDelete.vue";
 import Table from "@/Components/Table.vue";
 import notify from "@/helper";
+import { useFilter } from "@/Composables/useFilter";
 import { ref, watch } from "vue";
 const props = defineProps({
     rows: {
         type: Object,
         default: () => ({}),
     },
-    filter: {
-        type: Object,
-        default: () => ({}),
-    },
 });
 
-let search = ref(props.filter.search);
-const Reset = () => {
-    search.value = "";
-};
-watch(search, (value) => {
-    setTimeout(() => {
-        router.get(
-            "/admin/customer",
-            { search: value },
-            { preserveState: true, replace: true }
-        );
-    }, 600);
-});
+const { filters, resetFilters } = useFilter({ search: "" }, "/admin/customer");
+
 const form = useForm({
     name: "",
     email: "",
@@ -65,14 +51,17 @@ const submit = () => {
                 <div class="row gx-3">
                     <div class="col-lg-4 col-md-6 me-auto">
                         <input
-                            v-model="search"
+                            v-model="filters.search"
                             type="text"
                             placeholder="Recherche..."
                             class="form-control"
                         />
                     </div>
                     <div class="col-auto">
-                        <button @click="Reset" class="btn btn-danger rounded">
+                        <button
+                            @click="resetFilters"
+                            class="btn btn-danger rounded"
+                        >
                             Reset<i
                                 class="material-icons md-delete_forever md-18"
                             ></i>

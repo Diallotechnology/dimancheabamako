@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Controllers;
 
 use App\Helper\DeleteAction;
@@ -8,7 +10,7 @@ use App\Models\Product;
 use App\Models\Promotion;
 use Inertia\Inertia;
 
-class PromotionController extends Controller
+final class PromotionController extends Controller
 {
     use DeleteAction;
 

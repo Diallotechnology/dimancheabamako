@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Controllers;
 
 use App\Helper\DeleteAction;
@@ -7,7 +9,7 @@ use App\Http\Requests\StoreCategoryRequest;
 use App\Models\Category;
 use Inertia\Inertia;
 
-class CategoryController extends Controller
+final class CategoryController extends Controller
 {
     use DeleteAction;
 

@@ -1,16 +1,17 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Models;
 
 use App\Helper\DateFormat;
-use App\Enum\ProductStatus;
-use Illuminate\Support\Str;
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Facades\Storage;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 
 /**
  * @property int $id
@@ -29,16 +30,16 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
  * @property string $cover
  * @property string $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
- * @property-read \App\Models\Category $categorie
+ * @property-read Category $categorie
  * @property-read string $prix_final
  * @property-read string $prix_format
  * @property-read string $prix_promo
  * @property-read int $reduction
- * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Image> $images
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, Image> $images
  * @property-read int|null $images_count
- * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Order> $orders
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, Order> $orders
  * @property-read int|null $orders_count
- * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Promotion> $promotions
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, Promotion> $promotions
  * @property-read int|null $promotions_count
  *
  * @method static Builder|Product byStock()
@@ -65,7 +66,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
  *
  * @mixin \Eloquent
  */
-class Product extends Model
+final class Product extends Model
 {
     use DateFormat;
 
@@ -75,7 +76,6 @@ class Product extends Model
      * @var array
      */
     protected $fillable = ['categorie_id', 'reference', 'nom', 'color', 'taille', 'description', 'resume', 'poids', 'video', 'prix', 'cover', 'stock', 'favoris', 'slug', 'status'];
-
 
     /**
      * Scope to get nature by structure.
@@ -90,33 +90,6 @@ class Product extends Model
         return $query->where('status', 1);
     }
 
-    // Automatically generate slug
-    protected static function boot()
-    {
-        parent::boot();
-
-        // Générer ou mettre à jour le slug avant la sauvegarde
-        static::saving(function ($product) {
-            // Vérifier si le champ 'nom' a été modifié
-            if ($product->isDirty('nom')) {
-                // Générer un slug de base
-                $baseSlug = Str::slug($product->nom, '-');
-                $slug = $baseSlug;
-                $counter = 1;
-
-                // Vérifier l'unicité du slug
-                while (self::where('slug', $slug)->where('id', '!=', $product->id)->exists()) {
-                    $slug = $baseSlug . '-' . $counter;
-                    $counter++;
-                }
-
-                $product->slug = $slug;
-            }
-        });
-    }
-
-
-
     public function getMontant(): string
     {
         $montant = $this->pivot->montant;
@@ -124,37 +97,23 @@ class Product extends Model
 
         if ($devise === 'EUR') {
             $taux = session('taux_eur', 1);
-            return number_format($montant / $taux, 2, ',', ' ') . ' €';
+
+            return number_format($montant / $taux, 2, ',', ' ').' €';
         }
 
-        return number_format($montant, 0, ',', ' ') . ' CFA';
+        return number_format($montant, 0, ',', ' ').' CFA';
     }
 
     // Scope pour récupérer uniquement la promo active
     public function scopeWithActivePromotions(Builder $query): Builder
     {
         return $query->with([
-            'promotions' => fn($q) => $q
+            'promotions' => fn ($q) => $q
                 ->where('etat', 'En cours')
                 ->where('debut', '<=', now())
                 ->where('fin', '>=', now())
                 ->orderByDesc('id'),
         ]);
-    }
-
-    // Helper interne : trouve la promo active SANS refaire de requêtes si déjà chargée
-    private function resolveActivePromotion(): ?Promotion
-    {
-        if ($this->relationLoaded('promotions')) {
-            return $this->promotions->first(); // déjà filtrées via ->with()
-        }
-
-        return $this->promotions()
-            ->where('etat', 'En cours')
-            ->where('debut', '<=', now())
-            ->where('fin', '>=', now())
-            ->orderByDesc('id')
-            ->first();
     }
 
     /* ---------- Prix & promotions ---------- */
@@ -231,8 +190,6 @@ class Product extends Model
     //     return number_format($prix, 0, ',', ' ') . ' CFA';
     // }
 
-
-
     /**
      * Get the categorie that owns the Product
      */
@@ -274,5 +231,45 @@ class Product extends Model
     public function images(): HasMany
     {
         return $this->hasMany(Image::class);
+    }
+
+    // Automatically generate slug
+    protected static function boot()
+    {
+        parent::boot();
+
+        // Générer ou mettre à jour le slug avant la sauvegarde
+        self::saving(function ($product) {
+            // Vérifier si le champ 'nom' a été modifié
+            if ($product->isDirty('nom')) {
+                // Générer un slug de base
+                $baseSlug = Str::slug($product->nom, '-');
+                $slug = $baseSlug;
+                $counter = 1;
+
+                // Vérifier l'unicité du slug
+                while (self::where('slug', $slug)->where('id', '!=', $product->id)->exists()) {
+                    $slug = $baseSlug.'-'.$counter;
+                    $counter++;
+                }
+
+                $product->slug = $slug;
+            }
+        });
+    }
+
+    // Helper interne : trouve la promo active SANS refaire de requêtes si déjà chargée
+    private function resolveActivePromotion(): ?Promotion
+    {
+        if ($this->relationLoaded('promotions')) {
+            return $this->promotions->first(); // déjà filtrées via ->with()
+        }
+
+        return $this->promotions()
+            ->where('etat', 'En cours')
+            ->where('debut', '<=', now())
+            ->where('fin', '>=', now())
+            ->orderByDesc('id')
+            ->first();
     }
 }

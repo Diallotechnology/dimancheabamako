@@ -1,14 +1,17 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Console\Commands;
 
 use App\Helper\OrderAPI;
 use App\Models\PayLink;
+use Exception;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
-class CheckPayByLink extends Command
+final class CheckPayByLink extends Command
 {
     use OrderAPI;
 
@@ -63,7 +66,7 @@ class CheckPayByLink extends Command
                             } else {
                                 Log::error('Failed to retrieve order status', ['trans_ref' => $order->trans_ref]);
                             }
-                        } catch (\Exception $e) {
+                        } catch (Exception $e) {
                             Log::error('Failed to update order', [
                                 'order' => $order->trans_ref,
                                 'error' => $e->getMessage(),

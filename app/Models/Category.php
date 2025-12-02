@@ -1,13 +1,14 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Models;
 
 use App\Helper\DateFormat;
 use App\Service\CategoryService;
-use Illuminate\Support\Facades\App;
-use Illuminate\Support\Facades\Cache;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Support\Facades\App;
 
 /**
  * @property int $id
@@ -16,7 +17,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property int $promo
  * @property string $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
- * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Product> $products
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, Product> $products
  * @property-read int|null $products_count
  *
  * @method static \Database\Factories\CategoryFactory factory($count = null, $state = [])
@@ -32,7 +33,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  *
  * @mixin \Eloquent
  */
-class Category extends Model
+final class Category extends Model
 {
     use DateFormat;
 
@@ -53,11 +54,11 @@ class Category extends Model
 
     protected static function booted(): void
     {
-        static::saved(function () {
+        self::saved(function () {
             App::make(CategoryService::class)->clearCache();
         });
 
-        static::deleted(function () {
+        self::deleted(function () {
             App::make(CategoryService::class)->clearCache();
         });
     }

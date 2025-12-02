@@ -1,6 +1,6 @@
 <script setup>
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
-import { useForm, Link } from "@inertiajs/vue3";
+import { useForm, Link, router } from "@inertiajs/vue3";
 import notify from "@/helper";
 
 const props = defineProps({

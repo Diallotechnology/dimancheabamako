@@ -1,12 +1,14 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 use Illuminate\Validation\Rules;
 
-class UpdateUserProfilRequest extends FormRequest
+final class UpdateUserProfilRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.

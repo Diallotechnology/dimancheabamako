@@ -1,14 +1,14 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Livewire;
 
 use App\Helper\CartAction;
-use Darryldecode\Cart\Facades\CartFacade;
 use Illuminate\Support\Collection;
-use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Livewire\Component;
 
-class Update extends Component
+final class Update extends Component
 {
     use CartAction;
 
@@ -31,7 +31,8 @@ class Update extends Component
 
         if ($this->quantity > $this->stock) {
             $this->quantity = $this->stock;
-            flash()->warning("Stock insuffisant.");
+            flash()->warning('Stock insuffisant.');
+
             return;
         }
 
@@ -44,12 +45,12 @@ class Update extends Component
 
         if ($this->quantity < 1) {
             $this->quantity = 1;
+
             return;
         }
 
         $this->applyQuantity();
     }
-
 
     public function applyQuantity()
     {
@@ -57,15 +58,14 @@ class Update extends Component
 
         $success = $this->cart->update($this->card['id'], $newQuantity);
 
-        if (!$success) {
+        if (! $success) {
             $item = $this->cart->get($this->card['id']);
             $this->quantity = $item['quantity'];
-            flash()->warning("Quantité invalide ou stock insuffisant.");
+            flash()->warning('Quantité invalide ou stock insuffisant.');
         }
 
         $this->dispatch('productUpdate');
     }
-
 
     public function render()
     {

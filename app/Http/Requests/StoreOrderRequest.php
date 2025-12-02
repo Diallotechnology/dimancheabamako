@@ -1,12 +1,14 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Requests;
 
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rules;
 
-class StoreOrderRequest extends FormRequest
+final class StoreOrderRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.

@@ -1,11 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Models;
 
 use App\Helper\DateFormat;
-use Illuminate\Support\Facades\Cache;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Support\Facades\Cache;
 
 /**
  * @property int $id
@@ -17,9 +19,9 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property string $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property-read float $montant_devise
- * @property-read \App\Models\Poids $poids
- * @property-read \App\Models\Transport $transport
- * @property-read \App\Models\Zone $zone
+ * @property-read Poids $poids
+ * @property-read Transport $transport
+ * @property-read Zone $zone
  *
  * @method static \Database\Factories\ShippingFactory factory($count = null, $state = [])
  * @method static \Illuminate\Database\Eloquent\Builder|Shipping newModelQuery()
@@ -36,7 +38,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  *
  * @mixin \Eloquent
  */
-class Shipping extends Model
+final class Shipping extends Model
 {
     use DateFormat;
 
@@ -80,6 +82,7 @@ class Shipping extends Model
 
         if ($devise === 'EUR') {
             $taux = Cache::get('taux_eur', 1); // jamais en session
+
             return round($montant / $taux, 2);
         }
 

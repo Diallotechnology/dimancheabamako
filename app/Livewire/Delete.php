@@ -1,13 +1,14 @@
 <?php
 
-namespace App\Livewire;
+declare(strict_types=1);
 
-use Livewire\Component;
+namespace App\Livewire;
 
 use App\Helper\CartAction;
 use Illuminate\Support\Collection;
+use Livewire\Component;
 
-class Delete extends Component
+final class Delete extends Component
 {
     use CartAction;
 
@@ -22,9 +23,10 @@ class Delete extends Component
         // Suppression backend
         $success = $this->cart->remove($this->row['id']);
 
-        if (!$success) {
+        if (! $success) {
             $this->isDeleting = false;
             flash()->warning('Suppression impossible.');
+
             return;
         }
         $this->dispatch('productDelete');

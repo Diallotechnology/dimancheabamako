@@ -11,8 +11,8 @@ trait DateFormat
 {
     use HasFactory;
 
-    // protected function getCreatedAtAttribute(string $date): string
-    // {
-    //     return Carbon::parse($date)->format('d/m/Y');
-    // }
+    protected function getCreatedAtAttribute(string $date): string
+    {
+        return Carbon::parse($date)->format('d/m/Y');
+    }
 }

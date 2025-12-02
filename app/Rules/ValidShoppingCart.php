@@ -1,10 +1,12 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Rules;
 
-use Closure;
 use App\Models\Product;
 use App\Service\CartService;
+use Closure;
 use Illuminate\Contracts\Validation\ValidationRule;
 
 final readonly class ValidShoppingCart implements ValidationRule
@@ -16,7 +18,7 @@ final readonly class ValidShoppingCart implements ValidationRule
     /**
      * Run the validation rule.
      *
-     * @param  \Closure(string, ?string=): \Illuminate\Translation\PotentiallyTranslatedString  $fail
+     * @param  Closure(string, ?string=): \Illuminate\Translation\PotentiallyTranslatedString  $fail
      */
     public function validate(string $attribute, mixed $value, Closure $fail): void
     {
@@ -24,24 +26,28 @@ final readonly class ValidShoppingCart implements ValidationRule
 
         if ($cart->isEmpty()) {
             $fail('Votre panier est vide.');
+
             return;
         }
 
         foreach ($cart as $item) {
             $product = Product::find($item['id']);
 
-            if (!$product) {
+            if (! $product) {
                 $fail("Le produit « {$item['name']} » n'existe plus.");
+
                 return;
             }
 
             if ($product->status === false) {
                 $fail("Le produit « {$item['name']} » est désactivé et ne peut pas être acheté.");
+
                 return;
             }
 
             if ($product->stock < $item['quantity']) {
                 $fail("La quantité demandée pour « {$item['name']} » dépasse le stock disponible.");
+
                 return;
             }
         }

@@ -1,16 +1,18 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Livewire;
 
-use Livewire\Component;
 use App\Helper\CartAction;
-use Illuminate\Support\Collection;
+use Livewire\Component;
 
-class CartItem extends Component
+final class CartItem extends Component
 {
     use CartAction;
 
     public bool $hot = false;
+
     public bool $news = false;
 
     /** @var array<int, array<string, mixed>> */
@@ -20,10 +22,9 @@ class CartItem extends Component
     {
         // Livewire ne veut que des arrays / scalaires
         $this->items = $items;
-        $this->hot   = $hot;
-        $this->news  = $news;
+        $this->hot = $hot;
+        $this->news = $news;
     }
-
 
     public function add(int $id)
     {

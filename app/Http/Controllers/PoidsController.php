@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Controllers;
 
 use App\Helper\DeleteAction;
@@ -7,7 +9,7 @@ use App\Http\Requests\StorePoidsRequest;
 use App\Models\Poids;
 use Inertia\Inertia;
 
-class PoidsController extends Controller
+final class PoidsController extends Controller
 {
     use DeleteAction;
 

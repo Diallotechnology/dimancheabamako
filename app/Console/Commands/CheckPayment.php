@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Console\Commands;
 
 use App\Helper\OrderAPI;
@@ -12,7 +14,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 
-class CheckPayment extends Command
+final class CheckPayment extends Command
 {
     use OrderAPI;
 
@@ -29,15 +31,6 @@ class CheckPayment extends Command
      * @var string
      */
     protected $description = 'check-order-payment and send email';
-
-    private function cart_clear(): void
-    {
-        if (! empty(session('user_id'))) {
-            // Utiliser l'identifiant de session existant
-            $userId = session()->get('user_id');
-            CartFacade::session($userId)->clear();
-        }
-    }
 
     /**
      * Execute the console command.
@@ -88,5 +81,14 @@ class CheckPayment extends Command
                     });
                 }
             });
+    }
+
+    private function cart_clear(): void
+    {
+        if (! empty(session('user_id'))) {
+            // Utiliser l'identifiant de session existant
+            $userId = session()->get('user_id');
+            CartFacade::session($userId)->clear();
+        }
     }
 }

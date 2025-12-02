@@ -1,10 +1,12 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Models;
 
 use App\Helper\DateFormat;
-use Illuminate\Support\Facades\Cache;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Cache;
 
 /**
  * @property int $id
@@ -25,7 +27,7 @@ use Illuminate\Database\Eloquent\Model;
  *
  * @mixin \Eloquent
  */
-class Devise extends Model
+final class Devise extends Model
 {
     use DateFormat;
 
@@ -36,24 +38,23 @@ class Devise extends Model
      */
     protected $fillable = ['type', 'taux'];
 
-
     protected static function booted()
     {
-        static::updated(function ($devise) {
+        self::updated(function ($devise) {
             if ($devise->type === 'EUR') {
                 Cache::forget('taux_eur');
             }
             session()->forget('taux_eur');
         });
 
-        static::created(function ($devise) {
+        self::created(function ($devise) {
             if ($devise->type === 'EUR') {
                 Cache::forget('taux_eur');
             }
             session()->forget('taux_eur');
         });
 
-        static::deleted(function ($devise) {
+        self::deleted(function ($devise) {
             if ($devise->type === 'EUR') {
                 Cache::forget('taux_eur');
             }

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
@@ -13,9 +15,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\View\View;
 
-
-
-class AuthenticatedSessionController extends Controller
+final class AuthenticatedSessionController extends Controller
 {
     /**
      * Display the login view.
@@ -38,20 +38,20 @@ class AuthenticatedSessionController extends Controller
             Auth::logout();
 
             return redirect()->route('change.password', ['email' => $user->email]);
-        } else {
-            // Save the 'user_id' from the session if it exists
-            $key = ! empty($request->session()->get('user_id')) ? $request->session()->get('user_id') : null;
-            $cart = $request->session()->get($key . '_cart_items');
-            $request->session()->regenerate();
-            if ($key) {
-                session()->put(['user_id' => $key, $key . '_cart_items' => $cart]);
-            }
-            if ($request->user()->isClient()) {
-                return redirect()->intended('/');
-            } else {
-                return redirect()->intended(RouteServiceProvider::HOME);
-            }
         }
+        // Save the 'user_id' from the session if it exists
+        $key = ! empty($request->session()->get('user_id')) ? $request->session()->get('user_id') : null;
+        $cart = $request->session()->get($key.'_cart_items');
+        $request->session()->regenerate();
+        if ($key) {
+            session()->put(['user_id' => $key, $key.'_cart_items' => $cart]);
+        }
+        if ($request->user()->isClient()) {
+            return redirect()->intended('/');
+        }
+
+        return redirect()->intended(RouteServiceProvider::HOME);
+
     }
 
     public function update(UpdateUserProfilRequest $request, User $user)
@@ -80,7 +80,7 @@ class AuthenticatedSessionController extends Controller
 
         // Save the 'user_id' from the session if it exists
         $key = ! empty($request->session()->get('user_id')) ? $request->session()->get('user_id') : null;
-        $cart = $request->session()->get($key . '_cart_items');
+        $cart = $request->session()->get($key.'_cart_items');
         // Invalidate the session
         $request->session()->invalidate();
 
@@ -90,7 +90,7 @@ class AuthenticatedSessionController extends Controller
         // dd($key);
         // Restore the 'user_id' to the session if it was present
         if ($key) {
-            session()->put(['user_id' => $key, $key . '_cart_items' => $cart]);
+            session()->put(['user_id' => $key, $key.'_cart_items' => $cart]);
         }
 
         // Redirect to the login route

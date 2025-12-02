@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Models;
 
 use App\Helper\DateFormat;
@@ -13,7 +15,7 @@ use Illuminate\Support\Facades\Storage;
  * @property string $chemin
  * @property string $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
- * @property-read \App\Models\Product $product
+ * @property-read Product $product
  *
  * @method static \Database\Factories\ImageFactory factory($count = null, $state = [])
  * @method static \Illuminate\Database\Eloquent\Builder|Image newModelQuery()
@@ -27,7 +29,7 @@ use Illuminate\Support\Facades\Storage;
  *
  * @mixin \Eloquent
  */
-class Image extends Model
+final class Image extends Model
 {
     use DateFormat;
 

@@ -1,13 +1,15 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Livewire;
 
-use Livewire\Component;
 use App\Helper\CartAction;
-use App\Service\CartService;
 use App\Rules\ValidShoppingCart;
+use App\Service\CartService;
+use Livewire\Component;
 
-class AddToCard extends Component
+final class AddToCard extends Component
 {
     use CartAction;
 
@@ -16,7 +18,7 @@ class AddToCard extends Component
     public function add()
     {
         $this->validate([
-            'checkout' => [new ValidShoppingCart(app(CartService::class))]
+            'checkout' => [new ValidShoppingCart(app(CartService::class))],
         ]);
 
         return $this->store($this->id);

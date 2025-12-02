@@ -1,13 +1,15 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Console;
 
-use App\Models\Promotion;
 use App\Models\PendingRegistration;
+use App\Models\Promotion;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 
-class Kernel extends ConsoleKernel
+final class Kernel extends ConsoleKernel
 {
     /**
      * Define the application's command schedule.
@@ -29,7 +31,7 @@ class Kernel extends ConsoleKernel
         // delete paiement expire chaque 3mn
         $schedule->command('app:delete-pay-by-link')->everyTwoMinutes()->withoutOverlapping()->onOneServer()->runInBackground();
 
-        //verification user email not verified
+        // verification user email not verified
         $schedule->command('app:delete-user-not-verify')->everyThirtyMinutes()->withoutOverlapping()->onOneServer()->runInBackground();
 
         $schedule->call(function () {
@@ -48,7 +50,7 @@ class Kernel extends ConsoleKernel
      */
     protected function commands(): void
     {
-        $this->load(__DIR__ . '/Commands');
+        $this->load(__DIR__.'/Commands');
 
         require base_path('routes/console.php');
     }

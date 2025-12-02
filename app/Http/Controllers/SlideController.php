@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Controllers;
 
 use App\Helper\DeleteAction;
@@ -7,7 +9,7 @@ use App\Http\Requests\UpdateSlideRequest;
 use App\Models\Slide;
 use Inertia\Inertia;
 
-class SlideController extends Controller
+final class SlideController extends Controller
 {
     use DeleteAction;
 

@@ -1,15 +1,18 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Console\Commands;
 
 use App\Helper\OrderAPI;
 use App\Models\PayLink;
+use Exception;
 use Illuminate\Console\Command;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
-class DeletePayByLink extends Command
+final class DeletePayByLink extends Command
 {
     use OrderAPI;
 
@@ -58,7 +61,7 @@ class DeletePayByLink extends Command
                             }
 
                             DB::commit();
-                        } catch (\Exception $e) {
+                        } catch (Exception $e) {
                             DB::rollBack();
                             Log::error('Failed to update order or send mail', ['order' => $order->trans_ref, 'error' => $e->getMessage()]);
                         }

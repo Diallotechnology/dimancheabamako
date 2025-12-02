@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Mail;
 
 use App\Models\Order;
@@ -9,7 +11,7 @@ use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
 
-class CancelOrderMail extends Mailable
+final class CancelOrderMail extends Mailable
 {
     use Queueable, SerializesModels;
 

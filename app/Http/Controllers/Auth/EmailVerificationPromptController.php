@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
@@ -8,7 +10,7 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
 
-class EmailVerificationPromptController extends Controller
+final class EmailVerificationPromptController extends Controller
 {
     /**
      * Display the email verification prompt.
@@ -18,11 +20,13 @@ class EmailVerificationPromptController extends Controller
         if ($request->user()->hasVerifiedEmail()) {
             if ($request->user()->isClient()) {
                 return redirect()->intended('/');
-            } else {
-                return redirect()->intended(RouteServiceProvider::HOME);
             }
-        } else {
-            return view('auth.verify-email');
+
+            return redirect()->intended(RouteServiceProvider::HOME);
+
         }
+
+        return view('auth.verify-email');
+
     }
 }

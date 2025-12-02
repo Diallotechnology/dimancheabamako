@@ -9,6 +9,7 @@ use Exception;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\File;
+use Throwable;
 
 trait DeleteAction
 {
@@ -59,7 +60,7 @@ trait DeleteAction
                 ]);
 
             }
-        } catch (\Throwable $th) {
+        } catch (Throwable $th) {
             new Exception('file uplode error');
         }
     }

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Models;
 
 use App\Helper\DateFormat;
@@ -14,9 +16,9 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property-read \Illuminate\Database\Eloquent\Collection<int, Transport> $orders
  * @property-read int|null $orders_count
- * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Shipping> $shippings
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, Shipping> $shippings
  * @property-read int|null $shippings_count
- * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Zone> $zones
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, Zone> $zones
  * @property-read int|null $zones_count
  *
  * @method static \Database\Factories\TransportFactory factory($count = null, $state = [])
@@ -30,7 +32,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  *
  * @mixin \Eloquent
  */
-class Transport extends Model
+final class Transport extends Model
 {
     use DateFormat;
 
@@ -62,6 +64,6 @@ class Transport extends Model
      */
     public function orders(): HasMany
     {
-        return $this->hasMany(Transport::class);
+        return $this->hasMany(self::class);
     }
 }

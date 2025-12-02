@@ -1,11 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Controllers;
 
 use App\Models\Category;
 use App\Models\Product;
 
-class SitemapController extends Controller
+final class SitemapController extends Controller
 {
     // Sitemap index
     public function index()

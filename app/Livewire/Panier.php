@@ -1,22 +1,17 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Livewire;
 
-use App\Models\Devise;
-use App\Models\Country;
-use Livewire\Component;
-use App\Models\Shipping;
 use App\Helper\CartAction;
+use App\Models\Country;
+use Illuminate\Support\Facades\Auth;
 use Livewire\Attributes\On;
 use Livewire\Attributes\Validate;
-use Illuminate\Support\Collection;
-use App\Helper\UsesProductViewModel;
-use Illuminate\Support\Facades\Auth;
-use Darryldecode\Cart\Facades\CartFacade;
-use Jantinnerezo\LivewireAlert\LivewireAlert;
-use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Livewire\Component;
 
-class Panier extends Component
+final class Panier extends Component
 {
     use CartAction;
 
@@ -37,8 +32,11 @@ class Panier extends Component
     public $password;
 
     public int $count = 0;
+
     public int $TotalQuantity = 0;
+
     public string $Total = '0';
+
     public string $totalWeight = '0';
 
     public function login_submit()
@@ -69,20 +67,21 @@ class Panier extends Component
         $country = Country::with('zone')->find($this->country_id);
         if ($country->zone->transports->isNotEmpty()) {
             return $this->trans = $country->zone->transports;
-        } else {
-            $this->trans = [];
-
-            return flash()->success('Nous ne livrons pas dans ce pays!');
         }
+        $this->trans = [];
+
+        return flash()->success('Nous ne livrons pas dans ce pays!');
+
     }
 
     public function calculateShipping()
     {
         $shipping = $this->getShippingCost($this->country_id, $this->transport_id);
 
-        if (!$shipping) {
+        if (! $shipping) {
             $this->shipping = null;
             flash()->warning('Aucune correspondance trouvée pour le transport choisi.');
+
             return;
         }
 
@@ -93,13 +92,14 @@ class Panier extends Component
     {
         $this->refreshCart();
     }
+
     #[On('productUpdate')]
     #[On('productDelete')]
     public function refreshCart(): void
     {
-        $this->count         = $this->cart->getCount();
+        $this->count = $this->cart->getCount();
         $this->TotalQuantity = $this->cart->getTotalQuantity();
-        $this->totalWeight   = $this->getWeight(true);
+        $this->totalWeight = $this->getWeight(true);
 
         if (session('devise') === 'EUR') {
             $taux = session('taux_eur', 1);
