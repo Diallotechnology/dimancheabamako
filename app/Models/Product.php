@@ -118,7 +118,7 @@ final class Product extends Model
 
     /* ---------- Prix & promotions ---------- */
 
-    public function getPrixFinalBaseAttribute(): float
+    public function getPrixFinalBaseAttribute(): int
     {
         $prix = $this->prix;
 
@@ -128,67 +128,6 @@ final class Product extends Model
 
         return $prix; // toujours en CFA brut
     }
-
-    // public function getPrixFinalNumericAttribute(): float
-    // {
-    //     $prix = $this->prix_final_base;
-
-    //     if (session('devise') === 'EUR') {
-    //         $taux = session('taux_eur', 1);
-    //         return round($prix / $taux, 2);
-    //     }
-
-    //     return (float) $prix; // CFA
-    // }
-
-    // public function getPrixFinalAttribute(): string
-    // {
-    //     $value  = $this->prix_final_numeric;
-    //     $devise = session('devise');
-    //     $symbole = $devise === 'EUR' ? '€' : 'CFA';
-
-    //     return number_format(
-    //         $value,
-    //         $devise === 'EUR' ? 2 : 0,
-    //         ',',
-    //         ' '
-    //     ) . " $symbole";
-    // }
-
-    // public function getPrixFormatAttribute(): string
-    // {
-    //     if (session('devise') === 'EUR') {
-    //         $taux = session('taux_eur', 1);
-    //         $prix = number_format($this->prix / $taux, 2, ',', ' ');
-    //         return "{$prix} €";
-    //     }
-
-    //     $prix = number_format($this->prix, 0, ',', ' ');
-    //     return "{$prix} CFA";
-    // }
-
-    // public function getReductionAttribute(): int
-    // {
-    //     return $this->resolveActivePromotion()?->reduction ?? 0;
-    // }
-
-    // public function getPrixPromoAttribute(): string
-    // {
-    //     $promo = $this->resolveActivePromotion();
-
-    //     if (! $promo) {
-    //         return $this->prix_format;
-    //     }
-
-    //     $prix = $this->prix * (1 - $promo->reduction / 100);
-
-    //     if (session('devise') === 'EUR') {
-    //         $taux = session('taux_eur', 1);
-    //         return number_format($prix / $taux, 2, ',', ' ') . ' €';
-    //     }
-
-    //     return number_format($prix, 0, ',', ' ') . ' CFA';
-    // }
 
     /**
      * Get the categorie that owns the Product

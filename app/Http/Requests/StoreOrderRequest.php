@@ -8,6 +8,8 @@ use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rules;
 
+use function Flasher\Prime\flash;
+
 final class StoreOrderRequest extends FormRequest
 {
     /**
@@ -43,6 +45,6 @@ final class StoreOrderRequest extends FormRequest
 
     protected function failedValidation(Validator $validator)
     {
-        return toastr()->error('la validation a echoué verifiez vos informations!');
+        return flash()->error('la validation a echoué verifiez vos informations!');
     }
 }

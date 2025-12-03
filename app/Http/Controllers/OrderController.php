@@ -5,25 +5,20 @@ declare(strict_types=1);
 namespace App\Http\Controllers;
 
 use App\Enum\OrderEnum;
-use App\Enum\RoleEnum;
 use App\Helper\CartAction;
 use App\Helper\DeleteAction;
 use App\Helper\OrderAPI;
 use App\Http\Requests\StoreOrderRequest;
 use App\Http\Requests\UpdateOrderRequest;
-use App\Jobs\RegisterMailJob;
-use App\Models\Client;
-use App\Models\Country;
 use App\Models\Order;
-use App\Models\Shipping;
-use App\Models\User;
-use Darryldecode\Cart\Facades\CartFacade;
+use App\Service\OrderService;
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
 use Inertia\Inertia;
+use Throwable;
 
 use function Flasher\Prime\flash;
 
@@ -89,120 +84,58 @@ final class OrderController extends Controller
      */
     public function store(StoreOrderRequest $request)
     {
-        $link = '';
-        $transactionSucceeded = false;
-        $user = auth()->check() ? auth()->user()->id : session('user_id', '');
-
-        if (CartFacade::session($user)->getContent()->count() === 0) {
-            toastr()->error('Panier vide!');
-
-            return back();
-        }
-        if (! $request->livraison) {
-            toastr()->error("Il n'y a pas de transporteur disponible pour livrer ce colis.");
+        if ($this->cart->getContent()->isEmpty()) {
+            flash()->error('Panier vide !');
 
             return back();
         }
 
-        DB::transaction(function () use ($request, $user, &$link, &$transactionSucceeded) {
-            if ($request->password && ! empty($request->password)) {
-                $new_user = User::firstOrCreate(['email' => $request->email], [
-                    'name' => $request->prenom,
-                    'email' => $request->email,
-                    'role' => RoleEnum::CUSTOMER->value,
-                    'change_password' => true,
-                    'password' => Hash::make($request->password),
-                ]);
-                // send register mail
-                RegisterMailJob::dispatch($new_user);
-            }
+        if (! $request->integer('livraison')) {
+            flash()->error('Aucun transporteur disponible.');
 
-            $pays = Country::findOrFail($request->country_id);
-            // register client
-            $client = Client::firstOrCreate(['email' => $request->email], [
-                'prenom' => $request->prenom,
-                'nom' => $request->nom,
-                'contact' => $request->contact,
-                'pays' => $pays->nom,
-            ]);
-
-            // get user cart content
-            $panier = CartFacade::session($user);
-            // get product poids sum
-            $totalWeight = $panier->getContent()->pluck('attributes')->sum('poids');
-            $shipping = Shipping::findOrFail($request->livraison);
-
-            // register client order infos
-            $data = new Order([
-                'adresse' => $request->adresse,
-                'postal' => $request->postal,
-                'ville' => $request->ville,
-                'country_id' => $pays->id,
-                'poids' => $totalWeight . ' Kg',
-                'shipping' => $shipping->montant,
-                'transport_id' => $request->transport_id,
-                'commentaire' => $request->commentaire,
-            ]);
-
-            // save client order infos
-            $order = $client->orders()->save($data);
-
-            // Variable pour suivre si une erreur de stock est survenue
-            $erreurStockInsuffisant = false;
-
-            // // add pivot table value without updating stock
-            $panier->getContent()->each(function ($product) use ($order, &$erreurStockInsuffisant) {
-                if ($product->quantity > $product->associatedModel->stock) {
-                    // Indique qu'une erreur s'est produite
-                    $erreurStockInsuffisant = true;
-
-                    return false; // Arrête l'itération de la boucle
-                }
-                $order->products()->attach($product->associatedModel->id, [
-                    'quantity' => $product->quantity,
-                    'montant' => $product->price * $product->quantity,
-                ]);
-            });
-
-            // Si une erreur de stock est survenue, annule la transaction
-            if ($erreurStockInsuffisant) {
-                flash()->error("La quantité d'un produit est non disponible.");
-
-                return back();
-            }
-
-            // Générer le lien de paiement
-            $montant = (int) ($panier->getTotal()) + $shipping->montant;
-            $currencyCode = 'XOF';
-            $emailAddress = $request->email;
-            $redirectUrl = route('order.validate');
-            $cancelUrl = route('order.cancel');
-
-            $accessToken = $this->getAccessToken();
-            if ($accessToken) {
-                $postData = $this->prepareTransactionData(
-                    $montant,
-                    $currencyCode,
-                    $emailAddress,
-                    $redirectUrl,
-                    $cancelUrl
-                );
-
-                $response = $this->createOrder($postData, $accessToken);
-
-                if ($response && isset($response['_links']['payment']['href'])) {
-                    $link = $response['_links']['payment']['href'];
-                    $order->update(['trans_ref' => $response['reference']]);
-                    $transactionSucceeded = true;
-                }
-            }
-        });
-
-        if ($transactionSucceeded && $link) {
-            return redirect()->away($link);
+            return back();
         }
 
-        return abort(500, 'Unable to process payment');
+        // 1. Création de la commande (transaction DB)
+        try {
+            $order = app(OrderService::class)->createOrder($request, $this->cart);
+        } catch (Throwable $e) {
+            flash()->error($e->getMessage());
+
+            return back();
+        }
+
+        // 2. Création du lien de paiement (API externe → hors transaction)
+        try {
+            $montant = (int) $this->cart->getTotal() + $order->shipping;
+
+            $postData = $this->prepareTransactionData(
+                $montant,
+                'XOF',
+                $request->email,
+                route('order.validate'),
+                route('order.cancel')
+            );
+
+            $token = $this->getAccessToken();
+            $response = $this->createOrder($postData, $token);
+
+            if (! isset($response['_links']['payment']['href'])) {
+                throw new Exception('Lien de paiement introuvable');
+            }
+
+            // mettre à jour la commande
+            $order->update([
+                'trans_ref' => $response['reference'],
+            ]);
+
+            return redirect()->away($response['_links']['payment']['href']);
+        } catch (Throwable $e) {
+            // rollback API sans rollback DB
+            flash()->error('Le paiement n’a pas pu être initialisé.');
+
+            return back();
+        }
     }
 
     public function invoice(string $id)
@@ -217,7 +150,7 @@ final class OrderController extends Controller
     public function valid()
     {
         request()->fullUrlWithQuery(['ref' => null]);
-        $this->cart_clear();
+        // $this->cart_clear();
 
         return view('validate');
     }
@@ -231,8 +164,8 @@ final class OrderController extends Controller
             $this->cancelPaymentLink($order->trans_ref);
         }
 
-        $this->cart_clear();
-        toastr()->success('Commande annulée avec succès!');
+        // $this->cart_clear();
+        flash()->success('Commande annulée avec succès!');
 
         // Redirect to the home page or a URL without the 'ref' parameter
         return redirect()->route('home');

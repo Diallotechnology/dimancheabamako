@@ -6,6 +6,7 @@ import ButtonDelete from "@/Components/ButtonDelete.vue";
 import { Head, Link, useForm } from "@inertiajs/vue3";
 import Modal from "@/Components/Modal.vue";
 import notify from "@/helper";
+import { ref } from "vue";
 
 const props = defineProps({
     rows: {
@@ -20,6 +21,7 @@ const form = useForm({
     montant: "",
 });
 
+const processing = ref(false);
 const submit = () => {
     form.post(route("paylink.store"), {
         onSuccess: () => {
@@ -106,6 +108,8 @@ function copyMe(link) {
                             <Link
                                 :href="route('paylink.regenerate', row.id)"
                                 class="btn btn-sm font-sm rounded btn-brand m-1"
+                                :disabled="processing"
+                                @click="processing = true"
                             >
                                 <i class="material-icons md-change_circle"></i>
                             </Link>

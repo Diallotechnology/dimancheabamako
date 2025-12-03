@@ -4,16 +4,16 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers;
 
-use App\Models\User;
-use App\Models\Client;
-use App\Service\CartService;
 use App\Jobs\RegisterMailJob;
-use Illuminate\Support\Facades\DB;
+use App\Models\Client;
 use App\Models\PendingRegistration;
-use Illuminate\Support\Facades\Auth;
+use App\Models\User;
+use App\Service\CartService;
 use Illuminate\Auth\Events\Registered;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
-class PendingRegistrationController extends Controller
+final class PendingRegistrationController extends Controller
 {
     public function __invoke(string $token)
     {
@@ -24,7 +24,7 @@ class PendingRegistrationController extends Controller
         DB::transaction(function () use ($pending) {
 
             $user = User::create([
-                'name' => $pending->prenom . ' ' . $pending->nom,
+                'name' => $pending->prenom.' '.$pending->nom,
                 'email' => $pending->email,
                 'role' => $pending->role,
                 'password' => $pending->password,

@@ -100,7 +100,7 @@ final class Order extends Model
         return $this->belongsTo(Client::class);
     }
 
-    public function getShipping(): float|int
+    public function getShipping(): int
     {
         if (session('devise') === 'EUR') {
             // Récupération du taux de conversion et du symbole de devise en fonction de la locale de la session

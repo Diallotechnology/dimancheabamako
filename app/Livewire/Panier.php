@@ -71,7 +71,6 @@ final class Panier extends Component
         $this->trans = [];
 
         return flash()->success('Nous ne livrons pas dans ce pays!');
-
     }
 
     public function calculateShipping()
@@ -112,6 +111,7 @@ final class Panier extends Component
     public function render()
     {
         $items = $this->cart->getContent();
+
         $country = Country::select('id', 'nom')->get();
 
         return view('livewire.panier', compact('items', 'country'));

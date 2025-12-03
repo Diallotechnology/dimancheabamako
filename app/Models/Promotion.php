@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Models;
 
 use App\Helper\DateFormat;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Support\Carbon;
@@ -55,7 +56,7 @@ final class Promotion extends Model
         return $this->belongsToMany(Product::class);
     }
 
-    public function scopeActive($query)
+    public function scopeActive(Builder $query)
     {
         return $query
             ->where('etat', 'En cours')

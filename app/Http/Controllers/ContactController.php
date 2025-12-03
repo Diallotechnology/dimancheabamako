@@ -10,6 +10,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Validator;
 
+use function Flasher\Prime\flash;
+
 final class ContactController extends Controller
 {
     /**
@@ -34,7 +36,7 @@ final class ContactController extends Controller
             'message' => $request->message,
         ];
         Mail::mailer('contact')->to('contact@dimancheabamako.com')->send(new ContactMail($data));
-        toastr()->success('Votre message a été envoyer avec success!');
+        flash()->success('Votre message a été envoyer avec success!');
 
         return back();
     }

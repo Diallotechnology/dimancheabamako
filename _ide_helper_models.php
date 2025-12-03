@@ -19,7 +19,7 @@ namespace App\Models{
  * @property int $promo
  * @property string $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
- * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Product> $products
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, Product> $products
  * @property-read int|null $products_count
  * @method static \Database\Factories\CategoryFactory factory($count = null, $state = [])
  * @method static \Illuminate\Database\Eloquent\Builder|Category newModelQuery()
@@ -33,7 +33,7 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder|Category whereUpdatedAt($value)
  * @mixin \Eloquent
  */
-	class Category extends \Eloquent {}
+	final class Category extends \Eloquent {}
 }
 
 namespace App\Models{
@@ -46,7 +46,7 @@ namespace App\Models{
  * @property string $email
  * @property string $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
- * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Order> $orders
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, Order> $orders
  * @property-read int|null $orders_count
  * @method static \Database\Factories\ClientFactory factory($count = null, $state = [])
  * @method static \Illuminate\Database\Eloquent\Builder|Client newModelQuery()
@@ -62,7 +62,7 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder|Client whereUpdatedAt($value)
  * @mixin \Eloquent
  */
-	class Client extends \Eloquent {}
+	final class Client extends \Eloquent {}
 }
 
 namespace App\Models{
@@ -72,9 +72,9 @@ namespace App\Models{
  * @property string $nom
  * @property string $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
- * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Order> $orders
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, Order> $orders
  * @property-read int|null $orders_count
- * @property-read \App\Models\Zone $zone
+ * @property-read Zone $zone
  * @method static \Database\Factories\CountryFactory factory($count = null, $state = [])
  * @method static \Illuminate\Database\Eloquent\Builder|Country newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Country newQuery()
@@ -86,7 +86,7 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder|Country whereZoneId($value)
  * @mixin \Eloquent
  */
-	class Country extends \Eloquent {}
+	final class Country extends \Eloquent {}
 }
 
 namespace App\Models{
@@ -107,7 +107,7 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder|Devise whereUpdatedAt($value)
  * @mixin \Eloquent
  */
-	class Devise extends \Eloquent {}
+	final class Devise extends \Eloquent {}
 }
 
 namespace App\Models{
@@ -117,7 +117,7 @@ namespace App\Models{
  * @property string $chemin
  * @property string $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
- * @property-read \App\Models\Product $product
+ * @property-read Product $product
  * @method static \Database\Factories\ImageFactory factory($count = null, $state = [])
  * @method static \Illuminate\Database\Eloquent\Builder|Image newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Image newQuery()
@@ -129,7 +129,7 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder|Image whereUpdatedAt($value)
  * @mixin \Eloquent
  */
-	class Image extends \Eloquent {}
+	final class Image extends \Eloquent {}
 }
 
 namespace App\Models{
@@ -150,11 +150,11 @@ namespace App\Models{
  * @property string $etat
  * @property string $created_at
  * @property Carbon|null $updated_at
- * @property-read \App\Models\Client $client
- * @property-read \App\Models\Country $country
- * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Product> $products
+ * @property-read Client $client
+ * @property-read Country $country
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, Product> $products
  * @property-read int|null $products_count
- * @property-read \App\Models\Transport $transport
+ * @property-read Transport $transport
  * @method static \Database\Factories\OrderFactory factory($count = null, $state = [])
  * @method static \Illuminate\Database\Eloquent\Builder|Order newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Order newQuery()
@@ -181,7 +181,7 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Order whereDelai($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Order whereMetrage($value)
  */
-	class Order extends \Eloquent {}
+	final class Order extends \Eloquent {}
 }
 
 namespace App\Models{
@@ -194,7 +194,7 @@ namespace App\Models{
  * @property string $lien
  * @property int $montant
  * @property string $etat
- * @property \Illuminate\Support\Carbon|null $created_at
+ * @property string $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @method static \Illuminate\Database\Eloquent\Builder<static>|PayLink newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|PayLink newQuery()
@@ -210,7 +210,7 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder<static>|PayLink whereTransState($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|PayLink whereUpdatedAt($value)
  */
-	class PayLink extends \Eloquent {}
+	final class PayLink extends \Eloquent {}
 }
 
 namespace App\Models{
@@ -244,7 +244,7 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder<static>|PendingRegistration whereToken($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|PendingRegistration whereUpdatedAt($value)
  */
-	class PendingRegistration extends \Eloquent {}
+	final class PendingRegistration extends \Eloquent {}
 }
 
 namespace App\Models{
@@ -254,7 +254,7 @@ namespace App\Models{
  * @property float $max
  * @property string $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
- * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Shipping> $shippings
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, Shipping> $shippings
  * @property-read int|null $shippings_count
  * @method static \Database\Factories\PoidsFactory factory($count = null, $state = [])
  * @method static \Illuminate\Database\Eloquent\Builder|Poids newModelQuery()
@@ -267,7 +267,7 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder|Poids whereUpdatedAt($value)
  * @mixin \Eloquent
  */
-	class Poids extends \Eloquent {}
+	final class Poids extends \Eloquent {}
 }
 
 namespace App\Models{
@@ -288,16 +288,16 @@ namespace App\Models{
  * @property string $cover
  * @property string $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
- * @property-read \App\Models\Category $categorie
+ * @property-read Category $categorie
  * @property-read string $prix_final
  * @property-read string $prix_format
  * @property-read string $prix_promo
  * @property-read int $reduction
- * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Image> $images
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, Image> $images
  * @property-read int|null $images_count
- * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Order> $orders
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, Order> $orders
  * @property-read int|null $orders_count
- * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Promotion> $promotions
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, Promotion> $promotions
  * @property-read int|null $promotions_count
  * @method static Builder|Product byStock()
  * @method static \Database\Factories\ProductFactory factory($count = null, $state = [])
@@ -323,13 +323,13 @@ namespace App\Models{
  * @mixin \Eloquent
  * @property string|null $slug
  * @property int $status
- * @property-read float $prix_final_base
+ * @property-read int $prix_final_base
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Product active()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Product whereSlug($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Product whereStatus($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Product withActivePromotions()
  */
-	class Product extends \Eloquent {}
+	final class Product extends \Eloquent {}
 }
 
 namespace App\Models{
@@ -342,7 +342,7 @@ namespace App\Models{
  * @property string $fin
  * @property string $created_at
  * @property Carbon|null $updated_at
- * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Product> $products
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, Product> $products
  * @property-read int|null $products_count
  * @method static \Database\Factories\PromotionFactory factory($count = null, $state = [])
  * @method static \Illuminate\Database\Eloquent\Builder|Promotion newModelQuery()
@@ -359,7 +359,7 @@ namespace App\Models{
  * @mixin \Eloquent
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Promotion active()
  */
-	class Promotion extends \Eloquent {}
+	final class Promotion extends \Eloquent {}
 }
 
 namespace App\Models{
@@ -373,9 +373,9 @@ namespace App\Models{
  * @property string $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property-read float $montant_devise
- * @property-read \App\Models\Poids $poids
- * @property-read \App\Models\Transport $transport
- * @property-read \App\Models\Zone $zone
+ * @property-read Poids $poids
+ * @property-read Transport $transport
+ * @property-read Zone $zone
  * @method static \Database\Factories\ShippingFactory factory($count = null, $state = [])
  * @method static \Illuminate\Database\Eloquent\Builder|Shipping newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Shipping newQuery()
@@ -390,7 +390,7 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder|Shipping whereZoneId($value)
  * @mixin \Eloquent
  */
-	class Shipping extends \Eloquent {}
+	final class Shipping extends \Eloquent {}
 }
 
 namespace App\Models{
@@ -415,7 +415,7 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder|Slide whereUpdatedAt($value)
  * @mixin \Eloquent
  */
-	class Slide extends \Eloquent {}
+	final class Slide extends \Eloquent {}
 }
 
 namespace App\Models{
@@ -426,9 +426,9 @@ namespace App\Models{
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property-read \Illuminate\Database\Eloquent\Collection<int, Transport> $orders
  * @property-read int|null $orders_count
- * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Shipping> $shippings
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, Shipping> $shippings
  * @property-read int|null $shippings_count
- * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Zone> $zones
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, Zone> $zones
  * @property-read int|null $zones_count
  * @method static \Database\Factories\TransportFactory factory($count = null, $state = [])
  * @method static \Illuminate\Database\Eloquent\Builder|Transport newModelQuery()
@@ -440,7 +440,7 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder|Transport whereUpdatedAt($value)
  * @mixin \Eloquent
  */
-	class Transport extends \Eloquent {}
+	final class Transport extends \Eloquent {}
 }
 
 namespace App\Models{
@@ -477,7 +477,7 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder|User whereUpdatedAt($value)
  * @mixin \Eloquent
  */
-	class User extends \Eloquent implements \Illuminate\Contracts\Auth\MustVerifyEmail {}
+	final class User extends \Eloquent implements \Illuminate\Contracts\Auth\MustVerifyEmail {}
 }
 
 namespace App\Models{
@@ -486,11 +486,11 @@ namespace App\Models{
  * @property string $nom
  * @property string $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
- * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Country> $countries
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, Country> $countries
  * @property-read int|null $countries_count
- * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Shipping> $shippings
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, Shipping> $shippings
  * @property-read int|null $shippings_count
- * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Transport> $transports
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, Transport> $transports
  * @property-read int|null $transports_count
  * @method static \Database\Factories\ZoneFactory factory($count = null, $state = [])
  * @method static \Illuminate\Database\Eloquent\Builder|Zone newModelQuery()
@@ -502,6 +502,6 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder|Zone whereUpdatedAt($value)
  * @mixin \Eloquent
  */
-	class Zone extends \Eloquent {}
+	final class Zone extends \Eloquent {}
 }
 

@@ -191,26 +191,6 @@ final class CartService
         return $this->load()->filter($callback);
     }
 
-    /**
-     * Tri des items par clé donnée.
-     */
-    public function sortBy(string $key, bool $descending = false): Collection
-    {
-        $items = $this->load();
-
-        return $descending
-            ? $items->sortByDesc($key)
-            : $items->sortBy($key);
-    }
-
-    /**
-     * Groupement par clé.
-     */
-    public function groupBy(string $key): Collection
-    {
-        return $this->load()->groupBy($key);
-    }
-
     private function getCacheKey(): string
     {
         return $this->userId

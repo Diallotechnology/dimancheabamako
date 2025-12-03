@@ -33,8 +33,7 @@ trait CartAction
     {
         $product = Product::with([
             'promotions' => fn ($q) => $q->active()->orderByDesc('id')->limit(1),
-        ])->active()
-            ->ByStock()
+        ])
             ->findOrFail($id);
 
         if ($this->cart->has($product->id)) {

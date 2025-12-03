@@ -23,7 +23,6 @@ final class LinkController extends Controller
                 'promotions' => fn ($q) => $q->active()->orderByDesc('id'),
                 'categorie:id,nom',
             ])
-            ->active()
             ->ByStock();
 
         $latestModels = (clone $baseQuery)->latest()->take(10)->get();
