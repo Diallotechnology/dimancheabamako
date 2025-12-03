@@ -149,7 +149,7 @@
                                         <div class="modal-body">
 
                                             <form method="POST" wire:submit.prevent="login_submit">
-                                                @csrf
+
                                                 <div class="mb-3">
                                                     <x-input-label :value="__('Email')" />
                                                     <x-text-input wire:model='email' class="block mt-1 w-full"

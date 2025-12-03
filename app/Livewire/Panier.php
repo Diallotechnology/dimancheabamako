@@ -4,12 +4,13 @@ declare(strict_types=1);
 
 namespace App\Livewire;
 
-use App\Helper\CartAction;
 use App\Models\Country;
-use Illuminate\Support\Facades\Auth;
-use Livewire\Attributes\On;
-use Livewire\Attributes\Validate;
 use Livewire\Component;
+use App\Helper\CartAction;
+use Livewire\Attributes\On;
+use App\Service\CartService;
+use Livewire\Attributes\Validate;
+use Illuminate\Support\Facades\Auth;
 
 final class Panier extends Component
 {
@@ -17,7 +18,7 @@ final class Panier extends Component
 
     public int $qte = 1;
 
-    public int $country_id = 0;
+    public $country_id;
 
     public $transport_id;
 
@@ -43,18 +44,23 @@ final class Panier extends Component
     {
         $this->validate();
 
-        $credentials = [
+        $oldSessionId = session()->getId(); // ⚠️ Crutial
+        if (Auth::attempt([
             'email' => $this->email,
             'password' => $this->password,
-        ];
+        ])) {
 
-        if (Auth::attempt($credentials)) {
-            flash()->success('Connexion reussi.');
+            $cart = app(CartService::class);
+            $cart->mergeGuestCartToUser(Auth::id(), $oldSessionId);
 
+            flash()->success('Connexion réussie.');
             return $this->redirectRoute('panier');
         }
-        flash()->success(__('auth.failed'));
+
+        flash()->error(__('auth.failed'));
     }
+
+
 
     public function updatingCountryid()
     {
@@ -75,7 +81,7 @@ final class Panier extends Component
 
     public function calculateShipping()
     {
-        $shipping = $this->getShippingCost($this->country_id, $this->transport_id);
+        $shipping = $this->getShippingCost((int)$this->country_id, (int)$this->transport_id);
 
         if (! $shipping) {
             $this->shipping = null;

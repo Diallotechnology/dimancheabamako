@@ -84,6 +84,7 @@ final class OrderController extends Controller
      */
     public function store(StoreOrderRequest $request)
     {
+        dd($request->all());
         if ($this->cart->getContent()->isEmpty()) {
             flash()->error('Panier vide !');
 

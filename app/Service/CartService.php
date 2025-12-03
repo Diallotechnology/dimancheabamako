@@ -37,13 +37,13 @@ final class CartService
         Cache::forget($this->getCacheKey());
     }
 
-    public function mergeGuestCartToUser(int $userId): void
+    public function mergeGuestCartToUser(int $userId, string $guestSessionId): void
     {
-        $guestKey = 'cart_guest_'.$this->session->getId();
-        $userKey = "cart_user_{$userId}";
+        $guestKey = 'cart_guest_' . $guestSessionId;
+        $userKey  = "cart_user_{$userId}";
 
         $guestCart = Cache::get($guestKey, []);
-        $userCart = Cache::get($userKey, []);
+        $userCart  = Cache::get($userKey, []);
 
         if (empty($guestCart)) {
             return;
@@ -56,7 +56,7 @@ final class CartService
                 continue;
             }
 
-            // Si le produit existe déjà chez l'utilisateur, on cumule les quantités
+            // Fusion
             if (isset($userCart[$productId])) {
                 $userCart[$productId]['quantity'] += $itemGuest['quantity'];
                 $userCart[$productId]['total'] =
@@ -69,6 +69,8 @@ final class CartService
         Cache::put($userKey, $userCart, now()->addMinutes(self::CACHE_TTL));
         Cache::forget($guestKey);
     }
+
+
 
     /**
      * Ajoute un produit au panier.
@@ -103,7 +105,6 @@ final class CartService
 
         $items->put($id, $cartItem);
         $this->save($items);
-
         return $cartItem;
     }
 
@@ -195,13 +196,13 @@ final class CartService
     {
         return $this->userId
             ? "cart_user_{$this->userId}"
-            : 'cart_guest_'.$this->session->getId();
+            : 'cart_guest_' . $this->session->getId();
     }
 
     private function load(): Collection
     {
         return collect(Cache::get($this->getCacheKey(), []))
-            ->map(fn ($item) => collect($item));
+            ->map(fn($item) => collect($item));
     }
 
     private function save(Collection $items): void

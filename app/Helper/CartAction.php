@@ -9,6 +9,9 @@ use App\Models\Country;
 use App\Models\Product;
 use App\Models\Shipping;
 use App\Service\CartService;
+use Illuminate\Support\Facades\DB;
+
+use function Laravel\Prompts\select;
 
 trait CartAction
 {
@@ -32,7 +35,7 @@ trait CartAction
     public function store(int $id)
     {
         $product = Product::with([
-            'promotions' => fn ($q) => $q->active()->orderByDesc('id')->limit(1),
+            'promotions' => fn($q) => $q->active()->orderByDesc('id')->limit(1),
         ])
             ->findOrFail($id);
 
@@ -77,7 +80,7 @@ trait CartAction
             })
             ->sum();
 
-        return $format ? number_format($total, 2, '.', ' ').' kg' : $total;
+        return $format ? number_format($total, 2, '.', ' ') . ' kg' : $total;
     }
 
     public function getShippingCost(int $countryId, int $transportId): ?Shipping
@@ -90,10 +93,11 @@ trait CartAction
         }
 
         // zone du pays
-        $zoneId = Country::findOrFail($countryId)->zone_id;
+        $zoneId = DB::table('countries')->select('zone_id', 'id')->where('id', $countryId)->value('zone_id');
 
         // récupérer la correspondance shipping
         return Shipping::query()
+            ->select('id', 'zone_id', 'transport_id', 'montant', 'temps')
             ->where('zone_id', $zoneId)
             ->where('transport_id', $transportId)
             ->whereHas('poids', function ($query) use ($totalWeight) {
