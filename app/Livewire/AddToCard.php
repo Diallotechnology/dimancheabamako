@@ -17,11 +17,7 @@ final class AddToCard extends Component
 
     public function add()
     {
-        $this->validate([
-            'checkout' => [new ValidShoppingCart(app(CartService::class))],
-        ]);
-
-        return $this->store($this->id);
+        return $this->store((int)$this->id);
     }
 
     public function render()

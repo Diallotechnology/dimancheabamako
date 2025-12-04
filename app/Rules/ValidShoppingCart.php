@@ -23,7 +23,7 @@ final readonly class ValidShoppingCart implements ValidationRule
     public function validate(string $attribute, mixed $value, Closure $fail): void
     {
         $cart = $this->cartService->getContent();
-
+        \dd($cart);
         if ($cart->isEmpty()) {
             $fail('Votre panier est vide.');
 

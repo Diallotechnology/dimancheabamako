@@ -30,7 +30,7 @@ use App\Mail\RegisterMail;
 use Illuminate\Support\Facades\Route;
 
 Route::prefix('admin')->middleware('auth', 'verified')->group(function () {
-    Route::middleware('role:'.RoleEnum::ADMIN->value)->group(function () {
+    Route::middleware('role:' . RoleEnum::ADMIN->value)->group(function () {
         Route::resource('client', ClientController::class)->except('index', 'create');
         Route::resource('user', UserController::class)->except('index', 'create');
         Route::resource('image', ImageController::class)->except('index', 'create', 'show', 'store');
@@ -63,8 +63,8 @@ Route::prefix('admin')->middleware('auth', 'verified')->group(function () {
             Route::get('paylink', 'paylink')->name('paylink');
         });
     });
-    Route::middleware('role:'.RoleEnum::SECRTETAIRE->value)->group(function () {
-        Route::resource('order', OrderController::class)->except('index', 'create');
+    Route::middleware('role:' . RoleEnum::SECRTETAIRE->value)->group(function () {
+        Route::resource('order', OrderController::class)->except('index', 'create', 'store');
         Route::get('product/favoris/{data}/{product_id}', [ProductController::class, 'favoris_update'])->name('product.favori');
         Route::resource('category', CategoryController::class)->except('index', 'create', 'show');
         Route::resource('product', ProductController::class)->except('index');
@@ -72,7 +72,7 @@ Route::prefix('admin')->middleware('auth', 'verified')->group(function () {
             Route::get('dashboard', 'dashboard')->name('dashboard');
             Route::get('order', 'order')->name('order');
             Route::get('product', 'product')->name('product');
-            Route::get('categor', 'category')->name('categor');
+            Route::get('category', 'category')->name('category');
         });
     });
 });
@@ -86,7 +86,7 @@ Route::controller(LinkController::class)->group(function () {
 Route::get('/shop/{category}-{slug}', Produit::class)->name('shop');
 Route::get('/panier', Panier::class)->name('panier');
 Route::post('contact/mail', [ContactController::class, 'sendEmail'])->name('contact.email');
-Route::view('categorie', 'category')->name('category');
+Route::view('categorie', 'category')->name('categorie_mobile');
 Route::view('contact', 'contact')->name('contact');
 Route::view('about', 'about')->name('about');
 Route::view('livraison', 'livraison')->name('livraison');
@@ -130,4 +130,4 @@ Route::get('test', function () {
     return new ConfirmRegistrationMail('RHJIchQWVQK6lWCbK9GLczQmmfwZt5s7nOMeFXRk3WNfYrIjHsPjU9Tw0l9S6Qah');
 });
 // Route::get('test', [OrderController::class, 'test'])->name('test');
-require __DIR__.'/auth.php';
+require __DIR__ . '/auth.php';

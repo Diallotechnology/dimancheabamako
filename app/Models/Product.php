@@ -98,22 +98,27 @@ final class Product extends Model
         if ($devise === 'EUR') {
             $taux = session('taux_eur', 1);
 
-            return number_format($montant / $taux, 2, ',', ' ').' €';
+            return number_format($montant / $taux, 2, ',', ' ') . ' €';
         }
 
-        return number_format($montant, 0, ',', ' ').' CFA';
+        return number_format($montant, 0, ',', ' ') . ' CFA';
     }
 
-    // Scope pour récupérer uniquement la promo active
-    public function scopeWithActivePromotions(Builder $query): Builder
+    public function activePromotion()
     {
-        return $query->with([
-            'promotions' => fn ($q) => $q
-                ->where('etat', 'En cours')
-                ->where('debut', '<=', now())
-                ->where('fin', '>=', now())
-                ->orderByDesc('id'),
-        ]);
+        return $this->belongsToMany(Promotion::class)
+            ->where('etat', 'En cours')
+            ->where('debut', '<=', now())
+            ->where('fin', '>=', now())
+            ->orderByDesc('id');
+    }
+
+
+    // Helper interne : trouve la promo active SANS refaire de requêtes si déjà chargée
+    private function resolveActivePromotion(): ?Promotion
+    {
+        return $this->activePromotion
+            ->first();
     }
 
     /* ---------- Prix & promotions ---------- */
@@ -127,6 +132,34 @@ final class Product extends Model
         }
 
         return $prix; // toujours en CFA brut
+    }
+
+    public function getReductionAttribute(): int
+    {
+        return $this->resolveActivePromotion()?->reduction ?? 0;
+    }
+
+    public function getPrixPromoAttribute()
+    {
+        $promo = $this->resolveActivePromotion();
+
+        if (! $promo) {
+            return $this->prix_format;
+        }
+
+        return $this->prix * (1 - $promo->reduction / 100);
+    }
+
+    public function getPrixFormatAttribute(): string
+    {
+        if (session('devise') === 'EUR') {
+            $taux = session('taux_eur', 1);
+            $prix = number_format($this->prix / $taux, 2, ',', ' ');
+            return "{$prix} €";
+        }
+
+        $prix = number_format($this->prix, 0, ',', ' ');
+        return "{$prix} CFA";
     }
 
     /**
@@ -155,8 +188,8 @@ final class Product extends Model
 
     public function getCoverAttribute(): string
     {
-        return Storage::url($this->attributes['cover']);
-        // return asset('admin/assets/imgs/theme/logo.svg');
+        // return Storage::url($this->attributes['cover']);
+        return asset('admin/assets/imgs/theme/logo.svg');
     }
 
     public function DocLink(): string
@@ -188,27 +221,12 @@ final class Product extends Model
 
                 // Vérifier l'unicité du slug
                 while (self::where('slug', $slug)->where('id', '!=', $product->id)->exists()) {
-                    $slug = $baseSlug.'-'.$counter;
+                    $slug = $baseSlug . '-' . $counter;
                     $counter++;
                 }
 
                 $product->slug = $slug;
             }
         });
-    }
-
-    // Helper interne : trouve la promo active SANS refaire de requêtes si déjà chargée
-    private function resolveActivePromotion(): ?Promotion
-    {
-        if ($this->relationLoaded('promotions')) {
-            return $this->promotions->first(); // déjà filtrées via ->with()
-        }
-
-        return $this->promotions()
-            ->where('etat', 'En cours')
-            ->where('debut', '<=', now())
-            ->where('fin', '>=', now())
-            ->orderByDesc('id')
-            ->first();
     }
 }

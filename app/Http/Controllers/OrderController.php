@@ -11,6 +11,7 @@ use App\Helper\OrderAPI;
 use App\Http\Requests\StoreOrderRequest;
 use App\Http\Requests\UpdateOrderRequest;
 use App\Models\Order;
+use App\Service\CartService;
 use App\Service\OrderService;
 use Exception;
 use Illuminate\Http\Request;
@@ -24,7 +25,8 @@ use function Flasher\Prime\flash;
 
 final class OrderController extends Controller
 {
-    use CartAction, DeleteAction, OrderAPI;
+    use DeleteAction, OrderAPI;
+
 
     // public function test()
     // {
@@ -78,13 +80,17 @@ final class OrderController extends Controller
     //             }
     //         });
     // }
+    private CartService $cart;
 
+    public function __construct(CartService $cart)
+    {
+        $this->cart = $cart;
+    }
     /**
      * Store a newly created resource in storage.
      */
     public function store(StoreOrderRequest $request)
     {
-        dd($request->all());
         if ($this->cart->getContent()->isEmpty()) {
             flash()->error('Panier vide !');
 
@@ -151,7 +157,7 @@ final class OrderController extends Controller
     public function valid()
     {
         request()->fullUrlWithQuery(['ref' => null]);
-        // $this->cart_clear();
+        $this->cart->clear();
 
         return view('validate');
     }
@@ -165,7 +171,7 @@ final class OrderController extends Controller
             $this->cancelPaymentLink($order->trans_ref);
         }
 
-        // $this->cart_clear();
+        $this->cart->clear();
         flash()->success('Commande annulée avec succès!');
 
         // Redirect to the home page or a URL without the 'ref' parameter

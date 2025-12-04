@@ -197,7 +197,7 @@
                 <nav>
                     <ul class="mobile-menu">
                         <x-nav-link url='home' name="messages.home" />
-                        <x-nav-link url='category' name="messages.category" />
+                        <x-nav-link url='categorie_mobile' name="messages.category" />
                         <x-nav-link url='about' name="messages.about" />
                         <x-nav-link url='livraison' name="messages.delivery" />
                         <x-nav-link url='contact' name="messages.contact" />

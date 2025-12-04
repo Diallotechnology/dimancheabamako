@@ -95,6 +95,7 @@ return [
     'verify_email_address' => 'Vérifiez votre adresse e-mail',
     'click_to_verify_email' => 'Cliquez sur le bouton ci-dessous pour vérifier votre adresse e-mail.',
     'check_spam' => 'Pensez à vérifier dans les spams.',
+    'product_status' => 'sur commande',
     'email' => [
         'register' => [
             'greeting' => 'Bonjour,',

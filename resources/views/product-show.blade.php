@@ -29,7 +29,7 @@
         <link rel="canonical" href="{{ url()->current() }}">
 
         <!-- JSON-LD Structured Data -->
-        <script type="application/ld+json">
+        {{-- <script type="application/ld+json">
             {
             "@context": "https://schema.org",
             "@type": "Product",
@@ -48,7 +48,7 @@
                 "url": "{{ url()->current() }}"
             }
         }
-        </script>
+        </script> --}}
     </x-slot:metadata>
 
     <x-slot:title>
@@ -66,7 +66,7 @@
                                         <div class="swiper-wrapper">
                                             @foreach ($product->images as $row)
                                             <div class="swiper-slide">
-                                                <img src="{{ $row->chemin }}" alt="{{ $row->nom }}" />
+                                                <img src="{{ $row->chemin }}" alt="{{ $product->nom }}" />
                                             </div>
                                             @endforeach
                                         </div>
@@ -77,7 +77,7 @@
                                         <div class="swiper-wrapper">
                                             @foreach ($product->images as $row)
                                             <div class="swiper-slide">
-                                                <img src="{{ $row->chemin }}" alt="{{ $row->nom }}" />
+                                                <img src="{{ $row->chemin }}" alt="{{ $product->nom }}" />
                                             </div>
                                             @endforeach
                                         </div>
@@ -132,7 +132,7 @@
                                                 {{ $product->resume }}
                                             </p>
                                         </div>
-                                        <div class="product_sort_info font-xs mb-30">
+                                        <div class="product_sort_info font-xl mb-30">
                                             <ul>
                                                 <li class="mb-10">
                                                     <i class="fi-rs-crown mr-5"></i>@lang('messages.size'):
@@ -147,10 +147,17 @@
                                                     : "NON"
                                                     }}
                                                 </li>
+                                                <li>
+                                                    @if ($product->status)
+                                                    <span class="ml-1 text-danger ">
+                                                        @lang('messages.product_status')
+                                                    </span>
+                                                    @endif
+                                                </li>
                                             </ul>
                                         </div>
 
-                                        <div class="bt-1 border-color-1 mt-30 mb-30"></div>
+
                                         <div class="detail-extralink">
                                             <div class="product-extra-link2">
                                                 <livewire:add-to-card :id="$product->id" />

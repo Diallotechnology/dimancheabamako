@@ -24,7 +24,7 @@ final class PendingRegistrationController extends Controller
         DB::transaction(function () use ($pending) {
 
             $user = User::create([
-                'name' => $pending->prenom.' '.$pending->nom,
+                'name' => $pending->prenom . ' ' . $pending->nom,
                 'email' => $pending->email,
                 'role' => $pending->role,
                 'password' => $pending->password,
@@ -45,10 +45,11 @@ final class PendingRegistrationController extends Controller
             // event(new Registered($user));
             // ton mail de bienvenue si souhaité
             RegisterMailJob::dispatch($user);
+            $oldSessionId = session()->getId(); // ⚠️ Crutial
             // connexion automatique
             Auth::login($user);
 
-            app(CartService::class)->mergeGuestCartToUser($user->id);
+            app(CartService::class)->mergeGuestCartToUser(Auth::id(), $oldSessionId);
 
             $pending->delete();
         });

@@ -31,6 +31,7 @@
                         </span>
                     </div>
                     @endif
+
                 </div>
 
                 <div class="product-content-wrap">
@@ -58,11 +59,18 @@
                             {{ $item['reduction'] > 0 ? $item['prix_promo'] : $item['prix_format'] }}
                         </span>
 
+                        @if ($item['status'])
+                        <span class="ml-1 text-danger">
+                            @lang('messages.product_status')
+                        </span>
+                        @endif
+
                         @if ($item['reduction'] > 0)
                         <span class="old-price">
                             {{ $item['prix_format'] }}
                         </span>
                         @endif
+
                     </div>
 
                     <div class="product-action-1 show">

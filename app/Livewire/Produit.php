@@ -23,7 +23,7 @@ final class Produit extends Component
         return $this->store($id);
     }
 
-    public function mount(Category $category, string $slug)
+    public function mount(Category $category)
     {
         $this->cat = $category;
     }
@@ -31,7 +31,7 @@ final class Produit extends Component
     public function render()
     {
         $rows = Product::query()->with('promotions', 'categorie:id,nom')->ByStock()->when($this->search, function ($query) {
-            $query->whereAny(['nom', 'color'], 'LIKE', '%'.$this->search.'%');
+            $query->whereAny(['nom', 'color'], 'LIKE', '%' . $this->search . '%');
         })->when($this->cat, function ($query) {
             $query->where('categorie_id', $this->cat->id);
         })->latest('id')->paginate(15);

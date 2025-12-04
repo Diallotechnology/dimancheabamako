@@ -59,7 +59,7 @@ final class OrderService
                 'postal' => $request->postal,
                 'ville' => $request->ville,
                 'country_id' => $country->id,
-                'poids' => $totalWeight.' Kg',
+                'poids' => $totalWeight . ' Kg',
                 'shipping' => $shipping->montant,
                 'transport_id' => $request->transport_id,
                 'commentaire' => $request->commentaire,
@@ -67,15 +67,15 @@ final class OrderService
 
             // 4. vérifier stock + attach
             foreach ($cart->getContent() as $item) {
-                if ($item->quantity > $item->associatedModel->stock) {
-                    throw new Exception("Stock insuffisant pour {$item->name}");
+                if ($item['quantity'] > $item['stock']) {
+                    throw new Exception("Stock insuffisant pour {$item['name']}");
                 }
 
                 $order->products()->attach(
-                    $item->id,
+                    $item['id'],
                     [
-                        'quantity' => $item->quantity,
-                        'montant' => $item->price * $item->quantity,
+                        'quantity' => $item['quantity'],
+                        'montant' => $item['price'] * $item['quantity'],
                     ]
                 );
             }

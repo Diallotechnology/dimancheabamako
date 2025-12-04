@@ -1,7 +1,5 @@
 <x-app-layout>
-    @php
-    $cat = App\Models\Category::select('id','nom')->get();
-    @endphp
+
     <x-slot:title>
         @lang('messages.category')
         </x-slot>
@@ -13,25 +11,42 @@
                 </div>
             </div>
         </div>
-        <section class="section-padding">
-            <div class="container pt-25">
-                <h2 class="mb-3">Explorez nos categories de produits</h2>
-                <div class="row">
-                    <ul class="dropdown" style="list-style: inside;">
-                        @foreach($cat as $row)
-                        <li>
-                            <a class="text-black-50 cat" style="font-size: x-large"
-                                href="{{ route('shop', ['category'=>$row->id,'slug'=>$row->nom]) }}">{{
-                                $row->nom }}</a>
-                        </li>
-                        @endforeach
-                    </ul>
+        <section class="py-4 bg-white">
+            <div class="container">
+                <h2 class="fs-5 fw-semibold text-dark mb-4">Catégories</h2>
+
+                <div class="row g-3">
+                    @foreach($categories as $row)
+                    <div class="col-6">
+                        <a href="{{ route('shop', ['category'=>$row->id, 'slug'=>$row->nom]) }}"
+                            class="apple-card d-flex flex-column justify-content-center align-items-start p-3 rounded-4">
+                            <span class="category-name">{{ $row->nom }}</span>
+                        </a>
+                    </div>
+                    @endforeach
                 </div>
             </div>
         </section>
+
         <style>
-            .cat:hover {
-                color: #d79f01 !important;
+            .apple-card {
+                background: #f8f8f8;
+                border: 1px solid #e5e5e5;
+                border-radius: 18px;
+                transition: all .2s ease;
+            }
+
+            .apple-card:hover {
+                background: #ffffff;
+                border-color: #d1d1d1;
+                transform: translateY(-2px);
+            }
+
+            .category-name {
+                font-size: 1rem;
+                color: #000;
+                font-weight: 500;
+                letter-spacing: -0.2px;
             }
         </style>
 </x-app-layout>
