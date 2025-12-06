@@ -98,7 +98,6 @@ final class Panier extends Component
         $this->refreshCart();
     }
 
-    #[On('productUpdate')]
     #[On('productDelete')]
     public function refreshCart(): void
     {

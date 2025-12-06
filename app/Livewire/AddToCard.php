@@ -12,12 +12,21 @@ use Livewire\Component;
 final class AddToCard extends Component
 {
     use CartAction;
-
+    public array $addedItem = [];
     public $id;
 
     public function add()
     {
-        return $this->store((int)$this->id);
+        $item = $this->store((int)$this->id);
+
+        $this->addedItem = [
+            'rowId' => $item['rowId'],
+            'id' => $item['id'],
+            'name' => $item['name'],
+            'price' => $item['price'],
+            'quantity' => $item['quantity'],
+        ];
+        return;
     }
 
     public function render()

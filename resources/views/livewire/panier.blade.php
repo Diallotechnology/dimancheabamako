@@ -40,7 +40,9 @@
                                         </td>
                                         <td class="text-center" data-title="Stock">
                                             <div class="border radius d-inline-flex">
-                                                <livewire:update :row="$item" :key="'update-'.$item['id']" />
+                                                {{--
+                                                <livewire:update :row="$item" :key="'update-'.$item['id']" /> --}}
+                                                {{ $item['quantity'] }}
                                             </div>
                                         </td>
                                         <td>

@@ -1,4 +1,5 @@
 <div>
+
     <div class="row product-grid-4">
         @forelse ($items as $item)
         <div class="col-lg-3 col-md-4 col-12 col-sm-6" wire:key="product-{{ $item['id'] }}">
@@ -61,7 +62,11 @@
 
                         @if ($item['status'])
                         <span class="ml-1 text-danger">
-                            @lang('messages.product_status')
+                            @lang('messages.product_status.commande')
+                        </span>
+                        @else
+                        <span class="ml-1 text-success">
+                            @lang('messages.product_status.disponible')
                         </span>
                         @endif
 

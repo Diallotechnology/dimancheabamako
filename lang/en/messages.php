@@ -95,7 +95,10 @@ return [
     'verify_email_address' => 'Verify Email Address',
     'click_to_verify_email' => 'Click the button below to verify your email address.',
     'check_spam' => 'Remember to check your spam folder.',
-    'product_status' => 'on order',
+    'product_status' => [
+        'commande' => 'On order',
+        'disponible' => 'Available',
+    ],
     'email' => [
         'register' => [
             'greeting' => 'Hello,',

@@ -36,33 +36,48 @@ trait CartAction
     {
         $product = Product::with([
             'promotions' => fn($q) => $q->active()->orderByDesc('id')->limit(1),
-        ])
-            ->findOrFail($id);
+        ])->findOrFail($id);
 
+        // 1. Ajouter ou récupérer l'item
         if ($this->cart->has($product->id)) {
-            flash()->warning('Produit existe déjà dans le panier.');
-
-            return;
+            $added = $this->cart->get($product->id); // déjà existant
+        } else {
+            $added = $this->cart->add(
+                id: $product->id,
+                name: $product->nom,
+                price: $product->prix_final_base,
+                stock: $product->stock,
+                poids: $product->poids,
+                attributes: [
+                    'cover' => $product->cover,
+                    'reduction' => $product->reduction ?? 0,
+                ]
+            );
         }
 
-        $this->cart->add(
-            id: $product->id,
-            name: $product->nom,
-            price: $product->prix_final_base,
-            stock: $product->stock,
-            poids: $product->poids,
-            attributes: [
-                'cover' => $product->cover,
-                'reduction' => $product->reduction ?? 0,
-            ]
-        );
+        // 2. Structurer pour le front
+        $item = [
+            'id'       => $added['id'],
+            'name'     => $added['name'],
+            'price'    => $added['price'],
+            'quantity' => $added['quantity'],
+            'poids'    => $added['poids'],
+            'stock'    => $added['stock'],
+            'attributes' => [
+                'cover'     => $added['attributes']['cover'] ?? null,
+                'reduction' => $added['attributes']['reduction'] ?? 0,
+            ],
+        ];
 
-        flash()->success('Produit ajouté au panier avec succès.');
+        // 3. Ouverture immédiate du modal (toujours)
+        $this->js('window.showQuick()');
 
-        $this->dispatch('productCount')->to(Counter::class);
+        // 4. Envoi du payload (toujours)
+        $this->dispatch('openQuickModal', item: $item);
 
-        $this->dispatch('productAdded');
+        return $item; // utile si besoin dans add()
     }
+
 
     public function getWeight(bool $format = false): float|string
     {

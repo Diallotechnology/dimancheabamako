@@ -116,29 +116,10 @@
 
     @include('layouts.nav')
     <!-- Quick view -->
-    <div wire:ignore.self class="modal fade custom-modal" id="quickViewModal" tabindex="-1"
-        aria-labelledby="quickViewModalLabel" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                <div class="modal-body">
-                    <div class="cart-action text-center m-3">
-                        <h4 class="my-3">
-                            @lang('messages.product_added_success')
-                        </h4>
-                        <a class="btn mr-10 mb-sm-15" href="{{ route('panier') }}">
-                            <i class="fi-rs-shuffle mr-10"></i>
-                            @lang('messages.finalize_order')
-                        </a>
-                        <a class="btn" aria-label="Close" href="{{ route('home') }}">
-                            <i class="fi-rs-shopping-bag mr-10"></i>
-                            @lang('messages.continue_shopping')
-                        </a>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+
+
+    <livewire:quick-add-modal />
+
     <main class="main">
         {{ $slot }}
     </main>
