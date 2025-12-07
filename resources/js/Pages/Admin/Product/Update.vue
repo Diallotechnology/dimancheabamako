@@ -27,6 +27,7 @@ const form = useForm({
     prix: props.product.prix,
     stock: props.product.stock,
     favoris: props.product.favoris,
+    is_preorder: props.product.is_preorder,
     cover: null,
     image: [],
     video: null,
@@ -51,6 +52,7 @@ const submit = () => {
             form.cover = props.product.cover;
             form.image = props.product.image;
             form.video = props.product.video;
+            form.is_preorder = props.product.is_preorder;
             notify("produit mise à jour avec success !", true);
         },
         onError: () => {
@@ -99,11 +101,27 @@ const submit = () => {
                             </Select2>
                         </div>
                         <div class="col-md-6">
-                            <label for="">Favoris</label>
-                            <select v-model="form.favoris" class="form-select">
-                                <option value="1">OUI</option>
-                                <option value="0">NON</option>
-                            </select>
+                            <div class="mb-3">
+                                <span class="form-check-label"
+                                    >Produit Favoris ?
+                                </span>
+                                <input
+                                    v-model.number="form.favoris"
+                                    class="form-check-input"
+                                    type="checkbox"
+                                />
+                            </div>
+
+                            <div>
+                                <span class="form-check-label"
+                                    >Produit uniquement sur commande ?
+                                </span>
+                                <input
+                                    v-model.number="form.is_preorder"
+                                    class="form-check-input"
+                                    type="checkbox"
+                                />
+                            </div>
                         </div>
                         <div class="col-md-6">
                             <Input

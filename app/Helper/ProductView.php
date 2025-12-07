@@ -15,7 +15,7 @@ final class ProductView
             'id' => $product->id,
             'slug' => $product->slug,
             'nom' => $product->nom,
-            'status' => $product->status,
+            'is_preorder' => $product->is_preorder,
             'reference' => $product->reference,
             'cover' => $product->cover,
             'taille' => $product->taille,

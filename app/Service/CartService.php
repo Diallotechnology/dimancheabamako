@@ -39,11 +39,11 @@ final class CartService
 
     public function mergeGuestCartToUser(int $userId, string $guestSessionId): void
     {
-        $guestKey = 'cart_guest_' . $guestSessionId;
-        $userKey  = "cart_user_{$userId}";
+        $guestKey = 'cart_guest_'.$guestSessionId;
+        $userKey = "cart_user_{$userId}";
 
         $guestCart = Cache::get($guestKey, []);
-        $userCart  = Cache::get($userKey, []);
+        $userCart = Cache::get($userKey, []);
 
         if (empty($guestCart)) {
             return;
@@ -70,13 +70,11 @@ final class CartService
         Cache::forget($guestKey);
     }
 
-
-
     /**
      * Ajoute un produit au panier.
      * Si le produit est déjà présent, on ne modifie pas la quantité.
      */
-    public function add(int $id, string $name, int $price, int $stock, int|float $poids, ?array $attributes = []): Collection
+    public function add(int $id, string $name, int $price, int $stock, int|float $poids, bool $is_preorder = false, ?array $attributes = []): Collection
     {
         if ($price < 0) {
             throw new InvalidArgumentException('Le prix ne peut pas être négatif');
@@ -97,6 +95,7 @@ final class CartService
             'quantity' => 1,
             'stock' => $stock,
             'poids' => $poids,
+            'is_preorder' => $is_preorder,
             'attributes' => collect($attributes),
             'total' => $price,
             'added_at' => now(),
@@ -105,6 +104,7 @@ final class CartService
 
         $items->put($id, $cartItem);
         $this->save($items);
+
         return $cartItem;
     }
 
@@ -127,7 +127,7 @@ final class CartService
         }
 
         // quantité maximum par rapport au stock
-        if ($newQuantity > $cartItem['stock']) {
+        if ($cartItem['is_preorder'] === \false && $newQuantity > $cartItem['stock']) {
             return false;
         }
 
@@ -187,22 +187,17 @@ final class CartService
     /**
      * Recherche d’items avec callback.
      */
-    public function search(callable $callback): Collection
-    {
-        return $this->load()->filter($callback);
-    }
-
     private function getCacheKey(): string
     {
         return $this->userId
             ? "cart_user_{$this->userId}"
-            : 'cart_guest_' . $this->session->getId();
+            : 'cart_guest_'.$this->session->getId();
     }
 
     private function load(): Collection
     {
         return collect(Cache::get($this->getCacheKey(), []))
-            ->map(fn($item) => collect($item));
+            ->map(fn ($item) => collect($item));
     }
 
     private function save(Collection $items): void

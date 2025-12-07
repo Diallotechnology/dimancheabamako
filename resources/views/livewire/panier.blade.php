@@ -39,9 +39,7 @@
                                             <h5>{{ $item['name'] }}</h5>
                                         </td>
                                         <td class="text-center" data-title="Stock">
-                                            <div class="border radius d-inline-flex">
-                                                {{--
-                                                <livewire:update :row="$item" :key="'update-'.$item['id']" /> --}}
+                                            <div class="d-inline-flex">
                                                 {{ $item['quantity'] }}
                                             </div>
                                         </td>
@@ -126,6 +124,17 @@
                                             {{ session('devise') === 'EUR' ? $Total . ' €' : $Total . ' CFA' }}
                                             @endisset
                                         </span>
+
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th></th>
+                                    <td>
+                                        @if ($this->hasPreorder)
+                                        <div class="mb-3">
+                                            {{ __('messages.preorder_notice') }}
+                                        </div>
+                                        @endif
                                     </td>
                                 </tr>
                             </table>

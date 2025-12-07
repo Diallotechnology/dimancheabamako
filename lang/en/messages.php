@@ -61,7 +61,7 @@ return [
     'no_product_available' => 'No product available',
     'view_all' => 'View all',
     'product_description' => 'Product description',
-    'in_stock' => 'In stock',
+    'in_stock' => 'Availability',
     'address' => 'Address',
     'city' => 'City',
     'contact_with_code' => 'Contact (with country code)',
@@ -98,7 +98,10 @@ return [
     'product_status' => [
         'commande' => 'On order',
         'disponible' => 'Available',
+        'infos' => 'This product is only available in quantities of 5 or 6 meters.',
+        'unit' => 'meters',
     ],
+    'preorder_notice' => 'Your order includes a made-to-order product. It will be manufactured and delivered within 3 to 5 weeks.',
     'email' => [
         'register' => [
             'greeting' => 'Hello,',
@@ -107,6 +110,12 @@ return [
             'expires' => 'This link will expire in 15 minutes.',
             'regards' => 'Regards,',
         ],
+
     ],
+    'category_text' => [
+        'title' => "Discover the :name Collection: Bazin, Boubous and Accessories",
+        'description_1' => "Our :name collection offers an exclusive selection of clothing and accessories, crafted with high-quality Bazin fabric.",
+        'description_2' => "Perfect for any occasion, our creations combine elegance and comfort.",
+    ]
 
 ];

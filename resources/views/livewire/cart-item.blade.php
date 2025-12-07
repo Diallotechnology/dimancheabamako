@@ -60,7 +60,7 @@
                             {{ $item['reduction'] > 0 ? $item['prix_promo'] : $item['prix_format'] }}
                         </span>
 
-                        @if ($item['status'])
+                        @if ($item['is_preorder'])
                         <span class="ml-1 text-danger">
                             @lang('messages.product_status.commande')
                         </span>

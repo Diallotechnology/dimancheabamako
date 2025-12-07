@@ -17,6 +17,7 @@ final class LinkController extends Controller
     {
         $this->pricing = $pricing;
     }
+
     /**
      * Display the user's profile form.
      */

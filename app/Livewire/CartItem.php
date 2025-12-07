@@ -4,9 +4,8 @@ declare(strict_types=1);
 
 namespace App\Livewire;
 
-use Livewire\Component;
 use App\Helper\CartAction;
-use Illuminate\Support\Collection;
+use Livewire\Component;
 
 final class CartItem extends Component
 {
@@ -18,9 +17,6 @@ final class CartItem extends Component
 
     /** @var array<int, array<string, mixed>> */
     public array $items = [];
-
-
-
 
     public function mount(array $items, bool $hot = false, bool $news = false): void
     {

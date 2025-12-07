@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Http\Controllers;
 
 use App\Enum\OrderEnum;
-use App\Helper\CartAction;
 use App\Helper\DeleteAction;
 use App\Helper\OrderAPI;
 use App\Http\Requests\StoreOrderRequest;
@@ -26,7 +25,6 @@ use function Flasher\Prime\flash;
 final class OrderController extends Controller
 {
     use DeleteAction, OrderAPI;
-
 
     // public function test()
     // {
@@ -86,6 +84,7 @@ final class OrderController extends Controller
     {
         $this->cart = $cart;
     }
+
     /**
      * Store a newly created resource in storage.
      */

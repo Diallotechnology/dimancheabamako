@@ -75,7 +75,19 @@ final class Product extends Model
      *
      * @var array
      */
-    protected $fillable = ['categorie_id', 'reference', 'nom', 'color', 'taille', 'description', 'resume', 'poids', 'video', 'prix', 'cover', 'stock', 'favoris', 'slug', 'status'];
+    protected $fillable = ['categorie_id', 'reference', 'nom', 'color', 'taille', 'description', 'resume', 'poids', 'video', 'prix', 'cover', 'stock', 'favoris', 'slug', 'is_preorder'];
+
+    /**
+     * The attributes that should be cast.
+     *
+     * @var array<string, string>
+     */
+    protected $casts = [
+        'poids' => 'float',
+        'stock' => 'integer',
+        'favoris' => 'boolean',
+        'is_preorder' => 'boolean',
+    ];
 
     /**
      * Scope to get nature by structure.
@@ -87,7 +99,7 @@ final class Product extends Model
 
     public function scopeActive($query): Builder
     {
-        return $query->where('status', 1);
+        return $query->where('is_preorder', 1);
     }
 
     public function getMontant(): string
@@ -111,14 +123,6 @@ final class Product extends Model
             ->where('debut', '<=', now())
             ->where('fin', '>=', now())
             ->orderByDesc('id');
-    }
-
-
-    // Helper interne : trouve la promo active SANS refaire de requêtes si déjà chargée
-    private function resolveActivePromotion(): ?Promotion
-    {
-        return $this->activePromotion
-            ->first();
     }
 
     /* ---------- Prix & promotions ---------- */
@@ -155,10 +159,12 @@ final class Product extends Model
         if (session('devise') === 'EUR') {
             $taux = session('taux_eur', 1);
             $prix = number_format($this->prix / $taux, 2, ',', ' ');
+
             return "{$prix} €";
         }
 
         $prix = number_format($this->prix, 0, ',', ' ');
+
         return "{$prix} CFA";
     }
 
@@ -228,5 +234,12 @@ final class Product extends Model
                 $product->slug = $slug;
             }
         });
+    }
+
+    // Helper interne : trouve la promo active SANS refaire de requêtes si déjà chargée
+    private function resolveActivePromotion(): ?Promotion
+    {
+        return $this->activePromotion
+            ->first();
     }
 }

@@ -13,9 +13,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        // 1️⃣ Ajout des colonnes (pas de if/hasColumn)
+        // 1️⃣ Ajout des colonnes (pas d(e if/hasColumn)
         Schema::table('products', function (Blueprint $table) {
-            $table->boolean('status')->default(false)->after('prix');
+            if (!Schema::hasColumn('products', 'is_preorder')) {
+                $table->boolean('is_preorder')->default(false)->after('prix');
+            }
         });
 
         // 2️⃣ Correction de la contrainte de categories

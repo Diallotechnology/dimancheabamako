@@ -61,7 +61,7 @@ return [
     'no_product_available' => 'Aucun produit disponible',
     'view_all' => 'Voir tout',
     'product_description' => 'Description du produit',
-    'in_stock' => 'En stock',
+    'in_stock' => 'Disponibilité',
     'address' => 'Adresse',
     'city' => 'Ville',
     'contact_with_code' => 'Téléphone (avec l\'indicatif)',
@@ -98,7 +98,10 @@ return [
     'product_status' => [
         'commande' => 'Sur commande',
         'disponible' => 'Disponible',
+        'infos' => ' Ce produit est disponible uniquement en quantités de 5 ou 6 mètres.',
+        'unit' => 'mètres',
     ],
+    'preorder_notice' => 'Votre commande comprend un produit sur commande. Elle sera fabriquée et livrée dans un délai de 3 à 5 semaines.',
     'email' => [
         'register' => [
             'greeting' => 'Bonjour,',
@@ -108,4 +111,9 @@ return [
             'regards' => 'Cordialement,',
         ],
     ],
+    'category_text' => [
+        'title' => "Découvrez la collection :name : Bazin, Boubous et Accessoires",
+        'description_1' => "Notre collection :name propose une sélection exclusive de vêtements et accessoires, confectionnés à partir de Bazin de qualité supérieure.",
+        'description_2' => "Idéale pour toutes les occasions, nos créations allient élégance et confort.",
+    ]
 ];

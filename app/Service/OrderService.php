@@ -59,7 +59,7 @@ final class OrderService
                 'postal' => $request->postal,
                 'ville' => $request->ville,
                 'country_id' => $country->id,
-                'poids' => $totalWeight . ' Kg',
+                'poids' => $totalWeight.' Kg',
                 'shipping' => $shipping->montant,
                 'transport_id' => $request->transport_id,
                 'commentaire' => $request->commentaire,

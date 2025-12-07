@@ -4,14 +4,10 @@ declare(strict_types=1);
 
 namespace App\Helper;
 
-use App\Livewire\Counter;
-use App\Models\Country;
 use App\Models\Product;
 use App\Models\Shipping;
 use App\Service\CartService;
 use Illuminate\Support\Facades\DB;
-
-use function Laravel\Prompts\select;
 
 trait CartAction
 {
@@ -48,6 +44,7 @@ trait CartAction
                 price: $product->prix_final_base,
                 stock: $product->stock,
                 poids: $product->poids,
+                is_preorder: $product->is_preorder,
                 attributes: [
                     'cover' => $product->cover,
                     'reduction' => $product->reduction ?? 0,
@@ -57,14 +54,15 @@ trait CartAction
 
         // 2. Structurer pour le front
         $item = [
-            'id'       => $added['id'],
-            'name'     => $added['name'],
-            'price'    => $added['price'],
+            'id' => $added['id'],
+            'name' => $added['name'],
+            'price' => $added['price'],
             'quantity' => $added['quantity'],
-            'poids'    => $added['poids'],
-            'stock'    => $added['stock'],
+            'poids' => $added['poids'],
+            'stock' => $added['stock'],
+            'is_preorder' => $added['is_preorder'],
             'attributes' => [
-                'cover'     => $added['attributes']['cover'] ?? null,
+                'cover' => $added['attributes']['cover'] ?? null,
                 'reduction' => $added['attributes']['reduction'] ?? 0,
             ],
         ];
@@ -77,7 +75,6 @@ trait CartAction
 
         return $item; // utile si besoin dans add()
     }
-
 
     public function getWeight(bool $format = false): float|string
     {

@@ -4,19 +4,17 @@ declare(strict_types=1);
 
 namespace App\Livewire;
 
-use App\Models\Country;
-use Livewire\Component;
 use App\Helper\CartAction;
-use Livewire\Attributes\On;
+use App\Models\Country;
 use App\Service\CartService;
-use Livewire\Attributes\Validate;
 use Illuminate\Support\Facades\Auth;
+use Livewire\Attributes\On;
+use Livewire\Attributes\Validate;
+use Livewire\Component;
 
 final class Panier extends Component
 {
     use CartAction;
-
-    public int $qte = 1;
 
     public $country_id;
 
@@ -54,13 +52,12 @@ final class Panier extends Component
             $cart->mergeGuestCartToUser(Auth::id(), $oldSessionId);
 
             flash()->success('Connexion réussie.');
+
             return $this->redirectRoute('panier');
         }
 
         flash()->error(__('auth.failed'));
     }
-
-
 
     public function updatingCountryid()
     {
@@ -81,7 +78,7 @@ final class Panier extends Component
 
     public function calculateShipping()
     {
-        $shipping = $this->getShippingCost((int)$this->country_id, (int)$this->transport_id);
+        $shipping = $this->getShippingCost((int) $this->country_id, (int) $this->transport_id);
 
         if (! $shipping) {
             $this->shipping = null;
@@ -96,6 +93,11 @@ final class Panier extends Component
     public function mount(): void
     {
         $this->refreshCart();
+    }
+
+    public function getHasPreorderProperty()
+    {
+        return $this->cart->getContent()->contains('status', true);
     }
 
     #[On('productDelete')]

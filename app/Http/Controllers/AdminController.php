@@ -83,12 +83,12 @@ final class AdminController extends Controller
                 $qq->whereAny(['nom', 'color', 'taille', 'reference'], 'LIKE', "%$search%")
                     ->orWhere('prix', $search)
                     ->orWhere('poids', $search)
-                    ->orWhereHas('categorie', fn ($c) => $c->where('nom', 'LIKE', "%$search%"));
+                    ->orWhereHas('categorie', fn($c) => $c->where('nom', 'LIKE', "%$search%"));
             });
         })
-            ->when($request->filled('category'), fn ($query) => $query->where('categorie_id', $request->integer('category')))
-            ->when($request->filled('favoris'), fn ($query) => $query->where('favoris', $request->boolean('favoris')))
-            ->when($request->filled('status'), fn ($query) => $query->where('status', $request->boolean('status')))
+            ->when($request->filled('category'), fn($query) => $query->where('categorie_id', $request->integer('category')))
+            ->when($request->filled('favoris'), fn($query) => $query->where('favoris', $request->boolean('favoris')))
+            ->when($request->filled('status'), fn($query) => $query->where('is_preorder', $request->boolean('status')))
             ->latest('id')->paginate(10)->withQueryString();
 
         $category = Category::select('id', 'nom')->get();
@@ -110,13 +110,13 @@ final class AdminController extends Controller
                     )
                         ->orWhereHas(
                             'client',
-                            fn ($c) => $c->whereAny(['nom', 'prenom', 'email'], 'LIKE', "%{$search}%")
+                            fn($c) => $c->whereAny(['nom', 'prenom', 'email'], 'LIKE', "%{$search}%")
                         );
                 });
             })
-            ->when($request->filled('date'), fn ($query) => $query->whereDate('created_at', $request->input('date')))
-            ->when($request->filled('client'), fn ($query) => $query->where('client_id', $request->integer('client')))
-            ->when($request->filled('status'), fn ($query) => $query->where('etat', $request->input('status')))
+            ->when($request->filled('date'), fn($query) => $query->whereDate('created_at', $request->input('date')))
+            ->when($request->filled('client'), fn($query) => $query->where('client_id', $request->integer('client')))
+            ->when($request->filled('status'), fn($query) => $query->where('etat', $request->input('status')))
             ->latest('id')
             ->paginate(20)
             ->withQueryString();
@@ -177,7 +177,7 @@ final class AdminController extends Controller
             ->withQueryString();
 
         $country = Country::select('id', 'nom')->get()
-            ->map(fn ($row) => [
+            ->map(fn($row) => [
                 'label' => $row->nom,
                 'value' => $row->id,
             ]);
@@ -190,7 +190,7 @@ final class AdminController extends Controller
         $rows = Promotion::query()
             ->when(
                 $request->filled('search'),
-                fn ($q) => $q->where('nom', 'LIKE', "%{$request->search}%")
+                fn($q) => $q->where('nom', 'LIKE', "%{$request->search}%")
             )
             ->latest('id')
             ->paginate(10)
@@ -211,7 +211,7 @@ final class AdminController extends Controller
         $rows = Zone::with('countries')
             ->when(
                 $request->filled('search'),
-                fn ($q) => $q->where('nom', 'LIKE', "%{$request->search}%")
+                fn($q) => $q->where('nom', 'LIKE', "%{$request->search}%")
             )
             ->latest('id')
             ->paginate(10)
@@ -222,9 +222,9 @@ final class AdminController extends Controller
         $existing = Country::pluck('nom')->all();
 
         $pays = $allCountries
-            ->reject(fn ($name) => in_array($name, $existing))
+            ->reject(fn($name) => in_array($name, $existing))
             ->values()
-            ->map(fn ($name) => [
+            ->map(fn($name) => [
                 'label' => $name,
                 'value' => $name,
             ]);
@@ -237,7 +237,7 @@ final class AdminController extends Controller
         $rows = Country::with('zone')
             ->when(
                 $request->filled('search'),
-                fn ($q) => $q->where('nom', 'LIKE', "%{$request->search}%")
+                fn($q) => $q->where('nom', 'LIKE', "%{$request->search}%")
             )
             ->latest('id')
             ->paginate(10)
@@ -245,13 +245,13 @@ final class AdminController extends Controller
 
         $countries = collect(Countries::getList('fr'))
             ->values()
-            ->map(fn ($name) => [
+            ->map(fn($name) => [
                 'label' => $name,
                 'value' => $name,
             ]);
 
         $zone = Zone::orderBy('nom')->get()
-            ->map(fn ($row) => [
+            ->map(fn($row) => [
                 'label' => $row->nom,
                 'value' => $row->id,
             ]);
@@ -265,19 +265,19 @@ final class AdminController extends Controller
             ->when($request->filled('search'), function ($q) use ($request) {
                 $search = $request->search;
                 $q->where(
-                    fn ($qq) => $qq->where('temps', 'LIKE', "%$search%")
+                    fn($qq) => $qq->where('temps', 'LIKE', "%$search%")
                         ->orWhere('montant', 'LIKE', "%$search%")
                 )
                     ->orWhereHas(
                         'transport',
-                        fn ($t) => $t->where('nom', 'LIKE', "%$search%")
+                        fn($t) => $t->where('nom', 'LIKE', "%$search%")
                     );
             })
             ->latest('id')
             ->get()
-            ->groupBy(fn ($row) => $row->transport?->nom ?? 'Autre');
+            ->groupBy(fn($row) => $row->transport?->nom ?? 'Autre');
 
-        $poids = Poids::orderBy('min')->get()->map(fn ($row) => [
+        $poids = Poids::orderBy('min')->get()->map(fn($row) => [
             'label' => "{$row->min} à {$row->max} Kg",
             'value' => $row->id,
         ]);
@@ -291,7 +291,7 @@ final class AdminController extends Controller
     {
         $rows = Poids::when(
             $request->filled('search'),
-            fn ($q) => $q->whereAny(['min', 'max'], 'LIKE', "%{$request->search}%")
+            fn($q) => $q->whereAny(['min', 'max'], 'LIKE', "%{$request->search}%")
         )
             ->latest('id')
             ->paginate(10)
@@ -315,13 +315,13 @@ final class AdminController extends Controller
         $rows = Transport::with('zones')
             ->when(
                 $request->filled('search'),
-                fn ($q) => $q->where('nom', 'LIKE', "%{$request->search}%")
+                fn($q) => $q->where('nom', 'LIKE', "%{$request->search}%")
             )
             ->latest('id')
             ->paginate(10)
             ->withQueryString();
 
-        $zone = Zone::orderBy('nom')->get()->map(fn ($row) => [
+        $zone = Zone::orderBy('nom')->get()->map(fn($row) => [
             'label' => $row->nom,
             'value' => $row->id,
         ]);
@@ -337,7 +337,7 @@ final class AdminController extends Controller
     {
         $rows = User::when(
             $request->filled('search'),
-            fn ($q) => $q->whereAny(['name', 'email'], 'LIKE', "%{$request->search}%")
+            fn($q) => $q->whereAny(['name', 'email'], 'LIKE', "%{$request->search}%")
         )
             ->where('role', '!=', RoleEnum::CUSTOMER->value)
             ->latest('id')
@@ -354,7 +354,7 @@ final class AdminController extends Controller
     {
         $rows = User::when(
             $request->filled('search'),
-            fn ($q) => $q->whereAny(['name', 'email'], 'LIKE', "%{$request->search}%")
+            fn($q) => $q->whereAny(['name', 'email'], 'LIKE', "%{$request->search}%")
         )
             ->where('role', RoleEnum::CUSTOMER->value)
             ->latest('id')
@@ -381,7 +381,6 @@ final class AdminController extends Controller
         Session::put('down_token', $token);
         Session::put('down_message', 'Le mode maintenance a été activer avec succès!');
 
-        return redirect('/'.$token);
-
+        return redirect('/' . $token);
     }
 }

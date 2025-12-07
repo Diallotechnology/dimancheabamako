@@ -26,7 +26,7 @@ const form = useForm({
     cover: "",
     image: [],
     video: null,
-    status: "",
+    is_preorder: "",
 });
 
 const submit = () => {
@@ -140,7 +140,7 @@ const submit = () => {
                                     >Produit uniquement sur commande ?
                                 </span>
                                 <input
-                                    v-model.number="form.status"
+                                    v-model.number="form.is_preorder"
                                     class="form-check-input"
                                     type="checkbox"
                                 />

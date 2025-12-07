@@ -67,10 +67,25 @@
                         {{ session('warning') }}
                     </div>
                     @endif
+                    @if($addedItem['is_preorder'] ?? false)
+                    <div class="text-danger text-center mb-2">
+                        @lang('messages.product_status.infos')
+                    </div>
+                    @endif
 
                     <!-- Quantity controls -->
                     <div class="d-flex justify-content-center align-items-center mb-4 apple-qty-box">
-
+                        @if($addedItem['is_preorder'] ?? false)
+                        <select class="apple-select-qty" wire:change="setQuickQuantity($event.target.value)">
+                            <option value="" selected>select @lang('messages.product_status.unit')</option>
+                            <option value="5" @selected($addedItem['quantity']==5)">
+                                5 @lang('messages.product_status.unit')
+                            </option>
+                            <option value="6" @selected($addedItem['quantity']==6)">
+                                6 @lang('messages.product_status.unit')
+                            </option>
+                        </select>
+                        @else
 
                         <button class="apple-btn-qty" wire:click="decreaseQuick('{{ $addedItem['id'] ?? '' }}')">
                             –
@@ -85,6 +100,8 @@
                             wire:click="increaseQuick('{{ $addedItem['id'] ?? '' }}')">
                             +
                         </button>
+
+                        @endif
 
                     </div>
 
@@ -105,15 +122,37 @@
         </div>
     </div>
     <style>
-        .apple-warning {
-            background: #fff3cd;
-            color: #664d03;
-            padding: 10px 14px;
-            border-radius: 10px;
-            font-size: 0.9rem;
-            border: 1px solid #ffeeba;
-            text-align: center;
+        .apple-select-qty {
+            padding: 8px 14px;
+            border-radius: 12px;
+            border: 1px solid #ddd;
+            background: #fff;
+            font-size: 0.95rem;
+            font-weight: 500;
+            color: #333;
+            outline: none;
         }
+
+        .apple-select-qty:focus {
+            border-color: #999;
+        }
+
+        .apple-warning {
+            background: #ffe5e5;
+            /* rouge très pâle — premium */
+            color: #b30000;
+            /* rouge profond élégant */
+            padding: 12px 16px;
+            border-radius: 12px;
+            font-size: 0.92rem;
+            border: 1px solid #ffb3b3;
+            /* ligne subtile */
+            text-align: center;
+            font-weight: 500;
+            backdrop-filter: blur(4px);
+            /* léger flou façon Apple */
+        }
+
 
         .apple-product-img {
             width: 60px;
@@ -218,6 +257,7 @@
 
         .apple-btn-primary:hover {
             background: #d79f01;
+            color: #fff;
         }
 
         .apple-btn-secondary {

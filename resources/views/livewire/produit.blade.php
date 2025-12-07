@@ -57,12 +57,10 @@
             <div class="container">
                 <div class="row">
                     <div class="col-lg-9">
-                        <h3>Découvrez la collection {{ $cat->nom }} : Bazin, Boubous, et Accessoires</h3>
+                        <h3>{{ __('messages.category_text.title', ['name' => $cat->nom]) }}</h3>
 
-                        <p>Notre collection {{ $cat->nom }} propose une sélection exclusive de vêtements et
-                            accessoires, confectionnés à partir de Bazin de qualité supérieure. Idéale pour
-                            toutes les occasions, nos créations allient élégance et confort.</p>
-                        <p>
+                        <p>{{ __('messages.category_text.description_1', ['name' => $cat->nom]) }}</p>
+                        <p>{{ __('messages.category_text.description_2') }}</p>
                         <div class="shop-product-fillter style-2">
                             <div class="totall-product">
 
@@ -138,6 +136,15 @@
                                         @lang('messages.size') {{ $row->taille }} <br />
                                         @lang('messages.color') {{ $row->color }}
                                     </p>
+                                    @if ($row['is_preorder'])
+                                    <span class="ml-1 text-danger">
+                                        @lang('messages.product_status.commande')
+                                    </span>
+                                    @else
+                                    <span class="ml-1 text-success">
+                                        @lang('messages.product_status.disponible')
+                                    </span>
+                                    @endif
                                     <div class="product-action-1 show">
                                         <button type="button" aria-label="@lang('messages.purchased')"
                                             class="action-btn" wire:click='add({{ $row->id }})'>
