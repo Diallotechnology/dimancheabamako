@@ -4,11 +4,12 @@ declare(strict_types=1);
 
 namespace App\Mail;
 
+use App\Models\Order;
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
 use Illuminate\Mail\Mailables\Content;
-use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Mail\Mailables\Envelope;
 
 final class OrderAlertMail extends Mailable
 {
@@ -17,9 +18,9 @@ final class OrderAlertMail extends Mailable
     /**
      * Create a new message instance.
      */
-    public function __construct()
+    public function __construct(protected Order $order)
     {
-        //
+        $this->order->loadMissing('products:id,prix,nom,reference', 'client:id,nom,prenom,contact,email')->loadSum('products as totaux', 'order_product.montant');
     }
 
     /**
@@ -39,6 +40,9 @@ final class OrderAlertMail extends Mailable
     {
         return new Content(
             markdown: 'email.OrderAlertMail',
+            with: [
+                'order' => $this->order,
+            ]
         );
     }
 

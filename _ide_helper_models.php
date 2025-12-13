@@ -321,11 +321,13 @@ namespace App\Models{
  * @method static Builder|Product whereVideo($value)
  * @mixin \Eloquent
  * @property string|null $slug
+ * @property bool $is_preorder
  * @property int $status
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Promotion> $activePromotion
  * @property-read int|null $active_promotion_count
  * @property-read int $prix_final_base
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Product active()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Product whereIsPreorder($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Product whereSlug($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Product whereStatus($value)
  */

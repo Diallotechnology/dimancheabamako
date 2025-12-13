@@ -2,35 +2,37 @@
 
 declare(strict_types=1);
 
+use App\Models\Order;
 use App\Enum\RoleEnum;
-use App\Http\Controllers\AdminController;
-use App\Http\Controllers\CategoryController;
-use App\Http\Controllers\ClientController;
-use App\Http\Controllers\ContactController;
-use App\Http\Controllers\CountryController;
-use App\Http\Controllers\DeviseController;
-use App\Http\Controllers\ImageController;
-use App\Http\Controllers\LinkController;
-use App\Http\Controllers\OrderController;
-use App\Http\Controllers\PayLinkController;
-use App\Http\Controllers\PendingRegistrationController;
-use App\Http\Controllers\PoidsController;
-use App\Http\Controllers\ProductController;
-use App\Http\Controllers\PromotionController;
-use App\Http\Controllers\ShippingController;
-use App\Http\Controllers\SitemapController;
-use App\Http\Controllers\SlideController;
-use App\Http\Controllers\TransportController;
-use App\Http\Controllers\UserController;
-use App\Http\Controllers\ZoneController;
 use App\Livewire\Panier;
 use App\Livewire\Produit;
-use App\Mail\ConfirmRegistrationMail;
 use App\Mail\RegisterMail;
+use App\Mail\OrderAlertMail;
+use App\Mail\ConfirmRegistrationMail;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\LinkController;
+use App\Http\Controllers\UserController;
+use App\Http\Controllers\ZoneController;
+use App\Http\Controllers\AdminController;
+use App\Http\Controllers\ImageController;
+use App\Http\Controllers\OrderController;
+use App\Http\Controllers\PoidsController;
+use App\Http\Controllers\SlideController;
+use App\Http\Controllers\ClientController;
+use App\Http\Controllers\DeviseController;
+use App\Http\Controllers\ContactController;
+use App\Http\Controllers\CountryController;
+use App\Http\Controllers\PayLinkController;
+use App\Http\Controllers\ProductController;
+use App\Http\Controllers\SitemapController;
+use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\ShippingController;
+use App\Http\Controllers\PromotionController;
+use App\Http\Controllers\TransportController;
+use App\Http\Controllers\PendingRegistrationController;
 
 Route::prefix('admin')->middleware('auth', 'verified')->group(function () {
-    Route::middleware('role:'.RoleEnum::ADMIN->value)->group(function () {
+    Route::middleware('role:' . RoleEnum::ADMIN->value)->group(function () {
         Route::resource('client', ClientController::class)->except('index', 'create');
         Route::resource('user', UserController::class)->except('index', 'create');
         Route::resource('image', ImageController::class)->except('index', 'create', 'show', 'store');
@@ -63,7 +65,7 @@ Route::prefix('admin')->middleware('auth', 'verified')->group(function () {
             Route::get('paylink', 'paylink')->name('paylink');
         });
     });
-    Route::middleware('role:'.RoleEnum::SECRTETAIRE->value)->group(function () {
+    Route::middleware('role:' . RoleEnum::SECRTETAIRE->value)->group(function () {
         Route::resource('order', OrderController::class)->except('index', 'create', 'store');
         Route::get('product/favoris/{data}/{product_id}', [ProductController::class, 'favoris_update'])->name('product.favori');
         Route::resource('category', CategoryController::class)->except('index', 'create', 'show');
@@ -127,7 +129,8 @@ Route::get('test', function () {
     // Artisan::call('optimize:clear');
     // Artisan::call('migrate');
     // dd(app()->getLocale());
-    return new ConfirmRegistrationMail('RHJIchQWVQK6lWCbK9GLczQmmfwZt5s7nOMeFXRk3WNfYrIjHsPjU9Tw0l9S6Qah');
+    return new OrderAlertMail(Order::find(1));
+    // return new ConfirmRegistrationMail('RHJIchQWVQK6lWCbK9GLczQmmfwZt5s7nOMeFXRk3WNfYrIjHsPjU9Tw0l9S6Qah');
 });
 // Route::get('test', [OrderController::class, 'test'])->name('test');
-require __DIR__.'/auth.php';
+require __DIR__ . '/auth.php';

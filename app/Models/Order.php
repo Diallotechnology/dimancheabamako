@@ -66,7 +66,7 @@ final class Order extends Model
      *
      * @var array
      */
-    protected $fillable = ['client_id', 'trans_ref', 'trans_state', 'reference', 'adresse', 'postal', 'ville', 'country_id', 'transport_id', 'etat', 'poids', 'shipping', 'delai', 'metrage', 'commentaire'];
+    protected $fillable = ['client_id', 'trans_ref', 'trans_state', 'reference', 'adresse', 'postal', 'ville', 'country_id', 'transport_id', 'etat', 'poids', 'shipping', 'commentaire'];
 
     /**
      * The products that belong to the Order
@@ -124,11 +124,11 @@ final class Order extends Model
     public function generateId()
     {
         $currentYear = Carbon::today()->format('Y');
-        $prefix = 'DAB'.$currentYear.'-';
+        $prefix = 'DAB' . $currentYear . '-';
 
         return DB::transaction(function () use ($prefix) {
             // Verrouille le dernier identifiant de courrier enregistré dans la base de données pour la mise à jour
-            $lastCourrier = self::where('reference', 'like', $prefix.'%')->whereNotNull('reference')
+            $lastCourrier = self::where('reference', 'like', $prefix . '%')->whereNotNull('reference')
                 ->latest('id')
                 ->lockForUpdate()
                 ->first(['reference']);
@@ -140,7 +140,7 @@ final class Order extends Model
             }
             // Incrémente le numéro de séquence et génère le nouvel identifiant de courrier
             $sequence++;
-            $newCourrierNumber = $prefix.$sequence;
+            $newCourrierNumber = $prefix . $sequence;
             // Met à jour le numéro de courrier de l'instance courante
             $this->reference = $newCourrierNumber;
             $this->save();
