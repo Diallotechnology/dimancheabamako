@@ -52,12 +52,13 @@ trait CartAction
             );
         }
 
+
         // 2. Structurer pour le front
         $item = [
             'id' => $added['id'],
             'name' => $added['name'],
             'price' => $added['price'],
-            'quantity' => $added['quantity'],
+            'quantity' => $added['is_preorder'] ? 5 : $added['quantity'],
             'poids' => $added['poids'],
             'stock' => $added['stock'],
             'is_preorder' => $added['is_preorder'],

@@ -69,6 +69,20 @@ final class Order extends Model
     protected $fillable = ['client_id', 'trans_ref', 'trans_state', 'reference', 'adresse', 'postal', 'ville', 'country_id', 'transport_id', 'etat', 'poids', 'shipping', 'commentaire'];
 
     /**
+     * Get the attributes that should be cast.
+     *
+     * @return array<string, string>
+     */
+    protected function casts(): array
+    {
+        return [
+            'country_id' => 'integer',
+            'transport_id' => 'integer',
+            'client_id' => 'integer',
+        ];
+    }
+
+    /**
      * The products that belong to the Order
      */
     public function products(): BelongsToMany
@@ -100,7 +114,7 @@ final class Order extends Model
         return $this->belongsTo(Client::class);
     }
 
-    public function getShipping(): int
+    public function getShipping(): int|string
     {
         if (session('devise') === 'EUR') {
             // Récupération du taux de conversion et du symbole de devise en fonction de la locale de la session

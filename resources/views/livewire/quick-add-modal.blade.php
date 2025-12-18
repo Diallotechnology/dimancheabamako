@@ -67,52 +67,29 @@
                         {{ session('warning') }}
                     </div>
                     @endif
-                    @if($addedItem['is_preorder'] ?? false)
-                    <div class="text-danger text-center mb-2">
-                        @lang('messages.product_status.infos')
-                    </div>
-                    @endif
-
                     <!-- Quantity controls -->
+                    @if($addedItem['is_preorder'] ?? false)
                     <div class="d-flex justify-content-center align-items-center mb-4 apple-qty-box">
-                        @if($addedItem['is_preorder'] ?? false)
                         <select class="apple-select-qty" wire:change="setQuickQuantity($event.target.value)">
-                            <option value="" selected>select @lang('messages.product_status.unit')</option>
-                            <option value="5" @selected($addedItem['quantity']==5)">
+                            <option value="">select @lang('messages.product_status.unit')</option>
+                            <option selected value="5" @selected($addedItem['quantity']==5)">
                                 5 @lang('messages.product_status.unit')
                             </option>
                             <option value="6" @selected($addedItem['quantity']==6)">
                                 6 @lang('messages.product_status.unit')
                             </option>
                         </select>
-                        @else
-
-                        <button class="apple-btn-qty" wire:click="decreaseQuick('{{ $addedItem['id'] ?? '' }}')">
-                            –
-                        </button>
-
-                        <span class="mx-4 fw-semibold apple-qty-value">
-                            {{ $addedItem['quantity'] ?? 1 }}
-                        </span>
-
-                        <button {{-- @disabled($addedItem['stock']>= $addedItem['quantity']) --}}
-                            class="apple-btn-qty"
-                            wire:click="increaseQuick('{{ $addedItem['id'] ?? '' }}')">
-                            +
-                        </button>
-
-                        @endif
-
                     </div>
+                    @endif
 
                     <!-- Actions -->
                     <div class="mt-4">
                         <a href="{{ route('panier') }}" class="apple-btn-primary w-100 mb-3">
-                            Finaliser ma commande
+                            {{ __('messages.finalize_order') }}
                         </a>
 
                         <button class="apple-btn-secondary w-100" data-bs-dismiss="modal">
-                            Continuer vos achats
+                            {{ __('messages.continue_shopping') }}
                         </button>
                     </div>
 

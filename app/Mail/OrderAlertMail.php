@@ -20,7 +20,7 @@ final class OrderAlertMail extends Mailable
      */
     public function __construct(protected Order $order)
     {
-        $this->order->loadMissing('products:id,prix,nom,reference', 'client:id,nom,prenom,contact,email')->loadSum('products as totaux', 'order_product.montant');
+        $this->order->loadMissing('products:id,prix,reference', 'client:id,nom,prenom,contact,email')->loadSum('products as totaux', 'order_product.montant');
     }
 
     /**

@@ -155,7 +155,9 @@ final class OrderController extends Controller
 
     public function valid()
     {
-        request()->fullUrlWithQuery(['ref' => null]);
+        // request()->fullUrlWithQuery(['ref' => null]);
+        // dd(request()->fullUrlWithQuery(['ref' => null]));
+        \redirect()->to(request()->fullUrlWithQuery(['ref' => null]));
         $this->cart->clear();
 
         return view('validate');

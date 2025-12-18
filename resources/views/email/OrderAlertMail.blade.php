@@ -22,7 +22,7 @@ Une nouvelle commande vient d’être enregistrée sur la plateforme.
 | Produit | Quantité | Prix | Montant |
 |:--------|:--------:|-------------:|------:|
 @foreach ($order->products as $item)
-| {{ $item->nom }} | {{ $item->pivot->quantity }} | {{ number_format($item->prix, 0, ',', ' ') }} F | {{ number_format($item->pivot->montant, 0, ',', ' ') }} F |
+| {{ $item->reference }} | {{ $item->pivot->quantity }} | {{ number_format($item->prix, 0, ',', ' ') }} F | {{ number_format($item->pivot->montant, 0, ',', ' ') }} F |
 @endforeach
 </x-mail::table>
 

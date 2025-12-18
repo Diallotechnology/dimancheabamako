@@ -24,7 +24,7 @@ final class PendingRegistrationController extends Controller
         DB::transaction(function () use ($pending) {
 
             $user = User::create([
-                'name' => $pending->prenom.' '.$pending->nom,
+                'name' => $pending->prenom . ' ' . $pending->nom,
                 'email' => $pending->email,
                 'role' => $pending->role,
                 'password' => $pending->password,
@@ -37,8 +37,6 @@ final class PendingRegistrationController extends Controller
                 'contact' => $pending->contact,
                 'email' => $pending->email,
                 'pays' => $pending->pays,
-                'user_id' => $user->id,
-
             ]);
 
             // envoie éventuels listeners
@@ -54,8 +52,9 @@ final class PendingRegistrationController extends Controller
             $pending->delete();
         });
 
-        flash()->success('Votre compte a été activé avec succès !');
+        $msg = __('messages.register_success_msg');
+        flash()->success($msg);
 
-        return redirect('/')->with('status', 'Votre compte a été activé avec succès !');
+        return redirect('profil')->with('status', $msg);
     }
 }

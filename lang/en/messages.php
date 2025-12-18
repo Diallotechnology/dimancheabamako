@@ -95,10 +95,10 @@ return [
     'verify_email_address' => 'Verify Email Address',
     'click_to_verify_email' => 'Click the button below to verify your email address.',
     'check_spam' => 'Remember to check your spam folder.',
+
     'product_status' => [
         'commande' => 'On order',
         'disponible' => 'Available',
-        'infos' => 'This product is only available in quantities of 5 or 6 meters.',
         'unit' => 'meters',
     ],
     'preorder_notice' => 'Your order includes a made-to-order product. It will be manufactured and delivered within 3 to 5 weeks.',
@@ -107,11 +107,13 @@ return [
             'greeting' => 'Hello,',
             'thanks' => 'Thank you for signing up. Click the button below to activate your account:',
             'button' => 'Activate my account',
-            'expires' => 'This link will expire in 15 minutes.',
+            'expires' => 'This link will expire in 1 hours.',
             'regards' => 'Regards,',
         ],
 
     ],
+    'register_email_message' => 'A confirmation email has been sent to you. Please check your inbox.',
+    'register_success_msg' => 'Your account has been successfully activated!',
     'category_text' => [
         'title' => "Discover the :name Collection: Bazin, Boubous and Accessories",
         'description_1' => "Our :name collection offers an exclusive selection of clothing and accessories, crafted with high-quality Bazin fabric.",

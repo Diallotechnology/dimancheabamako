@@ -65,14 +65,14 @@ final class RegisteredUserController extends Controller
                 'role' => RoleEnum::CUSTOMER->value,
                 'password' => Hash::make($request->password),
                 'token' => $token,
-                'expires_at' => now()->addHours(2),
+                'expires_at' => now()->addHours(1),
             ]
         );
 
-        // Mail::to($request->email)->send(new ConfirmRegistrationMail($token, app()->getLocale()));
+        Mail::to($request->email)->send(new ConfirmRegistrationMail($token, app()->getLocale()));
 
-        flash()->success('Un email de confirmation vous a été envoyé. verifiez votre boîte mail.');
+        flash()->success(__('messages.register_success_msg'));
 
-        return back()->with('status', 'Un email de confirmation vous a été envoyé. verifiez votre boîte mail.');
+        return back()->with('status', __('messages.register_success_msg'));
     }
 }

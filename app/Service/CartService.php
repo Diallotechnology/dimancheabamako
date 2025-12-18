@@ -39,7 +39,7 @@ final class CartService
 
     public function mergeGuestCartToUser(int $userId, string $guestSessionId): void
     {
-        $guestKey = 'cart_guest_'.$guestSessionId;
+        $guestKey = 'cart_guest_' . $guestSessionId;
         $userKey = "cart_user_{$userId}";
 
         $guestCart = Cache::get($guestKey, []);
@@ -52,10 +52,9 @@ final class CartService
         foreach ($guestCart as $productId => $itemGuest) {
 
             // Produit désactivé → on ignore
-            if (! Product::where('id', $productId)->where('status', true)->exists()) {
-                continue;
-            }
-
+            // if (! Product::where('id', $productId)->ByStock()->exists()) {
+            //     continue;
+            // }
             // Fusion
             if (isset($userCart[$productId])) {
                 $userCart[$productId]['quantity'] += $itemGuest['quantity'];
@@ -92,7 +91,7 @@ final class CartService
             'id' => $id,
             'name' => $name,
             'price' => $price,
-            'quantity' => 1,
+            'quantity' => $is_preorder ? 5 : 1,
             'stock' => $stock,
             'poids' => $poids,
             'is_preorder' => $is_preorder,
@@ -191,13 +190,13 @@ final class CartService
     {
         return $this->userId
             ? "cart_user_{$this->userId}"
-            : 'cart_guest_'.$this->session->getId();
+            : 'cart_guest_' . $this->session->getId();
     }
 
     private function load(): Collection
     {
         return collect(Cache::get($this->getCacheKey(), []))
-            ->map(fn ($item) => collect($item));
+            ->map(fn($item) => collect($item));
     }
 
     private function save(Collection $items): void

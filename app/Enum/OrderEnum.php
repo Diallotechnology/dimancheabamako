@@ -10,6 +10,7 @@ enum OrderEnum: string
     case EN_ATTENTE = 'En attente';
     case EN_COURS = 'En cours';
     case TERMINE = 'Terminé';
+    case STOCK = 'Stock épuisé';
 
     public static function all(): array
     {

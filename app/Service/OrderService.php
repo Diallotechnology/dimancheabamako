@@ -16,16 +16,16 @@ use Illuminate\Support\Facades\Hash;
 
 final class OrderService
 {
-    public function createOrder($request, $cart): Order
+    public function createOrder($request, CartService $cart): Order
     {
         return DB::transaction(function () use ($request, $cart) {
 
             // 1. enregistrer user si besoin
             if ($request->filled('password')) {
-                $user = User::firstOrCreate(
+                User::firstOrCreate(
                     ['email' => $request->email],
                     [
-                        'name' => $request->prenom,
+                        'name' => $request->prenom . ' ' . $request->nom,
                         'email' => $request->email,
                         'password' => Hash::make($request->password),
                         'change_password' => true,
@@ -59,7 +59,7 @@ final class OrderService
                 'postal' => $request->postal,
                 'ville' => $request->ville,
                 'country_id' => $country->id,
-                'poids' => $totalWeight.' Kg',
+                'poids' => $totalWeight . ' Kg',
                 'shipping' => $shipping->montant,
                 'transport_id' => $request->transport_id,
                 'commentaire' => $request->commentaire,
@@ -67,12 +67,13 @@ final class OrderService
 
             // 4. vérifier stock + attach
             foreach ($cart->getContent() as $item) {
-                if ($item['quantity'] > $item['stock']) {
+
+                if ($item['is_preorder'] == \false and $item['quantity'] > $item['stock']) {
                     throw new Exception("Stock insuffisant pour {$item['name']}");
                 }
 
                 $order->products()->attach(
-                    $item['id'],
+                    (int) $item['id'],
                     [
                         'quantity' => $item['quantity'],
                         'montant' => $item['price'] * $item['quantity'],

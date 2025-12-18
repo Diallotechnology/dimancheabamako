@@ -78,17 +78,19 @@ final class Product extends Model
     protected $fillable = ['categorie_id', 'reference', 'nom', 'color', 'taille', 'description', 'resume', 'poids', 'video', 'prix', 'cover', 'stock', 'favoris', 'slug', 'is_preorder'];
 
     /**
-     * The attributes that should be cast.
+     * Get the attributes that should be cast.
      *
-     * @var array<string, string>
+     * @return array<string, string>
      */
-    protected $casts = [
-        'poids' => 'float',
-        'stock' => 'integer',
-        'favoris' => 'boolean',
-        'is_preorder' => 'boolean',
-    ];
-
+    protected function casts(): array
+    {
+        return [
+            'poids' => 'float',
+            'stock' => 'integer',
+            'favoris' => 'boolean',
+            'is_preorder' => 'boolean',
+        ];
+    }
     /**
      * Scope to get nature by structure.
      */

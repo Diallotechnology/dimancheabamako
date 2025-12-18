@@ -129,8 +129,8 @@ Route::get('test', function () {
     // Artisan::call('optimize:clear');
     // Artisan::call('migrate');
     // dd(app()->getLocale());
-    return new OrderAlertMail(Order::find(1));
-    // return new ConfirmRegistrationMail('RHJIchQWVQK6lWCbK9GLczQmmfwZt5s7nOMeFXRk3WNfYrIjHsPjU9Tw0l9S6Qah');
+    // return new OrderAlertMail(Order::find(1));
+    return new ConfirmRegistrationMail('4cZ0DnbuUSbCOHLqawbeeve6OLKbIbDBxn3SwMA1EIZ6y5hbgdvKr9DdNUOnjlbC');
 });
 // Route::get('test', [OrderController::class, 'test'])->name('test');
 require __DIR__ . '/auth.php';

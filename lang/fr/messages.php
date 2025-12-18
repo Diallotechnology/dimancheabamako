@@ -95,10 +95,10 @@ return [
     'verify_email_address' => 'Vérifiez votre adresse e-mail',
     'click_to_verify_email' => 'Cliquez sur le bouton ci-dessous pour vérifier votre adresse e-mail.',
     'check_spam' => 'Pensez à vérifier dans les spams.',
+
     'product_status' => [
         'commande' => 'Sur commande',
         'disponible' => 'Disponible',
-        'infos' => ' Ce produit est disponible uniquement en quantités de 5 ou 6 mètres.',
         'unit' => 'mètres',
     ],
     'preorder_notice' => 'Votre commande comprend un produit sur commande. Elle sera fabriquée et livrée dans un délai de 3 à 5 semaines.',
@@ -107,10 +107,12 @@ return [
             'greeting' => 'Bonjour,',
             'thanks' => 'Merci pour votre inscription. Cliquez sur le bouton ci-dessous pour activer votre compte :',
             'button' => 'Activer mon compte',
-            'expires' => 'Ce lien expirera dans 15 minutes.',
+            'expires' => 'Ce lien expirera dans 1 heure.',
             'regards' => 'Cordialement,',
         ],
     ],
+    'register_email_message' => 'Un email de confirmation vous a été envoyé. verifiez votre boîte mail.',
+    'register_success_msg' => 'Votre compte a été activé avec succès !',
     'category_text' => [
         'title' => "Découvrez la collection :name : Bazin, Boubous et Accessoires",
         'description_1' => "Notre collection :name propose une sélection exclusive de vêtements et accessoires, confectionnés à partir de Bazin de qualité supérieure.",

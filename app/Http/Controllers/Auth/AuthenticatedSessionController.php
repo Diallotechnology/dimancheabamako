@@ -4,16 +4,17 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Auth;
 
-use App\Http\Controllers\Controller;
-use App\Http\Requests\Auth\LoginRequest;
-use App\Http\Requests\UpdateUserProfilRequest;
 use App\Models\User;
-use App\Providers\RouteServiceProvider;
-use Illuminate\Http\RedirectResponse;
+use Illuminate\View\View;
+use App\Service\CartService;
 use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\View\View;
+use Illuminate\Http\RedirectResponse;
+use App\Providers\RouteServiceProvider;
+use App\Http\Requests\Auth\LoginRequest;
+use App\Http\Requests\UpdateUserProfilRequest;
 
 final class AuthenticatedSessionController extends Controller
 {
@@ -30,6 +31,7 @@ final class AuthenticatedSessionController extends Controller
      */
     public function store(LoginRequest $request): RedirectResponse
     {
+        $oldSessionId = session()->getId();
         $request->authenticate();
 
         $user = User::where('email', $request->email)->first();
@@ -40,18 +42,15 @@ final class AuthenticatedSessionController extends Controller
             return redirect()->route('change.password', ['email' => $user->email]);
         }
         // Save the 'user_id' from the session if it exists
-        $key = ! empty($request->session()->get('user_id')) ? $request->session()->get('user_id') : null;
-        $cart = $request->session()->get($key.'_cart_items');
+        $cart = app(CartService::class);
+        $cart->mergeGuestCartToUser(Auth::id(), $oldSessionId);
         $request->session()->regenerate();
-        if ($key) {
-            session()->put(['user_id' => $key, $key.'_cart_items' => $cart]);
-        }
+
         if ($request->user()->isClient()) {
             return redirect()->intended('/');
         }
 
         return redirect()->intended(RouteServiceProvider::HOME);
-
     }
 
     public function update(UpdateUserProfilRequest $request, User $user)
@@ -75,24 +74,13 @@ final class AuthenticatedSessionController extends Controller
      */
     public function destroy(Request $request): RedirectResponse
     {
-        // Log out the user from the 'web' guard
-        Auth::guard('web')->logout();
+        // $oldSessionId = session()->getId();
 
-        // Save the 'user_id' from the session if it exists
-        $key = ! empty($request->session()->get('user_id')) ? $request->session()->get('user_id') : null;
-        $cart = $request->session()->get($key.'_cart_items');
+        // $cart = app(CartService::class);
+        // $cart->mergeGuestCartToUser(Auth::id(), $oldSessionId);
+        Auth::guard('web')->logout();
         // Invalidate the session
         $request->session()->invalidate();
-
-        // Regenerate the CSRF token
-        $request->session()->regenerateToken();
-
-        // dd($key);
-        // Restore the 'user_id' to the session if it was present
-        if ($key) {
-            session()->put(['user_id' => $key, $key.'_cart_items' => $cart]);
-        }
-
         // Redirect to the login route
         return to_route('login');
     }

@@ -4,8 +4,9 @@ declare(strict_types=1);
 
 namespace App\Console;
 
-use App\Models\PendingRegistration;
+use App\Models\Order;
 use App\Models\Promotion;
+use App\Models\PendingRegistration;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 
@@ -31,9 +32,6 @@ final class Kernel extends ConsoleKernel
         // delete paiement expire chaque 3mn
         $schedule->command('app:delete-pay-by-link')->everyTwoMinutes()->withoutOverlapping()->onOneServer()->runInBackground();
 
-        // verification user email not verified
-        $schedule->command('app:delete-user-not-verify')->everyThirtyMinutes()->withoutOverlapping()->onOneServer()->runInBackground();
-
         $schedule->call(function () {
             PendingRegistration::where('expires_at', '<', now())->delete();
         })->hourly();
@@ -50,7 +48,7 @@ final class Kernel extends ConsoleKernel
      */
     protected function commands(): void
     {
-        $this->load(__DIR__.'/Commands');
+        $this->load(__DIR__ . '/Commands');
 
         require base_path('routes/console.php');
     }

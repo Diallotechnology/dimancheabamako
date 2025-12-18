@@ -25,32 +25,10 @@ final class QuickAddModal extends Component
         }
 
         // Mise à jour
-        $this->cart->update($this->addedItem['id'], $qty);
+        $this->cart->update((int)$this->addedItem['id'], $qty);
 
         // Mise à jour du modal
         $this->addedItem['quantity'] = $qty;
-    }
-
-    public function increaseQuick($rowId): void
-    {
-        $line = $this->cart->get($rowId);
-
-        $newQty = $this->updateQuantity($rowId, $line['quantity'] + 1);
-
-        if ($newQty !== false) {
-            $this->addedItem['quantity'] = $newQty;
-        }
-    }
-
-    public function decreaseQuick($rowId): void
-    {
-        $line = $this->cart->get($rowId);
-
-        $newQty = $this->updateQuantity($rowId, $line['quantity'] - 1);
-
-        if ($newQty !== false) {
-            $this->addedItem['quantity'] = $newQty;
-        }
     }
 
     #[On('openQuickModal')]
@@ -61,11 +39,6 @@ final class QuickAddModal extends Component
         if (empty($this->addedItem)) {
             return;
         }
-    }
-
-    public function render()
-    {
-        return view('livewire.quick-add-modal');
     }
 
     private function updateQuantity($rowId, $requestedQty): int|bool
@@ -100,24 +73,13 @@ final class QuickAddModal extends Component
             return $target;
         }
 
-        // ================================
-        // CAS NORMAL (produit non commande)
-        // ================================
-
-        if ($requestedQty < 1) {
-            session()->flash('warning', 'Quantité minimale 1.');
-
-            return false;
-        }
-
-        if ($requestedQty > $stock) {
-            session()->flash('warning', 'Stock insuffisant…');
-
-            return false;
-        }
-
         $this->cart->update($rowId, $requestedQty);
 
         return $requestedQty;
+    }
+
+    public function render()
+    {
+        return view('livewire.quick-add-modal');
     }
 }

@@ -130,11 +130,11 @@
                                 <tr>
                                     <th></th>
                                     <td>
-                                        @if ($this->hasPreorder)
+                                        {{-- @if ($this->is_preorder) --}}
                                         <div class="mb-3">
                                             {{ __('messages.preorder_notice') }}
                                         </div>
-                                        @endif
+                                        {{-- @endif --}}
                                     </td>
                                 </tr>
                             </table>
