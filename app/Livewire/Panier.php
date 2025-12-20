@@ -73,7 +73,7 @@ final class Panier extends Component
         }
         $this->trans = [];
 
-        return flash()->success('Nous ne livrons pas dans ce pays!');
+        return flash()->success(__('messages.panier.not_deliver'));
     }
 
     public function calculateShipping()
@@ -82,7 +82,7 @@ final class Panier extends Component
 
         if (! $shipping) {
             $this->shipping = null;
-            flash()->warning('Aucune correspondance trouvée pour le transport choisi.');
+            flash()->warning(__('messages.panier.not_transport'));
 
             return;
         }
@@ -93,11 +93,26 @@ final class Panier extends Component
     public function mount(): void
     {
         $this->refreshCart();
+        $this->cleanInvalidPreorders();
     }
+
+    private function cleanInvalidPreorders(): void
+    {
+        $this->cart->getContent()->each(function ($item) {
+            if (
+                ($item['is_preorder'] ?? false) === true
+                && ! in_array($item['quantity'], [5, 6], true)
+            ) {
+                $this->cart->remove($item['id']);
+            }
+        });
+    }
+
 
     public function getHasPreorderProperty()
     {
-        return $this->cart->getContent()->contains('status', true);
+
+        return $this->cart->getContent()->contains('is_preorder', true);
     }
 
     #[On('productDelete')]

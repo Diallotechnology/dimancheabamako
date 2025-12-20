@@ -100,6 +100,7 @@ return [
         'commande' => 'Sur commande',
         'disponible' => 'Disponible',
         'unit' => 'mètres',
+        'infos' => 'Selectionnez une quantite Ce produit est disponible uniquement en quantités de 5 ou 6 mètres.',
     ],
     'preorder_notice' => 'Votre commande comprend un produit sur commande. Elle sera fabriquée et livrée dans un délai de 3 à 5 semaines.',
     'email' => [
@@ -110,6 +111,10 @@ return [
             'expires' => 'Ce lien expirera dans 1 heure.',
             'regards' => 'Cordialement,',
         ],
+    ],
+    'panier' => [
+        'not_transport' => 'Aucune correspondance trouvée pour le transport choisi.',
+        'not_deliver' => 'Nous ne livrons pas dans ce pays!',
     ],
     'register_email_message' => 'Un email de confirmation vous a été envoyé. verifiez votre boîte mail.',
     'register_success_msg' => 'Votre compte a été activé avec succès !',

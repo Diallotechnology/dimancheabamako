@@ -100,6 +100,7 @@ return [
         'commande' => 'On order',
         'disponible' => 'Available',
         'unit' => 'meters',
+        'infos' => 'Select quantities This product is only available in quantities of 5 or 6 meters.',
     ],
     'preorder_notice' => 'Your order includes a made-to-order product. It will be manufactured and delivered within 3 to 5 weeks.',
     'email' => [
@@ -111,6 +112,10 @@ return [
             'regards' => 'Regards,',
         ],
 
+    ],
+    'panier' => [
+        'not_transport' => 'No match found for the chosen transport.',
+        'not_deliver' => 'We do not deliver to this country!',
     ],
     'register_email_message' => 'A confirmation email has been sent to you. Please check your inbox.',
     'register_success_msg' => 'Your account has been successfully activated!',

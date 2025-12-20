@@ -68,25 +68,29 @@
                     </div>
                     @endif
                     <!-- Quantity controls -->
-                    @if($addedItem['is_preorder'] ?? false)
+                    @if(!empty($addedItem) and $addedItem['is_preorder'] ?? false)
                     <div class="d-flex justify-content-center align-items-center mb-4 apple-qty-box">
                         <select class="apple-select-qty" wire:change="setQuickQuantity($event.target.value)">
-                            <option value="">select @lang('messages.product_status.unit')</option>
-                            <option selected value="5" @selected($addedItem['quantity']==5)">
-                                5 @lang('messages.product_status.unit')
+                            <option value="" selected>
+                                Select {{ __('messages.product_status.unit') }}
                             </option>
-                            <option value="6" @selected($addedItem['quantity']==6)">
-                                6 @lang('messages.product_status.unit')
+                            <option value="5" @selected($addedItem['quantity']==5)>
+                                5 {{ __('messages.product_status.unit') }}
+                            </option>
+                            <option value="6" @selected($addedItem['quantity']==6)>
+                                6 {{ __('messages.product_status.unit') }}
                             </option>
                         </select>
                     </div>
                     @endif
 
+
                     <!-- Actions -->
                     <div class="mt-4">
-                        <a href="{{ route('panier') }}" class="apple-btn-primary w-100 mb-3">
+                        <button class="apple-btn-primary w-100 mb-3" wire:click="goToCart">
                             {{ __('messages.finalize_order') }}
-                        </a>
+                        </button>
+
 
                         <button class="apple-btn-secondary w-100" data-bs-dismiss="modal">
                             {{ __('messages.continue_shopping') }}

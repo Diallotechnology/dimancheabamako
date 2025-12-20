@@ -91,7 +91,7 @@ final class CartService
             'id' => $id,
             'name' => $name,
             'price' => $price,
-            'quantity' => $is_preorder ? 5 : 1,
+            'quantity' => 1,
             'stock' => $stock,
             'poids' => $poids,
             'is_preorder' => $is_preorder,
