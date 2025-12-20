@@ -50,6 +50,7 @@ return [
     'first_name' => 'First Name',
     'last_name' => 'Last Name',
     'country' => 'Country',
+    'contact_with_code' => 'Contact (with country code, ex : +223XXXXXXXX)',
     'password' => 'Password',
     'confirm_password' => 'Confirm Password',
     'already_have_account' => 'Already have an account?',

@@ -50,6 +50,7 @@ return [
     'first_name' => 'Prénom',
     'last_name' => 'Nom',
     'country' => 'Pays',
+    'contact_with_code' => 'Contact (avec indicatif, ex : +223XXXXXXXX)',
     'password' => 'Mot de passe',
     'confirm_password' => 'Confirmer le mot de passe',
     'already_have_account' => 'Vous avez déjà un compte?',

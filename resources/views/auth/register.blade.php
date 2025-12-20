@@ -42,10 +42,11 @@
                         <div class="col-md-6">
                             <div class="mt-4">
                                 <!-- Name -->
-                                <x-input-label for="contact" :value="__('Contact')" />
-                                <input id="contact" type="tel" name="contact"
-                                    class="form-input block mt-1 w-full form-control" required />
+                                <x-input-label for="contact" :value="__('messages.contact_with_code')" />
+                                <input type="tel" name="contact" class="form-input block mt-1 w-full form-control"
+                                    placeholder="+223XXXXXXXX" required />
                                 <x-input-error :messages="$errors->get('contact')" class="mt-2" />
+
                             </div>
                         </div>
                         <div class="col-md-12">
@@ -94,5 +95,4 @@
                 </form>
             </div>
         </div>
-
 </x-guest-layout>

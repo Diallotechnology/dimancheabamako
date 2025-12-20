@@ -8,9 +8,6 @@
 
     <title>{{ $title ?? config('app.name') }}</title>
     <link href="{{ asset('assets/css/main.css') }}" rel="stylesheet" />
-    {{-- <script src="https://cdn.jsdelivr.net/npm/intl-tel-input@18.1.1/build/js/utils.js"></script> --}}
-
-    @vite('resources/js/phone-input.js')
 </head>
 
 <body>

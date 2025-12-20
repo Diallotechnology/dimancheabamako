@@ -111,7 +111,6 @@ final class Panier extends Component
 
     public function getHasPreorderProperty()
     {
-
         return $this->cart->getContent()->contains('is_preorder', true);
     }
 
