@@ -78,20 +78,6 @@ final class Product extends Model
     protected $fillable = ['categorie_id', 'reference', 'nom', 'color', 'taille', 'description', 'resume', 'poids', 'video', 'prix', 'cover', 'stock', 'favoris', 'slug', 'is_preorder'];
 
     /**
-     * Get the attributes that should be cast.
-     *
-     * @return array<string, string>
-     */
-    protected function casts(): array
-    {
-        return [
-            'poids' => 'float',
-            'stock' => 'integer',
-            'favoris' => 'boolean',
-            'is_preorder' => 'boolean',
-        ];
-    }
-    /**
      * Scope to get nature by structure.
      */
     public function scopeByStock(Builder $query): Builder
@@ -112,10 +98,10 @@ final class Product extends Model
         if ($devise === 'EUR') {
             $taux = session('taux_eur', 1);
 
-            return number_format($montant / $taux, 2, ',', ' ') . ' €';
+            return number_format($montant / $taux, 2, ',', ' ').' €';
         }
 
-        return number_format($montant, 0, ',', ' ') . ' CFA';
+        return number_format($montant, 0, ',', ' ').' CFA';
     }
 
     public function activePromotion()
@@ -229,13 +215,28 @@ final class Product extends Model
 
                 // Vérifier l'unicité du slug
                 while (self::where('slug', $slug)->where('id', '!=', $product->id)->exists()) {
-                    $slug = $baseSlug . '-' . $counter;
+                    $slug = $baseSlug.'-'.$counter;
                     $counter++;
                 }
 
                 $product->slug = $slug;
             }
         });
+    }
+
+    /**
+     * Get the attributes that should be cast.
+     *
+     * @return array<string, string>
+     */
+    protected function casts(): array
+    {
+        return [
+            'poids' => 'float',
+            'stock' => 'integer',
+            'favoris' => 'boolean',
+            'is_preorder' => 'boolean',
+        ];
     }
 
     // Helper interne : trouve la promo active SANS refaire de requêtes si déjà chargée

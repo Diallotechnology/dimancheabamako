@@ -31,7 +31,7 @@ trait CartAction
     public function store(int $id)
     {
         $product = Product::with([
-            'promotions' => fn($q) => $q->active()->orderByDesc('id')->limit(1),
+            'promotions' => fn ($q) => $q->active()->orderByDesc('id')->limit(1),
         ])->findOrFail($id);
 
         // 1. Ajouter ou récupérer l'item
@@ -51,7 +51,6 @@ trait CartAction
                 ]
             );
         }
-
 
         // 2. Structurer pour le front
         $item = [
@@ -93,7 +92,7 @@ trait CartAction
             })
             ->sum();
 
-        return $format ? number_format($total, 2, '.', ' ') . ' kg' : $total;
+        return $format ? number_format($total, 2, '.', ' ').' kg' : $total;
     }
 
     public function getShippingCost(int $countryId, int $transportId): ?Shipping

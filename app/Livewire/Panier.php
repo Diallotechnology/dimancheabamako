@@ -96,19 +96,6 @@ final class Panier extends Component
         $this->cleanInvalidPreorders();
     }
 
-    private function cleanInvalidPreorders(): void
-    {
-        $this->cart->getContent()->each(function ($item) {
-            if (
-                ($item['is_preorder'] ?? false) === true
-                && ! in_array($item['quantity'], [5, 6], true)
-            ) {
-                $this->cart->remove($item['id']);
-            }
-        });
-    }
-
-
     public function getHasPreorderProperty()
     {
         return $this->cart->getContent()->contains('is_preorder', true);
@@ -136,5 +123,17 @@ final class Panier extends Component
         $country = Country::select('id', 'nom')->get();
 
         return view('livewire.panier', compact('items', 'country'));
+    }
+
+    private function cleanInvalidPreorders(): void
+    {
+        $this->cart->getContent()->each(function ($item) {
+            if (
+                ($item['is_preorder'] ?? false) === true
+                && ! in_array($item['quantity'], [5, 6], true)
+            ) {
+                $this->cart->remove($item['id']);
+            }
+        });
     }
 }

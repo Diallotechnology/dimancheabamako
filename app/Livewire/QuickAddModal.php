@@ -17,7 +17,6 @@ final class QuickAddModal extends Component
 
     public ?int $quickQuantity = null;
 
-
     public function setQuickQuantity(int $qty): void
     {
         // Sécurité : uniquement pour les produits sur commande
@@ -31,6 +30,7 @@ final class QuickAddModal extends Component
                 'warning',
                 __('messages.product_status.infos')
             );
+
             return;
         }
 
@@ -42,17 +42,6 @@ final class QuickAddModal extends Component
         );
     }
 
-    private function applyQuantity(int|string $rowId, int $qty): void
-    {
-
-        // Cart::update attend un delta
-        $this->cart->update($rowId, $qty);
-
-        // Sync UI
-        $this->addedItem['quantity'] = $qty;
-    }
-
-
     public function goToCart()
     {
         if (($this->addedItem['is_preorder'] ?? false) && $this->quickQuantity === null) {
@@ -60,14 +49,12 @@ final class QuickAddModal extends Component
                 'warning',
                 __('messages.product_status.infos')
             );
+
             return;
         }
 
         return redirect()->route('panier');
     }
-
-
-
 
     #[On('openQuickModal')]
     public function open(array $item)
@@ -82,5 +69,15 @@ final class QuickAddModal extends Component
     public function render()
     {
         return view('livewire.quick-add-modal');
+    }
+
+    private function applyQuantity(int|string $rowId, int $qty): void
+    {
+
+        // Cart::update attend un delta
+        $this->cart->update($rowId, $qty);
+
+        // Sync UI
+        $this->addedItem['quantity'] = $qty;
     }
 }

@@ -4,17 +4,17 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Auth;
 
-use App\Models\User;
-use Illuminate\View\View;
-use App\Service\CartService;
-use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Http\RedirectResponse;
-use App\Providers\RouteServiceProvider;
 use App\Http\Requests\Auth\LoginRequest;
 use App\Http\Requests\UpdateUserProfilRequest;
+use App\Models\User;
+use App\Providers\RouteServiceProvider;
+use App\Service\CartService;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\View\View;
 
 final class AuthenticatedSessionController extends Controller
 {
@@ -81,6 +81,7 @@ final class AuthenticatedSessionController extends Controller
         Auth::guard('web')->logout();
         // Invalidate the session
         $request->session()->invalidate();
+
         // Redirect to the login route
         return to_route('login');
     }

@@ -1,15 +1,16 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Notifications;
 
 use App\Models\Order;
 use App\Models\Product;
 use Illuminate\Bus\Queueable;
-use Illuminate\Notifications\Notification;
-use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
+use Illuminate\Notifications\Notification;
 
-class NotifOrderStockIssue extends Notification
+final class NotifOrderStockIssue extends Notification
 {
     use Queueable;
 
@@ -39,9 +40,9 @@ class NotifOrderStockIssue extends Notification
         return (new MailMessage)
             ->subject('⚠️ Problème de stock')
             ->line('Un problème de stock a été détecté.')
-            ->line('Commande : #' . $this->order->id)
-            ->line('Produit : ' . $this->product->reference)
-            ->line('Quantité demandée : ' . ($this->product->pivot?->quantity ?? 'N/A'))
+            ->line('Commande : #'.$this->order->id)
+            ->line('Produit : '.$this->product->reference)
+            ->line('Quantité demandée : '.($this->product->pivot?->quantity ?? 'N/A'))
             ->line('Merci de vérifier le stock avant validation.');
     }
 

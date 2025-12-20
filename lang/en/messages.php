@@ -121,9 +121,9 @@ return [
     'register_email_message' => 'A confirmation email has been sent to you. Please check your inbox.',
     'register_success_msg' => 'Your account has been successfully activated!',
     'category_text' => [
-        'title' => "Discover the :name Collection: Bazin, Boubous and Accessories",
-        'description_1' => "Our :name collection offers an exclusive selection of clothing and accessories, crafted with high-quality Bazin fabric.",
-        'description_2' => "Perfect for any occasion, our creations combine elegance and comfort.",
-    ]
+        'title' => 'Discover the :name Collection: Bazin, Boubous and Accessories',
+        'description_1' => 'Our :name collection offers an exclusive selection of clothing and accessories, crafted with high-quality Bazin fabric.',
+        'description_2' => 'Perfect for any occasion, our creations combine elegance and comfort.',
+    ],
 
 ];

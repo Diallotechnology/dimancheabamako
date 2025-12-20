@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Service;
 
+use const false;
+
 use App\Enum\RoleEnum;
 use App\Models\Client;
 use App\Models\Country;
@@ -25,7 +27,7 @@ final class OrderService
                 User::firstOrCreate(
                     ['email' => $request->email],
                     [
-                        'name' => $request->prenom . ' ' . $request->nom,
+                        'name' => $request->prenom.' '.$request->nom,
                         'email' => $request->email,
                         'password' => Hash::make($request->password),
                         'change_password' => true,
@@ -59,7 +61,7 @@ final class OrderService
                 'postal' => $request->postal,
                 'ville' => $request->ville,
                 'country_id' => $country->id,
-                'poids' => $totalWeight . ' Kg',
+                'poids' => $totalWeight.' Kg',
                 'shipping' => $shipping->montant,
                 'transport_id' => $request->transport_id,
                 'commentaire' => $request->commentaire,
@@ -68,7 +70,7 @@ final class OrderService
             // 4. vérifier stock + attach
             foreach ($cart->getContent() as $item) {
 
-                if ($item['is_preorder'] == \false and $item['quantity'] > $item['stock']) {
+                if ($item['is_preorder'] === false and $item['quantity'] > $item['stock']) {
                     throw new Exception("Stock insuffisant pour {$item['name']}");
                 }
 

@@ -24,7 +24,7 @@ final class PendingRegistrationController extends Controller
         DB::transaction(function () use ($pending) {
 
             $user = User::create([
-                'name' => $pending->prenom . ' ' . $pending->nom,
+                'name' => $pending->prenom.' '.$pending->nom,
                 'email' => $pending->email,
                 'role' => $pending->role,
                 'password' => $pending->password,

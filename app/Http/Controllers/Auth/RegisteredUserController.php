@@ -4,22 +4,20 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Auth;
 
-use Countries;
 use App\Enum\RoleEnum;
-use Illuminate\View\View;
-use Illuminate\Support\Str;
-use Illuminate\Http\Request;
-use Illuminate\Validation\Rules;
-use App\Rules\NotDisposableEmail;
-use function Flasher\Prime\flash;
-use Illuminate\Support\Collection;
-use App\Models\PendingRegistration;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\StoreRegisterUserRequest;
+use App\Mail\ConfirmRegistrationMail;
+use App\Models\PendingRegistration;
+use Countries;
+use Illuminate\Http\Request;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Str;
+use Illuminate\View\View;
 
-use App\Mail\ConfirmRegistrationMail;
-use App\Http\Requests\StoreRegisterUserRequest;
+use function Flasher\Prime\flash;
 
 final class RegisteredUserController extends Controller
 {

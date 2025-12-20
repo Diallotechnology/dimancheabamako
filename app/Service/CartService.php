@@ -39,7 +39,7 @@ final class CartService
 
     public function mergeGuestCartToUser(int $userId, string $guestSessionId): void
     {
-        $guestKey = 'cart_guest_' . $guestSessionId;
+        $guestKey = 'cart_guest_'.$guestSessionId;
         $userKey = "cart_user_{$userId}";
 
         $guestCart = Cache::get($guestKey, []);
@@ -190,13 +190,13 @@ final class CartService
     {
         return $this->userId
             ? "cart_user_{$this->userId}"
-            : 'cart_guest_' . $this->session->getId();
+            : 'cart_guest_'.$this->session->getId();
     }
 
     private function load(): Collection
     {
         return collect(Cache::get($this->getCacheKey(), []))
-            ->map(fn($item) => collect($item));
+            ->map(fn ($item) => collect($item));
     }
 
     private function save(Collection $items): void

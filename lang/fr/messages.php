@@ -120,8 +120,8 @@ return [
     'register_email_message' => 'Un email de confirmation vous a été envoyé. verifiez votre boîte mail.',
     'register_success_msg' => 'Votre compte a été activé avec succès !',
     'category_text' => [
-        'title' => "Découvrez la collection :name : Bazin, Boubous et Accessoires",
-        'description_1' => "Notre collection :name propose une sélection exclusive de vêtements et accessoires, confectionnés à partir de Bazin de qualité supérieure.",
-        'description_2' => "Idéale pour toutes les occasions, nos créations allient élégance et confort.",
-    ]
+        'title' => 'Découvrez la collection :name : Bazin, Boubous et Accessoires',
+        'description_1' => 'Notre collection :name propose une sélection exclusive de vêtements et accessoires, confectionnés à partir de Bazin de qualité supérieure.',
+        'description_2' => 'Idéale pour toutes les occasions, nos créations allient élégance et confort.',
+    ],
 ];

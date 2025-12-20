@@ -4,20 +4,18 @@ declare(strict_types=1);
 
 namespace App\Console\Commands;
 
-use App\Models\Order;
 use App\Enum\OrderEnum;
 use App\Helper\OrderAPI;
 use App\Jobs\OrderMailJob;
-use App\Service\CartService;
 use App\Mail\CancelOrderMail;
-use App\Mail\OrderStockIssue;
+use App\Models\Order;
 use App\Notifications\NotifOrderStockIssue;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
-use Darryldecode\Cart\Facades\CartFacade;
 use Illuminate\Support\Facades\Notification;
+use Throwable;
 
 final class CheckPayment extends Command
 {
@@ -58,30 +56,33 @@ final class CheckPayment extends Command
 
                         try {
                             $data = $this->getOrderStatus($order->trans_ref);
-                        } catch (\Throwable $e) {
+                        } catch (Throwable $e) {
                             Log::error('Payment status fetch failed', [
                                 'order_id' => $order->id,
                                 'error' => $e->getMessage(),
                             ]);
+
                             return;
                         }
 
                         $payment = data_get($data, '_embedded.payment.0');
-                        $state   = $payment['state'] ?? null;
+                        $state = $payment['state'] ?? null;
 
                         if (! $state) {
                             Log::warning('Payment state missing', [
                                 'order_id' => $order->id,
                                 'response' => $data,
                             ]);
+
                             return;
                         }
 
                         // 🔴 Paiement refusé / annulé / expiré
                         if (in_array($state, ['FAILED', 'CANCELLED', 'EXPIRED'], true)) {
-                            $order->update(['trans_state' => $state,]);
+                            $order->update(['trans_state' => $state]);
 
                             $order->delete(); // autorisé ici
+
                             return;
                         }
 
@@ -103,6 +104,7 @@ final class CheckPayment extends Command
                                     $order->update(['etat' => OrderEnum::STOCK->value]);
                                     Notification::route('mail', 'topmariage.mali@gmail.com')
                                         ->notify(new NotifOrderStockIssue($order, $product));
+
                                     return;
                                 }
                             }
