@@ -10,6 +10,7 @@
     <x-slot:title>
         {{ __('messages.cart')}}
         </x-slot>
+
         <section class="mt-50 mb-50">
             <div class="container">
                 <div class="row">
@@ -137,7 +138,13 @@
                                         @endif
                                     </td>
                                 </tr>
+                                @if (session()->has('warning'))
+                                <div class="apple-warning mb-3">
+                                    {{ session('warning') }}
+                                </div>
+                                @endif
                             </table>
+
                         </div>
                     </div>
                     <div @class(['col-md-8', 'd-none'=> $items->count() == 0]) >
@@ -201,34 +208,36 @@
                             @csrf
                             <input type="hidden" name="livraison" value="{{ $shipping ? $shipping->id : '' }}">
                             <div class="row">
-                                <div class="col-md-6">
+                                <div class="col-md-6" wire:ignore>
                                     <x-input type="text" place="votre prenom" :label="__('messages.first_name')"
-                                        name="prenom" value="{{ $client ? $client->prenom : '' }}" />
+                                        name="prenom" value="{{ $client ? $client->prenom : '' }}"
+                                        :value="old('prenom')" />
                                 </div>
-                                <div class="col-md-6">
+                                <div class="col-md-6" wire:ignore>
                                     <x-input type="text" place="votre nom" value="{{ $client ? $client->nom : '' }}"
-                                        :label="__('messages.last_name')" name="nom" />
+                                        :label="__('messages.last_name')" name="nom" :value="old('nom')" />
                                 </div>
-                                <div class="col-md-6">
+                                <div class="col-md-6" wire:ignore>
                                     <x-input type="text" place="votre adresse"
                                         value="{{ $client ? $client->latestorder()->adresse : '' }}"
-                                        :label="__('messages.address')" name="adresse" />
+                                        :label="__('messages.address')" name="adresse" :value="old('adresse')" />
                                 </div>
-                                <div class="col-md-6">
+                                <div class="col-md-6" wire:ignore>
                                     <x-input type="text" place="votre code postal"
                                         value="{{ $client ? $client->latestorder()->postal : '' }}" label="Postal"
-                                        name="postal" />
+                                        name="postal" :value="old('postal')" />
                                 </div>
-                                <div class="col-md-6">
+                                <div class="col-md-6" wire:ignore>
                                     <x-input type="text" place="votre ville"
                                         value="{{ $client ? $client->latestorder()->ville : '' }}"
-                                        :label="__('messages.city')" name="ville" />
+                                        :label="__('messages.city')" name="ville" :value="old('ville')" />
                                 </div>
                                 <div class="col-md-6">
-                                    <div class="mt-3">
+                                    <div class="mt-3" wire:ignore>
                                         <x-input type="text" place="votre contact"
                                             value="{{ $client ? $client->contact : '' }}"
-                                            :label="__('messages.contact_with_code')" name="contact" />
+                                            :label="__('messages.contact_with_code')" name="contact"
+                                            :value="old('contact')" />
                                     </div>
                                 </div>
                                 <div class="col-md-6">
@@ -255,7 +264,8 @@
                                 </div>
                                 <div class="col-md-6">
                                     <x-input type="email" place="votre email" label="email"
-                                        value="{{ $client ? $client->email : '' }}" name="email" />
+                                        value="{{ $client ? $client->email : '' }}" name="email"
+                                        :value="old('email')" />
                                 </div>
                                 <div class="col-md-6">
                                     <div class="mb-4">

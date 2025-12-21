@@ -68,11 +68,12 @@ final class Panier extends Component
     {
         // get country
         $country = Country::with('zone')->find($this->country_id);
+        $country->loadMissing('zone.transports');
         if ($country->zone->transports->isNotEmpty()) {
             return $this->trans = $country->zone->transports;
         }
         $this->trans = [];
-
+        session()->flash('warning', __('messages.panier.not_deliver'));
         return flash()->success(__('messages.panier.not_deliver'));
     }
 
@@ -82,6 +83,7 @@ final class Panier extends Component
 
         if (! $shipping) {
             $this->shipping = null;
+            session()->flash('warning', __('messages.panier.not_transport'));
             flash()->warning(__('messages.panier.not_transport'));
 
             return;
@@ -116,15 +118,6 @@ final class Panier extends Component
         }
     }
 
-    public function render()
-    {
-        $items = $this->cart->getContent();
-
-        $country = Country::select('id', 'nom')->get();
-
-        return view('livewire.panier', compact('items', 'country'));
-    }
-
     private function cleanInvalidPreorders(): void
     {
         $this->cart->getContent()->each(function ($item) {
@@ -135,5 +128,14 @@ final class Panier extends Component
                 $this->cart->remove($item['id']);
             }
         });
+    }
+
+    public function render()
+    {
+        $items = $this->cart->getContent();
+
+        $country = Country::select('id', 'nom')->get();
+
+        return view('livewire.panier', compact('items', 'country'));
     }
 }

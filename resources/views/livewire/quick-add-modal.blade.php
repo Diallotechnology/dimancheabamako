@@ -123,7 +123,7 @@
             /* rouge très pâle — premium */
             color: #b30000;
             /* rouge profond élégant */
-            padding: 12px 16px;
+            padding: 8px 10px;
             border-radius: 12px;
             font-size: 0.92rem;
             border: 1px solid #ffb3b3;

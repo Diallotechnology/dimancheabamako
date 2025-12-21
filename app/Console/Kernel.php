@@ -26,8 +26,8 @@ final class Kernel extends ConsoleKernel
         $schedule->command('queue:work --stop-when-empty')->everyMinute()->withoutOverlapping()->onOneServer()->runInBackground();
 
         $schedule->command('queue:retry')->everyTwoMinutes()->withoutOverlapping()->onOneServer()->runInBackground();
-        // delete paiement expire chaque 3mn
-        $schedule->command('app:delete-order-payment-expire')->everyTwoMinutes()->withoutOverlapping()->onOneServer()->runInBackground();
+        // delete paiement expire chaque 5mn
+        $schedule->command('app:delete-order-payment-expire')->everyFiveMinutes()->withoutOverlapping()->onOneServer()->runInBackground();
         // delete paiement expire chaque 3mn
         $schedule->command('app:delete-pay-by-link')->everyTwoMinutes()->withoutOverlapping()->onOneServer()->runInBackground();
 
@@ -47,7 +47,7 @@ final class Kernel extends ConsoleKernel
      */
     protected function commands(): void
     {
-        $this->load(__DIR__.'/Commands');
+        $this->load(__DIR__ . '/Commands');
 
         require base_path('routes/console.php');
     }

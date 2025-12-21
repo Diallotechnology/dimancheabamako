@@ -67,7 +67,6 @@ final class CheckPayment extends Command
 
                         $payment = data_get($data, '_embedded.payment.0');
                         $state = $payment['state'] ?? null;
-
                         if (! $state) {
                             Log::warning('Payment state missing', [
                                 'order_id' => $order->id,

@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Service;
 
-use const false;
 
 use App\Enum\RoleEnum;
 use App\Models\Client;
@@ -27,7 +26,7 @@ final class OrderService
                 User::firstOrCreate(
                     ['email' => $request->email],
                     [
-                        'name' => $request->prenom.' '.$request->nom,
+                        'name' => $request->prenom . ' ' . $request->nom,
                         'email' => $request->email,
                         'password' => Hash::make($request->password),
                         'change_password' => true,
@@ -38,16 +37,28 @@ final class OrderService
 
             // 2. enregistrer client
             $country = Country::findOrFail($request->country_id);
-
-            $client = Client::firstOrCreate(
-                ['email' => $request->email],
+            $client = Client::updateOrCreate(
+                [
+                    'contact' => phone($request->contact)->formatE164()
+                ],
                 [
                     'prenom' => $request->prenom,
                     'nom' => $request->nom,
-                    'contact' => $request->contact,
+                    'contact' => phone($request->contact)->formatE164(),
                     'pays' => $country->nom,
                 ]
             );
+
+
+            // $client = Client::firstOrCreate(
+            //     ['email' => $request->email,  'contact' => $request->contact],
+            //     [
+            //         'prenom' => $request->prenom,
+            //         'nom' => $request->nom,
+            //         'contact' => $request->contact,
+            //         'pays' => $country->nom,
+            //     ]
+            // );
 
             // 3. infos commande
             $shipping = Shipping::findOrFail($request->integer('livraison'));
@@ -61,7 +72,7 @@ final class OrderService
                 'postal' => $request->postal,
                 'ville' => $request->ville,
                 'country_id' => $country->id,
-                'poids' => $totalWeight.' Kg',
+                'poids' => $totalWeight . ' Kg',
                 'shipping' => $shipping->montant,
                 'transport_id' => $request->transport_id,
                 'commentaire' => $request->commentaire,
