@@ -16,7 +16,6 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property-read \Illuminate\Database\Eloquent\Collection<int, Shipping> $shippings
  * @property-read int|null $shippings_count
- *
  * @method static \Database\Factories\PoidsFactory factory($count = null, $state = [])
  * @method static \Illuminate\Database\Eloquent\Builder|Poids newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Poids newQuery()
@@ -26,7 +25,6 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @method static \Illuminate\Database\Eloquent\Builder|Poids whereMax($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Poids whereMin($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Poids whereUpdatedAt($value)
- *
  * @mixin \Eloquent
  */
 final class Poids extends Model

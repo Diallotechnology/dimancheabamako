@@ -16,7 +16,6 @@ use Illuminate\Support\Facades\Storage;
  * @property string $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property-read Product $product
- *
  * @method static \Database\Factories\ImageFactory factory($count = null, $state = [])
  * @method static \Illuminate\Database\Eloquent\Builder|Image newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Image newQuery()
@@ -26,7 +25,6 @@ use Illuminate\Support\Facades\Storage;
  * @method static \Illuminate\Database\Eloquent\Builder|Image whereId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Image whereProductId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Image whereUpdatedAt($value)
- *
  * @mixin \Eloquent
  */
 final class Image extends Model

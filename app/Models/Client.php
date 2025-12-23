@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use LogicException;
 use App\Helper\DateFormat;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -19,7 +20,6 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property-read \Illuminate\Database\Eloquent\Collection<int, Order> $orders
  * @property-read int|null $orders_count
- *
  * @method static \Database\Factories\ClientFactory factory($count = null, $state = [])
  * @method static \Illuminate\Database\Eloquent\Builder|Client newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Client newQuery()
@@ -32,7 +32,6 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @method static \Illuminate\Database\Eloquent\Builder|Client wherePays($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Client wherePrenom($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Client whereUpdatedAt($value)
- *
  * @mixin \Eloquent
  */
 final class Client extends Model
@@ -62,5 +61,14 @@ final class Client extends Model
     public function latestorder()
     {
         return $this->hasOne(Order::class)->latestOfMany()->first();
+    }
+
+    protected static function booted()
+    {
+        static::deleting(function ($client) {
+            if ($client->orders()->exists()) {
+                throw new LogicException('Client still has orders');
+            }
+        });
     }
 }

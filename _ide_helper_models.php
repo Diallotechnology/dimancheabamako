@@ -175,11 +175,11 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder|Order whereTransportId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Order whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Order whereVille($value)
- * @mixin \Eloquent
  * @property int|null $delai
  * @property int|null $metrage
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Order whereDelai($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Order whereMetrage($value)
+ * @mixin \Eloquent
  */
 	final class Order extends \Eloquent {}
 }
@@ -209,6 +209,7 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder<static>|PayLink whereTransRef($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|PayLink whereTransState($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|PayLink whereUpdatedAt($value)
+ * @mixin \Eloquent
  */
 	final class PayLink extends \Eloquent {}
 }
@@ -242,6 +243,7 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder<static>|PendingRegistration whereRole($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|PendingRegistration whereToken($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|PendingRegistration whereUpdatedAt($value)
+ * @mixin \Eloquent
  */
 	final class PendingRegistration extends \Eloquent {}
 }
@@ -319,17 +321,17 @@ namespace App\Models{
  * @method static Builder|Product whereTaille($value)
  * @method static Builder|Product whereUpdatedAt($value)
  * @method static Builder|Product whereVideo($value)
- * @mixin \Eloquent
  * @property string|null $slug
  * @property bool $is_preorder
  * @property int $status
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Promotion> $activePromotion
  * @property-read int|null $active_promotion_count
  * @property-read int $prix_final_base
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Product active()
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Product whereIsPreorder($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Product whereSlug($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Product whereStatus($value)
+ * @method static Builder<static>|Product active()
+ * @method static Builder<static>|Product whereIsPreorder($value)
+ * @method static Builder<static>|Product whereSlug($value)
+ * @method static Builder<static>|Product whereStatus($value)
+ * @mixin \Eloquent
  */
 	final class Product extends \Eloquent {}
 }
@@ -358,8 +360,8 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder|Promotion whereNom($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Promotion whereReduction($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Promotion whereUpdatedAt($value)
+ * @method static Builder<static>|Promotion active()
  * @mixin \Eloquent
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Promotion active()
  */
 	final class Promotion extends \Eloquent {}
 }

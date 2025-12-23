@@ -45,14 +45,29 @@ final class DeleteOrderPaymentExpire extends Command
                 foreach ($orders as $order) {
                     DB::transaction(function () use ($order) {
 
-                        $order = Order::whereKey($order->id)
-                            ->lockForUpdate()
-                            ->first();
-                        $order->delete();
+                        $order = Order::lockForUpdate()->find($order->id);
+                        if (! $order) {
+                            return;
+                        }
 
-                        Log::info('Order deleted (payment failed)', [
+                        $client = $order->client;
+                        // 2️⃣ Vérifier si le client est fictif
+                        if ($client) {
+                            $hasOtherOrders = $client->orders()
+                                ->where('id', '!=', $order->id)
+                                ->exists();
+
+                            if (! $hasOtherOrders) {
+                                $client->delete();
+
+                                Log::info('Client deleted (no orders)', [
+                                    'client_id' => $client->id,
+                                ]);
+                            }
+                        }
+
+                        Log::info('Order deleted (abandoned / failed)', [
                             'order_id' => $order->id,
-                            'trans_state' => $order->trans_state,
                         ]);
                     });
                 }

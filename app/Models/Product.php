@@ -41,7 +41,6 @@ use Illuminate\Support\Str;
  * @property-read int|null $orders_count
  * @property-read \Illuminate\Database\Eloquent\Collection<int, Promotion> $promotions
  * @property-read int|null $promotions_count
- *
  * @method static Builder|Product byStock()
  * @method static \Database\Factories\ProductFactory factory($count = null, $state = [])
  * @method static Builder|Product newModelQuery()
@@ -63,7 +62,16 @@ use Illuminate\Support\Str;
  * @method static Builder|Product whereTaille($value)
  * @method static Builder|Product whereUpdatedAt($value)
  * @method static Builder|Product whereVideo($value)
- *
+ * @property string|null $slug
+ * @property bool $is_preorder
+ * @property int $status
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Promotion> $activePromotion
+ * @property-read int|null $active_promotion_count
+ * @property-read int $prix_final_base
+ * @method static Builder<static>|Product active()
+ * @method static Builder<static>|Product whereIsPreorder($value)
+ * @method static Builder<static>|Product whereSlug($value)
+ * @method static Builder<static>|Product whereStatus($value)
  * @mixin \Eloquent
  */
 final class Product extends Model

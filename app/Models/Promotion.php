@@ -21,7 +21,6 @@ use Illuminate\Support\Carbon;
  * @property Carbon|null $updated_at
  * @property-read \Illuminate\Database\Eloquent\Collection<int, Product> $products
  * @property-read int|null $products_count
- *
  * @method static \Database\Factories\PromotionFactory factory($count = null, $state = [])
  * @method static \Illuminate\Database\Eloquent\Builder|Promotion newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Promotion newQuery()
@@ -34,7 +33,7 @@ use Illuminate\Support\Carbon;
  * @method static \Illuminate\Database\Eloquent\Builder|Promotion whereNom($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Promotion whereReduction($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Promotion whereUpdatedAt($value)
- *
+ * @method static Builder<static>|Promotion active()
  * @mixin \Eloquent
  */
 final class Promotion extends Model
