@@ -5,7 +5,7 @@
 
 /**
  * A helper file for Laravel, to provide autocomplete information to your IDE
- * Generated for Laravel 12.41.1.
+ * Generated for Laravel 12.43.1.
  *
  * This file should not be included in your code, only analyzed by your IDE!
  *
@@ -1217,8 +1217,6 @@ namespace Illuminate\Support\Facades {
         /**
          * Define a contextual binding based on an attribute.
          *
-         * @param string $attribute
-         * @param \Closure $handler
          * @return void
          * @static
          */
@@ -1237,7 +1235,6 @@ namespace Illuminate\Support\Facades {
          * `has($id)` returning true does not mean that `get($id)` will not throw an exception.
          * It does however mean that `get($id)` will not throw a `NotFoundExceptionInterface`.
          *
-         * @return bool
          * @param string $id Identifier of the entry to look for.
          * @return bool
          * @static
@@ -1449,7 +1446,6 @@ namespace Illuminate\Support\Facades {
          * "Extend" an abstract type in the container.
          *
          * @param string $abstract
-         * @param \Closure $closure
          * @return void
          * @throws \InvalidArgumentException
          * @static
@@ -1526,7 +1522,6 @@ namespace Illuminate\Support\Facades {
          * Bind a new callback to an abstract's rebind event.
          *
          * @param string $abstract
-         * @param \Closure $callback
          * @return mixed
          * @static
          */
@@ -1556,8 +1551,6 @@ namespace Illuminate\Support\Facades {
         /**
          * Wrap the given closure such that its dependencies will be injected when executed.
          *
-         * @param \Closure $callback
-         * @param array $parameters
          * @return \Closure
          * @static
          */
@@ -1605,7 +1598,6 @@ namespace Illuminate\Support\Facades {
          *
          * @template TClass of object
          * @param string|class-string<TClass>|callable $abstract
-         * @param array $parameters
          * @return ($abstract is class-string<TClass> ? TClass : mixed)
          * @throws \Illuminate\Contracts\Container\BindingResolutionException
          * @static
@@ -1652,7 +1644,6 @@ namespace Illuminate\Support\Facades {
         /**
          * Resolve a dependency based on an attribute.
          *
-         * @param \ReflectionAttribute $attribute
          * @return mixed
          * @static
          */
@@ -1667,7 +1658,6 @@ namespace Illuminate\Support\Facades {
          * Register a new before resolving callback for all types.
          *
          * @param \Closure|string $abstract
-         * @param \Closure|null $callback
          * @return void
          * @static
          */
@@ -1682,7 +1672,6 @@ namespace Illuminate\Support\Facades {
          * Register a new resolving callback.
          *
          * @param \Closure|string $abstract
-         * @param \Closure|null $callback
          * @return void
          * @static
          */
@@ -1697,7 +1686,6 @@ namespace Illuminate\Support\Facades {
          * Register a new after resolving callback for all types.
          *
          * @param \Closure|string $abstract
-         * @param \Closure|null $callback
          * @return void
          * @static
          */
@@ -1711,8 +1699,6 @@ namespace Illuminate\Support\Facades {
         /**
          * Register a new after resolving attribute callback for all types.
          *
-         * @param string $attribute
-         * @param \Closure $callback
          * @return void
          * @static
          */
@@ -1875,7 +1861,6 @@ namespace Illuminate\Support\Facades {
         /**
          * Set the shared instance of the container.
          *
-         * @param \Illuminate\Contracts\Container\Container|null $container
          * @return \Illuminate\Contracts\Container\Container|static
          * @static
          */
@@ -1889,7 +1874,6 @@ namespace Illuminate\Support\Facades {
          * Determine if a given offset exists.
          *
          * @param string $key
-         * @return bool
          * @static
          */
         public static function offsetExists($key)
@@ -1903,7 +1887,6 @@ namespace Illuminate\Support\Facades {
          * Get the value at a given offset.
          *
          * @param string $key
-         * @return mixed
          * @static
          */
         public static function offsetGet($key)
@@ -1918,28 +1901,26 @@ namespace Illuminate\Support\Facades {
          *
          * @param string $key
          * @param mixed $value
-         * @return void
          * @static
          */
         public static function offsetSet($key, $value)
         {
             //Method inherited from \Illuminate\Container\Container 
             /** @var \Illuminate\Foundation\Application $instance */
-            $instance->offsetSet($key, $value);
+            return $instance->offsetSet($key, $value);
         }
 
         /**
          * Unset the value at a given offset.
          *
          * @param string $key
-         * @return void
          * @static
          */
         public static function offsetUnset($key)
         {
             //Method inherited from \Illuminate\Container\Container 
             /** @var \Illuminate\Foundation\Application $instance */
-            $instance->offsetUnset($key);
+            return $instance->offsetUnset($key);
         }
 
         /**
@@ -4231,7 +4212,7 @@ namespace Illuminate\Support\Facades {
         /**
          * Create a new assertion about a chained batch.
          *
-         * @param \Closure $callback
+         * @param \Closure(\Illuminate\Bus\PendingBatch):  bool  $callback
          * @return \Illuminate\Support\Testing\Fakes\ChainedBatchTruthTest
          * @static
          */
@@ -4244,7 +4225,7 @@ namespace Illuminate\Support\Facades {
         /**
          * Assert if a batch was dispatched based on a truth-test callback.
          *
-         * @param callable $callback
+         * @param callable(\Illuminate\Bus\PendingBatch):  bool  $callback
          * @return void
          * @static
          */
@@ -4336,8 +4317,8 @@ namespace Illuminate\Support\Facades {
         /**
          * Get all of the pending batches matching a truth-test callback.
          *
-         * @param callable $callback
-         * @return \Illuminate\Support\Collection
+         * @param callable(\Illuminate\Bus\PendingBatch):  bool  $callback
+         * @return \Illuminate\Support\Collection<int, \Illuminate\Bus\PendingBatch>
          * @static
          */
         public static function batched($callback)
@@ -6177,12 +6158,13 @@ namespace Illuminate\Support\Facades {
         }
 
         /**
+         * @template TReturn of mixed
+         * 
          * Run the callback function with the given context values and restore the original context state when complete.
-         *
-         * @param callable $callback
+         * @param (callable(): TReturn) $callback
          * @param array<string, mixed> $data
          * @param array<string, mixed> $hidden
-         * @return mixed
+         * @return TReturn
          * @throws \Throwable
          * @static
          */
@@ -9156,7 +9138,7 @@ namespace Illuminate\Support\Facades {
         }
 
         /**
-         * Guess the file extension from the mime-type of a given file.
+         * Guess the file extension from the MIME type of a given file.
          *
          * @param string $path
          * @return string|null
@@ -9183,7 +9165,7 @@ namespace Illuminate\Support\Facades {
         }
 
         /**
-         * Get the mime-type of a given file.
+         * Get the MIME type of a given file.
          *
          * @param string $path
          * @return string|false
@@ -10176,21 +10158,22 @@ namespace Illuminate\Support\Facades {
      * @method static \Illuminate\Http\Client\PendingRequest withMiddleware(callable $middleware)
      * @method static \Illuminate\Http\Client\PendingRequest withRequestMiddleware(callable $middleware)
      * @method static \Illuminate\Http\Client\PendingRequest withResponseMiddleware(callable $middleware)
+     * @method static \Illuminate\Http\Client\PendingRequest withAttributes(array $attributes)
      * @method static \Illuminate\Http\Client\PendingRequest beforeSending(callable $callback)
      * @method static \Illuminate\Http\Client\PendingRequest throw(callable|null $callback = null)
      * @method static \Illuminate\Http\Client\PendingRequest throwIf(callable|bool $condition)
      * @method static \Illuminate\Http\Client\PendingRequest throwUnless(callable|bool $condition)
      * @method static \Illuminate\Http\Client\PendingRequest dump()
      * @method static \Illuminate\Http\Client\PendingRequest dd()
-     * @method static \Illuminate\Http\Client\Response|\GuzzleHttp\Promise\PromiseInterface get(string $url, array|string|null $query = null)
-     * @method static \Illuminate\Http\Client\Response|\GuzzleHttp\Promise\PromiseInterface head(string $url, array|string|null $query = null)
-     * @method static \Illuminate\Http\Client\Response|\GuzzleHttp\Promise\PromiseInterface post(string $url, array|\JsonSerializable|\Illuminate\Contracts\Support\Arrayable $data = [])
-     * @method static \Illuminate\Http\Client\Response|\GuzzleHttp\Promise\PromiseInterface patch(string $url, array|\JsonSerializable|\Illuminate\Contracts\Support\Arrayable $data = [])
-     * @method static \Illuminate\Http\Client\Response|\GuzzleHttp\Promise\PromiseInterface put(string $url, array|\JsonSerializable|\Illuminate\Contracts\Support\Arrayable $data = [])
-     * @method static \Illuminate\Http\Client\Response|\GuzzleHttp\Promise\PromiseInterface delete(string $url, array|\JsonSerializable|\Illuminate\Contracts\Support\Arrayable $data = [])
+     * @method static void get(string $url, array|string|null $query = null)
+     * @method static void head(string $url, array|string|null $query = null)
+     * @method static void post(string $url, array|\JsonSerializable|\Illuminate\Contracts\Support\Arrayable $data = [])
+     * @method static void patch(string $url, array|\JsonSerializable|\Illuminate\Contracts\Support\Arrayable $data = [])
+     * @method static void put(string $url, array|\JsonSerializable|\Illuminate\Contracts\Support\Arrayable $data = [])
+     * @method static void delete(string $url, array|\JsonSerializable|\Illuminate\Contracts\Support\Arrayable $data = [])
      * @method static array pool(callable $callback, int|null $concurrency = null)
      * @method static \Illuminate\Http\Client\Batch batch(callable $callback)
-     * @method static \Illuminate\Http\Client\Response send(string $method, string $url, array $options = [])
+     * @method static void send(string $method, string $url, array $options = [])
      * @method static \GuzzleHttp\Client buildClient()
      * @method static \GuzzleHttp\Client createClient(\GuzzleHttp\HandlerStack $handlerStack)
      * @method static \GuzzleHttp\HandlerStack buildHandlerStack()
@@ -11519,6 +11502,20 @@ namespace Illuminate\Support\Facades {
         {
             /** @var \Illuminate\Support\Testing\Fakes\MailFake $instance */
             $instance->assertSent($mailable, $callback);
+        }
+
+        /**
+         * Assert if a mailable was sent a number of times.
+         *
+         * @param string $mailable
+         * @param int $times
+         * @return void
+         * @static
+         */
+        public static function assertSentTimes($mailable, $times = 1)
+        {
+            /** @var \Illuminate\Support\Testing\Fakes\MailFake $instance */
+            $instance->assertSentTimes($mailable, $times);
         }
 
         /**
@@ -15012,7 +15009,7 @@ namespace Illuminate\Support\Facades {
          * 
          * Suppose this request is instantiated from /mysite on localhost:
          * 
-         *  * http://localhost/mysite              returns an empty string
+         *  * http://localhost/mysite              returns '/'
          *  * http://localhost/mysite/about        returns '/about'
          *  * http://localhost/mysite/enco%20ded   returns '/enco%20ded'
          *  * http://localhost/mysite/about?var=1  returns '/about'
@@ -18591,6 +18588,40 @@ namespace Illuminate\Support\Facades {
             //Method inherited from \Illuminate\Database\Schema\Builder 
             /** @var \Illuminate\Database\Schema\MySqlBuilder $instance */
             $instance->whenTableDoesntHaveColumn($table, $column, $callback);
+        }
+
+        /**
+         * Execute a table builder callback if the given table has a given index.
+         *
+         * @param string $table
+         * @param string|array $index
+         * @param \Closure $callback
+         * @param string|null $type
+         * @return void
+         * @static
+         */
+        public static function whenTableHasIndex($table, $index, $callback, $type = null)
+        {
+            //Method inherited from \Illuminate\Database\Schema\Builder 
+            /** @var \Illuminate\Database\Schema\MySqlBuilder $instance */
+            $instance->whenTableHasIndex($table, $index, $callback, $type);
+        }
+
+        /**
+         * Execute a table builder callback if the given table doesn't have a given index.
+         *
+         * @param string $table
+         * @param string|array $index
+         * @param \Closure $callback
+         * @param string|null $type
+         * @return void
+         * @static
+         */
+        public static function whenTableDoesntHaveIndex($table, $index, $callback, $type = null)
+        {
+            //Method inherited from \Illuminate\Database\Schema\Builder 
+            /** @var \Illuminate\Database\Schema\MySqlBuilder $instance */
+            $instance->whenTableDoesntHaveIndex($table, $index, $callback, $type);
         }
 
         /**
@@ -23818,6 +23849,359 @@ namespace Barryvdh\Debugbar\Facades {
             //Method inherited from \DebugBar\DebugBar 
             /** @var \Barryvdh\Debugbar\LaravelDebugbar $instance */
             return $instance->offsetUnset($key);
+        }
+
+            }
+    }
+
+namespace Laravel\Pulse\Facades {
+    /**
+     * @method static void store(\Illuminate\Support\Collection $items)
+     * @method static void trim()
+     * @method static void purge(array $types = null)
+     * @method static \Illuminate\Support\Collection values(string $type, array $keys = null)
+     * @method static \Illuminate\Support\Collection graph(array $types, string $aggregate, \Carbon\CarbonInterval $interval)
+     * @method static \Illuminate\Support\Collection aggregate(string $type, string|array $aggregates, \Carbon\CarbonInterval $interval, string|null $orderBy = null, string $direction = 'desc', int $limit = 101)
+     * @method static \Illuminate\Support\Collection aggregateTypes(string|array $types, string $aggregate, \Carbon\CarbonInterval $interval, string|null $orderBy = null, string $direction = 'desc', int $limit = 101)
+     * @method static float|\Illuminate\Support\Collection aggregateTotal(string|array $types, string $aggregate, \Carbon\CarbonInterval $interval)
+     * @see \Laravel\Pulse\Pulse
+     */
+    class Pulse {
+        /**
+         * Register a recorder.
+         *
+         * @param array<class-string, array<mixed>|bool> $recorders
+         * @static
+         */
+        public static function register($recorders)
+        {
+            /** @var \Laravel\Pulse\Pulse $instance */
+            return $instance->register($recorders);
+        }
+
+        /**
+         * Record an entry.
+         *
+         * @static
+         */
+        public static function record($type, $key, $value = null, $timestamp = null)
+        {
+            /** @var \Laravel\Pulse\Pulse $instance */
+            return $instance->record($type, $key, $value, $timestamp);
+        }
+
+        /**
+         * Record a value.
+         *
+         * @static
+         */
+        public static function set($type, $key, $value, $timestamp = null)
+        {
+            /** @var \Laravel\Pulse\Pulse $instance */
+            return $instance->set($type, $key, $value, $timestamp);
+        }
+
+        /**
+         * Lazily capture items.
+         *
+         * @static
+         */
+        public static function lazy($closure)
+        {
+            /** @var \Laravel\Pulse\Pulse $instance */
+            return $instance->lazy($closure);
+        }
+
+        /**
+         * Report the throwable exception to Pulse.
+         *
+         * @static
+         */
+        public static function report($e)
+        {
+            /** @var \Laravel\Pulse\Pulse $instance */
+            return $instance->report($e);
+        }
+
+        /**
+         * Start recording.
+         *
+         * @static
+         */
+        public static function startRecording()
+        {
+            /** @var \Laravel\Pulse\Pulse $instance */
+            return $instance->startRecording();
+        }
+
+        /**
+         * Stop recording.
+         *
+         * @static
+         */
+        public static function stopRecording()
+        {
+            /** @var \Laravel\Pulse\Pulse $instance */
+            return $instance->stopRecording();
+        }
+
+        /**
+         * Execute the given callback without recording.
+         *
+         * @template TReturn
+         * @param (callable(): TReturn) $callback
+         * @return TReturn
+         * @static
+         */
+        public static function ignore($callback)
+        {
+            /** @var \Laravel\Pulse\Pulse $instance */
+            return $instance->ignore($callback);
+        }
+
+        /**
+         * Flush the queue.
+         *
+         * @static
+         */
+        public static function flush()
+        {
+            /** @var \Laravel\Pulse\Pulse $instance */
+            return $instance->flush();
+        }
+
+        /**
+         * Filter items before storage using the provided filter.
+         *
+         * @param (callable(\Laravel\Pulse\Entry|\Laravel\Pulse\Value): bool) $filter
+         * @static
+         */
+        public static function filter($filter)
+        {
+            /** @var \Laravel\Pulse\Pulse $instance */
+            return $instance->filter($filter);
+        }
+
+        /**
+         * Ingest the entries.
+         *
+         * @static
+         */
+        public static function ingest()
+        {
+            /** @var \Laravel\Pulse\Pulse $instance */
+            return $instance->ingest();
+        }
+
+        /**
+         * Digest the entries.
+         *
+         * @static
+         */
+        public static function digest()
+        {
+            /** @var \Laravel\Pulse\Pulse $instance */
+            return $instance->digest();
+        }
+
+        /**
+         * Determine if Pulse wants to ingest entries.
+         *
+         * @static
+         */
+        public static function wantsIngesting()
+        {
+            /** @var \Laravel\Pulse\Pulse $instance */
+            return $instance->wantsIngesting();
+        }
+
+        /**
+         * Get the registered recorders.
+         *
+         * @return \Illuminate\Support\Collection<int, object>
+         * @static
+         */
+        public static function recorders()
+        {
+            /** @var \Laravel\Pulse\Pulse $instance */
+            return $instance->recorders();
+        }
+
+        /**
+         * Resolve the user details for the given user IDs.
+         *
+         * @param \Illuminate\Support\Collection<int, string> $keys
+         * @static
+         */
+        public static function resolveUsers($keys)
+        {
+            /** @var \Laravel\Pulse\Pulse $instance */
+            return $instance->resolveUsers($keys);
+        }
+
+        /**
+         * Resolve the users' details using the given closure.
+         *
+         * @deprecated
+         * @param callable(\Illuminate\Support\Collection<int, mixed>):  ?iterable<int|string, array{name: string, email?: ?string, avatar?: ?string, extra?: ?string}>  $callback
+         * @static
+         */
+        public static function users($callback)
+        {
+            /** @var \Laravel\Pulse\Pulse $instance */
+            return $instance->users($callback);
+        }
+
+        /**
+         * Resolve the user's details using the given closure.
+         *
+         * @param callable(\Illuminate\Contracts\Auth\Authenticatable):  array{name: string, email?: ?string, avatar?: ?string, extra?: ?string}  $callback
+         * @static
+         */
+        public static function user($callback)
+        {
+            /** @var \Laravel\Pulse\Pulse $instance */
+            return $instance->user($callback);
+        }
+
+        /**
+         * Get the authenticated user ID resolver.
+         *
+         * @return callable(): (int|string|null)
+         * @static
+         */
+        public static function authenticatedUserIdResolver()
+        {
+            /** @var \Laravel\Pulse\Pulse $instance */
+            return $instance->authenticatedUserIdResolver();
+        }
+
+        /**
+         * Resolve the authenticated user id.
+         *
+         * @static
+         */
+        public static function resolveAuthenticatedUserId()
+        {
+            /** @var \Laravel\Pulse\Pulse $instance */
+            return $instance->resolveAuthenticatedUserId();
+        }
+
+        /**
+         * Remember the authenticated user's ID.
+         *
+         * @static
+         */
+        public static function rememberUser($user)
+        {
+            /** @var \Laravel\Pulse\Pulse $instance */
+            return $instance->rememberUser($user);
+        }
+
+        /**
+         * Register or return CSS for the Pulse dashboard.
+         *
+         * @param string|\Illuminate\Contracts\Support\Htmlable|list<string|Htmlable>|null $css
+         * @static
+         */
+        public static function css($css = null)
+        {
+            /** @var \Laravel\Pulse\Pulse $instance */
+            return $instance->css($css);
+        }
+
+        /**
+         * Return the compiled JavaScript from the vendor directory.
+         *
+         * @static
+         */
+        public static function js()
+        {
+            /** @var \Laravel\Pulse\Pulse $instance */
+            return $instance->js();
+        }
+
+        /**
+         * The default "vendor" cache keys that should be ignored by Pulse.
+         *
+         * @return list<string>
+         * @static
+         */
+        public static function defaultVendorCacheKeys()
+        {
+            return \Laravel\Pulse\Pulse::defaultVendorCacheKeys();
+        }
+
+        /**
+         * Determine if Pulse may register routes.
+         *
+         * @static
+         */
+        public static function registersRoutes()
+        {
+            /** @var \Laravel\Pulse\Pulse $instance */
+            return $instance->registersRoutes();
+        }
+
+        /**
+         * Configure Pulse to not register its routes.
+         *
+         * @static
+         */
+        public static function ignoreRoutes()
+        {
+            /** @var \Laravel\Pulse\Pulse $instance */
+            return $instance->ignoreRoutes();
+        }
+
+        /**
+         * Handle exceptions using the given callback.
+         *
+         * @param (callable(\Throwable): mixed) $callback
+         * @static
+         */
+        public static function handleExceptionsUsing($callback)
+        {
+            /** @var \Laravel\Pulse\Pulse $instance */
+            return $instance->handleExceptionsUsing($callback);
+        }
+
+        /**
+         * Execute the given callback handling any exceptions.
+         *
+         * @template TReturn
+         * @param (callable(): TReturn) $callback
+         * @return TReturn|null
+         * @static
+         */
+        public static function rescue($callback)
+        {
+            /** @var \Laravel\Pulse\Pulse $instance */
+            return $instance->rescue($callback);
+        }
+
+        /**
+         * Set the container instance.
+         *
+         * @param \Illuminate\Contracts\Foundation\Application $container
+         * @return \Laravel\Pulse\Pulse
+         * @static
+         */
+        public static function setContainer($container)
+        {
+            /** @var \Laravel\Pulse\Pulse $instance */
+            return $instance->setContainer($container);
+        }
+
+        /**
+         * Configure the class after resolving.
+         *
+         * @static
+         */
+        public static function afterResolving($app, $class, $callback)
+        {
+            /** @var \Laravel\Pulse\Pulse $instance */
+            return $instance->afterResolving($app, $class, $callback);
         }
 
             }
@@ -29545,6 +29929,7 @@ namespace  {
     class Vite extends \Illuminate\Support\Facades\Vite {}
     class Countries extends \Monarobase\CountryList\CountryListFacade {}
     class Debugbar extends \Barryvdh\Debugbar\Facades\Debugbar {}
+    class Pulse extends \Laravel\Pulse\Facades\Pulse {}
     class Livewire extends \Livewire\Livewire {}
     class Flasher extends \Flasher\Laravel\Facade\Flasher {}
 }

@@ -11,7 +11,8 @@
     <title>{{ $title ?? __('messages.home').' '. __('messages.sunday_sale') }}</title>
     <link href="{{ asset('assets/css/main.css') }}" rel="stylesheet" />
     {{--
-    <link href="{{ asset('build/assets/app-YaJoXqX7.css') }}" rel="stylesheet" /> --}}
+    <link href="{{ asset('build/assets/app-ga_5tWk4.css') }}" rel="stylesheet" /> --}}
+
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
     <!-- Google tag (gtag.js) -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-KKFP18GDQ9"></script>
@@ -150,7 +151,8 @@
                                 Follow Us
                             </h5>
                             <div class="mobile-social-icon wow fadeIn animated mb-sm-5 mb-md-0">
-                                <a href="#"><img src="{{ asset('assets/imgs/theme/icons/icon-facebook.svg') }}"
+                                <a href="https://www.facebook.com/share/16vqoDjtmp/"><img
+                                        src="{{ asset('assets/imgs/theme/icons/icon-facebook.svg') }}"
                                         alt="facebook" /></a>
 
                                 <a href="#"><img src="{{ asset('assets/imgs/theme/icons/icon-instagram.svg') }}"

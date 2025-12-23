@@ -12,6 +12,11 @@
                         <div class="card">
                             <div class="card-header">
                                 <h5>Details du compte</h5>
+                                @if (session()->has('success'))
+                                <div class="apple-success mb-3">
+                                    {{ session('success') }}
+                                </div>
+                                @endif
                             </div>
                             <div class="card-body">
                                 <form method="post" class="needs-validation"

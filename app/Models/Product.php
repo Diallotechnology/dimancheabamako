@@ -98,10 +98,10 @@ final class Product extends Model
         if ($devise === 'EUR') {
             $taux = session('taux_eur', 1);
 
-            return number_format($montant / $taux, 2, ',', ' ').' €';
+            return number_format($montant / $taux, 2, ',', ' ') . ' €';
         }
 
-        return number_format($montant, 0, ',', ' ').' CFA';
+        return number_format($montant, 0, ',', ' ') . ' CFA';
     }
 
     public function activePromotion()
@@ -191,6 +191,11 @@ final class Product extends Model
         return Storage::url($this->attributes['cover']);
     }
 
+    public function VideoLink(): string
+    {
+        return Storage::url($this->attributes['video']);
+    }
+
     /**
      * Get all of the images for the Product
      */
@@ -215,7 +220,7 @@ final class Product extends Model
 
                 // Vérifier l'unicité du slug
                 while (self::where('slug', $slug)->where('id', '!=', $product->id)->exists()) {
-                    $slug = $baseSlug.'-'.$counter;
+                    $slug = $baseSlug . '-' . $counter;
                     $counter++;
                 }
 

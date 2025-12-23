@@ -31,34 +31,6 @@
             content="Achetez en ligne votre Bazin riche teinté, Getzner, prêt-à-porter, accessoires, brodés et Wax. Livraison rapide et sécurisée.">
         <meta name="twitter:image" content="{{ asset('assets/imgs/theme/logo_meta_tag.png') }}">
 
-        <!-- JSON-LD Structured Data -->
-        {{-- <script type="application/ld+json">
-            {
-                "@context": "https://schema.org",
-                "@type": "Store",
-                "name": "Dimanche à Bamako",
-                "description": "Boutique en ligne pour Bazin riche teinté, Getzner Magnum, boubous, robes prêt-à-porter, brodés, Wax et accessoires à Bamako.",
-                "url": "https://www.dimancheabamako.com",
-                "logo": "{{ asset('assets/imgs/theme/logo_meta_tag.png') }}",
-                "image": "{{ asset('assets/imgs/theme/logo_meta_tag.png') }}",
-                "address": {
-                    "@type": "PostalAddress",
-                    "streetAddress": "Rue de l'E-commerce, Bamako",
-                    "addressLocality": "Bamako",
-                    "addressCountry": "ML"
-                },
-                "telephone": "+223 20 00 00 00",
-                "sameAs": [
-                    "https://www.facebook.com/dimancheabamako",
-                    "https://twitter.com/dimancheabamako",
-                    "https://www.instagram.com/dimancheabamako"
-                ],
-                "openingHours": "Mo-Fr 09:00-18:00",
-                "currenciesAccepted": "XOF,EUR",
-                "paymentAccepted": ["Cash", "Credit Card", "Mobile Payment"],
-                "priceRange": "$$"
-            }
-        </script> --}}
     </x-slot:metadata>
 
     {{-- SLIDER --}}

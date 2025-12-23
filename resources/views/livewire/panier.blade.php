@@ -234,7 +234,7 @@
                                 </div>
                                 <div class="col-md-6">
                                     <div class="mt-3" wire:ignore>
-                                        <x-input type="text" place="votre contact"
+                                        <x-input type="text" place="votre contact +223XXXXXXXX"
                                             value="{{ $client ? $client->contact : '' }}"
                                             :label="__('messages.contact_with_code')" name="contact"
                                             :value="old('contact')" />

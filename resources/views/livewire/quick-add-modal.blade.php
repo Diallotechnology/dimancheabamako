@@ -134,6 +134,19 @@
             /* léger flou façon Apple */
         }
 
+        .apple-success {
+            background: #00b312;
+            /* rouge très pâle — premium */
+            color: #fff;
+            /* rouge profond élégant */
+            padding: 8px 10px;
+            border-radius: 12px;
+            font-size: 0.92rem;
+            text-align: center;
+            font-weight: 500;
+            backdrop-filter: blur(4px);
+        }
+
 
         .apple-product-img {
             width: 60px;

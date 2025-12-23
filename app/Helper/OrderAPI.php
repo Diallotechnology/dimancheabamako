@@ -12,6 +12,11 @@ use InvalidArgumentException;
 
 trait OrderAPI
 {
+        // https://api-gateway.sandbox.ngenius-payments.com
+    // https://api-gateway.orabankml.ngenius-payments.com
+    // protected string $base = env('NGENIUS_API_KEY');
+    // protected string $base =  config('services.api_key');
+
     /** GET ORDER STATUS */
     public function getOrderStatus(string $reference): array
     {
@@ -134,10 +139,7 @@ trait OrderAPI
 
         return $response->json();
     }
-    // https://api-gateway.sandbox.ngenius-payments.com
-    // https://api-gateway.orabankml.ngenius-payments.com
-    // protected string $base = env('NGENIUS_API_KEY');
-    // protected string $base =  config('services.api_key');
+
 
     /** BASE REQUEST (timeout + retry + headers) */
     protected function api()
@@ -150,7 +152,7 @@ trait OrderAPI
     /** URL BUILDER */
     protected function endpoint(string $path): string
     {
-        return mb_rtrim($this->base(), '/').'/transactions/outlets/'.$this->outletId().'/'.$path;
+        return mb_rtrim($this->base(), '/') . '/transactions/outlets/' . $this->outletId() . '/' . $path;
     }
 
     /** BASE URL */
@@ -169,7 +171,7 @@ trait OrderAPI
     protected function getHeaders(): array
     {
         return [
-            'Authorization' => 'Bearer '.$this->getAccessToken(),
+            'Authorization' => 'Bearer ' . $this->getAccessToken(),
             'Accept' => 'application/vnd.ni-payment.v2+json',
             'Content-Type' => 'application/vnd.ni-payment.v2+json',
         ];
@@ -186,10 +188,10 @@ trait OrderAPI
             ->retry(1, 100)
             ->withHeaders([
                 'Accept' => 'application/vnd.ni-identity.v1+json',
-                'Authorization' => 'Basic '.config('services.ngenius.api_key'),
+                'Authorization' => 'Basic ' . config('services.ngenius.api_key'),
                 'Content-Type' => 'application/vnd.ni-identity.v1+json',
             ])
-            ->post($this->base().'/identity/auth/access-token', [
+            ->post($this->base() . '/identity/auth/access-token', [
                 'realmName' => config('services.ngenius.realm_name'),
             ]);
 

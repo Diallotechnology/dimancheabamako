@@ -61,8 +61,8 @@ final class RegisteredUserController extends Controller
 
         Mail::to($request->email)->send(new ConfirmRegistrationMail($token, app()->getLocale()));
 
-        flash()->success(__('messages.register_success_msg'));
+        session()->flash('success', __('messages.register_email_message'));
 
-        return back()->with('status', __('messages.register_success_msg'));
+        return back()->with('status', __('messages.register_email_message'));
     }
 }

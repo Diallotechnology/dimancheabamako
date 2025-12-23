@@ -55,7 +55,7 @@
                     <span>@lang('messages.size') {{ $item['taille'] }}</span><br />
                     <span>@lang('messages.color') {{ $item['color'] }}</span>
 
-                    <div class="product-price">
+                    <div class="product-price d-flex justify-content-between">
                         <span>
                             {{ $item['reduction'] > 0 ? $item['prix_promo'] : $item['prix_format'] }}
                         </span>

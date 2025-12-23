@@ -3,9 +3,15 @@
         @lang('messages.register')
         </x-slot>
         <div class="card mx-auto card-login">
+
             <div class="card-body">
                 <x-auth-session-status class="mb-4" :status="session('status')" />
                 <h4 class="card-title mb-4 h2"> @lang('messages.register')</h4>
+                @if (session()->has('success'))
+                <div class="apple-success mb-3">
+                    {{ session('success') }}
+                </div>
+                @endif
                 <form method="POST" action="{{ route('register') }}">
                     @csrf
                     <input type="text" name="website" style="display:none">

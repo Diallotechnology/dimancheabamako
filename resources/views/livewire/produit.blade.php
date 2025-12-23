@@ -32,20 +32,6 @@
         <!-- Canonical URL -->
         <link rel="canonical" href="{{ url()->current() }}">
 
-        <!-- JSON-LD Structured Data -->
-        {{-- <script type="application/ld+json">
-            {
-            "@context": "https://schema.org",
-            "@type": "ProductCollection",
-            "name": "{{ $cat->nom }}",
-            "description": "Découvrez une collection unique de {{ $cat->nom }} incluant Bazin riche teinté, Getzner Magnum, boubous, robes Prêt-à-porter et accessoires.",
-            "url": "{{ url()->current() }}",
-            "image": "{{ asset('assets/imgs/theme/logo_meta_tag.png') }}",
-            "brand": {
-                "@type": "Brand",
-                "name": "Dimanche à Bamako"
-            }
-        } --}}
         </script>
     </x-slot:metadata>
 
@@ -112,7 +98,7 @@
                                     </div>
                                 </div>
                                 <div class="product-content-wrap">
-                                    <h2>
+                                    <h2 class="mt-3">
                                         <a href="{{ route('shop.show',  ['id' => $row->id, 'slug' => $row->slug]) }}">{{
                                             $row->nom }}</a>
                                     </h2>

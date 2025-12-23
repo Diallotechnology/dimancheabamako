@@ -28,27 +28,7 @@
         <!-- Canonical URL -->
         <link rel="canonical" href="{{ url()->current() }}">
 
-        <!-- JSON-LD Structured Data -->
-        {{-- <script type="application/ld+json">
-            {
-            "@context": "https://schema.org",
-            "@type": "Product",
-            "name": "{{ $product->nom }}",
-            "image": "{{ $product->cover }}",
-            "description": "{{ $product->resume }}",
-            "brand": {
-                "@type": "Brand",
-                "name": "Dimanche à Bamako"
-            },
-            "offers": {
-                "@type": "Offer",
-                "priceCurrency": "XOF,EUR",
-                "price": "{{ $product->prix }}",
-                "availability": "https://schema.org/InStock",
-                "url": "{{ url()->current() }}"
-            }
-        }
-        </script> --}}
+
     </x-slot:metadata>
 
     <x-slot:title>
@@ -64,6 +44,15 @@
                                     <div style="--swiper-navigation-color: #fff; --swiper-pagination-color: #fff"
                                         class="swiper mySwiper2">
                                         <div class="swiper-wrapper">
+                                            {{-- 🔹 Vidéo en premier (optionnel) --}}
+                                            @if ($product->video)
+                                            <div class="swiper-slide">
+                                                <video controls preload="metadata" style="width:100%; height:auto">
+                                                    <source src="{{ $product->VideoLink() }}" type="video/mp4">
+                                                    Votre navigateur ne supporte pas la vidéo.
+                                                </video>
+                                            </div>
+                                            @endif
                                             @foreach ($product->images as $row)
                                             <div class="swiper-slide">
                                                 <img src="{{ $row->chemin }}" alt="{{ $product->nom }}" />
@@ -141,19 +130,11 @@
 
                                                 <li>
                                                     @lang('messages.in_stock'):
-                                                    {{
-                                                    $product->stock >= 1
-                                                    ? "OUI"
-                                                    : "NON"
+                                                    {{ $product->is_preorder ? __('messages.product_status.commande')
+                                                    : "En Stock"
                                                     }}
                                                 </li>
-                                                <li>
-                                                    @if ($product->status)
-                                                    <span class="ml-1 text-danger ">
-                                                        @lang('messages.product_status')
-                                                    </span>
-                                                    @endif
-                                                </li>
+
                                             </ul>
                                         </div>
 

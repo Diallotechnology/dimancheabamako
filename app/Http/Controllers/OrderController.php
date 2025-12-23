@@ -26,58 +26,6 @@ final class OrderController extends Controller
 {
     use DeleteAction, OrderAPI;
 
-    // public function test()
-    // {
-    //     Order::whereNotNull('trans_ref')
-    //         ->whereNull('reference')
-    //         ->whereNull('trans_state')
-    //         ->chunk(100, function ($orders) {
-    //             foreach ($orders as $order) {
-    //                 DB::transaction(function () use ($order) {
-    //                     // Verrouiller la commande pour empêcher les accès concurrents
-    //                     $order = Order::where('id', $order->id)->lockForUpdate()->first();
-
-    //                     // Récupérer l'état de la commande via l'API
-    //                     $responseData = $this->getOrderStatut($order->trans_ref);
-    //                     if ($responseData) {
-    //                         try {
-    //                             // Parse `createDateTime` depuis les données reçues
-    //                             $createDateTime = Carbon::parse($responseData['createDateTime']);
-    //                             $currentTime = Carbon::now();
-
-    //                             // Calculer la différence en minutes
-    //                             $minutesDifference = $currentTime->diffInMinutes($createDateTime);
-
-    //                             // Vérifier l'état du paiement
-    //                             $paymentState = $responseData['_embedded']['payment'][0]['state'] ?? null;
-
-    //                             if ($minutesDifference >= 5 && $paymentState !== 'PURCHASED') {
-    //                                 dd($order);
-    //                                 // Annuler le lien de paiement et supprimer la commande
-    //                                 $this->cancelPaymentLink($order->trans_ref);
-    //                                 $order->delete();
-
-    //                                 Log::info('Order cancelled due to timeout', [
-    //                                     'order_id' => $order->id,
-    //                                     'trans_ref' => $order->trans_ref,
-    //                                     'minutes_elapsed' => $minutesDifference,
-    //                                 ]);
-    //                             }
-    //                         } catch (\Exception $e) {
-    //                             Log::error('Failed to process order', [
-    //                                 'order_id' => $order->id,
-    //                                 'trans_ref' => $order->trans_ref,
-    //                                 'error' => $e->getMessage(),
-    //                             ]);
-    //                             throw $e; // Relancer pour annuler la transaction
-    //                         }
-    //                     } else {
-    //                         Log::error('Failed to retrieve order status', ['trans_ref' => $order->trans_ref]);
-    //                     }
-    //                 });
-    //             }
-    //         });
-    // }
     private CartService $cart;
 
     public function __construct(CartService $cart)
@@ -106,7 +54,11 @@ final class OrderController extends Controller
         try {
             $order = app(OrderService::class)->createOrder($request, $this->cart);
         } catch (Throwable $e) {
-            flash()->error($e->getMessage());
+            flash()->error('la validation a echoué verifiez vos informations!');
+            Log::error('Order store failed error', [
+                'order_id' => $order->id,
+                'error' => $e->getMessage(),
+            ]);
 
             return back();
         }
@@ -131,9 +83,7 @@ final class OrderController extends Controller
             }
 
             // mettre à jour la commande
-            $order->update([
-                'trans_ref' => $response['reference'],
-            ]);
+            $order->update(['trans_ref' => $response['reference']]);
 
             return redirect()->away($response['_links']['payment']['href']);
         } catch (Throwable $e) {
@@ -155,10 +105,9 @@ final class OrderController extends Controller
 
     public function valid()
     {
-        // request()->fullUrlWithQuery(['ref' => null]);
-        // dd(request()->fullUrlWithQuery(['ref' => null]));
-        \redirect()->to(request()->fullUrlWithQuery(['ref' => null]));
+
         $this->cart->clear();
+        \redirect()->to(request()->fullUrlWithQuery(['ref' => null]));
 
         return view('validate');
     }
@@ -205,7 +154,7 @@ final class OrderController extends Controller
     public function update(UpdateOrderRequest $request, Order $order)
     {
         $order->update($request->validated());
-
+        flash()->success('Commande mise à jour avec succès!');
         return back();
     }
 
@@ -214,6 +163,7 @@ final class OrderController extends Controller
      */
     public function destroy(Order $order)
     {
-        return $this->supp($order);
+        $order->delete();
+        flash()->success('Commande supprimer avec succès!');
     }
 }

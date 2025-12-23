@@ -39,26 +39,17 @@ final class OrderService
             $country = Country::findOrFail($request->country_id);
             $client = Client::updateOrCreate(
                 [
-                    'contact' => phone($request->contact)->formatE164()
+                    'contact' => phone($request->contact)->formatE164(),
+                    'email' => $request->email,
                 ],
                 [
                     'prenom' => $request->prenom,
                     'nom' => $request->nom,
                     'contact' => phone($request->contact)->formatE164(),
                     'pays' => $country->nom,
+                    'email' => $request->email,
                 ]
             );
-
-
-            // $client = Client::firstOrCreate(
-            //     ['email' => $request->email,  'contact' => $request->contact],
-            //     [
-            //         'prenom' => $request->prenom,
-            //         'nom' => $request->nom,
-            //         'contact' => $request->contact,
-            //         'pays' => $country->nom,
-            //     ]
-            // );
 
             // 3. infos commande
             $shipping = Shipping::findOrFail($request->integer('livraison'));
