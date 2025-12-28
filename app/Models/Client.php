@@ -66,8 +66,8 @@ final class Client extends Model
     protected static function booted()
     {
         static::deleting(function ($client) {
-            if ($client->orders()->exists()) {
-                throw new LogicException('Client still has orders');
+            if ($client->orders()->where('trans_state', 'PURCHASED')->exists()) {
+                throw new \LogicException('Cannot delete client with paid orders');
             }
         });
     }

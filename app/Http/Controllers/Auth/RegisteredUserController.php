@@ -40,28 +40,35 @@ final class RegisteredUserController extends Controller
     {
         if ($request->filled('website')) {
             abort(403);
-        } // honeypot anti-bots
+        }
 
+        $contactE164 = phone($request->contact)->formatE164();
         $token = Str::random(64);
 
-        PendingRegistration::updateOrCreate(
-            ['email' => $request->email],
-            [
-                'prenom' => $request->prenom,
-                'nom' => $request->nom,
-                'pays' => $request->pays,
-                'contact' => phone($request->contact)->formatE164(),
-                'email' => $request->email,
-                'role' => RoleEnum::CUSTOMER->value,
-                'password' => Hash::make($request->password),
-                'token' => $token,
-                'expires_at' => now()->addHours(1),
-            ]
-        );
+        $pending = PendingRegistration::where('email', $request->email)
+            ->orWhere('contact', $contactE164)
+            ->first();
 
-        Mail::to($request->email)->send(new ConfirmRegistrationMail($token, app()->getLocale()));
+        $data = [
+            'prenom'     => $request->prenom,
+            'nom'        => $request->nom,
+            'pays'       => $request->pays,
+            'contact'    => $contactE164,
+            'email'      => $request->email,
+            'role'       => RoleEnum::CUSTOMER->value,
+            'password'   => Hash::make($request->password),
+            'token'      => $token,
+            'expires_at' => now()->addHour(),
+        ];
 
-        session()->flash('success', __('messages.register_email_message'));
+        if ($pending) {
+            $pending->update($data);
+        } else {
+            PendingRegistration::create($data);
+        }
+
+        Mail::to($request->email)
+            ->send(new ConfirmRegistrationMail($token, app()->getLocale()));
 
         return back()->with('status', __('messages.register_email_message'));
     }

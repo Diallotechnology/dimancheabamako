@@ -30,7 +30,7 @@ final class StoreRegisterUserRequest extends FormRequest
             'nom' => 'required|string|max:50',
             'pays' => 'required|string|max:50',
             'contact' => ['required', 'phone:international'],
-            'email' => ['required', 'string', 'lowercase', 'email', 'max:255', new NotDisposableEmail()],
+            'email' => ['required', 'string', 'lowercase', 'email', 'max:255', new NotDisposableEmail(), 'unique:users,email'],
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
         ];
     }

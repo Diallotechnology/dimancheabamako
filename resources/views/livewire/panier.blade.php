@@ -54,7 +54,7 @@
                                             ' '
                                             ) }} {{ session('devise') === 'EUR' ? '€' : 'CFA' }}
                                         </td>
-                                        <td class="action" data-title="Remove">
+                                        <td class="action" data-title="Supprimer">
                                             <livewire:delete :row="$item" :key="'delete-'.$item['id']" />
                                         </td>
                                     </tr>
@@ -187,6 +187,13 @@
                                                     <span class="text-sm text-danger">{{ $message }}</span>
                                                     @enderror
                                                 </div>
+                                                <div class="mb-3">
+                                                    @if (Route::has('password.request'))
+                                                    <a href="{{ route('password.request') }}" class="text-dark">
+                                                        @lang('messages.forgot_password')
+                                                    </a>
+                                                    @endif
+                                                </div>
                                                 <div class="mb-3 row">
                                                     <span wire:loading
                                                         class="col-md-3 offset-md-5 text-brand">Processing...</span>
@@ -262,7 +269,7 @@
                                         <div class="invalid-feedback">Ce champ est obligatoire.</div>
                                     </div>
                                 </div>
-                                <div class="col-md-6">
+                                <div class="col-md-6" wire:ignore>
                                     <x-input type="email" place="votre email" label="email"
                                         value="{{ $client ? $client->email : '' }}" name="email"
                                         :value="old('email')" />

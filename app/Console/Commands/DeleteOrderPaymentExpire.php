@@ -14,7 +14,6 @@ use Illuminate\Support\Facades\Log;
 
 final class DeleteOrderPaymentExpire extends Command
 {
-    use OrderAPI;
 
     /**
      * The name and signature of the console command.
@@ -35,39 +34,54 @@ final class DeleteOrderPaymentExpire extends Command
      */
     public function handle()
     {
-
         Order::query()
             ->whereNull('reference')
-            ->where('trans_state', '!=', 'PURCHASED')
-            ->where('created_at', '<=', now()->subMinutes(15))
+            ->where('created_at', '<=', now()->subMinutes(10))
+            ->where(function ($q) {
+                $q->whereNull('trans_state')
+                    ->orWhereIn('trans_state', ['FAILED', 'CANCELLED', 'EXPIRED']);
+            })
             ->chunkById(100, function ($orders) {
 
                 foreach ($orders as $order) {
                     DB::transaction(function () use ($order) {
 
-                        $order = Order::lockForUpdate()->find($order->id);
+                        /** @var Order|null $order */
+                        $order = Order::with('client')
+                            ->lockForUpdate()
+                            ->find($order->id);
+
                         if (! $order) {
                             return;
                         }
 
                         $client = $order->client;
-                        // 2️⃣ Vérifier si le client est fictif
-                        if ($client) {
-                            $hasOtherOrders = $client->orders()
-                                ->where('id', '!=', $order->id)
-                                ->exists();
 
-                            if (! $hasOtherOrders) {
-                                $client->delete();
-
-                                Log::info('Client deleted (no orders)', [
-                                    'client_id' => $client->id,
-                                ]);
-                            }
-                        }
+                        // 1️⃣ Supprimer la commande (cause)
+                        $order->delete();
 
                         Log::info('Order deleted (abandoned / failed)', [
-                            'order_id' => $order->id,
+                            'order_id'   => $order->id,
+                            'state'      => $order->trans_state,
+                        ]);
+
+                        // 2️⃣ Nettoyer le client si fictif
+                        if (! $client) {
+                            return;
+                        }
+
+                        $hasPaidOrders = $client->orders()
+                            ->where('trans_state', 'PURCHASED')
+                            ->exists();
+
+                        if ($hasPaidOrders) {
+                            return;
+                        }
+
+                        $client->delete();
+
+                        Log::info('Client deleted (no paid orders)', [
+                            'client_id' => $client->id,
                         ]);
                     });
                 }

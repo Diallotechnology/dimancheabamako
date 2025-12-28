@@ -34,7 +34,7 @@ final class CategoryService
             }
 
             $categories = Category::select('id', 'nom')
-                ->orderBy('nom')
+                ->orderBy('id')
                 ->get();
 
             Cache::forever(self::CACHE_KEY, $categories);

@@ -4,12 +4,26 @@
         </x-slot>
         <div class="card mx-auto card-login">
 
+            <style>
+                .apple-success {
+                    background: #00b312;
+                    /* rouge très pâle — premium */
+                    color: #fff;
+                    /* rouge profond élégant */
+                    padding: 8px 10px;
+                    border-radius: 12px;
+                    font-size: 0.92rem;
+                    text-align: center;
+                    font-weight: 500;
+                    backdrop-filter: blur(4px);
+                }
+            </style>
             <div class="card-body">
                 <x-auth-session-status class="mb-4" :status="session('status')" />
                 <h4 class="card-title mb-4 h2"> @lang('messages.register')</h4>
-                @if (session()->has('success'))
+                @if (session()->has('status'))
                 <div class="apple-success mb-3">
-                    {{ session('success') }}
+                    {{ session('status') }}
                 </div>
                 @endif
                 <form method="POST" action="{{ route('register') }}">

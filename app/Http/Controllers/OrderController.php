@@ -40,59 +40,49 @@ final class OrderController extends Controller
     {
         if ($this->cart->getContent()->isEmpty()) {
             flash()->error('Panier vide !');
-
             return back();
         }
 
         if (! $request->integer('livraison')) {
             flash()->error('Aucun transporteur disponible.');
-
             return back();
         }
 
-        // 1. Création de la commande (transaction DB)
         try {
-            $order = app(OrderService::class)->createOrder($request, $this->cart);
+            $redirectUrl = DB::transaction(function () use ($request) {
+
+                $order = app(OrderService::class)->createOrder($request, $this->cart);
+
+                $montant = (int) $this->cart->getTotal() + $order->shipping;
+
+                $postData = $this->prepareTransactionData(
+                    $montant,
+                    'XOF',
+                    $request->email,
+                    route('order.validate'),
+                    route('order.cancel')
+                );
+
+                $token = $this->getAccessToken();
+                $response = $this->createOrder($postData, $token);
+
+                if (! isset($response['_links']['payment']['href'])) {
+                    throw new Exception('Lien de paiement introuvable');
+                }
+
+                $order->update(['trans_ref' => $response['reference']]);
+
+                return $response['_links']['payment']['href'];
+            });
+
+            return redirect()->away($redirectUrl);
         } catch (Throwable $e) {
-            flash()->error('la validation a echoué verifiez vos informations!');
-            Log::error('Order store failed error', [
-                'order_id' => $order->id,
-                'error' => $e->getMessage(),
-            ]);
-
-            return back();
-        }
-
-        // 2. Création du lien de paiement (API externe → hors transaction)
-        try {
-            $montant = (int) $this->cart->getTotal() + $order->shipping;
-
-            $postData = $this->prepareTransactionData(
-                $montant,
-                'XOF',
-                $request->email,
-                route('order.validate'),
-                route('order.cancel')
-            );
-
-            $token = $this->getAccessToken();
-            $response = $this->createOrder($postData, $token);
-
-            if (! isset($response['_links']['payment']['href'])) {
-                throw new Exception('Lien de paiement introuvable');
-            }
-
-            // mettre à jour la commande
-            $order->update(['trans_ref' => $response['reference']]);
-
-            return redirect()->away($response['_links']['payment']['href']);
-        } catch (Throwable $e) {
-            // rollback API sans rollback DB
-            flash()->error('Le paiement n’a pas pu être initialisé.');
-
+            Log::error('Order failed rollback', ['error' => $e->getMessage()]);
+            flash()->error('La validation a échoué. Aucune donnée enregistrée.');
             return back();
         }
     }
+
 
     public function invoice(string $id)
     {
@@ -120,8 +110,6 @@ final class OrderController extends Controller
             $order->delete();
             $this->cancelPaymentLink($order->trans_ref);
         }
-
-        $this->cart->clear();
         flash()->success('Commande annulée avec succès!');
 
         // Redirect to the home page or a URL without the 'ref' parameter

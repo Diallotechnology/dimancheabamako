@@ -21,6 +21,7 @@ final class OrderService
     {
         return DB::transaction(function () use ($request, $cart) {
 
+
             // 1. enregistrer user si besoin
             if ($request->filled('password')) {
                 User::firstOrCreate(
@@ -37,20 +38,42 @@ final class OrderService
 
             // 2. enregistrer client
             $country = Country::findOrFail($request->country_id);
-            $client = Client::updateOrCreate(
-                [
-                    'contact' => phone($request->contact)->formatE164(),
-                    'email' => $request->email,
-                ],
-                [
-                    'prenom' => $request->prenom,
-                    'nom' => $request->nom,
-                    'contact' => phone($request->contact)->formatE164(),
-                    'pays' => $country->nom,
-                    'email' => $request->email,
-                ]
-            );
+            $contactE164 = phone($request->contact)->formatE164();
 
+            // Chercher client par contact
+            $clientByContact = Client::where('contact', $contactE164)->first();
+
+            // Chercher client par email
+            $clientByEmail = Client::where('email', $request->email)->first();
+
+            if ($clientByContact) {
+                // Contact existe → update uniquement les champs autres que contact
+                $clientByContact->update([
+                    'prenom' => $request->prenom,
+                    'nom'    => $request->nom,
+                    'pays'   => $country->nom,
+                    // 'email' non touché pour éviter collision
+                ]);
+                $client = $clientByContact;
+            } elseif ($clientByEmail) {
+                // Email existe → update uniquement les champs autres que email
+                $clientByEmail->update([
+                    'prenom'  => $request->prenom,
+                    'nom'     => $request->nom,
+                    'pays'    => $country->nom,
+                    // 'contact' non touché pour éviter collision
+                ]);
+                $client = $clientByEmail;
+            } else {
+                // Ni contact ni email n’existe → créer un nouveau client
+                $client = Client::create([
+                    'prenom'  => $request->prenom,
+                    'nom'     => $request->nom,
+                    'contact' => $contactE164,
+                    'email'   => $request->email,
+                    'pays'    => $country->nom,
+                ]);
+            }
             // 3. infos commande
             $shipping = Shipping::findOrFail($request->integer('livraison'));
 
