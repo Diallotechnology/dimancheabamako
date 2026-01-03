@@ -7,6 +7,7 @@ namespace App\Models;
 use LogicException;
 use App\Helper\DateFormat;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 /**
@@ -54,14 +55,13 @@ final class Client extends Model
     }
 
     /**
-     * Get the latest order for the Client.
-     *
-     * @return Order|null
+     * Get the latest order for the client.
      */
-    public function latestorder()
+    public function latestOrder()
     {
-        return $this->hasOne(Order::class)->latestOfMany()->first();
+        return $this->hasOne(Order::class)->latestOfMany();
     }
+
 
     protected static function booted()
     {

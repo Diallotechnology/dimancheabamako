@@ -1,12 +1,5 @@
 <div>
-    @php
-    if (Auth::check() and Auth::user()->isClient()) {
-    $client = App\Models\Client::where('email', Auth::user()->email)->first();
-    } else {
-    $client = null;
-    }
 
-    @endphp
     <x-slot:title>
         {{ __('messages.cart')}}
         </x-slot>
@@ -213,38 +206,33 @@
                         </div>
                         <form method="post" class="needs-validation" action="{{ route('order.store') }}" novalidate>
                             @csrf
-                            <input type="hidden" name="livraison" value="{{ $shipping ? $shipping->id : '' }}">
+                            <input type="hidden" name="livraison" :value="$shipping?->id">
                             <div class="row">
                                 <div class="col-md-6" wire:ignore>
                                     <x-input type="text" place="votre prenom" :label="__('messages.first_name')"
-                                        name="prenom" value="{{ $client ? $client->prenom : '' }}"
-                                        :value="old('prenom')" />
+                                        name="prenom" :value="$client?->prenom" />
                                 </div>
                                 <div class="col-md-6" wire:ignore>
-                                    <x-input type="text" place="votre nom" value="{{ $client ? $client->nom : '' }}"
-                                        :label="__('messages.last_name')" name="nom" :value="old('nom')" />
+                                    <x-input type="text" place="votre nom" :value="$client?->nom"
+                                        :label="__('messages.last_name')" name="nom" />
                                 </div>
                                 <div class="col-md-6" wire:ignore>
-                                    <x-input type="text" place="votre adresse"
-                                        value="{{ $client ? $client->latestorder()->adresse : '' }}"
-                                        :label="__('messages.address')" name="adresse" :value="old('adresse')" />
+                                    <x-input type="text" place="votre adresse" :value="$client?->latestOrder?->adresse "
+                                        :label="__('messages.address')" name="adresse" />
                                 </div>
                                 <div class="col-md-6" wire:ignore>
                                     <x-input type="text" place="votre code postal"
-                                        value="{{ $client ? $client->latestorder()->postal : '' }}" label="Postal"
-                                        name="postal" :value="old('postal')" />
+                                        :value="$client?->latestOrder?->postal " label="Postal" name="postal" />
                                 </div>
                                 <div class="col-md-6" wire:ignore>
-                                    <x-input type="text" place="votre ville"
-                                        value="{{ $client ? $client->latestorder()->ville : '' }}"
-                                        :label="__('messages.city')" name="ville" :value="old('ville')" />
+                                    <x-input type="text" place="votre ville" :value="$client?->latestOrder?->ville "
+                                        :label="__('messages.city')" name="ville" />
                                 </div>
                                 <div class="col-md-6">
                                     <div class="mt-3" wire:ignore>
                                         <x-input type="text" place="votre contact +223XXXXXXXX"
-                                            value="{{ $client ? $client->contact : '' }}"
-                                            :label="__('messages.contact_with_code')" name="contact"
-                                            :value="old('contact')" />
+                                            :value="$client?->contact " :label="__('messages.contact_with_code')"
+                                            name="contact" />
                                     </div>
                                 </div>
                                 <div class="col-md-6">
@@ -270,9 +258,8 @@
                                     </div>
                                 </div>
                                 <div class="col-md-6" wire:ignore>
-                                    <x-input type="email" place="votre email" label="email"
-                                        value="{{ $client ? $client->email : '' }}" name="email"
-                                        :value="old('email')" />
+                                    <x-input type="email" place="votre email" label="email" :value="$client?->email"
+                                        name="email" />
                                 </div>
                                 <div class="col-md-6">
                                     <div class="mb-4">
@@ -290,6 +277,9 @@
                                         </select>
                                         <div class="valid-feedback"></div>
                                         <div class="invalid-feedback">Ce champ est obligatoire.</div>
+                                        @error('livraison')
+                                        <span class="text-sm text-danger">{{ $message }}</span>
+                                        @enderror
                                     </div>
                                 </div>
                             </div>

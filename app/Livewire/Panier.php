@@ -4,13 +4,14 @@ declare(strict_types=1);
 
 namespace App\Livewire;
 
-use App\Helper\CartAction;
+use App\Models\Client;
 use App\Models\Country;
-use App\Service\CartService;
-use Illuminate\Support\Facades\Auth;
-use Livewire\Attributes\On;
-use Livewire\Attributes\Validate;
 use Livewire\Component;
+use App\Helper\CartAction;
+use Livewire\Attributes\On;
+use App\Service\CartService;
+use Livewire\Attributes\Validate;
+use Illuminate\Support\Facades\Auth;
 
 final class Panier extends Component
 {
@@ -136,6 +137,14 @@ final class Panier extends Component
 
         $country = Country::select('id', 'nom')->get();
 
-        return view('livewire.panier', compact('items', 'country'));
+        if (Auth::check() and Auth::user()->isClient()) {
+            $client = Client::with('latestOrder')
+                ->where('email', Auth::user()->email)
+                ->first();
+        } else {
+            $client = null;
+        }
+
+        return view('livewire.panier', compact('items', 'country', 'client'));
     }
 }

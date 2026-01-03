@@ -44,7 +44,7 @@ final class OrderController extends Controller
         }
 
         if (! $request->integer('livraison')) {
-            flash()->error('Aucun transporteur disponible.');
+            session()->flash('warning', __('messages.panier.not_transport'));
             return back();
         }
 

@@ -1,6 +1,6 @@
 @props(['disabled' => false,'required'=>true, 'name' => '','type' => '', 'place' => '', 'label' =>
 '', 'value' =>
-false,'messages'])
+false,'messages', 'value' => null,])
 
 <label {{ $attributes->merge(['class' => 'text-uppercase form-label']) }}>
     @empty($label)
@@ -11,7 +11,8 @@ false,'messages'])
 </label>
 <input {{ $attributes->merge(['class' => 'form-control']) }} type="{{ $type }}" value="{{
 $value }}"
-placeholder="Entrer {{ $place }}" name="{{ $name }}" id="{{ $name }}" value="{{ $value ? $value : @old($name) }}" {{
+placeholder="Entrer {{ $place }}" name="{{ $name }}" id="{{ $name }}" value="{{ old($name, $value) }}"
+{{
 $disabled ? 'disabled' : '' }}
 @required($required)
 >

@@ -61,6 +61,7 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder|Client wherePrenom($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Client whereUpdatedAt($value)
  * @mixin \Eloquent
+ * @property-read \App\Models\Order|null $latestOrder
  */
 	final class Client extends \Eloquent {}
 }
