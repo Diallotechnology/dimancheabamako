@@ -17,6 +17,8 @@ use Illuminate\Support\Facades\View;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\ServiceProvider;
+use Illuminate\Auth\Notifications\ResetPassword;
+use Illuminate\Notifications\Messages\MailMessage;
 
 final class AppServiceProvider extends ServiceProvider
 {
@@ -54,12 +56,5 @@ final class AppServiceProvider extends ServiceProvider
 
             return $this->map(fn(Product $model) => new ProductView($model, $pricing));
         });
-
-        // VerifyEmail::toMailUsing(function (object $notifiable, string $url) {
-        //     return (new MailMessage)
-        //         ->subject(__('messages.verify_email_address'))
-        //         ->line(__('messages.click_to_verify_email'))
-        //         ->action(__('messages.verify_email_address'), $url);
-        // });
     }
 }

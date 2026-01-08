@@ -30,4 +30,19 @@ return [
     'If you\'re having trouble clicking the ":actionText" button, copy and paste the URL below into your web browser:' => 'If you\'re having trouble clicking the ":actionText" button, copy and paste the URL below into your web browser:',
     'All rights reserved.' => 'All rights reserved.',
 
+    'reset_subject' => 'Reset your password',
+    'greeting' => 'Hello,',
+
+    'intro' => 'You are receiving this email because we received a password reset request for your Dimanche à Bamako account.',
+
+    'instruction' => 'Please click the button below to set a new password. This secure link will remain valid for 60 minutes.',
+
+    'button' => 'Create a new password',
+
+    'fallback' => 'If the button does not work, copy and paste the following link into your browser:',
+
+    'ignore' => 'If you did not request a password reset, no further action is required.',
+
+    'closing' => 'Best regards,',
+
 ];

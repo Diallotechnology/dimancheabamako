@@ -30,4 +30,20 @@ return [
     'action_help' => "Si vous avez des difficultés à cliquer sur le bouton \":actionText\", copiez et collez l'URL ci-dessous\n dans votre navigateur web :",
     'All rights reserved.' => 'Tous droits réservés.',
 
+
+    'reset_subject' => 'Réinitialisation de votre mot de passe',
+    'greeting' => 'Bonjour,',
+
+    'intro' => 'Vous recevez ce message suite à votre demande de réinitialisation de mot de passe pour votre compte Dimanche à Bamako.',
+
+    'instruction' => 'Veuillez cliquer sur le bouton ci-dessous pour configurer votre nouveau mot de passe. Ce lien est sécurisé et restera valide pendant 60 minutes.',
+
+    'button' => 'Créer un nouveau mot de passe',
+
+    'fallback' => 'Si le bouton ne s\'affiche pas correctement, vous pouvez copier et coller le lien suivant dans votre navigateur :',
+
+    'ignore' => 'Si vous n\'êtes pas à l\'origine de cette demande, vous pouvez ignorer ce message. Votre mot de passe actuel restera inchangé.',
+
+    'closing' => 'Cordialement,',
+
 ];

@@ -70,6 +70,6 @@ final class RegisteredUserController extends Controller
         Mail::to($request->email)
             ->send(new ConfirmRegistrationMail($token, app()->getLocale()));
 
-        return back()->with('status', __('messages.register_email_message'));
+        return \to_route('register-email', 0)->with('status', __('messages.register_email_message'));
     }
 }

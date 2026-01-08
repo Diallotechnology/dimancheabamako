@@ -1,4 +1,4 @@
-@extends('errors::minimal')
+@extends('errors.minimal')
 @section('message')
 <div class="col-lg-8 m-auto">
     <h2 class="mb-30">Service Temporairement Indisponible</h2>

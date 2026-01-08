@@ -19,6 +19,7 @@
                 @csrf
                 <!-- Password Reset Token -->
                 <input type="hidden" name="token" value="{{ $request->route('token') }}">
+                <input type="hidden" name="email" value="{{ $request->email }}">
 
                 <div class="mb-3 form-password-toggle">
                     <label class="form-label" for="password">@lang('messages.new_password')</label>

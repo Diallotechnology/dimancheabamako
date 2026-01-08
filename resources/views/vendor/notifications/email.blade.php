@@ -1,58 +1,22 @@
 <x-mail::message>
-{{-- Salutation --}}
-@if (! empty($greeting))
-# {{ $greeting }}
-@else
-@if ($level === 'error')
-# @lang('Oups!')
-@else
-# @lang('Bonjour !')
-@endif
-@endif
+# {{ __('passwords.greeting') }}
 
-{{-- Lignes d'introduction --}}
-@foreach ($introLines as $line)
-{{ $line }}
+{{ __('passwords.intro') }}
 
-@endforeach
+{{ __('passwords.instruction') }}
 
-{{-- Bouton d'action --}}
-@isset($actionText)
-<?php
-    $color = match ($level) {
-        'success', 'error' => $level,
-        default => 'primary',
-    };
-?>
-<x-mail::button :url="$actionUrl" :color="$color">
-{{ $actionText }}
+<x-mail::button :url="$actionUrl">
+{{ __('passwords.button') }}
 </x-mail::button>
-@endisset
 
-{{-- Lignes de conclusion --}}
-@foreach ($outroLines as $line)
-{{ $line }}
+{{ __('passwords.fallback') }}
 
-@endforeach
+<span class="break-all">[{{ $actionUrl }}]({{ $actionUrl }})</span>
 
-{{-- Salutation --}}
-@if (! empty($salutation))
-{{ $salutation }}
-@else
-@lang('Cordialement'),<br>
-{{ config('app.name') }}
-@endif
+{{ __('passwords.ignore') }}
 
-{{-- Subcopy --}}
-@isset($actionText)
-<x-slot:subcopy>
-@lang(
-    "Si vous avez des difficultés à cliquer sur le bouton \":actionText\", copiez et collez l'URL ci-dessous\n".
-    'dans votre navigateur web :',
-    [
-        'actionText' => $actionText,
-    ]
-) <span class="break-all">[{{ $displayableActionUrl }}]({{ $actionUrl }})</span>
-</x-slot:subcopy>
-@endisset
+{{ __('passwords.closing') }}<br>
+<strong>Le Service Clients</strong><br>
+Dimanche à Bamako<br>
+📞 Tel / WhatsApp : +223 66 03 51 54
 </x-mail::message>

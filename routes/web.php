@@ -92,6 +92,7 @@ Route::view('categorie', 'category')->name('categorie_mobile');
 Route::view('contact', 'contact')->name('contact');
 Route::view('about', 'about')->name('about');
 Route::view('livraison', 'livraison')->name('livraison');
+Route::view('register/confirm/{show}', 'auth.register-confirm')->name('register-email');
 
 Route::controller(OrderController::class)->group(function () {
     Route::get('order/invoice/{id}', 'invoice')->name('order.invoice');

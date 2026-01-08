@@ -6,10 +6,11 @@ namespace App\Models;
 
 use App\Enum\RoleEnum;
 use App\Helper\DateFormat;
-use Illuminate\Contracts\Auth\MustVerifyEmail;
-use Illuminate\Foundation\Auth\User as Authenticatable;
-use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
+use Illuminate\Notifications\Notifiable;
+use Illuminate\Contracts\Auth\MustVerifyEmail;
+use App\Notifications\MailResetPasswordNotification;
+use Illuminate\Foundation\Auth\User as Authenticatable;
 
 /**
  * @property int $id
@@ -82,6 +83,7 @@ final class User extends Authenticatable implements MustVerifyEmail
         'password' => 'hashed',
         'role' => RoleEnum::class,
     ];
+
 
     /**
      * Check if the user has the invite role.

@@ -10,8 +10,6 @@
     <link rel="shortcut icon" type="image/x-icon" href="{{ asset('assets/imgs/theme/favicon.svg') }}">
     <title>{{ $title ?? __('messages.home').' '. __('messages.sunday_sale') }}</title>
     <link href="{{ asset('assets/css/main.css') }}" rel="stylesheet" />
-    {{--
-    <link href="{{ asset('build/assets/app-ga_5tWk4.css') }}" rel="stylesheet" /> --}}
 
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
     <!-- Google tag (gtag.js) -->

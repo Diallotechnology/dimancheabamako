@@ -85,10 +85,6 @@ final class PendingRegistrationController extends Controller
 
             $pending->delete();
         });
-
-        $msg = __('messages.register_success_msg');
-        flash()->success($msg);
-
-        return redirect('profil')->with('status', $msg);
+        return to_route('register-email', 1)->with('status', __('messages.register_success_msg'));
     }
 }
