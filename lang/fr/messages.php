@@ -99,7 +99,7 @@ return [
     'product_status' => [
         'commande' => 'Sur commande',
         'disponible' => 'Disponible',
-        'unit' => 'mètres',
+        'unit' => 'mètre',
         'infos' => 'Selectionnez une quantite Ce produit est disponible uniquement en quantités de 5 ou 6 mètres.',
     ],
     'preorder_notice' => 'Votre commande comprend un produit sur commande. Elle sera fabriquée et livrée dans un délai de 3 à 5 semaines.',

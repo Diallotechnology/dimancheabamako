@@ -206,7 +206,7 @@
                         </div>
                         <form method="post" class="needs-validation" action="{{ route('order.store') }}" novalidate>
                             @csrf
-                            <input type="hidden" name="livraison" :value="$shipping?->id">
+                            <input type="hidden" name="livraison" value="{{ $shipping?->id }}" />
                             <div class="row">
                                 <div class="col-md-6" wire:ignore>
                                     <x-input type="text" place="votre prenom" :label="__('messages.first_name')"

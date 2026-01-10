@@ -190,8 +190,10 @@ final class Product extends Model
 
     public function getCoverAttribute(): string
     {
-        // return Storage::url($this->attributes['cover']);
-        return asset('admin/assets/imgs/theme/logo.svg');
+        if (! app()->isProduction()) {
+            return asset('admin/assets/imgs/theme/logo.svg');
+        }
+        return Storage::url($this->attributes['cover']);
     }
 
     public function DocLink(): string

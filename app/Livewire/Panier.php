@@ -80,17 +80,16 @@ final class Panier extends Component
 
     public function calculateShipping()
     {
-        $shipping = $this->getShippingCost((int) $this->country_id, (int) $this->transport_id);
+        $this->shipping = $this->getShippingCost((int) $this->country_id, (int) $this->transport_id);
 
-        if (! $shipping) {
+        if (! $this->shipping) {
             $this->shipping = null;
             session()->flash('warning', __('messages.panier.not_transport'));
             flash()->warning(__('messages.panier.not_transport'));
 
             return;
         }
-
-        $this->shipping = $shipping;
+        return $this->shipping;
     }
 
     public function mount(): void

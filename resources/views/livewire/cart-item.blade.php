@@ -56,9 +56,18 @@
                     <span>@lang('messages.color') {{ $item['color'] }}</span>
 
                     <div class="product-price d-flex justify-content-between">
+                        @if ($item['reduction'] > 0)
                         <span>
-                            {{ $item['reduction'] > 0 ? $item['prix_promo'] : $item['prix_format'] }}
+                            {{ $item['prix_promo'] }}
+                            {{ $item['is_preorder'] ? __('messages.product_status.unit') : '' }}
                         </span>
+                        @else
+                        <span>
+                            {{ $item['prix_format'] }}
+                            {{ $item['is_preorder'] ? '/'. __('messages.product_status.unit') : '' }}
+                        </span>
+                        @endif
+
 
                         @if ($item['is_preorder'])
                         <span class="ml-1 text-danger">
@@ -72,7 +81,8 @@
 
                         @if ($item['reduction'] > 0)
                         <span class="old-price">
-                            {{ $item['prix_format'] }}
+                            {{ $item['prix_format'] }} {{ $item['is_preorder'] ??
+                            __('messages.product_status.unit') }}
                         </span>
                         @endif
 
