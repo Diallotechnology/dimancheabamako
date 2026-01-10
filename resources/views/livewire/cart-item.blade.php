@@ -59,7 +59,7 @@
                         @if ($item['reduction'] > 0)
                         <span>
                             {{ $item['prix_promo'] }}
-                            {{ $item['is_preorder'] ? __('messages.product_status.unit') : '' }}
+                            {{ $item['is_preorder'] ? '/'. __('messages.product_status.unit') : '' }}
                         </span>
                         @else
                         <span>

@@ -103,13 +103,19 @@
                                             $row->nom }}</a>
                                     </h2>
                                     <div class="product-price">
+
+                                        @if ($row->reduction > 0)
                                         <span>
-                                            {{
-                                            $row->reduction > 0
-                                            ? $row->prix_promo
-                                            : $row->prix_format
-                                            }}
+                                            {{ $row->prix_promo }}
+                                            {{ $row->is_preorder ? '/'. __('messages.product_status.unit') : '' }}
                                         </span>
+                                        @else
+                                        <span>
+                                            {{ $row->prix_format }}
+                                            {{ $row->is_preorder ? '/'. __('messages.product_status.unit') : '' }}
+                                        </span>
+                                        @endif
+
                                         @if ($row->reduction > 0)
                                         <span class="old-price">
                                             {{ $row->prix_format }}
