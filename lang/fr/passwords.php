@@ -30,7 +30,6 @@ return [
     'action_help' => "Si vous avez des difficultés à cliquer sur le bouton \":actionText\", copiez et collez l'URL ci-dessous\n dans votre navigateur web :",
     'All rights reserved.' => 'Tous droits réservés.',
 
-
     'reset_subject' => 'Réinitialisation de votre mot de passe',
     'greeting' => 'Bonjour,',
 

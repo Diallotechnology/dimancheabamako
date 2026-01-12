@@ -1,7 +1,4 @@
 <x-app-layout>
-    @php
-    $client = App\Models\Client::where('email',Auth::user()->email)->first();
-    @endphp
     <x-slot:title>
         Profil
         </x-slot>
@@ -66,10 +63,10 @@
                                 <h5 class="mb-0">Address</h5>
                             </div>
                             <div class="card-body">
-                                <address>{{ $client->prenom }} {{ $client->nom }}<br>{{ $client->email
-                                    }}<br>{{ $client->contact }}
+                                <address>{{ Auth::user()->client?->email
+                                    }}<br>Contact: {{ Auth::user()->client?->contact }}
                                 </address>
-                                <p>{{ $client->pays }}</p>
+                                <p>Pays: {{ Auth::user()->client?->pays }}</p>
                             </div>
                         </div>
                     </div>

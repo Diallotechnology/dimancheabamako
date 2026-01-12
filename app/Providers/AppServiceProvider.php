@@ -12,13 +12,13 @@ use App\Service\CategoryService;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\URL;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\ServiceProvider;
-use Illuminate\Auth\Notifications\ResetPassword;
-use Illuminate\Notifications\Messages\MailMessage;
+use Opcodes\LogViewer\Facades\LogViewer;
 
 final class AppServiceProvider extends ServiceProvider
 {
@@ -38,6 +38,10 @@ final class AppServiceProvider extends ServiceProvider
 
         Gate::define('viewPulse', function (User $user) {
             return $user->isAdmin();
+        });
+
+        LogViewer::auth(function () {
+            return Auth::user()->check() && Auth::user()->isAdmin();
         });
         // Stocke en cache et en session une seule fois
         $taux = Cache::rememberForever('taux_eur', function () {

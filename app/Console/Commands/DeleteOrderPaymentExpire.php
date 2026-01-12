@@ -4,17 +4,13 @@ declare(strict_types=1);
 
 namespace App\Console\Commands;
 
-use App\Helper\OrderAPI;
+use App\Models\Client;
 use App\Models\Order;
-use Exception;
 use Illuminate\Console\Command;
-use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
 
 final class DeleteOrderPaymentExpire extends Command
 {
-
     /**
      * The name and signature of the console command.
      *
@@ -47,29 +43,28 @@ final class DeleteOrderPaymentExpire extends Command
                     DB::transaction(function () use ($order) {
 
                         /** @var Order|null $order */
-                        $order = Order::with('client')
-                            ->lockForUpdate()
-                            ->find($order->id);
+                        $order = Order::lockForUpdate()->find($order->id);
 
                         if (! $order) {
                             return;
                         }
 
-                        $client = $order->client;
-
                         // 1️⃣ Supprimer la commande (cause)
                         $order->delete();
 
-                        Log::info('Order deleted (abandoned / failed)', [
-                            'order_id'   => $order->id,
-                            'state'      => $order->trans_state,
-                        ]);
+                        // 2️⃣ Recharger + verrouiller le client
+                        $client = Client::lockForUpdate()->find($order->client_id);
 
-                        // 2️⃣ Nettoyer le client si fictif
                         if (! $client) {
                             return;
                         }
 
+                        // 3️⃣ Si client lié à un user → NEVER DELETE
+                        if ($client->user()->exists()) {
+                            return;
+                        }
+
+                        // 4️⃣ Si au moins une commande payée → KEEP
                         $hasPaidOrders = $client->orders()
                             ->where('trans_state', 'PURCHASED')
                             ->exists();
@@ -78,11 +73,8 @@ final class DeleteOrderPaymentExpire extends Command
                             return;
                         }
 
+                        // 5️⃣ Safe delete (guest fictif uniquement)
                         $client->delete();
-
-                        Log::info('Client deleted (no paid orders)', [
-                            'client_id' => $client->id,
-                        ]);
                     });
                 }
             });

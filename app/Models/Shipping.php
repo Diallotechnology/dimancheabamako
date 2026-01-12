@@ -22,6 +22,7 @@ use Illuminate\Support\Facades\Cache;
  * @property-read Poids $poids
  * @property-read Transport $transport
  * @property-read Zone $zone
+ *
  * @method static \Database\Factories\ShippingFactory factory($count = null, $state = [])
  * @method static \Illuminate\Database\Eloquent\Builder|Shipping newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Shipping newQuery()
@@ -34,6 +35,7 @@ use Illuminate\Support\Facades\Cache;
  * @method static \Illuminate\Database\Eloquent\Builder|Shipping whereTransportId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Shipping whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Shipping whereZoneId($value)
+ *
  * @mixin \Eloquent
  */
 final class Shipping extends Model

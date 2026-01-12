@@ -18,6 +18,7 @@
         "laravel/tinker": "^2.8",
         "livewire/livewire": "^3.5",
         "monarobase/country-list": "^3.5",
+        "opcodesio/log-viewer": "^3.21",
         "php-flasher/flasher-laravel": "*",
         "propaganistas/laravel-phone": "^6.0",
         "tightenco/ziggy": "^1.0"

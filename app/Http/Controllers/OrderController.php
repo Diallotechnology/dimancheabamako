@@ -14,7 +14,6 @@ use App\Service\CartService;
 use App\Service\OrderService;
 use Exception;
 use Illuminate\Http\Request;
-use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Inertia\Inertia;
@@ -40,11 +39,13 @@ final class OrderController extends Controller
     {
         if ($this->cart->getContent()->isEmpty()) {
             flash()->error('Panier vide !');
+
             return back();
         }
 
         if (! $request->integer('livraison')) {
             session()->flash('warning', __('messages.panier.not_transport'));
+
             return back();
         }
 
@@ -79,10 +80,10 @@ final class OrderController extends Controller
         } catch (Throwable $e) {
             Log::error('Order failed rollback', ['error' => $e->getMessage()]);
             flash()->error('La validation a échoué. Aucune donnée enregistrée.');
+
             return back();
         }
     }
-
 
     public function invoice(string $id)
     {
@@ -143,6 +144,7 @@ final class OrderController extends Controller
     {
         $order->update($request->validated());
         flash()->success('Commande mise à jour avec succès!');
+
         return back();
     }
 

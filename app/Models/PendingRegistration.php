@@ -20,6 +20,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property \Illuminate\Support\Carbon $expires_at
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
+ *
  * @method static \Illuminate\Database\Eloquent\Builder<static>|PendingRegistration newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|PendingRegistration newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|PendingRegistration query()
@@ -35,6 +36,7 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder<static>|PendingRegistration whereRole($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|PendingRegistration whereToken($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|PendingRegistration whereUpdatedAt($value)
+ *
  * @mixin \Eloquent
  */
 final class PendingRegistration extends Model

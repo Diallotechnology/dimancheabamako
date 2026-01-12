@@ -19,6 +19,7 @@ use Illuminate\Support\Facades\App;
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property-read \Illuminate\Database\Eloquent\Collection<int, Product> $products
  * @property-read int|null $products_count
+ *
  * @method static \Database\Factories\CategoryFactory factory($count = null, $state = [])
  * @method static \Illuminate\Database\Eloquent\Builder|Category newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Category newQuery()
@@ -29,6 +30,7 @@ use Illuminate\Support\Facades\App;
  * @method static \Illuminate\Database\Eloquent\Builder|Category whereNom($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Category wherePromo($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Category whereUpdatedAt($value)
+ *
  * @mixin \Eloquent
  */
 final class Category extends Model

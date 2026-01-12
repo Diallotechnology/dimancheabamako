@@ -17,7 +17,7 @@ use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
 use Illuminate\View\View;
 
-use function Flasher\Prime\flash;
+use function to_route;
 
 final class RegisteredUserController extends Controller
 {
@@ -50,14 +50,14 @@ final class RegisteredUserController extends Controller
             ->first();
 
         $data = [
-            'prenom'     => $request->prenom,
-            'nom'        => $request->nom,
-            'pays'       => $request->pays,
-            'contact'    => $contactE164,
-            'email'      => $request->email,
-            'role'       => RoleEnum::CUSTOMER->value,
-            'password'   => Hash::make($request->password),
-            'token'      => $token,
+            'prenom' => $request->prenom,
+            'nom' => $request->nom,
+            'pays' => $request->pays,
+            'contact' => $contactE164,
+            'email' => $request->email,
+            'role' => RoleEnum::CUSTOMER->value,
+            'password' => Hash::make($request->password),
+            'token' => $token,
             'expires_at' => now()->addHour(),
         ];
 
@@ -70,6 +70,6 @@ final class RegisteredUserController extends Controller
         Mail::to($request->email)
             ->send(new ConfirmRegistrationMail($token, app()->getLocale()));
 
-        return \to_route('register-email', 0)->with('status', __('messages.register_email_message'));
+        return to_route('register-email', 0)->with('status', __('messages.register_email_message'));
     }
 }

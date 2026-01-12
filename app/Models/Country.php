@@ -18,6 +18,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property-read \Illuminate\Database\Eloquent\Collection<int, Order> $orders
  * @property-read int|null $orders_count
  * @property-read Zone $zone
+ *
  * @method static \Database\Factories\CountryFactory factory($count = null, $state = [])
  * @method static \Illuminate\Database\Eloquent\Builder|Country newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Country newQuery()
@@ -27,6 +28,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @method static \Illuminate\Database\Eloquent\Builder|Country whereNom($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Country whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Country whereZoneId($value)
+ *
  * @mixin \Eloquent
  */
 final class Country extends Model

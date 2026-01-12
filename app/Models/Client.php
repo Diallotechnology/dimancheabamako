@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace App\Models;
 
-use LogicException;
 use App\Helper\DateFormat;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
+use LogicException;
 
 /**
  * @property int $id
@@ -21,6 +21,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property-read \Illuminate\Database\Eloquent\Collection<int, Order> $orders
  * @property-read int|null $orders_count
+ *
  * @method static \Database\Factories\ClientFactory factory($count = null, $state = [])
  * @method static \Illuminate\Database\Eloquent\Builder|Client newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Client newQuery()
@@ -33,6 +34,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @method static \Illuminate\Database\Eloquent\Builder|Client wherePays($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Client wherePrenom($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Client whereUpdatedAt($value)
+ *
  * @mixin \Eloquent
  */
 final class Client extends Model
@@ -62,12 +64,19 @@ final class Client extends Model
         return $this->hasOne(Order::class)->latestOfMany();
     }
 
+    /**
+     * Get the user associated with the Client
+     */
+    public function user(): HasOne
+    {
+        return $this->hasOne(User::class);
+    }
 
     protected static function booted()
     {
-        static::deleting(function ($client) {
+        self::deleting(function ($client) {
             if ($client->orders()->where('trans_state', 'PURCHASED')->exists()) {
-                throw new \LogicException('Cannot delete client with paid orders');
+                throw new LogicException('Cannot delete client with paid orders');
             }
         });
     }

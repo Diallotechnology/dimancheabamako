@@ -6,11 +6,11 @@ namespace App\Models;
 
 use App\Enum\RoleEnum;
 use App\Helper\DateFormat;
-use Laravel\Sanctum\HasApiTokens;
-use Illuminate\Notifications\Notifiable;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
-use App\Notifications\MailResetPasswordNotification;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Notifications\Notifiable;
+use Laravel\Sanctum\HasApiTokens;
 
 /**
  * @property int $id
@@ -28,6 +28,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
  * @property-read int|null $notifications_count
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \Laravel\Sanctum\PersonalAccessToken> $tokens
  * @property-read int|null $tokens_count
+ *
  * @method static \Database\Factories\UserFactory factory($count = null, $state = [])
  * @method static \Illuminate\Database\Eloquent\Builder|User newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|User newQuery()
@@ -43,6 +44,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
  * @method static \Illuminate\Database\Eloquent\Builder|User whereRememberToken($value)
  * @method static \Illuminate\Database\Eloquent\Builder|User whereRole($value)
  * @method static \Illuminate\Database\Eloquent\Builder|User whereUpdatedAt($value)
+ *
  * @mixin \Eloquent
  */
 final class User extends Authenticatable implements MustVerifyEmail
@@ -61,6 +63,7 @@ final class User extends Authenticatable implements MustVerifyEmail
         'role',
         'etat',
         'change_password',
+        'client_id',
     ];
 
     /**
@@ -84,6 +87,13 @@ final class User extends Authenticatable implements MustVerifyEmail
         'role' => RoleEnum::class,
     ];
 
+    /**
+     * Get the client that owns the User
+     */
+    public function client(): BelongsTo
+    {
+        return $this->belongsTo(Client::class);
+    }
 
     /**
      * Check if the user has the invite role.

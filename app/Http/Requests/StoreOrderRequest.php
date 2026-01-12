@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Http\Requests;
 
-use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rules;
 
@@ -73,6 +72,7 @@ final class StoreOrderRequest extends FormRequest
                 'password.string' => 'Le mot de passe doit être une chaîne de caractères.',
             ];
         }
+
         // EN (default)
         return [
             // ENGLISH

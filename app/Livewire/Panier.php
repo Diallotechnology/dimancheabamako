@@ -4,14 +4,14 @@ declare(strict_types=1);
 
 namespace App\Livewire;
 
+use App\Helper\CartAction;
 use App\Models\Client;
 use App\Models\Country;
-use Livewire\Component;
-use App\Helper\CartAction;
-use Livewire\Attributes\On;
 use App\Service\CartService;
-use Livewire\Attributes\Validate;
 use Illuminate\Support\Facades\Auth;
+use Livewire\Attributes\On;
+use Livewire\Attributes\Validate;
+use Livewire\Component;
 
 final class Panier extends Component
 {
@@ -75,6 +75,7 @@ final class Panier extends Component
         }
         $this->trans = [];
         session()->flash('warning', __('messages.panier.not_deliver'));
+
         return flash()->success(__('messages.panier.not_deliver'));
     }
 
@@ -89,6 +90,7 @@ final class Panier extends Component
 
             return;
         }
+
         return $this->shipping;
     }
 
@@ -118,18 +120,6 @@ final class Panier extends Component
         }
     }
 
-    private function cleanInvalidPreorders(): void
-    {
-        $this->cart->getContent()->each(function ($item) {
-            if (
-                ($item['is_preorder'] ?? false) === true
-                && ! in_array($item['quantity'], [5, 6], true)
-            ) {
-                $this->cart->remove($item['id']);
-            }
-        });
-    }
-
     public function render()
     {
         $items = $this->cart->getContent();
@@ -145,5 +135,17 @@ final class Panier extends Component
         }
 
         return view('livewire.panier', compact('items', 'country', 'client'));
+    }
+
+    private function cleanInvalidPreorders(): void
+    {
+        $this->cart->getContent()->each(function ($item) {
+            if (
+                ($item['is_preorder'] ?? false) === true
+                && ! in_array($item['quantity'], [5, 6], true)
+            ) {
+                $this->cart->remove($item['id']);
+            }
+        });
     }
 }
