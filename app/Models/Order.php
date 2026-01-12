@@ -33,7 +33,6 @@ use Illuminate\Support\Facades\DB;
  * @property-read \Illuminate\Database\Eloquent\Collection<int, Product> $products
  * @property-read int|null $products_count
  * @property-read Transport $transport
- *
  * @method static \Database\Factories\OrderFactory factory($count = null, $state = [])
  * @method static \Illuminate\Database\Eloquent\Builder|Order newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Order newQuery()
@@ -54,13 +53,10 @@ use Illuminate\Support\Facades\DB;
  * @method static \Illuminate\Database\Eloquent\Builder|Order whereTransportId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Order whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Order whereVille($value)
- *
  * @property int|null $delai
  * @property int|null $metrage
- *
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Order whereDelai($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Order whereMetrage($value)
- *
  * @mixin \Eloquent
  */
 final class Order extends Model
