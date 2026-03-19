@@ -39,6 +39,43 @@ final class UpdateProductRequest extends FormRequest
             'image' => 'nullable|array',
             'prix' => 'required|integer',
             'stock' => 'required|integer',
+
+            'video' => 'nullable',
+            'cover' => 'nullable',
+            'image' => 'nullable|array',
+        ];
+    }
+
+    public function messages(): array
+    {
+        return [
+            'categorie_id.exists' => 'La catégorie sélectionnée est invalide.',
+
+            'reference.required' => 'La référence est obligatoire.',
+            'reference.unique' => 'Cette référence existe déjà.',
+
+            'nom.required' => 'Le nom du produit est obligatoire.',
+            'nom.string' => 'Le nom doit être une chaîne de caractères.',
+
+            'color.string' => 'La couleur doit être une chaîne valide.',
+            'taille.string' => 'La taille doit être une chaîne valide.',
+
+            'resume.required' => 'Le résumé est obligatoire.',
+
+            'favoris.required' => 'Le champ favoris est obligatoire.',
+            'favoris.boolean' => 'Le champ favoris doit être vrai ou faux.',
+
+            'is_preorder.required' => 'Le champ précommande est obligatoire.',
+            'is_preorder.boolean' => 'Le champ précommande doit être vrai ou faux.',
+
+            'poids.required' => 'Le poids est obligatoire.',
+            'poids.string' => 'Le poids doit être une valeur valide.',
+
+            'prix.required' => 'Le prix est obligatoire.',
+            'prix.integer' => 'Le prix doit être un nombre entier.',
+
+            'stock.required' => 'Le stock est obligatoire.',
+            'stock.integer' => 'Le stock doit être un nombre entier.',
         ];
     }
 }

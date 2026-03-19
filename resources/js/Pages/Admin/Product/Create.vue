@@ -22,14 +22,19 @@ const form = useForm({
     poids: "",
     prix: "",
     favoris: 0,
+    is_preorder: 0,
     stock: 1,
     cover: "",
     image: [],
     video: null,
-    is_preorder: "",
 });
 
 const submit = () => {
+    form.transform((data) => ({
+        ...data,
+        favoris: data.favoris ? 1 : 0,
+        is_preorder: data.is_preorder ? 1 : 0,
+    }));
     form.post(route("product.store"), {
         forceFormData: true,
         onSuccess: () => {
@@ -129,7 +134,9 @@ const submit = () => {
                                     >Produit Favoris ?
                                 </span>
                                 <input
-                                    v-model.number="form.favoris"
+                                    v-model="form.favoris"
+                                    :true-value="1"
+                                    :false-value="0"
                                     class="form-check-input"
                                     type="checkbox"
                                 />
@@ -140,7 +147,9 @@ const submit = () => {
                                     >Produit uniquement sur commande ?
                                 </span>
                                 <input
-                                    v-model.number="form.is_preorder"
+                                    v-model="form.is_preorder"
+                                    :true-value="1"
+                                    :false-value="0"
                                     class="form-check-input"
                                     type="checkbox"
                                 />
@@ -151,7 +160,7 @@ const submit = () => {
                                 input_type="number"
                                 label="stock"
                                 place="le stock du produit"
-                                v-model="form.stock"
+                                v-model.number="form.stock"
                                 :message="form.errors.stock"
                                 required
                             />

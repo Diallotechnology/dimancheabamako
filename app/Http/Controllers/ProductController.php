@@ -96,22 +96,31 @@ final class ProductController extends Controller
     {
         $data = $request->validated();
 
+        unset($data['video'], $data['cover'], $data['image']);
+
         if ($request->hasFile('cover')) {
             $this->file_delete($product);
+
             $filename = $request->cover->hashName();
-            $chemin = $request->cover->storeAs('product/cover', $filename, 'public');
-            $data['cover'] = $chemin;
+            $path = $request->cover->storeAs('product/cover', $filename, 'public');
+
+            $data['cover'] = $path;
         }
+
         if ($request->hasFile('video')) {
             $this->file_delete($product);
+
             $filename = $request->video->hashName();
-            $chemin = $request->video->storeAs('product/video', $filename, 'public');
-            $data['video'] = $chemin;
+            $path = $request->video->storeAs('product/video', $filename, 'public');
+
+            $data['video'] = $path;
         }
+
         if ($request->hasFile('image')) {
             $this->file_uplode($request, $product);
         }
-        $product->update(data_forget($data, 'image'));
+
+        $product->update($data);
 
         return back();
     }

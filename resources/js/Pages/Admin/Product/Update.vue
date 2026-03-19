@@ -21,18 +21,20 @@ const form = useForm({
     nom: props.product.nom,
     color: props.product.color,
     taille: props.product.taille,
-    description: props.product.description,
+    description: props.product.description ? props.product.description : "",
     resume: props.product.resume,
     poids: props.product.poids,
     prix: props.product.prix,
     stock: props.product.stock,
-    favoris: props.product.favoris,
-    is_preorder: props.product.is_preorder,
+    favoris: props.product.favoris ? 1 : 0,
+    is_preorder: props.product.is_preorder ? 1 : 0,
     cover: null,
     image: [],
     video: null,
     _method: "PUT",
 });
+
+console.log(props.product);
 
 const submit = () => {
     form.post(route("product.update", props.product.id), {
@@ -106,7 +108,9 @@ const submit = () => {
                                     >Produit Favoris ?
                                 </span>
                                 <input
-                                    v-model.number="form.favoris"
+                                    v-model="form.favoris"
+                                    :true-value="1"
+                                    :false-value="0"
                                     class="form-check-input"
                                     type="checkbox"
                                 />
@@ -117,7 +121,9 @@ const submit = () => {
                                     >Produit uniquement sur commande ?
                                 </span>
                                 <input
-                                    v-model.number="form.is_preorder"
+                                    v-model="form.is_preorder"
+                                    :true-value="1"
+                                    :false-value="0"
                                     class="form-check-input"
                                     type="checkbox"
                                 />
