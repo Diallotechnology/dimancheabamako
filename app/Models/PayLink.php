@@ -18,6 +18,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property string $etat
  * @property string $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
+ *
  * @method static \Illuminate\Database\Eloquent\Builder<static>|PayLink newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|PayLink newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|PayLink query()
@@ -31,6 +32,7 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder<static>|PayLink whereTransRef($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|PayLink whereTransState($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|PayLink whereUpdatedAt($value)
+ *
  * @mixin \Eloquent
  */
 final class PayLink extends Model
