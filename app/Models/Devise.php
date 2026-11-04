@@ -14,6 +14,7 @@ use Illuminate\Support\Facades\Cache;
  * @property int $taux
  * @property string $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
+ *
  * @method static \Database\Factories\DeviseFactory factory($count = null, $state = [])
  * @method static \Illuminate\Database\Eloquent\Builder|Devise newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Devise newQuery()
@@ -23,6 +24,7 @@ use Illuminate\Support\Facades\Cache;
  * @method static \Illuminate\Database\Eloquent\Builder|Devise whereTaux($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Devise whereType($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Devise whereUpdatedAt($value)
+ *
  * @mixin \Eloquent
  */
 final class Devise extends Model

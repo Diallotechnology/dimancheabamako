@@ -21,6 +21,7 @@ use LogicException;
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property-read \Illuminate\Database\Eloquent\Collection<int, Order> $orders
  * @property-read int|null $orders_count
+ *
  * @method static \Database\Factories\ClientFactory factory($count = null, $state = [])
  * @method static \Illuminate\Database\Eloquent\Builder|Client newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Client newQuery()
@@ -33,8 +34,10 @@ use LogicException;
  * @method static \Illuminate\Database\Eloquent\Builder|Client wherePays($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Client wherePrenom($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Client whereUpdatedAt($value)
- * @property-read \App\Models\Order|null $latestOrder
- * @property-read \App\Models\User|null $user
+ *
+ * @property-read Order|null $latestOrder
+ * @property-read User|null $user
+ *
  * @mixin \Eloquent
  */
 final class Client extends Model
