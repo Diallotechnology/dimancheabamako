@@ -7,7 +7,7 @@
     },
     "devDependencies": {
         "@flasher/flasher": "file:vendor/php-flasher/flasher/Resources",
-        "@inertiajs/vue3": "^2.3.29",
+        "@inertiajs/vue3": "^3.11.0",
         "@types/select2": "^4.0.63",
         "@vitejs/plugin-vue": "^5.0.0",
         "@vue/server-renderer": "^3.4.0",
