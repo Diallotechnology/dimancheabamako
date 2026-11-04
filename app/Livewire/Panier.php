@@ -120,6 +120,20 @@ final class Panier extends Component
         }
     }
 
+    /**
+     * Total affiché au client : sous-total du panier + frais de livraison, dans la devise de session.
+     */
+    public function getTotalWithShippingProperty(): string
+    {
+        $totalCfa = (float) $this->cart->getTotal() + (float) ($this->shipping?->montant ?? 0);
+
+        if (PriceService::isEuro()) {
+            return number_format($totalCfa / PriceService::eurRate(), 2, ',', ' ');
+        }
+
+        return number_format($totalCfa, 0, ',', ' ');
+    }
+
     public function render()
     {
         $items = $this->cart->getContent();

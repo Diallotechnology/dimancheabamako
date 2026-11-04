@@ -9,8 +9,13 @@ use App\Livewire\Delete;
 use App\Livewire\Panier;
 use App\Livewire\Produit;
 use App\Models\Category;
+use App\Models\Country;
+use App\Models\Poids;
 use App\Models\Product;
+use App\Models\Shipping;
+use App\Models\Transport;
 use App\Models\User;
+use App\Models\Zone;
 use App\Service\CartService;
 use Livewire\Livewire;
 
@@ -160,4 +165,44 @@ it('rejects a wrong password from the cart login', function () {
         ->assertNoRedirect();
 
     $this->assertGuest();
+});
+
+function shippingFor(float $weightMax = 5, int $montant = 5000): array
+{
+    $zone = Zone::factory()->create();
+    $country = Country::factory()->create(['zone_id' => $zone->id]);
+    $transport = Transport::factory()->create();
+    $poids = Poids::factory()->create(['min' => 0, 'max' => $weightMax]);
+    Shipping::factory()->create([
+        'zone_id' => $zone->id,
+        'transport_id' => $transport->id,
+        'poids_id' => $poids->id,
+        'montant' => $montant,
+    ]);
+
+    return [$country, $transport];
+}
+
+it('adds the shipping cost to the displayed cart total in CFA', function () {
+    [$country, $transport] = shippingFor(montant: 5000);
+    cartWith(shopProduct(['prix' => 20000, 'poids' => 1]));
+
+    Livewire::test(Panier::class)
+        ->set('country_id', $country->id)
+        ->set('transport_id', $transport->id)
+        ->call('calculateShipping')
+        ->assertSee('25 000 CFA');
+});
+
+it('adds the shipping cost to the displayed cart total in EUR', function () {
+    session(['devise' => 'EUR']);
+    [$country, $transport] = shippingFor(montant: 5000);
+    cartWith(shopProduct(['prix' => 20000, 'poids' => 1]));
+
+    // (20 000 + 5 000) CFA / 655,957 = 38,11 €
+    Livewire::test(Panier::class)
+        ->set('country_id', $country->id)
+        ->set('transport_id', $transport->id)
+        ->call('calculateShipping')
+        ->assertSee('38,11 €');
 });
