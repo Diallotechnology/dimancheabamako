@@ -17,7 +17,8 @@ return [
     |
     */
 
-    'default' => env('CACHE_DRIVER', 'file'),
+    // CACHE_DRIVER (utilisé en production) prime ; CACHE_STORE (nom du squelette Laravel 11+) en repli.
+    'default' => env('CACHE_DRIVER', env('CACHE_STORE', 'file')),
 
     /*
     |--------------------------------------------------------------------------
