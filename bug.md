@@ -23,3 +23,10 @@ Bugs rencontrés pendant d'autres chantiers, notés ici pour être corrigés ens
 - **Découvert :** 2026-11-04, étape 4 de l'upgrade Laravel 13 (analyse du cache).
 - **Problème :** depuis Laravel 11 le squelette lit `CACHE_STORE`. Ici la variable est ignorée : le cache (panier, catégories, taux EUR) tourne sur le driver `file`, quelle que soit la valeur de `CACHE_STORE`.
 - **Piste :** aligner `config/cache.php` sur `env('CACHE_STORE', 'file')` après avoir vérifié la valeur réellement voulue en production (`database` suppose la table `cache`). Vérifier aussi `.env` de prod avant de changer.
+
+## 4. `DatabaseSeeder` : aucune zone n'a de transporteur ni de tarif utilisable
+
+- **Fichier :** `database/seeders/DatabaseSeeder.php` (`Transport::factory()->hasZones(2)`, `ShippingFactory` avec `rand(1, 2)`).
+- **Découvert :** 2026-11-04, test navigateur du panier (étape 5 de l'upgrade Laravel 13).
+- **Problème :** les pays sont tous dans la zone 1, mais les zones liées aux transporteurs sont d'autres zones créées par `hasZones(2)`. Après `db:seed`, le menu « Transporteur » du panier reste vide, donc la livraison ne peut pas se calculer en local sans retouche manuelle.
+- **Piste :** lier explicitement les transporteurs à la zone des pays (`$zone->transports()->attach(...)`) et créer des `Shipping` cohérents avec les `Poids` (zone, transport, poids).

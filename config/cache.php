@@ -118,13 +118,14 @@ return [
     |
     | Classes autorisées à être désérialisées depuis le cache (protection contre
     | les chaînes de gadgets de désérialisation PHP). Le panier (CartService)
-    | stocke des Collection, et CategoryService une Collection Eloquent de Category.
+    | stocke des Collection (avec des Carbon), et CategoryService une Collection Eloquent de Category.
     |
     */
 
     'serializable_classes' => [
         Illuminate\Support\Collection::class,
         Illuminate\Database\Eloquent\Collection::class,
+        Illuminate\Support\Carbon::class,
         App\Models\Category::class,
     ],
 

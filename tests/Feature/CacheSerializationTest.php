@@ -6,6 +6,7 @@ use App\Models\Category;
 use App\Models\Product;
 use App\Service\CartService;
 use App\Service\CategoryService;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Cache;
 
 beforeEach(function () {
@@ -37,6 +38,17 @@ it('still reads the cart from the cache when unserialization is restricted', fun
     app(CartService::class)->add($product->id, $product->nom, 20000, 10, 1.0);
 
     $fresh = app()->make(CartService::class);
-    expect($fresh->get($product->id)['quantity'])->toBe(1)
-        ->and((int) $fresh->getTotal())->toBe(20000);
+    $line = $fresh->get($product->id);
+
+    expect($line['quantity'])->toBe(1)
+        ->and((int) $fresh->getTotal())->toBe(20000)
+        ->and($line['added_at'])->toBeInstanceOf(Carbon::class);
+});
+
+it('renders the cart page from a serialized cache', function () {
+    $category = Category::factory()->create();
+    $product = Product::factory()->create(['categorie_id' => $category->id, 'prix' => 20000, 'stock' => 10, 'is_preorder' => false]);
+    app(CartService::class)->add($product->id, $product->nom, 20000, 10, 1.0);
+
+    $this->get('/panier')->assertOk();
 });
