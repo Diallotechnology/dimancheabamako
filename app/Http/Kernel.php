@@ -36,7 +36,7 @@ final class Kernel extends HttpKernel
             Middleware\EncryptCookies::class,
             \Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse::class,
             \Illuminate\View\Middleware\ShareErrorsFromSession::class,
-            Middleware\VerifyCsrfToken::class,
+            Middleware\PreventRequestForgery::class,
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
             Middleware\HandleInertiaRequests::class,
             \Illuminate\Http\Middleware\AddLinkHeadersForPreloadedAssets::class,
