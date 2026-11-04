@@ -361,12 +361,6 @@ parameters:
 			path: app/Http/Controllers/Auth/RegisteredUserController.php
 
 		-
-			message: '#^Function toastr not found\.$#'
-			identifier: function.notFound
-			count: 2
-			path: app/Http/Controllers/Auth/VerifyEmailController.php
-
-		-
 			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$id\.$#'
 			identifier: property.notFound
 			count: 1

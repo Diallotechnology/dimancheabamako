@@ -17,20 +17,21 @@ final class VerifyEmailController extends Controller
      */
     public function __invoke(EmailVerificationRequest $request): RedirectResponse
     {
-        if ($request->user()->hasVerifiedEmail()) {
-            toastr()->success('Votre e-mail a été vérifié avec succès!');
-            $redirectUrl = $request->user()->isClient() ? '/' : RouteServiceProvider::HOME;
+        $user = $request->user();
 
-            return redirect()->intended($redirectUrl.'?verified=1');
+        if (! $user->hasVerifiedEmail()) {
+            if (! $user->markEmailAsVerified()) {
+                flash()->error('Votre e-mail n\'a pas pu être vérifié. Veuillez réessayer.');
+
+                return redirect()->route('verification.notice');
+            }
+
+            event(new Verified($user));
         }
 
-        if ($request->user()->markEmailAsVerified()) {
-            event(new Verified($request->user()));
+        flash()->success('Votre e-mail a été vérifié avec succès!');
+        $redirectUrl = $user->isClient() ? '/' : RouteServiceProvider::HOME;
 
-            toastr()->success('Votre e-mail a été vérifié avec succès!');
-            $redirectUrl = $request->user()->isClient() ? '/' : RouteServiceProvider::HOME;
-
-            return redirect()->intended($redirectUrl.'?verified=1');
-        }
+        return redirect()->intended($redirectUrl.'?verified=1');
     }
 }
