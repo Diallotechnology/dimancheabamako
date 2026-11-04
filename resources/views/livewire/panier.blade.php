@@ -103,20 +103,7 @@
                                     <th>Total</th>
                                     <td class="product-subtotal">
                                         <span class="font-xl text-brand fw-900">
-                                            @isset($shipping)
-                                            @php
-                                            $totalAmount = 0;
-                                            if (is_numeric($Total) && is_numeric($shipping->montant_devise)) {
-                                            $totalAmount = $Total + $shipping->montant_devise;
-                                            } else {
-                                            $totalAmount = $Total;
-                                            }
-                                            @endphp
-                                            {{ session('devise') === 'EUR' ? $totalAmount . ' €' : $totalAmount . ' CFA'
-                                            }}
-                                            @else
-                                            {{ session('devise') === 'EUR' ? $Total . ' €' : $Total . ' CFA' }}
-                                            @endisset
+                                            {{ $this->totalWithShipping }} {{ session('devise') === 'EUR' ? '€' : 'CFA' }}
                                         </span>
 
                                     </td>
