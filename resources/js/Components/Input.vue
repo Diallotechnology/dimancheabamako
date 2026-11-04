@@ -41,7 +41,8 @@ defineExpose({ focus: () => input.value.focus() });
     <div class="mb-3">
         <label class="text-uppercase form-label"> {{ props.label }}</label>
         <input
-            type="{{ input_type }}"
+            :type="props.input_type"
+            :step="props.input_type === 'number' ? 'any' : undefined"
             :placeholder="`Entrez ${props.place}`"
             class="form-control"
             v-model="model"
