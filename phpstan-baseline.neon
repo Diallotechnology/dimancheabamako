@@ -1,0 +1,2629 @@
+parameters:
+	ignoreErrors:
+		-
+			message: '#^Call to an undefined method App\\Console\\Commands\\CheckPayByLink\:\:getOrderStatut\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: app/Console/Commands/CheckPayByLink.php
+
+		-
+			message: '#^Method App\\Console\\Commands\\CheckPayByLink\:\:api\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: app/Console/Commands/CheckPayByLink.php
+
+		-
+			message: '#^Method App\\Console\\Commands\\CheckPayByLink\:\:cancelPayment\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Console/Commands/CheckPayByLink.php
+
+		-
+			message: '#^Method App\\Console\\Commands\\CheckPayByLink\:\:cancelPaymentLink\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Console/Commands/CheckPayByLink.php
+
+		-
+			message: '#^Method App\\Console\\Commands\\CheckPayByLink\:\:createOrder\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: app/Console/Commands/CheckPayByLink.php
+
+		-
+			message: '#^Method App\\Console\\Commands\\CheckPayByLink\:\:createOrder\(\) has parameter \$postData with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Console/Commands/CheckPayByLink.php
+
+		-
+			message: '#^Method App\\Console\\Commands\\CheckPayByLink\:\:getHeaders\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Console/Commands/CheckPayByLink.php
+
+		-
+			message: '#^Method App\\Console\\Commands\\CheckPayByLink\:\:getOrderStatus\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Console/Commands/CheckPayByLink.php
+
+		-
+			message: '#^Method App\\Console\\Commands\\CheckPayByLink\:\:handle\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: app/Console/Commands/CheckPayByLink.php
+
+		-
+			message: '#^Method App\\Console\\Commands\\CheckPayByLink\:\:prepareTransactionData\(\) has parameter \$lang with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: app/Console/Commands/CheckPayByLink.php
+
+		-
+			message: '#^Method App\\Console\\Commands\\CheckPayByLink\:\:prepareTransactionData\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Console/Commands/CheckPayByLink.php
+
+		-
+			message: '#^Access to an undefined property App\\Models\\Product\:\:\$pivot\.$#'
+			identifier: property.notFound
+			count: 2
+			path: app/Console/Commands/CheckPayment.php
+
+		-
+			message: '#^Method App\\Console\\Commands\\CheckPayment\:\:api\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: app/Console/Commands/CheckPayment.php
+
+		-
+			message: '#^Method App\\Console\\Commands\\CheckPayment\:\:cancelPayment\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Console/Commands/CheckPayment.php
+
+		-
+			message: '#^Method App\\Console\\Commands\\CheckPayment\:\:cancelPaymentLink\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Console/Commands/CheckPayment.php
+
+		-
+			message: '#^Method App\\Console\\Commands\\CheckPayment\:\:createOrder\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: app/Console/Commands/CheckPayment.php
+
+		-
+			message: '#^Method App\\Console\\Commands\\CheckPayment\:\:createOrder\(\) has parameter \$postData with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Console/Commands/CheckPayment.php
+
+		-
+			message: '#^Method App\\Console\\Commands\\CheckPayment\:\:getHeaders\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Console/Commands/CheckPayment.php
+
+		-
+			message: '#^Method App\\Console\\Commands\\CheckPayment\:\:getOrderStatus\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Console/Commands/CheckPayment.php
+
+		-
+			message: '#^Method App\\Console\\Commands\\CheckPayment\:\:handle\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: app/Console/Commands/CheckPayment.php
+
+		-
+			message: '#^Method App\\Console\\Commands\\CheckPayment\:\:prepareTransactionData\(\) has parameter \$lang with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: app/Console/Commands/CheckPayment.php
+
+		-
+			message: '#^Method App\\Console\\Commands\\CheckPayment\:\:prepareTransactionData\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Console/Commands/CheckPayment.php
+
+		-
+			message: '#^Method App\\Console\\Commands\\DeleteOrderPaymentExpire\:\:handle\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: app/Console/Commands/DeleteOrderPaymentExpire.php
+
+		-
+			message: '#^Call to an undefined method App\\Console\\Commands\\DeletePayByLink\:\:getOrderStatut\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: app/Console/Commands/DeletePayByLink.php
+
+		-
+			message: '#^Method App\\Console\\Commands\\DeletePayByLink\:\:api\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: app/Console/Commands/DeletePayByLink.php
+
+		-
+			message: '#^Method App\\Console\\Commands\\DeletePayByLink\:\:cancelPayment\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Console/Commands/DeletePayByLink.php
+
+		-
+			message: '#^Method App\\Console\\Commands\\DeletePayByLink\:\:cancelPaymentLink\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Console/Commands/DeletePayByLink.php
+
+		-
+			message: '#^Method App\\Console\\Commands\\DeletePayByLink\:\:createOrder\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: app/Console/Commands/DeletePayByLink.php
+
+		-
+			message: '#^Method App\\Console\\Commands\\DeletePayByLink\:\:createOrder\(\) has parameter \$postData with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Console/Commands/DeletePayByLink.php
+
+		-
+			message: '#^Method App\\Console\\Commands\\DeletePayByLink\:\:getHeaders\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Console/Commands/DeletePayByLink.php
+
+		-
+			message: '#^Method App\\Console\\Commands\\DeletePayByLink\:\:getOrderStatus\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Console/Commands/DeletePayByLink.php
+
+		-
+			message: '#^Method App\\Console\\Commands\\DeletePayByLink\:\:handle\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: app/Console/Commands/DeletePayByLink.php
+
+		-
+			message: '#^Method App\\Console\\Commands\\DeletePayByLink\:\:prepareTransactionData\(\) has parameter \$lang with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: app/Console/Commands/DeletePayByLink.php
+
+		-
+			message: '#^Method App\\Console\\Commands\\DeletePayByLink\:\:prepareTransactionData\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Console/Commands/DeletePayByLink.php
+
+		-
+			message: '#^Method App\\Enum\\OrderEnum\:\:all\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Enum/OrderEnum.php
+
+		-
+			message: '#^Ternary operator condition is always true\.$#'
+			identifier: ternary.alwaysTrue
+			count: 1
+			path: app/Helper/DeleteAction.php
+
+		-
+			message: '#^Method App\\Helper\\ProductView\:\:collection\(\) has parameter \$products with no value type specified in iterable type iterable\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Helper/ProductView.php
+
+		-
+			message: '#^Method App\\Helper\\ProductView\:\:collection\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Helper/ProductView.php
+
+		-
+			message: '#^Method App\\Helper\\ProductView\:\:fromModel\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Helper/ProductView.php
+
+		-
+			message: '#^Using nullsafe property access on non\-nullable type App\\Models\\Category\. Use \-\> instead\.$#'
+			identifier: nullsafe.neverNull
+			count: 1
+			path: app/Helper/ProductView.php
+
+		-
+			message: '#^Expression on left side of \?\? is not nullable\.$#'
+			identifier: nullCoalesce.expr
+			count: 1
+			path: app/Http/Controllers/AdminController.php
+
+		-
+			message: '#^Method App\\Http\\Controllers\\AdminController\:\:category\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: app/Http/Controllers/AdminController.php
+
+		-
+			message: '#^Method App\\Http\\Controllers\\AdminController\:\:client\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: app/Http/Controllers/AdminController.php
+
+		-
+			message: '#^Method App\\Http\\Controllers\\AdminController\:\:country\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: app/Http/Controllers/AdminController.php
+
+		-
+			message: '#^Method App\\Http\\Controllers\\AdminController\:\:customer\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: app/Http/Controllers/AdminController.php
+
+		-
+			message: '#^Method App\\Http\\Controllers\\AdminController\:\:dashboard\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: app/Http/Controllers/AdminController.php
+
+		-
+			message: '#^Method App\\Http\\Controllers\\AdminController\:\:devise\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: app/Http/Controllers/AdminController.php
+
+		-
+			message: '#^Method App\\Http\\Controllers\\AdminController\:\:maintenance\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: app/Http/Controllers/AdminController.php
+
+		-
+			message: '#^Method App\\Http\\Controllers\\AdminController\:\:order\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: app/Http/Controllers/AdminController.php
+
+		-
+			message: '#^Method App\\Http\\Controllers\\AdminController\:\:paylink\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: app/Http/Controllers/AdminController.php
+
+		-
+			message: '#^Method App\\Http\\Controllers\\AdminController\:\:poids\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: app/Http/Controllers/AdminController.php
+
+		-
+			message: '#^Method App\\Http\\Controllers\\AdminController\:\:product\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: app/Http/Controllers/AdminController.php
+
+		-
+			message: '#^Method App\\Http\\Controllers\\AdminController\:\:promotion\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: app/Http/Controllers/AdminController.php
+
+		-
+			message: '#^Method App\\Http\\Controllers\\AdminController\:\:shipping\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: app/Http/Controllers/AdminController.php
+
+		-
+			message: '#^Method App\\Http\\Controllers\\AdminController\:\:slide\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: app/Http/Controllers/AdminController.php
+
+		-
+			message: '#^Method App\\Http\\Controllers\\AdminController\:\:transport\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: app/Http/Controllers/AdminController.php
+
+		-
+			message: '#^Method App\\Http\\Controllers\\AdminController\:\:user\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: app/Http/Controllers/AdminController.php
+
+		-
+			message: '#^Method App\\Http\\Controllers\\AdminController\:\:zone\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: app/Http/Controllers/AdminController.php
+
+		-
+			message: '#^Method App\\Http\\Controllers\\Auth\\AuthenticatedSessionController\:\:update\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: app/Http/Controllers/Auth/AuthenticatedSessionController.php
+
+		-
+			message: '#^Method App\\Http\\Controllers\\Auth\\RegisteredUserController\:\:store\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: app/Http/Controllers/Auth/RegisteredUserController.php
+
+		-
+			message: '#^Function toastr not found\.$#'
+			identifier: function.notFound
+			count: 2
+			path: app/Http/Controllers/Auth/VerifyEmailController.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$id\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Http/Controllers/CategoryController.php
+
+		-
+			message: '#^Call to an undefined method Illuminate\\Database\\Eloquent\\Model\:\:DocLink\(\)\.$#'
+			identifier: method.notFound
+			count: 2
+			path: app/Http/Controllers/CategoryController.php
+
+		-
+			message: '#^Method App\\Http\\Controllers\\CategoryController\:\:destroy\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: app/Http/Controllers/CategoryController.php
+
+		-
+			message: '#^Method App\\Http\\Controllers\\CategoryController\:\:edit\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: app/Http/Controllers/CategoryController.php
+
+		-
+			message: '#^Method App\\Http\\Controllers\\CategoryController\:\:file_multiple_delete\(\) has parameter \$path with generic class Illuminate\\Support\\Collection but does not specify its types\: TKey, TValue$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Http/Controllers/CategoryController.php
+
+		-
+			message: '#^Method App\\Http\\Controllers\\CategoryController\:\:file_uplode\(\) has parameter \$request with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: app/Http/Controllers/CategoryController.php
+
+		-
+			message: '#^Method App\\Http\\Controllers\\CategoryController\:\:show\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: app/Http/Controllers/CategoryController.php
+
+		-
+			message: '#^Method App\\Http\\Controllers\\CategoryController\:\:store\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: app/Http/Controllers/CategoryController.php
+
+		-
+			message: '#^Method App\\Http\\Controllers\\CategoryController\:\:supp\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: app/Http/Controllers/CategoryController.php
+
+		-
+			message: '#^Method App\\Http\\Controllers\\CategoryController\:\:update\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: app/Http/Controllers/CategoryController.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$id\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Http/Controllers/ClientController.php
+
+		-
+			message: '#^Call to an undefined method Illuminate\\Database\\Eloquent\\Model\:\:DocLink\(\)\.$#'
+			identifier: method.notFound
+			count: 2
+			path: app/Http/Controllers/ClientController.php
+
+		-
+			message: '#^Method App\\Http\\Controllers\\ClientController\:\:destroy\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: app/Http/Controllers/ClientController.php
+
+		-
+			message: '#^Method App\\Http\\Controllers\\ClientController\:\:edit\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: app/Http/Controllers/ClientController.php
+
+		-
+			message: '#^Method App\\Http\\Controllers\\ClientController\:\:file_multiple_delete\(\) has parameter \$path with generic class Illuminate\\Support\\Collection but does not specify its types\: TKey, TValue$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Http/Controllers/ClientController.php
+
+		-
+			message: '#^Method App\\Http\\Controllers\\ClientController\:\:file_uplode\(\) has parameter \$request with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: app/Http/Controllers/ClientController.php
+
+		-
+			message: '#^Method App\\Http\\Controllers\\ClientController\:\:show\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: app/Http/Controllers/ClientController.php
+
+		-
+			message: '#^Method App\\Http\\Controllers\\ClientController\:\:store\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: app/Http/Controllers/ClientController.php
+
+		-
+			message: '#^Method App\\Http\\Controllers\\ClientController\:\:supp\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: app/Http/Controllers/ClientController.php
+
+		-
+			message: '#^Method App\\Http\\Controllers\\ClientController\:\:update\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: app/Http/Controllers/ClientController.php
+
+		-
+			message: '#^Method App\\Http\\Controllers\\ContactController\:\:sendEmail\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: app/Http/Controllers/ContactController.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$id\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Http/Controllers/CountryController.php
+
+		-
+			message: '#^Call to an undefined method Illuminate\\Database\\Eloquent\\Model\:\:DocLink\(\)\.$#'
+			identifier: method.notFound
+			count: 2
+			path: app/Http/Controllers/CountryController.php
+
+		-
+			message: '#^Method App\\Http\\Controllers\\CountryController\:\:destroy\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: app/Http/Controllers/CountryController.php
+
+		-
+			message: '#^Method App\\Http\\Controllers\\CountryController\:\:edit\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: app/Http/Controllers/CountryController.php
+
+		-
+			message: '#^Method App\\Http\\Controllers\\CountryController\:\:file_multiple_delete\(\) has parameter \$path with generic class Illuminate\\Support\\Collection but does not specify its types\: TKey, TValue$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Http/Controllers/CountryController.php
+
+		-
+			message: '#^Method App\\Http\\Controllers\\CountryController\:\:file_uplode\(\) has parameter \$request with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: app/Http/Controllers/CountryController.php
+
+		-
+			message: '#^Method App\\Http\\Controllers\\CountryController\:\:store\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: app/Http/Controllers/CountryController.php
+
+		-
+			message: '#^Method App\\Http\\Controllers\\CountryController\:\:supp\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: app/Http/Controllers/CountryController.php
+
+		-
+			message: '#^Method App\\Http\\Controllers\\CountryController\:\:update\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: app/Http/Controllers/CountryController.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$id\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Http/Controllers/DeviseController.php
+
+		-
+			message: '#^Call to an undefined method Illuminate\\Database\\Eloquent\\Model\:\:DocLink\(\)\.$#'
+			identifier: method.notFound
+			count: 2
+			path: app/Http/Controllers/DeviseController.php
+
+		-
+			message: '#^Method App\\Http\\Controllers\\DeviseController\:\:destroy\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: app/Http/Controllers/DeviseController.php
+
+		-
+			message: '#^Method App\\Http\\Controllers\\DeviseController\:\:edit\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: app/Http/Controllers/DeviseController.php
+
+		-
+			message: '#^Method App\\Http\\Controllers\\DeviseController\:\:file_multiple_delete\(\) has parameter \$path with generic class Illuminate\\Support\\Collection but does not specify its types\: TKey, TValue$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Http/Controllers/DeviseController.php
+
+		-
+			message: '#^Method App\\Http\\Controllers\\DeviseController\:\:file_uplode\(\) has parameter \$request with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: app/Http/Controllers/DeviseController.php
+
+		-
+			message: '#^Method App\\Http\\Controllers\\DeviseController\:\:store\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: app/Http/Controllers/DeviseController.php
+
+		-
+			message: '#^Method App\\Http\\Controllers\\DeviseController\:\:supp\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: app/Http/Controllers/DeviseController.php
+
+		-
+			message: '#^Method App\\Http\\Controllers\\DeviseController\:\:update\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: app/Http/Controllers/DeviseController.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$id\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Http/Controllers/ImageController.php
+
+		-
+			message: '#^Call to an undefined method Illuminate\\Database\\Eloquent\\Model\:\:DocLink\(\)\.$#'
+			identifier: method.notFound
+			count: 2
+			path: app/Http/Controllers/ImageController.php
+
+		-
+			message: '#^Method App\\Http\\Controllers\\ImageController\:\:destroy\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: app/Http/Controllers/ImageController.php
+
+		-
+			message: '#^Method App\\Http\\Controllers\\ImageController\:\:edit\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: app/Http/Controllers/ImageController.php
+
+		-
+			message: '#^Method App\\Http\\Controllers\\ImageController\:\:file_multiple_delete\(\) has parameter \$path with generic class Illuminate\\Support\\Collection but does not specify its types\: TKey, TValue$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Http/Controllers/ImageController.php
+
+		-
+			message: '#^Method App\\Http\\Controllers\\ImageController\:\:file_uplode\(\) has parameter \$request with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: app/Http/Controllers/ImageController.php
+
+		-
+			message: '#^Method App\\Http\\Controllers\\ImageController\:\:show\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: app/Http/Controllers/ImageController.php
+
+		-
+			message: '#^Method App\\Http\\Controllers\\ImageController\:\:store\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: app/Http/Controllers/ImageController.php
+
+		-
+			message: '#^Method App\\Http\\Controllers\\ImageController\:\:supp\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: app/Http/Controllers/ImageController.php
+
+		-
+			message: '#^Method App\\Http\\Controllers\\ImageController\:\:update\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: app/Http/Controllers/ImageController.php
+
+		-
+			message: '#^Method App\\Http\\Controllers\\LinkController\:\:home\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: app/Http/Controllers/LinkController.php
+
+		-
+			message: '#^Method App\\Http\\Controllers\\LinkController\:\:product_detail\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: app/Http/Controllers/LinkController.php
+
+		-
+			message: '#^Relation ''activePromotion'' is not found in App\\Models\\Product model\.$#'
+			identifier: larastan.relationExistence
+			count: 2
+			path: app/Http/Controllers/LinkController.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$id\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Http/Controllers/OrderController.php
+
+		-
+			message: '#^Binary operation "\+" between int and string results in an error\.$#'
+			identifier: binaryOp.invalid
+			count: 1
+			path: app/Http/Controllers/OrderController.php
+
+		-
+			message: '#^Call to an undefined method Illuminate\\Database\\Eloquent\\Model\:\:DocLink\(\)\.$#'
+			identifier: method.notFound
+			count: 2
+			path: app/Http/Controllers/OrderController.php
+
+		-
+			message: '#^Method App\\Http\\Controllers\\OrderController\:\:api\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: app/Http/Controllers/OrderController.php
+
+		-
+			message: '#^Method App\\Http\\Controllers\\OrderController\:\:cancel\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: app/Http/Controllers/OrderController.php
+
+		-
+			message: '#^Method App\\Http\\Controllers\\OrderController\:\:cancelPayment\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Http/Controllers/OrderController.php
+
+		-
+			message: '#^Method App\\Http\\Controllers\\OrderController\:\:cancelPaymentLink\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Http/Controllers/OrderController.php
+
+		-
+			message: '#^Method App\\Http\\Controllers\\OrderController\:\:createOrder\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: app/Http/Controllers/OrderController.php
+
+		-
+			message: '#^Method App\\Http\\Controllers\\OrderController\:\:createOrder\(\) has parameter \$postData with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Http/Controllers/OrderController.php
+
+		-
+			message: '#^Method App\\Http\\Controllers\\OrderController\:\:destroy\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: app/Http/Controllers/OrderController.php
+
+		-
+			message: '#^Method App\\Http\\Controllers\\OrderController\:\:edit\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: app/Http/Controllers/OrderController.php
+
+		-
+			message: '#^Method App\\Http\\Controllers\\OrderController\:\:file_multiple_delete\(\) has parameter \$path with generic class Illuminate\\Support\\Collection but does not specify its types\: TKey, TValue$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Http/Controllers/OrderController.php
+
+		-
+			message: '#^Method App\\Http\\Controllers\\OrderController\:\:file_uplode\(\) has parameter \$request with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: app/Http/Controllers/OrderController.php
+
+		-
+			message: '#^Method App\\Http\\Controllers\\OrderController\:\:getHeaders\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Http/Controllers/OrderController.php
+
+		-
+			message: '#^Method App\\Http\\Controllers\\OrderController\:\:getOrderStatus\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Http/Controllers/OrderController.php
+
+		-
+			message: '#^Method App\\Http\\Controllers\\OrderController\:\:invoice\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: app/Http/Controllers/OrderController.php
+
+		-
+			message: '#^Method App\\Http\\Controllers\\OrderController\:\:prepareTransactionData\(\) has parameter \$lang with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: app/Http/Controllers/OrderController.php
+
+		-
+			message: '#^Method App\\Http\\Controllers\\OrderController\:\:prepareTransactionData\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Http/Controllers/OrderController.php
+
+		-
+			message: '#^Method App\\Http\\Controllers\\OrderController\:\:show\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: app/Http/Controllers/OrderController.php
+
+		-
+			message: '#^Method App\\Http\\Controllers\\OrderController\:\:store\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: app/Http/Controllers/OrderController.php
+
+		-
+			message: '#^Method App\\Http\\Controllers\\OrderController\:\:supp\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: app/Http/Controllers/OrderController.php
+
+		-
+			message: '#^Method App\\Http\\Controllers\\OrderController\:\:update\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: app/Http/Controllers/OrderController.php
+
+		-
+			message: '#^Method App\\Http\\Controllers\\OrderController\:\:valid\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: app/Http/Controllers/OrderController.php
+
+		-
+			message: '#^Variable \$orderReference in empty\(\) always exists and is not falsy\.$#'
+			identifier: empty.variable
+			count: 1
+			path: app/Http/Controllers/OrderController.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$id\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Http/Controllers/PayLinkController.php
+
+		-
+			message: '#^Call to an undefined method Illuminate\\Database\\Eloquent\\Model\:\:DocLink\(\)\.$#'
+			identifier: method.notFound
+			count: 2
+			path: app/Http/Controllers/PayLinkController.php
+
+		-
+			message: '#^Method App\\Http\\Controllers\\PayLinkController\:\:api\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: app/Http/Controllers/PayLinkController.php
+
+		-
+			message: '#^Method App\\Http\\Controllers\\PayLinkController\:\:cancelPayment\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Http/Controllers/PayLinkController.php
+
+		-
+			message: '#^Method App\\Http\\Controllers\\PayLinkController\:\:cancelPaymentLink\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Http/Controllers/PayLinkController.php
+
+		-
+			message: '#^Method App\\Http\\Controllers\\PayLinkController\:\:createOrder\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: app/Http/Controllers/PayLinkController.php
+
+		-
+			message: '#^Method App\\Http\\Controllers\\PayLinkController\:\:createOrder\(\) has parameter \$postData with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Http/Controllers/PayLinkController.php
+
+		-
+			message: '#^Method App\\Http\\Controllers\\PayLinkController\:\:destroy\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: app/Http/Controllers/PayLinkController.php
+
+		-
+			message: '#^Method App\\Http\\Controllers\\PayLinkController\:\:edit\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: app/Http/Controllers/PayLinkController.php
+
+		-
+			message: '#^Method App\\Http\\Controllers\\PayLinkController\:\:file_multiple_delete\(\) has parameter \$path with generic class Illuminate\\Support\\Collection but does not specify its types\: TKey, TValue$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Http/Controllers/PayLinkController.php
+
+		-
+			message: '#^Method App\\Http\\Controllers\\PayLinkController\:\:file_uplode\(\) has parameter \$request with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: app/Http/Controllers/PayLinkController.php
+
+		-
+			message: '#^Method App\\Http\\Controllers\\PayLinkController\:\:getHeaders\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Http/Controllers/PayLinkController.php
+
+		-
+			message: '#^Method App\\Http\\Controllers\\PayLinkController\:\:getOrderStatus\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Http/Controllers/PayLinkController.php
+
+		-
+			message: '#^Method App\\Http\\Controllers\\PayLinkController\:\:prepareTransactionData\(\) has parameter \$lang with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: app/Http/Controllers/PayLinkController.php
+
+		-
+			message: '#^Method App\\Http\\Controllers\\PayLinkController\:\:prepareTransactionData\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Http/Controllers/PayLinkController.php
+
+		-
+			message: '#^Method App\\Http\\Controllers\\PayLinkController\:\:regenerate\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: app/Http/Controllers/PayLinkController.php
+
+		-
+			message: '#^Method App\\Http\\Controllers\\PayLinkController\:\:store\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: app/Http/Controllers/PayLinkController.php
+
+		-
+			message: '#^Method App\\Http\\Controllers\\PayLinkController\:\:supp\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: app/Http/Controllers/PayLinkController.php
+
+		-
+			message: '#^Method App\\Http\\Controllers\\PayLinkController\:\:update\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: app/Http/Controllers/PayLinkController.php
+
+		-
+			message: '#^Method App\\Http\\Controllers\\PendingRegistrationController\:\:__invoke\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: app/Http/Controllers/PendingRegistrationController.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$id\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Http/Controllers/PoidsController.php
+
+		-
+			message: '#^Call to an undefined method Illuminate\\Database\\Eloquent\\Model\:\:DocLink\(\)\.$#'
+			identifier: method.notFound
+			count: 2
+			path: app/Http/Controllers/PoidsController.php
+
+		-
+			message: '#^Method App\\Http\\Controllers\\PoidsController\:\:destroy\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: app/Http/Controllers/PoidsController.php
+
+		-
+			message: '#^Method App\\Http\\Controllers\\PoidsController\:\:edit\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: app/Http/Controllers/PoidsController.php
+
+		-
+			message: '#^Method App\\Http\\Controllers\\PoidsController\:\:file_multiple_delete\(\) has parameter \$path with generic class Illuminate\\Support\\Collection but does not specify its types\: TKey, TValue$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Http/Controllers/PoidsController.php
+
+		-
+			message: '#^Method App\\Http\\Controllers\\PoidsController\:\:file_uplode\(\) has parameter \$request with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: app/Http/Controllers/PoidsController.php
+
+		-
+			message: '#^Method App\\Http\\Controllers\\PoidsController\:\:store\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: app/Http/Controllers/PoidsController.php
+
+		-
+			message: '#^Method App\\Http\\Controllers\\PoidsController\:\:supp\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: app/Http/Controllers/PoidsController.php
+
+		-
+			message: '#^Method App\\Http\\Controllers\\PoidsController\:\:update\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: app/Http/Controllers/PoidsController.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$id\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Http/Controllers/ProductController.php
+
+		-
+			message: '#^Call to an undefined method Illuminate\\Database\\Eloquent\\Model\:\:DocLink\(\)\.$#'
+			identifier: method.notFound
+			count: 2
+			path: app/Http/Controllers/ProductController.php
+
+		-
+			message: '#^Method App\\Http\\Controllers\\ProductController\:\:create\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: app/Http/Controllers/ProductController.php
+
+		-
+			message: '#^Method App\\Http\\Controllers\\ProductController\:\:destroy\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: app/Http/Controllers/ProductController.php
+
+		-
+			message: '#^Method App\\Http\\Controllers\\ProductController\:\:edit\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: app/Http/Controllers/ProductController.php
+
+		-
+			message: '#^Method App\\Http\\Controllers\\ProductController\:\:favoris_update\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: app/Http/Controllers/ProductController.php
+
+		-
+			message: '#^Method App\\Http\\Controllers\\ProductController\:\:favoris_update\(\) has parameter \$product_id with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: app/Http/Controllers/ProductController.php
+
+		-
+			message: '#^Method App\\Http\\Controllers\\ProductController\:\:file_multiple_delete\(\) has parameter \$path with generic class Illuminate\\Support\\Collection but does not specify its types\: TKey, TValue$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Http/Controllers/ProductController.php
+
+		-
+			message: '#^Method App\\Http\\Controllers\\ProductController\:\:file_uplode\(\) has parameter \$request with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: app/Http/Controllers/ProductController.php
+
+		-
+			message: '#^Method App\\Http\\Controllers\\ProductController\:\:show\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: app/Http/Controllers/ProductController.php
+
+		-
+			message: '#^Method App\\Http\\Controllers\\ProductController\:\:store\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: app/Http/Controllers/ProductController.php
+
+		-
+			message: '#^Method App\\Http\\Controllers\\ProductController\:\:supp\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: app/Http/Controllers/ProductController.php
+
+		-
+			message: '#^Method App\\Http\\Controllers\\ProductController\:\:update\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: app/Http/Controllers/ProductController.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$id\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Http/Controllers/PromotionController.php
+
+		-
+			message: '#^Call to an undefined method Illuminate\\Database\\Eloquent\\Model\:\:DocLink\(\)\.$#'
+			identifier: method.notFound
+			count: 2
+			path: app/Http/Controllers/PromotionController.php
+
+		-
+			message: '#^Method App\\Http\\Controllers\\PromotionController\:\:create\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: app/Http/Controllers/PromotionController.php
+
+		-
+			message: '#^Method App\\Http\\Controllers\\PromotionController\:\:destroy\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: app/Http/Controllers/PromotionController.php
+
+		-
+			message: '#^Method App\\Http\\Controllers\\PromotionController\:\:edit\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: app/Http/Controllers/PromotionController.php
+
+		-
+			message: '#^Method App\\Http\\Controllers\\PromotionController\:\:file_multiple_delete\(\) has parameter \$path with generic class Illuminate\\Support\\Collection but does not specify its types\: TKey, TValue$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Http/Controllers/PromotionController.php
+
+		-
+			message: '#^Method App\\Http\\Controllers\\PromotionController\:\:file_uplode\(\) has parameter \$request with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: app/Http/Controllers/PromotionController.php
+
+		-
+			message: '#^Method App\\Http\\Controllers\\PromotionController\:\:show\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: app/Http/Controllers/PromotionController.php
+
+		-
+			message: '#^Method App\\Http\\Controllers\\PromotionController\:\:store\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: app/Http/Controllers/PromotionController.php
+
+		-
+			message: '#^Method App\\Http\\Controllers\\PromotionController\:\:supp\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: app/Http/Controllers/PromotionController.php
+
+		-
+			message: '#^Method App\\Http\\Controllers\\PromotionController\:\:update\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: app/Http/Controllers/PromotionController.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$id\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Http/Controllers/ShippingController.php
+
+		-
+			message: '#^Call to an undefined method Illuminate\\Database\\Eloquent\\Model\:\:DocLink\(\)\.$#'
+			identifier: method.notFound
+			count: 2
+			path: app/Http/Controllers/ShippingController.php
+
+		-
+			message: '#^Method App\\Http\\Controllers\\ShippingController\:\:destroy\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: app/Http/Controllers/ShippingController.php
+
+		-
+			message: '#^Method App\\Http\\Controllers\\ShippingController\:\:edit\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: app/Http/Controllers/ShippingController.php
+
+		-
+			message: '#^Method App\\Http\\Controllers\\ShippingController\:\:file_multiple_delete\(\) has parameter \$path with generic class Illuminate\\Support\\Collection but does not specify its types\: TKey, TValue$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Http/Controllers/ShippingController.php
+
+		-
+			message: '#^Method App\\Http\\Controllers\\ShippingController\:\:file_uplode\(\) has parameter \$request with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: app/Http/Controllers/ShippingController.php
+
+		-
+			message: '#^Method App\\Http\\Controllers\\ShippingController\:\:show\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: app/Http/Controllers/ShippingController.php
+
+		-
+			message: '#^Method App\\Http\\Controllers\\ShippingController\:\:store\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: app/Http/Controllers/ShippingController.php
+
+		-
+			message: '#^Method App\\Http\\Controllers\\ShippingController\:\:supp\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: app/Http/Controllers/ShippingController.php
+
+		-
+			message: '#^Method App\\Http\\Controllers\\ShippingController\:\:update\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: app/Http/Controllers/ShippingController.php
+
+		-
+			message: '#^Method App\\Http\\Controllers\\SitemapController\:\:category\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: app/Http/Controllers/SitemapController.php
+
+		-
+			message: '#^Method App\\Http\\Controllers\\SitemapController\:\:index\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: app/Http/Controllers/SitemapController.php
+
+		-
+			message: '#^Method App\\Http\\Controllers\\SitemapController\:\:page\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: app/Http/Controllers/SitemapController.php
+
+		-
+			message: '#^Method App\\Http\\Controllers\\SitemapController\:\:product\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: app/Http/Controllers/SitemapController.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$id\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Http/Controllers/SlideController.php
+
+		-
+			message: '#^Call to an undefined method Illuminate\\Database\\Eloquent\\Model\:\:DocLink\(\)\.$#'
+			identifier: method.notFound
+			count: 2
+			path: app/Http/Controllers/SlideController.php
+
+		-
+			message: '#^Method App\\Http\\Controllers\\SlideController\:\:destroy\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: app/Http/Controllers/SlideController.php
+
+		-
+			message: '#^Method App\\Http\\Controllers\\SlideController\:\:edit\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: app/Http/Controllers/SlideController.php
+
+		-
+			message: '#^Method App\\Http\\Controllers\\SlideController\:\:file_multiple_delete\(\) has parameter \$path with generic class Illuminate\\Support\\Collection but does not specify its types\: TKey, TValue$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Http/Controllers/SlideController.php
+
+		-
+			message: '#^Method App\\Http\\Controllers\\SlideController\:\:file_uplode\(\) has parameter \$request with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: app/Http/Controllers/SlideController.php
+
+		-
+			message: '#^Method App\\Http\\Controllers\\SlideController\:\:supp\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: app/Http/Controllers/SlideController.php
+
+		-
+			message: '#^Method App\\Http\\Controllers\\SlideController\:\:update\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: app/Http/Controllers/SlideController.php
+
+		-
+			message: '#^Unreachable statement \- code above always terminates\.$#'
+			identifier: deadCode.unreachable
+			count: 1
+			path: app/Http/Controllers/SlideController.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$id\.$#'
+			identifier: property.notFound
+			count: 2
+			path: app/Http/Controllers/TransportController.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$nom\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Http/Controllers/TransportController.php
+
+		-
+			message: '#^Call to an undefined method Illuminate\\Database\\Eloquent\\Model\:\:DocLink\(\)\.$#'
+			identifier: method.notFound
+			count: 2
+			path: app/Http/Controllers/TransportController.php
+
+		-
+			message: '#^Method App\\Http\\Controllers\\TransportController\:\:destroy\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: app/Http/Controllers/TransportController.php
+
+		-
+			message: '#^Method App\\Http\\Controllers\\TransportController\:\:edit\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: app/Http/Controllers/TransportController.php
+
+		-
+			message: '#^Method App\\Http\\Controllers\\TransportController\:\:file_multiple_delete\(\) has parameter \$path with generic class Illuminate\\Support\\Collection but does not specify its types\: TKey, TValue$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Http/Controllers/TransportController.php
+
+		-
+			message: '#^Method App\\Http\\Controllers\\TransportController\:\:file_uplode\(\) has parameter \$request with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: app/Http/Controllers/TransportController.php
+
+		-
+			message: '#^Method App\\Http\\Controllers\\TransportController\:\:get_trans_zone\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: app/Http/Controllers/TransportController.php
+
+		-
+			message: '#^Method App\\Http\\Controllers\\TransportController\:\:show\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: app/Http/Controllers/TransportController.php
+
+		-
+			message: '#^Method App\\Http\\Controllers\\TransportController\:\:store\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: app/Http/Controllers/TransportController.php
+
+		-
+			message: '#^Method App\\Http\\Controllers\\TransportController\:\:supp\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: app/Http/Controllers/TransportController.php
+
+		-
+			message: '#^Method App\\Http\\Controllers\\TransportController\:\:update\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: app/Http/Controllers/TransportController.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$id\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Http/Controllers/UserController.php
+
+		-
+			message: '#^Call to an undefined method Illuminate\\Database\\Eloquent\\Model\:\:DocLink\(\)\.$#'
+			identifier: method.notFound
+			count: 2
+			path: app/Http/Controllers/UserController.php
+
+		-
+			message: '#^Method App\\Http\\Controllers\\UserController\:\:destroy\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: app/Http/Controllers/UserController.php
+
+		-
+			message: '#^Method App\\Http\\Controllers\\UserController\:\:edit\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: app/Http/Controllers/UserController.php
+
+		-
+			message: '#^Method App\\Http\\Controllers\\UserController\:\:file_multiple_delete\(\) has parameter \$path with generic class Illuminate\\Support\\Collection but does not specify its types\: TKey, TValue$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Http/Controllers/UserController.php
+
+		-
+			message: '#^Method App\\Http\\Controllers\\UserController\:\:file_uplode\(\) has parameter \$request with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: app/Http/Controllers/UserController.php
+
+		-
+			message: '#^Method App\\Http\\Controllers\\UserController\:\:show\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: app/Http/Controllers/UserController.php
+
+		-
+			message: '#^Method App\\Http\\Controllers\\UserController\:\:store\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: app/Http/Controllers/UserController.php
+
+		-
+			message: '#^Method App\\Http\\Controllers\\UserController\:\:supp\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: app/Http/Controllers/UserController.php
+
+		-
+			message: '#^Method App\\Http\\Controllers\\UserController\:\:update\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: app/Http/Controllers/UserController.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$id\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Http/Controllers/ZoneController.php
+
+		-
+			message: '#^Call to an undefined method Illuminate\\Database\\Eloquent\\Model\:\:DocLink\(\)\.$#'
+			identifier: method.notFound
+			count: 2
+			path: app/Http/Controllers/ZoneController.php
+
+		-
+			message: '#^Method App\\Http\\Controllers\\ZoneController\:\:destroy\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: app/Http/Controllers/ZoneController.php
+
+		-
+			message: '#^Method App\\Http\\Controllers\\ZoneController\:\:edit\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: app/Http/Controllers/ZoneController.php
+
+		-
+			message: '#^Method App\\Http\\Controllers\\ZoneController\:\:file_multiple_delete\(\) has parameter \$path with generic class Illuminate\\Support\\Collection but does not specify its types\: TKey, TValue$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Http/Controllers/ZoneController.php
+
+		-
+			message: '#^Method App\\Http\\Controllers\\ZoneController\:\:file_uplode\(\) has parameter \$request with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: app/Http/Controllers/ZoneController.php
+
+		-
+			message: '#^Method App\\Http\\Controllers\\ZoneController\:\:show\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: app/Http/Controllers/ZoneController.php
+
+		-
+			message: '#^Method App\\Http\\Controllers\\ZoneController\:\:store\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: app/Http/Controllers/ZoneController.php
+
+		-
+			message: '#^Method App\\Http\\Controllers\\ZoneController\:\:supp\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: app/Http/Controllers/ZoneController.php
+
+		-
+			message: '#^Method App\\Http\\Controllers\\ZoneController\:\:update\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: app/Http/Controllers/ZoneController.php
+
+		-
+			message: '#^PHPDoc tag @var above a method has no effect\.$#'
+			identifier: varTag.misplaced
+			count: 1
+			path: app/Http/Middleware/HandleInertiaRequests.php
+
+		-
+			message: '#^Result of method Illuminate\\Session\\Store\:\:put\(\) \(void\) is used\.$#'
+			identifier: method.void
+			count: 2
+			path: app/Http/Middleware/HandleInertiaRequests.php
+
+		-
+			message: '#^PHPDoc tag @param for parameter \$user with type App\\Model\\User is not subtype of native type App\\Models\\User\.$#'
+			identifier: parameter.phpDocType
+			count: 1
+			path: app/Http/Middleware/RoleMiddleware.php
+
+		-
+			message: '#^Parameter \$user of method App\\Http\\Middleware\\RoleMiddleware\:\:hasRole\(\) has invalid type App\\Model\\User\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Http/Middleware/RoleMiddleware.php
+
+		-
+			message: '#^Method App\\Http\\Requests\\Auth\\LoginRequest\:\:rules\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Http/Requests/Auth/LoginRequest.php
+
+		-
+			message: '#^Parameter \#1 \$value of static method Illuminate\\Support\\Str\:\:lower\(\) expects string, Illuminate\\Support\\Stringable given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Http/Requests/Auth/LoginRequest.php
+
+		-
+			message: '#^Access to an undefined property App\\Models\\Shipping\:\:\$price\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Livewire/AddToCard.php
+
+		-
+			message: '#^Call to an undefined method Illuminate\\Database\\Eloquent\\Relations\\BelongsToMany\:\:active\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: app/Livewire/AddToCard.php
+
+		-
+			message: '#^Method App\\Livewire\\AddToCard\:\:add\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: app/Livewire/AddToCard.php
+
+		-
+			message: '#^Method App\\Livewire\\AddToCard\:\:destroy\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: app/Livewire/AddToCard.php
+
+		-
+			message: '#^Method App\\Livewire\\AddToCard\:\:render\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: app/Livewire/AddToCard.php
+
+		-
+			message: '#^Method App\\Livewire\\AddToCard\:\:store\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: app/Livewire/AddToCard.php
+
+		-
+			message: '#^Property App\\Livewire\\AddToCard\:\:\$id has no type specified\.$#'
+			identifier: missingType.property
+			count: 1
+			path: app/Livewire/AddToCard.php
+
+		-
+			message: '#^Access to an undefined property App\\Models\\Shipping\:\:\$price\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Livewire/CartItem.php
+
+		-
+			message: '#^Call to an undefined method Illuminate\\Database\\Eloquent\\Relations\\BelongsToMany\:\:active\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: app/Livewire/CartItem.php
+
+		-
+			message: '#^Method App\\Livewire\\CartItem\:\:destroy\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: app/Livewire/CartItem.php
+
+		-
+			message: '#^Method App\\Livewire\\CartItem\:\:mount\(\) has parameter \$items with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Livewire/CartItem.php
+
+		-
+			message: '#^Method App\\Livewire\\CartItem\:\:render\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: app/Livewire/CartItem.php
+
+		-
+			message: '#^Method App\\Livewire\\CartItem\:\:store\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: app/Livewire/CartItem.php
+
+		-
+			message: '#^Access to an undefined property App\\Models\\Shipping\:\:\$price\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Livewire/Counter.php
+
+		-
+			message: '#^Call to an undefined method Illuminate\\Database\\Eloquent\\Relations\\BelongsToMany\:\:active\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: app/Livewire/Counter.php
+
+		-
+			message: '#^Method App\\Livewire\\Counter\:\:destroy\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: app/Livewire/Counter.php
+
+		-
+			message: '#^Method App\\Livewire\\Counter\:\:render\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: app/Livewire/Counter.php
+
+		-
+			message: '#^Method App\\Livewire\\Counter\:\:store\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: app/Livewire/Counter.php
+
+		-
+			message: '#^Access to an undefined property App\\Models\\Shipping\:\:\$price\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Livewire/Delete.php
+
+		-
+			message: '#^Call to an undefined method Illuminate\\Database\\Eloquent\\Relations\\BelongsToMany\:\:active\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: app/Livewire/Delete.php
+
+		-
+			message: '#^Method App\\Livewire\\Delete\:\:deleteProduct\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: app/Livewire/Delete.php
+
+		-
+			message: '#^Method App\\Livewire\\Delete\:\:destroy\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: app/Livewire/Delete.php
+
+		-
+			message: '#^Method App\\Livewire\\Delete\:\:render\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: app/Livewire/Delete.php
+
+		-
+			message: '#^Method App\\Livewire\\Delete\:\:store\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: app/Livewire/Delete.php
+
+		-
+			message: '#^Property App\\Livewire\\Delete\:\:\$row with generic class Illuminate\\Support\\Collection does not specify its types\: TKey, TValue$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Livewire/Delete.php
+
+		-
+			message: '#^Access to an undefined property App\\Models\\Shipping\:\:\$price\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Livewire/Panier.php
+
+		-
+			message: '#^Call to an undefined method Illuminate\\Database\\Eloquent\\Relations\\BelongsToMany\:\:active\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: app/Livewire/Panier.php
+
+		-
+			message: '#^Method App\\Livewire\\Panier\:\:GetTrans\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: app/Livewire/Panier.php
+
+		-
+			message: '#^Method App\\Livewire\\Panier\:\:calculateShipping\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: app/Livewire/Panier.php
+
+		-
+			message: '#^Method App\\Livewire\\Panier\:\:destroy\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: app/Livewire/Panier.php
+
+		-
+			message: '#^Method App\\Livewire\\Panier\:\:getHasPreorderProperty\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: app/Livewire/Panier.php
+
+		-
+			message: '#^Method App\\Livewire\\Panier\:\:login_submit\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: app/Livewire/Panier.php
+
+		-
+			message: '#^Method App\\Livewire\\Panier\:\:render\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: app/Livewire/Panier.php
+
+		-
+			message: '#^Method App\\Livewire\\Panier\:\:store\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: app/Livewire/Panier.php
+
+		-
+			message: '#^Method App\\Livewire\\Panier\:\:updatingCountryid\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: app/Livewire/Panier.php
+
+		-
+			message: '#^Property App\\Livewire\\Panier\:\:\$country_id has no type specified\.$#'
+			identifier: missingType.property
+			count: 1
+			path: app/Livewire/Panier.php
+
+		-
+			message: '#^Property App\\Livewire\\Panier\:\:\$email has no type specified\.$#'
+			identifier: missingType.property
+			count: 1
+			path: app/Livewire/Panier.php
+
+		-
+			message: '#^Property App\\Livewire\\Panier\:\:\$password has no type specified\.$#'
+			identifier: missingType.property
+			count: 1
+			path: app/Livewire/Panier.php
+
+		-
+			message: '#^Property App\\Livewire\\Panier\:\:\$shipping has no type specified\.$#'
+			identifier: missingType.property
+			count: 1
+			path: app/Livewire/Panier.php
+
+		-
+			message: '#^Property App\\Livewire\\Panier\:\:\$trans has no type specified\.$#'
+			identifier: missingType.property
+			count: 1
+			path: app/Livewire/Panier.php
+
+		-
+			message: '#^Property App\\Livewire\\Panier\:\:\$transport_id has no type specified\.$#'
+			identifier: missingType.property
+			count: 1
+			path: app/Livewire/Panier.php
+
+		-
+			message: '#^Relation ''latestOrder'' is not found in App\\Models\\Client model\.$#'
+			identifier: larastan.relationExistence
+			count: 1
+			path: app/Livewire/Panier.php
+
+		-
+			message: '#^Using nullsafe property access "\?\-\>montant" on left side of \?\? is unnecessary\. Use \-\> instead\.$#'
+			identifier: nullsafe.neverNull
+			count: 1
+			path: app/Livewire/Panier.php
+
+		-
+			message: '#^Access to an undefined property App\\Models\\Shipping\:\:\$price\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Livewire/Produit.php
+
+		-
+			message: '#^Call to an undefined method Illuminate\\Database\\Eloquent\\Relations\\BelongsToMany\:\:active\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: app/Livewire/Produit.php
+
+		-
+			message: '#^Method App\\Livewire\\Produit\:\:add\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: app/Livewire/Produit.php
+
+		-
+			message: '#^Method App\\Livewire\\Produit\:\:destroy\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: app/Livewire/Produit.php
+
+		-
+			message: '#^Method App\\Livewire\\Produit\:\:mount\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: app/Livewire/Produit.php
+
+		-
+			message: '#^Method App\\Livewire\\Produit\:\:render\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: app/Livewire/Produit.php
+
+		-
+			message: '#^Method App\\Livewire\\Produit\:\:store\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: app/Livewire/Produit.php
+
+		-
+			message: '#^Access to an undefined property App\\Models\\Shipping\:\:\$price\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Livewire/QuickAddModal.php
+
+		-
+			message: '#^Call to an undefined method Illuminate\\Database\\Eloquent\\Relations\\BelongsToMany\:\:active\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: app/Livewire/QuickAddModal.php
+
+		-
+			message: '#^Left side of && is always false\.$#'
+			identifier: booleanAnd.leftAlwaysFalse
+			count: 1
+			path: app/Livewire/QuickAddModal.php
+
+		-
+			message: '#^Method App\\Livewire\\QuickAddModal\:\:applyQuantity\(\) is unused\.$#'
+			identifier: method.unused
+			count: 1
+			path: app/Livewire/QuickAddModal.php
+
+		-
+			message: '#^Method App\\Livewire\\QuickAddModal\:\:destroy\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: app/Livewire/QuickAddModal.php
+
+		-
+			message: '#^Method App\\Livewire\\QuickAddModal\:\:goToCart\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: app/Livewire/QuickAddModal.php
+
+		-
+			message: '#^Method App\\Livewire\\QuickAddModal\:\:open\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: app/Livewire/QuickAddModal.php
+
+		-
+			message: '#^Method App\\Livewire\\QuickAddModal\:\:open\(\) has parameter \$item with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Livewire/QuickAddModal.php
+
+		-
+			message: '#^Method App\\Livewire\\QuickAddModal\:\:render\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: app/Livewire/QuickAddModal.php
+
+		-
+			message: '#^Method App\\Livewire\\QuickAddModal\:\:store\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: app/Livewire/QuickAddModal.php
+
+		-
+			message: '#^Negated boolean expression is always true\.$#'
+			identifier: booleanNot.alwaysTrue
+			count: 1
+			path: app/Livewire/QuickAddModal.php
+
+		-
+			message: '#^Offset ''is_preorder'' on array\<int, array\<string, mixed\>\> on left side of \?\? does not exist\.$#'
+			identifier: nullCoalesce.offset
+			count: 2
+			path: app/Livewire/QuickAddModal.php
+
+		-
+			message: '#^Property App\\Livewire\\QuickAddModal\:\:\$addedItem \(array\<int, array\<string, mixed\>\>\) does not accept array\<int\|string, array\<string, mixed\>\|int\>\.$#'
+			identifier: assign.propertyType
+			count: 1
+			path: app/Livewire/QuickAddModal.php
+
+		-
+			message: '#^Unreachable statement \- code above always terminates\.$#'
+			identifier: deadCode.unreachable
+			count: 1
+			path: app/Livewire/QuickAddModal.php
+
+		-
+			message: '#^Access to an undefined property App\\Models\\Shipping\:\:\$price\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Livewire/Update.php
+
+		-
+			message: '#^Call to an undefined method Illuminate\\Database\\Eloquent\\Relations\\BelongsToMany\:\:active\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: app/Livewire/Update.php
+
+		-
+			message: '#^Method App\\Livewire\\Update\:\:applyQuantity\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: app/Livewire/Update.php
+
+		-
+			message: '#^Method App\\Livewire\\Update\:\:decrement\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: app/Livewire/Update.php
+
+		-
+			message: '#^Method App\\Livewire\\Update\:\:destroy\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: app/Livewire/Update.php
+
+		-
+			message: '#^Method App\\Livewire\\Update\:\:increment\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: app/Livewire/Update.php
+
+		-
+			message: '#^Method App\\Livewire\\Update\:\:mount\(\) has parameter \$row with generic class Illuminate\\Support\\Collection but does not specify its types\: TKey, TValue$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Livewire/Update.php
+
+		-
+			message: '#^Method App\\Livewire\\Update\:\:render\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: app/Livewire/Update.php
+
+		-
+			message: '#^Method App\\Livewire\\Update\:\:store\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: app/Livewire/Update.php
+
+		-
+			message: '#^Parameter \#1 \$view of function view expects view\-string\|null, string given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Livewire/Update.php
+
+		-
+			message: '#^Property App\\Livewire\\Update\:\:\$card with generic class Illuminate\\Support\\Collection does not specify its types\: TKey, TValue$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Livewire/Update.php
+
+		-
+			message: '#^Method App\\Mail\\ContactMail\:\:__construct\(\) has parameter \$data with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Mail/ContactMail.php
+
+		-
+			message: '#^Method App\\Models\\Category\:\:products\(\) return type with generic class Illuminate\\Database\\Eloquent\\Relations\\HasMany does not specify its types\: TRelatedModel, TDeclaringModel$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/Category.php
+
+		-
+			message: '#^PHPDoc type array of property App\\Models\\Category\:\:\$fillable is not covariant with PHPDoc type list\<string\> of overridden property Illuminate\\Database\\Eloquent\\Model\:\:\$fillable\.$#'
+			identifier: property.phpDocType
+			count: 1
+			path: app/Models/Category.php
+
+		-
+			message: '#^Property App\\Models\\Category\:\:\$fillable type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Models/Category.php
+
+		-
+			message: '#^Trait App\\Helper\\DateFormat uses generic trait Illuminate\\Database\\Eloquent\\Factories\\HasFactory but does not specify its types\: TFactory$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/Category.php
+
+		-
+			message: '#^Method App\\Models\\Client\:\:latestOrder\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: app/Models/Client.php
+
+		-
+			message: '#^Method App\\Models\\Client\:\:orders\(\) return type with generic class Illuminate\\Database\\Eloquent\\Relations\\HasMany does not specify its types\: TRelatedModel, TDeclaringModel$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/Client.php
+
+		-
+			message: '#^Method App\\Models\\Client\:\:user\(\) return type with generic class Illuminate\\Database\\Eloquent\\Relations\\HasOne does not specify its types\: TRelatedModel, TDeclaringModel$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/Client.php
+
+		-
+			message: '#^PHPDoc type array of property App\\Models\\Client\:\:\$fillable is not covariant with PHPDoc type list\<string\> of overridden property Illuminate\\Database\\Eloquent\\Model\:\:\$fillable\.$#'
+			identifier: property.phpDocType
+			count: 1
+			path: app/Models/Client.php
+
+		-
+			message: '#^Property App\\Models\\Client\:\:\$fillable type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Models/Client.php
+
+		-
+			message: '#^Trait App\\Helper\\DateFormat uses generic trait Illuminate\\Database\\Eloquent\\Factories\\HasFactory but does not specify its types\: TFactory$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/Client.php
+
+		-
+			message: '#^Method App\\Models\\Country\:\:orders\(\) return type with generic class Illuminate\\Database\\Eloquent\\Relations\\HasMany does not specify its types\: TRelatedModel, TDeclaringModel$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/Country.php
+
+		-
+			message: '#^Method App\\Models\\Country\:\:zone\(\) return type with generic class Illuminate\\Database\\Eloquent\\Relations\\BelongsTo does not specify its types\: TRelatedModel, TDeclaringModel$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/Country.php
+
+		-
+			message: '#^PHPDoc type array of property App\\Models\\Country\:\:\$fillable is not covariant with PHPDoc type list\<string\> of overridden property Illuminate\\Database\\Eloquent\\Model\:\:\$fillable\.$#'
+			identifier: property.phpDocType
+			count: 1
+			path: app/Models/Country.php
+
+		-
+			message: '#^Property App\\Models\\Country\:\:\$fillable type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Models/Country.php
+
+		-
+			message: '#^Trait App\\Helper\\DateFormat uses generic trait Illuminate\\Database\\Eloquent\\Factories\\HasFactory but does not specify its types\: TFactory$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/Country.php
+
+		-
+			message: '#^PHPDoc type array of property App\\Models\\Devise\:\:\$fillable is not covariant with PHPDoc type list\<string\> of overridden property Illuminate\\Database\\Eloquent\\Model\:\:\$fillable\.$#'
+			identifier: property.phpDocType
+			count: 1
+			path: app/Models/Devise.php
+
+		-
+			message: '#^Property App\\Models\\Devise\:\:\$fillable type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Models/Devise.php
+
+		-
+			message: '#^Trait App\\Helper\\DateFormat uses generic trait Illuminate\\Database\\Eloquent\\Factories\\HasFactory but does not specify its types\: TFactory$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/Devise.php
+
+		-
+			message: '#^Method App\\Models\\Image\:\:product\(\) return type with generic class Illuminate\\Database\\Eloquent\\Relations\\BelongsTo does not specify its types\: TRelatedModel, TDeclaringModel$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/Image.php
+
+		-
+			message: '#^PHPDoc type array of property App\\Models\\Image\:\:\$fillable is not covariant with PHPDoc type list\<string\> of overridden property Illuminate\\Database\\Eloquent\\Model\:\:\$fillable\.$#'
+			identifier: property.phpDocType
+			count: 1
+			path: app/Models/Image.php
+
+		-
+			message: '#^Property App\\Models\\Image\:\:\$fillable type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Models/Image.php
+
+		-
+			message: '#^Trait App\\Helper\\DateFormat uses generic trait Illuminate\\Database\\Eloquent\\Factories\\HasFactory but does not specify its types\: TFactory$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/Image.php
+
+		-
+			message: '#^Binary operation "/" between string and float\|null results in an error\.$#'
+			identifier: binaryOp.invalid
+			count: 1
+			path: app/Models/Order.php
+
+		-
+			message: '#^Class App\\Models\\Order uses generic trait Illuminate\\Database\\Eloquent\\Factories\\HasFactory but does not specify its types\: TFactory$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/Order.php
+
+		-
+			message: '#^Method App\\Models\\Order\:\:client\(\) return type with generic class Illuminate\\Database\\Eloquent\\Relations\\BelongsTo does not specify its types\: TRelatedModel, TDeclaringModel$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/Order.php
+
+		-
+			message: '#^Method App\\Models\\Order\:\:country\(\) return type with generic class Illuminate\\Database\\Eloquent\\Relations\\BelongsTo does not specify its types\: TRelatedModel, TDeclaringModel$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/Order.php
+
+		-
+			message: '#^Method App\\Models\\Order\:\:generateId\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: app/Models/Order.php
+
+		-
+			message: '#^Method App\\Models\\Order\:\:getShipping\(\) never returns int so it can be removed from the return type\.$#'
+			identifier: return.unusedType
+			count: 1
+			path: app/Models/Order.php
+
+		-
+			message: '#^Method App\\Models\\Order\:\:products\(\) return type with generic class Illuminate\\Database\\Eloquent\\Relations\\BelongsToMany does not specify its types\: TRelatedModel, TDeclaringModel, TPivotModel, TAccessor \(2\-4 required\)$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/Order.php
+
+		-
+			message: '#^Method App\\Models\\Order\:\:transport\(\) return type with generic class Illuminate\\Database\\Eloquent\\Relations\\BelongsTo does not specify its types\: TRelatedModel, TDeclaringModel$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/Order.php
+
+		-
+			message: '#^PHPDoc type array of property App\\Models\\Order\:\:\$fillable is not covariant with PHPDoc type list\<string\> of overridden property Illuminate\\Database\\Eloquent\\Model\:\:\$fillable\.$#'
+			identifier: property.phpDocType
+			count: 1
+			path: app/Models/Order.php
+
+		-
+			message: '#^Property App\\Models\\Order\:\:\$fillable type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Models/Order.php
+
+		-
+			message: '#^PHPDoc type array of property App\\Models\\PayLink\:\:\$fillable is not covariant with PHPDoc type list\<string\> of overridden property Illuminate\\Database\\Eloquent\\Model\:\:\$fillable\.$#'
+			identifier: property.phpDocType
+			count: 1
+			path: app/Models/PayLink.php
+
+		-
+			message: '#^Property App\\Models\\PayLink\:\:\$fillable type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Models/PayLink.php
+
+		-
+			message: '#^Trait App\\Helper\\DateFormat uses generic trait Illuminate\\Database\\Eloquent\\Factories\\HasFactory but does not specify its types\: TFactory$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/PayLink.php
+
+		-
+			message: '#^PHPDoc tag @use has invalid type Database\\Factories\\PendingRegistrationFactory\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Models/PendingRegistration.php
+
+		-
+			message: '#^Type Database\\Factories\\PendingRegistrationFactory in generic type Illuminate\\Database\\Eloquent\\Factories\\HasFactory\<Database\\Factories\\PendingRegistrationFactory\> in PHPDoc tag @use is not subtype of template type TFactory of Illuminate\\Database\\Eloquent\\Factories\\Factory of trait Illuminate\\Database\\Eloquent\\Factories\\HasFactory\.$#'
+			identifier: generics.notSubtype
+			count: 1
+			path: app/Models/PendingRegistration.php
+
+		-
+			message: '#^Method App\\Models\\Poids\:\:shippings\(\) return type with generic class Illuminate\\Database\\Eloquent\\Relations\\HasMany does not specify its types\: TRelatedModel, TDeclaringModel$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/Poids.php
+
+		-
+			message: '#^PHPDoc type array of property App\\Models\\Poids\:\:\$fillable is not covariant with PHPDoc type list\<string\> of overridden property Illuminate\\Database\\Eloquent\\Model\:\:\$fillable\.$#'
+			identifier: property.phpDocType
+			count: 1
+			path: app/Models/Poids.php
+
+		-
+			message: '#^Property App\\Models\\Poids\:\:\$fillable type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Models/Poids.php
+
+		-
+			message: '#^Trait App\\Helper\\DateFormat uses generic trait Illuminate\\Database\\Eloquent\\Factories\\HasFactory but does not specify its types\: TFactory$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/Poids.php
+
+		-
+			message: '#^Access to an undefined property App\\Models\\Product\:\:\$pivot\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Models/Product.php
+
+		-
+			message: '#^Method App\\Models\\Product\:\:activePromotion\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: app/Models/Product.php
+
+		-
+			message: '#^Method App\\Models\\Product\:\:categorie\(\) return type with generic class Illuminate\\Database\\Eloquent\\Relations\\BelongsTo does not specify its types\: TRelatedModel, TDeclaringModel$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/Product.php
+
+		-
+			message: '#^Method App\\Models\\Product\:\:getPrixPromoAttribute\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: app/Models/Product.php
+
+		-
+			message: '#^Method App\\Models\\Product\:\:images\(\) return type with generic class Illuminate\\Database\\Eloquent\\Relations\\HasMany does not specify its types\: TRelatedModel, TDeclaringModel$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/Product.php
+
+		-
+			message: '#^Method App\\Models\\Product\:\:orders\(\) return type with generic class Illuminate\\Database\\Eloquent\\Relations\\BelongsToMany does not specify its types\: TRelatedModel, TDeclaringModel, TPivotModel, TAccessor \(2\-4 required\)$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/Product.php
+
+		-
+			message: '#^Method App\\Models\\Product\:\:promotions\(\) return type with generic class Illuminate\\Database\\Eloquent\\Relations\\BelongsToMany does not specify its types\: TRelatedModel, TDeclaringModel, TPivotModel, TAccessor \(2\-4 required\)$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/Product.php
+
+		-
+			message: '#^Method App\\Models\\Product\:\:scopeActive\(\) has parameter \$query with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: app/Models/Product.php
+
+		-
+			message: '#^Method App\\Models\\Product\:\:scopeActive\(\) return type with generic class Illuminate\\Database\\Eloquent\\Builder does not specify its types\: TModel$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/Product.php
+
+		-
+			message: '#^Method App\\Models\\Product\:\:scopeByStock\(\) has parameter \$query with generic class Illuminate\\Database\\Eloquent\\Builder but does not specify its types\: TModel$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/Product.php
+
+		-
+			message: '#^Method App\\Models\\Product\:\:scopeByStock\(\) return type with generic class Illuminate\\Database\\Eloquent\\Builder does not specify its types\: TModel$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/Product.php
+
+		-
+			message: '#^PHPDoc type array of property App\\Models\\Product\:\:\$fillable is not covariant with PHPDoc type list\<string\> of overridden property Illuminate\\Database\\Eloquent\\Model\:\:\$fillable\.$#'
+			identifier: property.phpDocType
+			count: 1
+			path: app/Models/Product.php
+
+		-
+			message: '#^Property App\\Models\\Product\:\:\$fillable type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Models/Product.php
+
+		-
+			message: '#^Trait App\\Helper\\DateFormat uses generic trait Illuminate\\Database\\Eloquent\\Factories\\HasFactory but does not specify its types\: TFactory$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/Product.php
+
+		-
+			message: '#^Using nullsafe property access "\?\-\>reduction" on left side of \?\? is unnecessary\. Use \-\> instead\.$#'
+			identifier: nullsafe.neverNull
+			count: 1
+			path: app/Models/Product.php
+
+		-
+			message: '#^Method App\\Models\\Promotion\:\:products\(\) return type with generic class Illuminate\\Database\\Eloquent\\Relations\\BelongsToMany does not specify its types\: TRelatedModel, TDeclaringModel, TPivotModel, TAccessor \(2\-4 required\)$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/Promotion.php
+
+		-
+			message: '#^Method App\\Models\\Promotion\:\:scopeActive\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: app/Models/Promotion.php
+
+		-
+			message: '#^Method App\\Models\\Promotion\:\:scopeActive\(\) has parameter \$query with generic class Illuminate\\Database\\Eloquent\\Builder but does not specify its types\: TModel$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/Promotion.php
+
+		-
+			message: '#^PHPDoc type array of property App\\Models\\Promotion\:\:\$fillable is not covariant with PHPDoc type list\<string\> of overridden property Illuminate\\Database\\Eloquent\\Model\:\:\$fillable\.$#'
+			identifier: property.phpDocType
+			count: 1
+			path: app/Models/Promotion.php
+
+		-
+			message: '#^Property App\\Models\\Promotion\:\:\$fillable type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Models/Promotion.php
+
+		-
+			message: '#^Trait App\\Helper\\DateFormat uses generic trait Illuminate\\Database\\Eloquent\\Factories\\HasFactory but does not specify its types\: TFactory$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/Promotion.php
+
+		-
+			message: '#^Method App\\Models\\Shipping\:\:poids\(\) return type with generic class Illuminate\\Database\\Eloquent\\Relations\\BelongsTo does not specify its types\: TRelatedModel, TDeclaringModel$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/Shipping.php
+
+		-
+			message: '#^Method App\\Models\\Shipping\:\:transport\(\) return type with generic class Illuminate\\Database\\Eloquent\\Relations\\BelongsTo does not specify its types\: TRelatedModel, TDeclaringModel$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/Shipping.php
+
+		-
+			message: '#^Method App\\Models\\Shipping\:\:zone\(\) return type with generic class Illuminate\\Database\\Eloquent\\Relations\\BelongsTo does not specify its types\: TRelatedModel, TDeclaringModel$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/Shipping.php
+
+		-
+			message: '#^PHPDoc type array of property App\\Models\\Shipping\:\:\$fillable is not covariant with PHPDoc type list\<string\> of overridden property Illuminate\\Database\\Eloquent\\Model\:\:\$fillable\.$#'
+			identifier: property.phpDocType
+			count: 1
+			path: app/Models/Shipping.php
+
+		-
+			message: '#^Property App\\Models\\Shipping\:\:\$fillable type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Models/Shipping.php
+
+		-
+			message: '#^Trait App\\Helper\\DateFormat uses generic trait Illuminate\\Database\\Eloquent\\Factories\\HasFactory but does not specify its types\: TFactory$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/Shipping.php
+
+		-
+			message: '#^Class App\\Models\\Slide uses generic trait Illuminate\\Database\\Eloquent\\Factories\\HasFactory but does not specify its types\: TFactory$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/Slide.php
+
+		-
+			message: '#^PHPDoc type array of property App\\Models\\Slide\:\:\$fillable is not covariant with PHPDoc type list\<string\> of overridden property Illuminate\\Database\\Eloquent\\Model\:\:\$fillable\.$#'
+			identifier: property.phpDocType
+			count: 1
+			path: app/Models/Slide.php
+
+		-
+			message: '#^Property App\\Models\\Slide\:\:\$fillable type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Models/Slide.php
+
+		-
+			message: '#^Method App\\Models\\Transport\:\:orders\(\) return type with generic class Illuminate\\Database\\Eloquent\\Relations\\HasMany does not specify its types\: TRelatedModel, TDeclaringModel$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/Transport.php
+
+		-
+			message: '#^Method App\\Models\\Transport\:\:shippings\(\) return type with generic class Illuminate\\Database\\Eloquent\\Relations\\HasMany does not specify its types\: TRelatedModel, TDeclaringModel$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/Transport.php
+
+		-
+			message: '#^Method App\\Models\\Transport\:\:zones\(\) return type with generic class Illuminate\\Database\\Eloquent\\Relations\\BelongsToMany does not specify its types\: TRelatedModel, TDeclaringModel, TPivotModel, TAccessor \(2\-4 required\)$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/Transport.php
+
+		-
+			message: '#^PHPDoc type array of property App\\Models\\Transport\:\:\$fillable is not covariant with PHPDoc type list\<string\> of overridden property Illuminate\\Database\\Eloquent\\Model\:\:\$fillable\.$#'
+			identifier: property.phpDocType
+			count: 1
+			path: app/Models/Transport.php
+
+		-
+			message: '#^Property App\\Models\\Transport\:\:\$fillable type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Models/Transport.php
+
+		-
+			message: '#^Trait App\\Helper\\DateFormat uses generic trait Illuminate\\Database\\Eloquent\\Factories\\HasFactory but does not specify its types\: TFactory$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/Transport.php
+
+		-
+			message: '#^Method App\\Models\\User\:\:client\(\) return type with generic class Illuminate\\Database\\Eloquent\\Relations\\BelongsTo does not specify its types\: TRelatedModel, TDeclaringModel$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/User.php
+
+		-
+			message: '#^PHPDoc type array\<int, string\> of property App\\Models\\User\:\:\$fillable is not covariant with PHPDoc type list\<string\> of overridden property Illuminate\\Database\\Eloquent\\Model\:\:\$fillable\.$#'
+			identifier: property.phpDocType
+			count: 1
+			path: app/Models/User.php
+
+		-
+			message: '#^PHPDoc type array\<int, string\> of property App\\Models\\User\:\:\$hidden is not covariant with PHPDoc type list\<string\> of overridden property Illuminate\\Database\\Eloquent\\Model\:\:\$hidden\.$#'
+			identifier: property.phpDocType
+			count: 1
+			path: app/Models/User.php
+
+		-
+			message: '#^Trait App\\Helper\\DateFormat uses generic trait Illuminate\\Database\\Eloquent\\Factories\\HasFactory but does not specify its types\: TFactory$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/User.php
+
+		-
+			message: '#^Method App\\Models\\Zone\:\:countries\(\) return type with generic class Illuminate\\Database\\Eloquent\\Relations\\HasMany does not specify its types\: TRelatedModel, TDeclaringModel$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/Zone.php
+
+		-
+			message: '#^Method App\\Models\\Zone\:\:shippings\(\) return type with generic class Illuminate\\Database\\Eloquent\\Relations\\HasMany does not specify its types\: TRelatedModel, TDeclaringModel$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/Zone.php
+
+		-
+			message: '#^Method App\\Models\\Zone\:\:transports\(\) return type with generic class Illuminate\\Database\\Eloquent\\Relations\\BelongsToMany does not specify its types\: TRelatedModel, TDeclaringModel, TPivotModel, TAccessor \(2\-4 required\)$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/Zone.php
+
+		-
+			message: '#^PHPDoc type array of property App\\Models\\Zone\:\:\$fillable is not covariant with PHPDoc type list\<string\> of overridden property Illuminate\\Database\\Eloquent\\Model\:\:\$fillable\.$#'
+			identifier: property.phpDocType
+			count: 1
+			path: app/Models/Zone.php
+
+		-
+			message: '#^Property App\\Models\\Zone\:\:\$fillable type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Models/Zone.php
+
+		-
+			message: '#^Trait App\\Helper\\DateFormat uses generic trait Illuminate\\Database\\Eloquent\\Factories\\HasFactory but does not specify its types\: TFactory$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/Zone.php
+
+		-
+			message: '#^Using nullsafe property access "\?\-\>quantity" on left side of \?\? is unnecessary\. Use \-\> instead\.$#'
+			identifier: nullsafe.neverNull
+			count: 1
+			path: app/Notifications/NotifOrderStockIssue.php
+
+		-
+			message: '#^Call to an undefined method App\\Models\\User\:\:check\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: app/Providers/AppServiceProvider.php
+
+		-
+			message: '#^Class App\\Helper\\ProductView does not have a constructor and must be instantiated without any parameters\.$#'
+			identifier: new.noConstructor
+			count: 1
+			path: app/Providers/AppServiceProvider.php
+
+		-
+			message: '#^Property App\\Rules\\NotDisposableEmail\:\:\$disposableDomains type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Rules/NotDisposableEmail.php
+
+		-
+			message: '#^Method App\\Service\\CartService\:\:add\(\) has parameter \$attributes with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Service/CartService.php
+
+		-
+			message: '#^Method App\\Service\\CartService\:\:add\(\) return type with generic class Illuminate\\Support\\Collection does not specify its types\: TKey, TValue$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Service/CartService.php
+
+		-
+			message: '#^Method App\\Service\\CartService\:\:get\(\) return type with generic class Illuminate\\Support\\Collection does not specify its types\: TKey, TValue$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Service/CartService.php
+
+		-
+			message: '#^Method App\\Service\\CartService\:\:getContent\(\) return type with generic class Illuminate\\Support\\Collection does not specify its types\: TKey, TValue$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Service/CartService.php
+
+		-
+			message: '#^Method App\\Service\\CartService\:\:load\(\) return type with generic class Illuminate\\Support\\Collection does not specify its types\: TKey, TValue$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Service/CartService.php
+
+		-
+			message: '#^Method App\\Service\\CartService\:\:save\(\) has parameter \$items with generic class Illuminate\\Support\\Collection but does not specify its types\: TKey, TValue$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Service/CartService.php
+
+		-
+			message: '#^Unable to resolve the template type TKey in call to function collect$#'
+			identifier: argument.templateType
+			count: 2
+			path: app/Service/CartService.php
+
+		-
+			message: '#^Unable to resolve the template type TValue in call to function collect$#'
+			identifier: argument.templateType
+			count: 2
+			path: app/Service/CartService.php
+
+		-
+			message: '#^Method App\\Service\\CategoryService\:\:all\(\) return type with generic class Illuminate\\Support\\Collection does not specify its types\: TKey, TValue$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Service/CategoryService.php
+
+		-
+			message: '#^Method App\\Service\\ClientResolverService\:\:resolve\(\) has parameter \$data with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Service/ClientResolverService.php
+
+		-
+			message: '#^Call to an undefined method Illuminate\\Database\\Eloquent\\Model\:\:products\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: app/Service/OrderService.php
+
+		-
+			message: '#^Method App\\Service\\OrderService\:\:createOrder\(\) has parameter \$request with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: app/Service/OrderService.php
+
+		-
+			message: '#^Method App\\Service\\OrderService\:\:createOrder\(\) should return App\\Models\\Order but returns Illuminate\\Database\\Eloquent\\Model\.$#'
+			identifier: return.type
+			count: 1
+			path: app/Service/OrderService.php
+
+		-
+			message: '#^Method App\\View\\Components\\PriceFormat\:\:format\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: app/View/Components/PriceFormat.php
+
+		-
+			message: '#^Method App\\View\\Components\\PriceFormat\:\:format\(\) has parameter \$v with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: app/View/Components/PriceFormat.php
+
+		-
+			message: '#^Method App\\View\\Components\\PriceFormat\:\:render\(\) never returns Closure so it can be removed from the return type\.$#'
+			identifier: return.unusedType
+			count: 1
+			path: app/View/Components/PriceFormat.php
+
+		-
+			message: '#^Method App\\View\\Components\\PriceFormat\:\:render\(\) never returns string so it can be removed from the return type\.$#'
+			identifier: return.unusedType
+			count: 1
+			path: app/View/Components/PriceFormat.php
+
+		-
+			message: '#^PHPDoc tag @extends has invalid type App\\Models\\Pays\.$#'
+			identifier: class.notFound
+			count: 1
+			path: database/factories/PaysFactory.php
+
+		-
+			message: '#^Type App\\Models\\Pays in generic type Illuminate\\Database\\Eloquent\\Factories\\Factory\<App\\Models\\Pays\> in PHPDoc tag @extends is not subtype of template type TModel of Illuminate\\Database\\Eloquent\\Model of class Illuminate\\Database\\Eloquent\\Factories\\Factory\.$#'
+			identifier: generics.notSubtype
+			count: 1
+			path: database/factories/PaysFactory.php
+
+		-
+			message: '#^Method Illuminate\\Routing\\RouteRegistrar\:\:middleware\(\) invoked with 2 parameters, 1 required\.$#'
+			identifier: arguments.count
+			count: 1
+			path: routes/web.php
