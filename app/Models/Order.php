@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use App\Service\PriceService;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -33,6 +34,7 @@ use Illuminate\Support\Facades\DB;
  * @property-read \Illuminate\Database\Eloquent\Collection<int, Product> $products
  * @property-read int|null $products_count
  * @property-read Transport $transport
+ *
  * @method static \Database\Factories\OrderFactory factory($count = null, $state = [])
  * @method static \Illuminate\Database\Eloquent\Builder|Order newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Order newQuery()
@@ -53,10 +55,13 @@ use Illuminate\Support\Facades\DB;
  * @method static \Illuminate\Database\Eloquent\Builder|Order whereTransportId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Order whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Order whereVille($value)
+ *
  * @property int|null $delai
  * @property int|null $metrage
+ *
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Order whereDelai($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Order whereMetrage($value)
+ *
  * @mixin \Eloquent
  */
 final class Order extends Model
@@ -104,23 +109,19 @@ final class Order extends Model
 
     public function getShipping(): int|string
     {
-        if (session('devise') === 'EUR') {
-            // Récupération du taux de conversion et du symbole de devise en fonction de la locale de la session
-            $tauxConversion = session('devise') === 'EUR' ? Devise::whereType('EUR')->value('taux') : '';
+        if (PriceService::isEuro()) {
+            return number_format($this->shipping / PriceService::eurRate(), 2);
+        }
 
-            return number_format($this->shipping / $tauxConversion, 2);
-        }
-        if (session('devise') === 'CFA') {
-            $this->shipping;
-        }
+        return $this->shipping;
     }
 
-    public function getTaux(): int
+    /**
+     * Taux EUR valide, ou null (appeler uniquement quand PriceService::isEuro() est vrai).
+     */
+    public function getTaux(): ?float
     {
-        // Récupération du taux de conversion et du symbole de devise en fonction de la locale de la session
-        $tauxConversion = session('devise') === 'EUR' ? Devise::whereType('EUR')->value('taux') : '';
-
-        return $tauxConversion;
+        return PriceService::eurRate();
     }
 
     public function generateId()
