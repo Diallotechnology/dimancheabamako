@@ -19,7 +19,8 @@ final class PoidsFactory extends Factory
     public function definition(): array
     {
         return [
-            //
+            'min' => 0,
+            'max' => 5,
         ];
     }
 }
