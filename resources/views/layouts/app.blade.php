@@ -207,7 +207,6 @@
     <script src="{{ asset('assets/js/plugins/scrollup.js') }}"></script>
     <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
-    <x-livewire-alert::scripts />
     @yield('js')
     <script>
         var swiper = new Swiper(".mySwiper", {

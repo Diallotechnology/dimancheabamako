@@ -6,7 +6,6 @@ namespace App\Providers;
 
 use App\Helper\ProductView;
 use App\Models\Product;
-use App\Models\User;
 use App\Service\CategoryService;
 use App\Service\PriceService;
 use Illuminate\Database\Eloquent\Model;
@@ -14,7 +13,6 @@ use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Facades\View;
@@ -36,10 +34,6 @@ final class AppServiceProvider extends ServiceProvider
         Model::automaticallyEagerLoadRelationships();
         Model::shouldBeStrict(! app()->isProduction());
         URL::forceHttps(app()->isProduction());
-
-        Gate::define('viewPulse', function (User $user) {
-            return $user->isAdmin();
-        });
 
         LogViewer::auth(function () {
             return Auth::user()->check() && Auth::user()->isAdmin();
