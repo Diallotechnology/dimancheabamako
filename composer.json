@@ -11,28 +11,28 @@
         "php": "^8.2",
         "guzzlehttp/guzzle": "^7.2",
         "inertiajs/inertia-laravel": "^3.0",
-        "laravel/framework": "^12.0",
+        "laravel/framework": "^13.0",
         "laravel/sanctum": "^4.0",
-        "laravel/tinker": "^2.8",
+        "laravel/tinker": "^3.0",
         "livewire/livewire": "^4.4",
         "monarobase/country-list": "^3.5",
         "opcodesio/log-viewer": "^3.21",
         "php-flasher/flasher-laravel": "*",
         "propaganistas/laravel-phone": "^6.0",
-        "tightenco/ziggy": "^1.0"
+        "tightenco/ziggy": "^2.0"
     },
     "require-dev": {
-        "barryvdh/laravel-debugbar": "^3.16",
+        "barryvdh/laravel-debugbar": "^4.0",
         "barryvdh/laravel-ide-helper": "*",
         "fakerphp/faker": "^1.9.1",
         "larastan/larastan": "^3.14",
         "laravel/pint": "^1.0",
-        "laravel/sail": "^1.18",
+        "laravel/sail": "^1.69",
         "mockery/mockery": "^1.4.4",
         "nunomaduro/collision": "^8.0",
-        "pestphp/pest": "^3.0",
-        "pestphp/pest-plugin-laravel": "^3.0",
-        "phpunit/phpunit": "^11"
+        "pestphp/pest": "^4.0",
+        "pestphp/pest-plugin-laravel": "^4.0",
+        "phpunit/phpunit": "^12.0"
     },
     "autoload": {
         "psr-4": {

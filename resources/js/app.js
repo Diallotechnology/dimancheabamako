@@ -3,7 +3,7 @@ import "./bootstrap";
 import { createApp, h } from "vue";
 import { createInertiaApp } from "@inertiajs/vue3";
 import { resolvePageComponent } from "laravel-vite-plugin/inertia-helpers";
-import { ZiggyVue } from "../../vendor/tightenco/ziggy/dist/vue.m";
+import { ZiggyVue } from "../../vendor/tightenco/ziggy";
 
 import Select from "@/Components/Select.vue";
 import Select2 from "@/Components/Select2.vue";
