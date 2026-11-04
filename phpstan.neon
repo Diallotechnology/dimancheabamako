@@ -9,7 +9,3 @@ parameters:
         - routes
         - database/factories
     tmpDir: storage/framework/phpstan
-    excludePaths:
-        # Défaut connu (non ignorable par PHPStan) : pas de return si markEmailAsVerified() renvoie false.
-        # À corriger séparément, puis retirer cette exclusion.
-        - app/Http/Controllers/Auth/VerifyEmailController.php
