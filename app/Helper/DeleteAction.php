@@ -9,6 +9,7 @@ use Exception;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Storage;
 use Throwable;
 
 trait DeleteAction
@@ -32,6 +33,16 @@ trait DeleteAction
         }
 
         return $fileDeleted;
+    }
+
+    /**
+     * Supprime un fichier du disque public à partir de son chemin relatif (ex: product/cover/x.jpg).
+     */
+    public function deleteStored(?string $path): void
+    {
+        if ($path !== null && $path !== '') {
+            Storage::disk('public')->delete($path);
+        }
     }
 
     public function file_multiple_delete(Collection $path): bool
@@ -61,7 +72,7 @@ trait DeleteAction
 
             }
         } catch (Throwable $th) {
-            new Exception('file uplode error');
+            throw new Exception('file uplode error', 0, $th);
         }
     }
 }

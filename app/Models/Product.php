@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Models;
 
 use App\Helper\DateFormat;
+use App\Service\PriceService;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -41,6 +42,7 @@ use Illuminate\Support\Str;
  * @property-read int|null $orders_count
  * @property-read \Illuminate\Database\Eloquent\Collection<int, Promotion> $promotions
  * @property-read int|null $promotions_count
+ *
  * @method static Builder|Product byStock()
  * @method static \Database\Factories\ProductFactory factory($count = null, $state = [])
  * @method static Builder|Product newModelQuery()
@@ -62,16 +64,19 @@ use Illuminate\Support\Str;
  * @method static Builder|Product whereTaille($value)
  * @method static Builder|Product whereUpdatedAt($value)
  * @method static Builder|Product whereVideo($value)
+ *
  * @property string|null $slug
  * @property bool $is_preorder
  * @property int $status
  * @property-read \Illuminate\Database\Eloquent\Collection<int, Promotion> $activePromotion
  * @property-read int|null $active_promotion_count
  * @property-read int $prix_final_base
+ *
  * @method static Builder<static>|Product active()
  * @method static Builder<static>|Product whereIsPreorder($value)
  * @method static Builder<static>|Product whereSlug($value)
  * @method static Builder<static>|Product whereStatus($value)
+ *
  * @mixin \Eloquent
  */
 final class Product extends Model
@@ -101,12 +106,8 @@ final class Product extends Model
     public function getMontant(): string
     {
         $montant = $this->pivot->montant;
-        $devise = session('devise');
-
-        if ($devise === 'EUR') {
-            $taux = session('taux_eur', 1);
-
-            return number_format($montant / $taux, 2, ',', ' ').' €';
+        if (PriceService::isEuro()) {
+            return number_format($montant / PriceService::eurRate(), 2, ',', ' ').' €';
         }
 
         return number_format($montant, 0, ',', ' ').' CFA';
@@ -128,10 +129,10 @@ final class Product extends Model
         $prix = $this->prix;
 
         if ($promo = $this->resolveActivePromotion()) {
-            $prix *= (1 - $promo->reduction / 100);
+            $prix = (int) round($prix * (1 - $promo->reduction / 100));
         }
 
-        return $prix; // toujours en CFA brut
+        return $prix; // toujours en CFA brut, entier
     }
 
     public function getReductionAttribute(): int
@@ -152,9 +153,8 @@ final class Product extends Model
 
     public function getPrixFormatAttribute(): string
     {
-        if (session('devise') === 'EUR') {
-            $taux = session('taux_eur', 1);
-            $prix = number_format($this->prix / $taux, 2, ',', ' ');
+        if (PriceService::isEuro()) {
+            $prix = number_format($this->prix / PriceService::eurRate(), 2, ',', ' ');
 
             return "{$prix} €";
         }

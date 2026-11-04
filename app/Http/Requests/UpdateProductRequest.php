@@ -40,9 +40,9 @@ final class UpdateProductRequest extends FormRequest
             'prix' => 'required|integer',
             'stock' => 'required|integer',
 
-            'video' => 'nullable',
-            'cover' => 'nullable',
-            'image' => 'nullable|array',
+            'video' => ['nullable', 'file', 'mimetypes:video/mp4,video/quicktime,video/webm', 'max:51200'],
+            'cover' => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp', 'max:5120'],
+            'image.*' => ['image', 'mimes:jpg,jpeg,png,webp', 'max:5120'],
         ];
     }
 

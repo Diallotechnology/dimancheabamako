@@ -39,13 +39,13 @@
                                         </td>
                                         <td>
                                             {{ number_format(
-                                            session('devise') === 'EUR'
-                                            ? ($item['price'] / session('taux_eur'))
+                                            \App\Service\PriceService::isEuro()
+                                            ? ($item['price'] / \App\Service\PriceService::eurRate())
                                             : $item['price'],
-                                            session('devise') === 'EUR' ? 2 : 0,
+                                            \App\Service\PriceService::isEuro() ? 2 : 0,
                                             ',',
                                             ' '
-                                            ) }} {{ session('devise') === 'EUR' ? '€' : 'CFA' }}
+                                            ) }} {{ \App\Service\PriceService::isEuro() ? '€' : 'CFA' }}
                                         </td>
                                         <td class="action" data-title="Supprimer">
                                             <livewire:delete :row="$item" :key="'delete-'.$item['id']" />

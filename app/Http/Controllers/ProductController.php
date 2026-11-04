@@ -99,7 +99,7 @@ final class ProductController extends Controller
         unset($data['video'], $data['cover'], $data['image']);
 
         if ($request->hasFile('cover')) {
-            $this->file_delete($product);
+            $this->deleteStored($product->getRawOriginal('cover'));
 
             $filename = $request->cover->hashName();
             $path = $request->cover->storeAs('product/cover', $filename, 'public');
@@ -108,7 +108,7 @@ final class ProductController extends Controller
         }
 
         if ($request->hasFile('video')) {
-            $this->file_delete($product);
+            $this->deleteStored($product->getRawOriginal('video'));
 
             $filename = $request->video->hashName();
             $path = $request->video->storeAs('product/video', $filename, 'public');
@@ -130,8 +130,9 @@ final class ProductController extends Controller
      */
     public function destroy(Product $product)
     {
-        $this->file_delete($product);
-        $this->file_multiple_delete($product->images()->pluck('chemin'));
+        $this->deleteStored($product->getRawOriginal('cover'));
+        $this->deleteStored($product->getRawOriginal('video'));
+        $product->images->each(fn ($image) => $this->deleteStored($image->getRawOriginal('chemin')));
 
         return $this->supp($product);
     }

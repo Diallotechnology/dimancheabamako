@@ -8,6 +8,7 @@ use App\Helper\CartAction;
 use App\Models\Client;
 use App\Models\Country;
 use App\Service\CartService;
+use App\Service\PriceService;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Attributes\On;
 use Livewire\Attributes\Validate;
@@ -112,9 +113,8 @@ final class Panier extends Component
         $this->TotalQuantity = $this->cart->getTotalQuantity();
         $this->totalWeight = $this->getWeight(true);
 
-        if (session('devise') === 'EUR') {
-            $taux = session('taux_eur', 1);
-            $this->Total = number_format($this->cart->getTotal() / $taux, 2, ',', ' ');
+        if (PriceService::isEuro()) {
+            $this->Total = number_format($this->cart->getTotal() / PriceService::eurRate(), 2, ',', ' ');
         } else {
             $this->Total = number_format($this->cart->getTotal(), 0, ',', ' ');
         }
