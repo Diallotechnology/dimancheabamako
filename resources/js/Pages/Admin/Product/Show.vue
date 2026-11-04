@@ -25,7 +25,7 @@ const props = defineProps({
                     <!--  col.// -->
                     <div class="col-sm-6 col-lg-4 col-xl-3">
                         <p>Nom: {{ product.nom }}</p>
-                        <p>Categorie: {{ product.categorie.nom }}</p>
+                        <p>Categorie: {{ product.categorie?.nom }}</p>
                         <p>Réference: {{ product.reference }}</p>
                     </div>
                     <div class="col-sm-6 col-lg-4 col-xl-3">

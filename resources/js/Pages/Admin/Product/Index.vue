@@ -135,7 +135,7 @@ const favori = (url) => {
                                     Reférence {{ row.reference }}
                                 </p>
                                 <p class="title">
-                                    Categorie {{ row.categorie.nom }}
+                                    Categorie {{ row.categorie?.nom }}
                                 </p>
                                 <p class="title">Couleur {{ row.color }}</p>
                                 <p class="title">Taille {{ row.taille }} M</p>
