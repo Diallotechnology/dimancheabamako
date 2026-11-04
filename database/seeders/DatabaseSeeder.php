@@ -49,16 +49,30 @@ final class DatabaseSeeder extends Seeder
             'paragraph' => 'Clothing, Shoes, Bags, Wallets...',
             'image' => 'slide/image/slider-3.png',
         ]);
-        Zone::factory()->hasCountries(5)->create(['nom' => 'Afrique']);
+        $zone = Zone::factory()->hasCountries(5)->create(['nom' => 'Afrique']);
         // Zone::factory()->hasCountries(5)->create(['nom' => 'Europe']);
         // Zone::factory()->hasCountries(5)->create(['nom' => 'Asie']);
-        Transport::factory()->hasZones(2)->create(['nom' => 'DHL']);
-        Transport::factory()->hasZones(2)->create(['nom' => 'FeDEX']);
-        Poids::factory()->create(['min' => '1', 'max' => '2']);
-        Poids::factory()->create(['min' => '3', 'max' => '4']);
+        $transports = collect([
+            Transport::factory()->create(['nom' => 'DHL']),
+            Transport::factory()->create(['nom' => 'FeDEX']),
+        ]);
+        $zone->transports()->attach($transports->pluck('id'));
+        $poids = collect([
+            Poids::factory()->create(['min' => '1', 'max' => '2']),
+            Poids::factory()->create(['min' => '3', 'max' => '4']),
+        ]);
         // Poids::factory()->create(['min' => '5', 'max' => '7']);
         // Poids::factory()->create(['min' => '8', 'max' => '10']);
-        Shipping::factory(10)->create();
+        // Un tarif par transporteur et par tranche de poids pour la zone des pays.
+        foreach ($transports as $transport) {
+            foreach ($poids as $range) {
+                Shipping::factory()->create([
+                    'zone_id' => $zone->id,
+                    'transport_id' => $transport->id,
+                    'poids_id' => $range->id,
+                ]);
+            }
+        }
         User::factory(10)->create();
         Category::factory(5)->create();
         Client::factory(30)->create();
