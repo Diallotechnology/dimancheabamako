@@ -30,7 +30,7 @@ trait CartAction
 
     public function store(int $id)
     {
-        $product = Product::with([
+        $product = Product::published()->with([
             'promotions' => fn ($q) => $q->active()->orderByDesc('id')->limit(1),
         ])->findOrFail($id);
 

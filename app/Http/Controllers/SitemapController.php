@@ -12,7 +12,7 @@ final class SitemapController extends Controller
     // Sitemap index
     public function index()
     {
-        $product = Product::latest()->first();
+        $product = Product::published()->latest()->first();
 
         return response()->view('sitemap.index', compact('product'))->header('Content-Type', 'text/xml');
     }
@@ -26,7 +26,7 @@ final class SitemapController extends Controller
     // Sitemap product
     public function product()
     {
-        $product = Product::latest()->get();
+        $product = Product::published()->latest()->get();
 
         return response()->view('sitemap.product', compact('product'))->header('Content-Type', 'text/xml');
     }

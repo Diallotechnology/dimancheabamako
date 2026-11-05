@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use App\Enum\ProductStatus;
 use App\Helper\DateFormat;
 use App\Service\PriceService;
 use Illuminate\Database\Eloquent\Builder;
@@ -67,7 +68,7 @@ use Illuminate\Support\Str;
  *
  * @property string|null $slug
  * @property bool $is_preorder
- * @property int $status
+ * @property ProductStatus $status
  * @property-read \Illuminate\Database\Eloquent\Collection<int, Promotion> $activePromotion
  * @property-read int|null $active_promotion_count
  * @property-read int $prix_final_base
@@ -88,7 +89,7 @@ final class Product extends Model
      *
      * @var array
      */
-    protected $fillable = ['categorie_id', 'reference', 'nom', 'color', 'taille', 'description', 'resume', 'poids', 'video', 'prix', 'cover', 'stock', 'favoris', 'slug', 'is_preorder'];
+    protected $fillable = ['categorie_id', 'reference', 'nom', 'color', 'taille', 'description', 'resume', 'poids', 'video', 'prix', 'cover', 'stock', 'favoris', 'slug', 'is_preorder', 'status'];
 
     /**
      * Scope to get nature by structure.
@@ -96,6 +97,15 @@ final class Product extends Model
     public function scopeByStock(Builder $query): Builder
     {
         return $query->where('stock', '>=', 1);
+    }
+
+    /**
+     * @param  Builder<Product>  $query
+     * @return Builder<Product>
+     */
+    public function scopePublished(Builder $query): Builder
+    {
+        return $query->where('status', ProductStatus::Published);
     }
 
     public function scopeActive($query): Builder
@@ -255,6 +265,7 @@ final class Product extends Model
             'stock' => 'integer',
             'favoris' => 'boolean',
             'is_preorder' => 'boolean',
+            'status' => ProductStatus::class,
         ];
     }
 

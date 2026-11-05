@@ -24,6 +24,7 @@ final class OrderService
             // 0. Le panier vient du cache (24 h) : prix, promo, stock et poids sont relus en base,
             // produits verrouillés, AVANT tout calcul (poids de livraison, totaux, montant N-Genius).
             $products = Product::query()
+                ->published()
                 ->whereIn('id', $cart->getContent()->keys())
                 ->with('activePromotion')
                 ->lockForUpdate()

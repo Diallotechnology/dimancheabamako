@@ -31,6 +31,7 @@ final class ProductFactory extends Factory
             'taille' => rand(1, 5),
             'resume' => $this->faker->paragraph(),
             'description' => $this->faker->paragraph(3),
+            'status' => 'published',
             'cover' => $this->faker->imageUrl(),
         ];
     }

@@ -25,6 +25,7 @@ final class LinkController extends Controller
     {
 
         $baseQuery = Product::query()
+            ->published()
             ->with([
                 'activePromotion',
                 'categorie:id,nom',
@@ -45,6 +46,7 @@ final class LinkController extends Controller
     public function product_detail(int $id, string $slug)
     {
         $baseQuery = Product::query()
+            ->published()
             ->with([
                 'activePromotion',
                 'categorie:id,nom',
