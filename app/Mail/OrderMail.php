@@ -10,6 +10,7 @@ use Illuminate\Mail\Mailable;
 use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Facades\URL;
 
 final class OrderMail extends Mailable
 {
@@ -42,7 +43,7 @@ final class OrderMail extends Mailable
     {
         return new Content(
             markdown: 'email.OrderMail',
-            with: ['url' => route('order.invoice', $this->order->trans_ref)]
+            with: ['url' => URL::signedRoute('order.invoice.signed', ['id' => $this->order->trans_ref])]
         );
     }
 

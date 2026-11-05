@@ -96,6 +96,7 @@ Route::view('register/confirm/{show}', 'auth.register-confirm')->name('register-
 
 Route::controller(OrderController::class)->group(function () {
     Route::get('order/invoice/{id}', 'invoice')->name('order.invoice')->middleware('throttle:30,1');
+    Route::get('order/facture/{id}', 'invoiceSigned')->name('order.invoice.signed')->middleware(['signed', 'throttle:30,1']);
     Route::get('order/validate', 'valid')->name('order.validate');
     Route::get('order/cancel', 'cancel')->name('order.cancel');
 });

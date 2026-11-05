@@ -107,14 +107,15 @@ Bugs rencontrés pendant d'autres chantiers, notés ici pour être corrigés ens
 - **Nuance** : l'affirmation « chemin qui ne correspond pas au fichier réel » était trop forte : avec le lien `public/storage`, `file_delete` pouvait fonctionner en production. Le défaut certain était le code mort de `SlideController::destroy` ; le reste était fragile et non testable.
 - **Résolution** : `SlideController` et `ImageController` utilisent `deleteStored()` (disque `public`, comme `ProductController`) ; `file_delete` et `file_multiple_delete` supprimés de `DeleteAction`. Tests dans `tests/Feature/AdminUploadValidationTest.php`.
 
-## 2026-11-04 — M6 · Pas de limitation sur la création de commande — 🟡 RÉSOLU PARTIELLEMENT (2026-11-05)
+## 2026-11-04 — M6 · Pas de limitation sur la création de commande — ✅ RÉSOLU (2026-11-05)
 
 - **Où** : `routes/web.php` (`POST order`), `app/Http/Controllers/OrderController.php:store`.
 - **Cause** : aucun `throttle`, et chaque appel crée un client, une commande et un ordre N-Genius.
 - **Symptôme** : spam de commandes et d'appels à l'API de paiement ; la facture `order/invoice/{trans_ref}` est publique et contient des données personnelles.
 - **Piste** : `throttle:10,1` sur `POST order`, protéger `order/invoice` (URL signée ou propriétaire).
 - **Résolution** : `throttle:10,1` sur `POST order`, `throttle:30,1` sur `GET order/invoice/{id}`. Tests dans `tests/Feature/PublicRoutesThrottleTest.php`.
-- **Reste ouvert** : la facture reste publique pour qui connaît la référence N-Genius (UUID). La passer en URL signée casserait les liens déjà envoyés par e-mail aux clients ; à traiter avec un plan de migration (ex. accepter les deux formats pendant une période).
+- **Résolution (facture)** : la facture n'était pas énumérable (`trans_ref` est un UUID N-Genius ; `reference` séquentielle n'est qu'affichée), mais le lien, jamais expiré et diffusé par e-mail, URL de retour N-Genius et facture elle-même, donnait accès aux données personnelles du client à quiconque le détenait. Nouvelle route `order/facture/{id}` (`order.invoice.signed`, middleware `signed` + `throttle:30,1`) ; `OrderMail` génère désormais `URL::signedRoute(...)` (signature permanente, sans expiration). L'ancienne route `order.invoice` ne sert plus que les commandes créées avant `config('invoice.legacy_cutoff')` (`INVOICE_LEGACY_CUTOFF`, défaut 2026-11-06) pour ne pas casser les e-mails déjà envoyés. Tests dans `tests/Feature/InvoiceAccessTest.php`.
+- **À faire plus tard** : supprimer la route `order.invoice`, `config/invoice.php` et `INVOICE_LEGACY_CUTOFF` quand la coexistence n'est plus utile. **Prérequis prod** : `APP_KEY` stable (une rotation invalide toutes les URLs signées) ; ajouter `INVOICE_LEGACY_CUTOFF` au `.env` réel (ou garder le défaut) et relancer `config:cache` si utilisé. Les e-mails déjà en file au déploiement gardent l'ancien lien, couvert par la coexistence. Pas de page « renvoyer ma facture » (hors périmètre).
 
 ## 2026-11-04 — M7 · Valeurs de configuration risquées par défaut — ✅ RÉSOLU (2026-11-05) côté dépôt
 

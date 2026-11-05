@@ -13,11 +13,13 @@ use App\Http\Requests\UpdateOrderRequest;
 use App\Models\Order;
 use App\Service\CartService;
 use App\Service\OrderService;
+use Carbon\Carbon;
 use DomainException;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Illuminate\View\View;
 use Inertia\Inertia;
 use Throwable;
 
@@ -100,13 +102,24 @@ final class OrderController extends Controller
         }
     }
 
-    public function invoice(string $id)
+    /**
+     * Ancien lien (référence N-Genius seule, sans signature) : réservé aux commandes
+     * créées avant la date de bascule, pour ne pas casser les e-mails déjà envoyés.
+     */
+    public function invoice(string $id): View
     {
-        $order = Order::with('client', 'products')->withSum('products as totaux', 'order_product.montant')
-            ->where('trans_ref', $id)->where('trans_state', 'PURCHASED')
-            ->firstOrFail();
+        return $this->renderInvoice(
+            $id,
+            Carbon::parse((string) config('invoice.legacy_cutoff')),
+        );
+    }
 
-        return view('invoice', compact('order'));
+    /**
+     * Lien signé (middleware `signed`) : la référence N-Genius seule ne suffit plus.
+     */
+    public function invoiceSigned(string $id): View
+    {
+        return $this->renderInvoice($id);
     }
 
     public function valid()
@@ -199,5 +212,15 @@ final class OrderController extends Controller
     {
         $order->delete();
         flash()->success('Commande supprimer avec succès!');
+    }
+
+    private function renderInvoice(string $ref, ?Carbon $createdBefore = null): View
+    {
+        $order = Order::with('client', 'products')->withSum('products as totaux', 'order_product.montant')
+            ->where('trans_ref', $ref)->where('trans_state', 'PURCHASED')
+            ->when($createdBefore, fn ($query) => $query->where('created_at', '<', $createdBefore))
+            ->firstOrFail();
+
+        return view('invoice', compact('order'));
     }
 }
