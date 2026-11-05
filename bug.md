@@ -64,12 +64,14 @@ Bugs rencontrés pendant d'autres chantiers, notés ici pour être corrigés ens
 - **Résolution** : `OrderAPI::ngeniusLogContext()` ne garde que `reference`, les états de paiement et les clés de premier niveau ; utilisé dans `OrderAPI` (commande sans bloc paiement, annulation sans référence de paiement) et `CheckPayment` (« Payment state missing »). `PayLinkController::store` ne logue plus la trace complète. Tests dans `tests/Feature/NgeniusLogPrivacyTest.php`.
 - **Volontairement conservé** : les corps de réponses d'erreur N-Genius (`'body' => $response->json()`), utiles au diagnostic (cf. entrée « Paiement N-Genius invisible ») et qui ne contiennent pas le payload client. À revérifier si N-Genius y renvoie un jour des données de commande. Les jobs mail loguent `$exception->getMessage()` : un message d'erreur SMTP peut contenir une adresse e-mail, non traité ici.
 
-## 2026-11-04 — M1 · Actions sensibles déclenchées en GET
+## 2026-11-04 — M1 · Actions sensibles déclenchées en GET — ✅ RÉSOLU (2026-11-05)
 
 - **Où** : `routes/web.php` — `product/favoris/{data}/{product_id}`, `paylink/{paylink}/regenerate`, `admin/maintenance` (`AdminController::maintenance`).
 - **Cause** : actions qui modifient l'état exposées en GET, donc sans protection CSRF effective.
 - **Symptôme** : un lien piégé ouvert par un admin bascule le mode maintenance, régénère un lien de paiement ou change un favori.
 - **Piste** : passer en POST/PUT avec jeton CSRF (Inertia `router.post`). `favoris_update` fait aussi `Product::find()->update()` sans 404 si l'ID n'existe pas.
+- **Résolution** : `product.favori` passe en `PUT` (`whereIn('data', ['0','1'])`, `findOrFail` donc 404 si le produit n'existe pas, réponse 204), `paylink.regenerate` et `maintenance` en `POST`. Front adapté (`axios.put`, `<Link method="post" as="button">`) ; `npm run build` passe. Tests dans `tests/Feature/StateChangingRoutesTest.php` (méthodes des routes vérifiées sans les exécuter : un GET sur `maintenance` mettrait vraiment l'application en maintenance).
+- **À vérifier à la main** : l'apparence du lien « Mode maintenance » du menu (maintenant rendu comme un bouton) et le clic sur chaque action dans le navigateur.
 
 ## 2026-11-04 — M2 · Prix et stock figés dans le panier (cache 24 h)
 
@@ -78,12 +80,13 @@ Bugs rencontrés pendant d'autres chantiers, notés ici pour être corrigés ens
 - **Symptôme** : promo expirée, hausse de prix ou rupture de stock non répercutées ; la commande peut être payée à l'ancien prix.
 - **Piste** : relire prix/stock depuis `Product` dans `createOrder` (dans la transaction, avec verrou). Test RED (financier + race condition).
 
-## 2026-11-04 — M3 · Validation trop permissive
+## 2026-11-04 — M3 · Validation trop permissive — ✅ RÉSOLU (2026-11-05)
 
 - **Où** : `StoreUserRequest` / `UpdateUserRequest` (`role` libre), `UpdateOrderRequest` (`etat` libre), `StoreProductRequest` / `UpdateProductRequest` (`prix`, `stock` sans `min:0`), `StorePayLinkRequest` (`montant` sans `min:1`), `StoreOrderRequest` (`password` sans règle de robustesse).
 - **Cause** : règles `required` / `nullable` sans contrainte de valeur.
 - **Symptôme** : rôle invalide → erreur 500 ; état de commande arbitraire ; prix, stock ou montant négatifs acceptés.
 - **Piste** : `Rule::enum(RoleEnum::class)`, `Rule::enum(OrderEnum::class)`, `min:0` / `min:1`, `Rules\Password::defaults()`.
+- **Résolution** : `Rule::enum(RoleEnum)` (création et modification d'utilisateur), `Rule::enum(OrderEnum)` pour `etat`, `min:0` sur `prix`, `stock` et le montant de livraison, `min:1` sur le montant d'un paylink, `Rules\Password::defaults()` sur le mot de passe du checkout. **Ajout hors entrée d'origine** : `reduction` d'une promotion bornée à 1–100 (au-dessus de 100 le prix devient négatif). Tests dans `tests/Feature/AdminValidationRulesTest.php`.
 
 ## 2026-11-04 — M4 · Session non régénérée à la confirmation d'inscription — ❌ FAUX POSITIF (2026-11-05)
 
@@ -93,21 +96,25 @@ Bugs rencontrés pendant d'autres chantiers, notés ici pour être corrigés ens
 - **Piste** : régénérer la session après avoir récupéré `$oldSessionId`.
 - **Vérification** : `Auth::login()` appelle `SessionGuard::updateSession()` qui fait `session->regenerate(true)`. La session est bien régénérée ; rien à corriger. Seul reste vrai le point secondaire : `mergeGuestCartToUser` doit recevoir l'ancien ID de session, ce que le code fait déjà (`$oldSessionId` capturé avant `Auth::login`).
 
-## 2026-11-04 — M5 · Fichiers jamais supprimés du disque
+## 2026-11-04 — M5 · Fichiers jamais supprimés du disque — ✅ RÉSOLU (2026-11-05)
 
 - **Où** : `app/Http/Controllers/SlideController.php:destroy` (`file_delete` après le `return`, jamais exécuté), `app/Helper/DeleteAction.php:file_delete` (`public_path(Storage::url(...))`).
 - **Cause** : code mort après `return` ; `Storage::url()` renvoie `/storage/...`, qui ne correspond pas au vrai chemin sur disque.
 - **Symptôme** : les fichiers supprimés (slides, images produit) restent accessibles sur le serveur.
 - **Piste** : utiliser `deleteStored()` (disque `public`) partout et supprimer `file_delete` / `file_multiple_delete`.
+- **Nuance** : l'affirmation « chemin qui ne correspond pas au fichier réel » était trop forte : avec le lien `public/storage`, `file_delete` pouvait fonctionner en production. Le défaut certain était le code mort de `SlideController::destroy` ; le reste était fragile et non testable.
+- **Résolution** : `SlideController` et `ImageController` utilisent `deleteStored()` (disque `public`, comme `ProductController`) ; `file_delete` et `file_multiple_delete` supprimés de `DeleteAction`. Tests dans `tests/Feature/AdminUploadValidationTest.php`.
 
-## 2026-11-04 — M6 · Pas de limitation sur la création de commande
+## 2026-11-04 — M6 · Pas de limitation sur la création de commande — 🟡 RÉSOLU PARTIELLEMENT (2026-11-05)
 
 - **Où** : `routes/web.php` (`POST order`), `app/Http/Controllers/OrderController.php:store`.
 - **Cause** : aucun `throttle`, et chaque appel crée un client, une commande et un ordre N-Genius.
 - **Symptôme** : spam de commandes et d'appels à l'API de paiement ; la facture `order/invoice/{trans_ref}` est publique et contient des données personnelles.
 - **Piste** : `throttle:10,1` sur `POST order`, protéger `order/invoice` (URL signée ou propriétaire).
+- **Résolution** : `throttle:10,1` sur `POST order`, `throttle:30,1` sur `GET order/invoice/{id}`. Tests dans `tests/Feature/PublicRoutesThrottleTest.php`.
+- **Reste ouvert** : la facture reste publique pour qui connaît la référence N-Genius (UUID). La passer en URL signée casserait les liens déjà envoyés par e-mail aux clients ; à traiter avec un plan de migration (ex. accepter les deux formats pendant une période).
 
-## 2026-11-04 — M7 · Valeurs de configuration risquées par défaut
+## 2026-11-04 — M7 · Valeurs de configuration risquées par défaut — ✅ RÉSOLU (2026-11-05) côté dépôt
 
 - **Où** : `.env.example` (`APP_DEBUG=true`), `config/session.php` (`'secure' => env('SESSION_SECURE_COOKIE')` sans défaut).
 - **Cause** : le gabarit d'environnement encourage le debug activé et un cookie de session sans drapeau `Secure`.
@@ -120,6 +127,8 @@ Bugs rencontrés pendant d'autres chantiers, notés ici pour être corrigés ens
 - **Cause** : `poids` est une clé de premier niveau de chaque ligne du panier, pas dans `attributes` (qui ne contient que `cover` et `reduction`). Le `pluck` ne trouve rien et, en plus, ne multiplie pas par la quantité.
 - **Symptôme** : la colonne `orders.poids` vaut `0 Kg` pour toutes les commandes (à confirmer en base), donc le poids affiché dans l'admin et sur la facture est faux.
 - **Piste** : utiliser `$cart->getTotalWeight()` (ajouté pour I1). Pas de test RED obligatoire (affichage), mais un test dans `OrderServiceTest` est peu coûteux.
+- **Résolution** : `.env.example` avec `APP_DEBUG=false` ; `config/session.php` : `secure` vaut `true` par défaut quand `APP_ENV=production` (surchargeable par `SESSION_SECURE_COOKIE`). Tests dans `tests/Feature/SafeConfigDefaultsTest.php`.
+- **Reste manuel** : vérifier le `.env` réel de production (`APP_DEBUG=false`, `APP_ENV=production`), que le dépôt ne peut pas contrôler.
 
 ## 2026-11-05 — `OrderController::valid()` vide le panier sans vérifier de paiement
 
