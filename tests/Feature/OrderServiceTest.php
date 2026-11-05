@@ -13,7 +13,6 @@ use App\Models\Transport;
 use App\Models\Zone;
 use App\Service\CartService;
 use App\Service\OrderService;
-use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 
 function orderFixtures(): array
@@ -106,12 +105,79 @@ it('allows ordering beyond stock for preorder products', function () {
     expect($order->products)->toHaveCount(1);
 });
 
+function cartWithWeight(array $fx, float $poids, int $quantity = 1): CartService
+{
+    $product = Product::factory()->create(['categorie_id' => $fx['category']->id, 'stock' => 20]);
+    $cart = app(CartService::class);
+    $cart->add($product->id, $product->nom, 1000, 20, $poids);
+    $cart->update($product->id, $quantity);
+
+    return $cart;
+}
+
+// I1 — le tarif de livraison est recalculé côté serveur, jamais choisi par le client
+
+it('rejects a forged shipping id from another zone and transport', function () {
+    $fx = orderFixtures();
+    $cheap = Shipping::factory()->create([
+        'zone_id' => Zone::factory()->create()->id,
+        'transport_id' => Transport::factory()->create()->id,
+        'poids_id' => Poids::factory()->create()->id,
+        'montant' => 1,
+    ]);
+    $cart = cartWithWeight($fx, 1.5, 3);
+
+    expect(fn () => app(OrderService::class)->createOrder(orderRequest($fx, ['livraison' => $cheap->id]), $cart))
+        ->toThrow(DomainException::class);
+
+    expect(Order::count())->toBe(0);
+});
+
+it('rejects a forged shipping id from another weight bracket of the same zone and transport', function () {
+    $fx = orderFixtures();
+    $cheap = Shipping::factory()->create([
+        'zone_id' => $fx['shipping']->zone_id,
+        'transport_id' => $fx['shipping']->transport_id,
+        'poids_id' => Poids::factory()->create(['min' => 10, 'max' => 20])->id,
+        'montant' => 1,
+    ]);
+    $cart = cartWithWeight($fx, 1.5, 3); // 4,5 kg → tranche 0-5 kg (15 000)
+
+    expect(fn () => app(OrderService::class)->createOrder(orderRequest($fx, ['livraison' => $cheap->id]), $cart))
+        ->toThrow(DomainException::class);
+
+    expect(Order::count())->toBe(0);
+});
+
+it('uses the weight bracket matching the real cart weight', function () {
+    $fx = orderFixtures();
+    $heavy = Shipping::factory()->create([
+        'zone_id' => $fx['shipping']->zone_id,
+        'transport_id' => $fx['shipping']->transport_id,
+        'poids_id' => Poids::factory()->create(['min' => 5.01, 'max' => 20])->id,
+        'montant' => 40000,
+    ]);
+    $cart = cartWithWeight($fx, 4, 2); // 8 kg → tranche 5,01-20 kg
+
+    $order = app(OrderService::class)->createOrder(orderRequest($fx, ['livraison' => $heavy->id]), $cart);
+
+    expect($order->shipping)->toBe(40000);
+});
+
+it('rejects an order when no shipping bracket matches the cart weight', function () {
+    $fx = orderFixtures();
+    $cart = cartWithWeight($fx, 4, 3); // 12 kg, seule tranche existante : 0-5 kg
+
+    expect(fn () => app(OrderService::class)->createOrder(orderRequest($fx), $cart))
+        ->toThrow(DomainException::class);
+
+    expect(Order::count())->toBe(0);
+});
+
 it('rejects an unknown shipping option', function () {
     $fx = orderFixtures();
-    $product = Product::factory()->create(['categorie_id' => $fx['category']->id, 'stock' => 5]);
-    $cart = app(CartService::class);
-    $cart->add($product->id, $product->nom, 1000, 5, 1);
+    $cart = cartWithWeight($fx, 1);
 
     expect(fn () => app(OrderService::class)->createOrder(orderRequest($fx, ['livraison' => 9999]), $cart))
-        ->toThrow(ModelNotFoundException::class);
+        ->toThrow(DomainException::class);
 });

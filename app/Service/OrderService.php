@@ -8,8 +8,8 @@ use App\Enum\RoleEnum;
 use App\Models\Client;
 use App\Models\Country;
 use App\Models\Order;
-use App\Models\Shipping;
 use App\Models\User;
+use DomainException;
 use Exception;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
@@ -53,7 +53,17 @@ final class OrderService
             }
 
             // 3. infos commande
-            $shipping = Shipping::findOrFail($request->integer('livraison'));
+            // Le tarif est recalculé côté serveur ; l'ID `livraison` du formulaire ne sert
+            // qu'à vérifier que le client a bien vu (et accepté) ce tarif-là.
+            $shipping = app(ShippingService::class)->resolve(
+                (int) $country->id,
+                (int) $request->transport_id,
+                $cart->getTotalWeight(),
+            );
+
+            if ($shipping === null || $shipping->id !== $request->integer('livraison')) {
+                throw new DomainException('Tarif de livraison invalide pour cette commande.');
+            }
 
             $totalWeight = $cart->getContent()
                 ->pluck('attributes.poids')

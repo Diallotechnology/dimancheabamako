@@ -21,12 +21,13 @@ Bugs rencontrés pendant d'autres chantiers, notés ici pour être corrigés ens
 
 # Audit sécurité du 2026-11-04 (C1 et C2 corrigés avec tests : `tests/Feature/AccountTakeoverTest.php`)
 
-## 2026-11-04 — I1 · Frais de livraison choisis par le client
+## 2026-11-04 — I1 · Frais de livraison choisis par le client — ✅ RÉSOLU (2026-11-05)
 
 - **Où** : `app/Service/OrderService.php` (`Shipping::findOrFail($request->integer('livraison'))`), `app/Http/Controllers/OrderController.php:store`.
 - **Cause** : l'ID du tarif vient du formulaire et n'est jamais recoupé avec le pays, le transport ni le poids du panier ; `$order->shipping` et le montant envoyé à N-Genius en dépendent.
 - **Symptôme** : en envoyant l'ID du tarif le moins cher, le client paie moins de frais de port que dû.
 - **Piste** : recalculer côté serveur via `CartAction::getShippingCost($country_id, $transport_id)` et ignorer `livraison`. Test RED obligatoire (logique financière).
+- **Résolution** : nouveau `app/Service/ShippingService::resolve()` (source unique, aussi utilisé par `CartAction::getShippingCost`) ; `OrderService::createOrder` recalcule le tarif (pays, transport, poids du panier via `CartService::getTotalWeight()`) et rejette la commande (`DomainException`) si `livraison` diffère ou s'il n'existe aucun tarif. Tests dans `tests/Feature/OrderServiceTest.php`.
 
 ## 2026-11-04 — I2 · `GET order/cancel` supprime n'importe quelle commande
 
@@ -105,3 +106,10 @@ Bugs rencontrés pendant d'autres chantiers, notés ici pour être corrigés ens
 - **Cause** : le gabarit d'environnement encourage le debug activé et un cookie de session sans drapeau `Secure`.
 - **Symptôme** : si copié tel quel en production, stack traces exposées et cookie envoyé en HTTP.
 - **Piste** : vérifier le `.env` de production (`APP_DEBUG=false`, `SESSION_SECURE_COOKIE=true`) ; mettre `APP_DEBUG=false` dans `.env.example`.
+
+## 2026-11-05 — Poids de la commande toujours à `0 Kg`
+
+- **Où** : `app/Service/OrderService.php` (`$totalWeight = $cart->getContent()->pluck('attributes.poids')->sum()`, puis `'poids' => $totalWeight.' Kg'`).
+- **Cause** : `poids` est une clé de premier niveau de chaque ligne du panier, pas dans `attributes` (qui ne contient que `cover` et `reduction`). Le `pluck` ne trouve rien et, en plus, ne multiplie pas par la quantité.
+- **Symptôme** : la colonne `orders.poids` vaut `0 Kg` pour toutes les commandes (à confirmer en base), donc le poids affiché dans l'admin et sur la facture est faux.
+- **Piste** : utiliser `$cart->getTotalWeight()` (ajouté pour I1). Pas de test RED obligatoire (affichage), mais un test dans `OrderServiceTest` est peu coûteux.

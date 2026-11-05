@@ -7,7 +7,7 @@ namespace App\Helper;
 use App\Models\Product;
 use App\Models\Shipping;
 use App\Service\CartService;
-use Illuminate\Support\Facades\DB;
+use App\Service\ShippingService;
 
 trait CartAction
 {
@@ -78,46 +78,14 @@ trait CartAction
 
     public function getWeight(bool $format = false): float|string
     {
-        $total = $this->cart->getContent()
-            ->map(function ($item) {
-
-                $weight = $item['poids'] ?? 0;
-
-                // Convertir les chaînes avec virgule → float (1,23 → 1.23)
-                if (is_string($weight)) {
-                    $weight = (float) (str_replace(',', '.', $weight));
-                }
-
-                return $weight * $item['quantity'];
-            })
-            ->sum();
+        $total = $this->cart->getTotalWeight();
 
         return $format ? number_format($total, 2, '.', ' ').' kg' : $total;
     }
 
     public function getShippingCost(int $countryId, int $transportId): ?Shipping
     {
-        // poids total
-        $totalWeight = $this->getWeight();
-
-        if ($totalWeight <= 0) {
-            return null; // panier vide ou poids invalide
-        }
-
-        // zone du pays
-        $zoneId = DB::table('countries')->select('zone_id', 'id')->where('id', $countryId)->value('zone_id');
-
-        // récupérer la correspondance shipping
-        return Shipping::query()
-            ->select('id', 'zone_id', 'transport_id', 'montant', 'temps')
-            ->where('zone_id', $zoneId)
-            ->where('transport_id', $transportId)
-            ->whereHas('poids', function ($query) use ($totalWeight) {
-                $query
-                    ->where('min', '<=', $totalWeight)
-                    ->where('max', '>=', $totalWeight);
-            })
-            ->first();
+        return app(ShippingService::class)->resolve($countryId, $transportId, $this->cart->getTotalWeight());
     }
 
     public function getShippingAmount(int $countryId, int $transportId): ?int

@@ -173,6 +173,23 @@ final class CartService
         return $this->load()->sum('quantity');
     }
 
+    /**
+     * Poids total du panier en kg (Σ poids × quantité).
+     */
+    public function getTotalWeight(): float
+    {
+        return (float) $this->load()->sum(function (Collection $item): float {
+            $weight = $item['poids'] ?? 0;
+
+            // Les poids saisis avec une virgule (1,23) sont convertis en float.
+            if (is_string($weight)) {
+                $weight = (float) str_replace(',', '.', $weight);
+            }
+
+            return (float) $weight * (int) $item['quantity'];
+        });
+    }
+
     public function has(int $id): bool
     {
         return $this->load()->has($id);
