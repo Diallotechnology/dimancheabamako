@@ -115,6 +115,7 @@ return [
     'panier' => [
         'not_transport' => 'Aucune correspondance trouvée pour le transport choisi.',
         'not_deliver' => 'Nous ne livrons pas dans ce pays!',
+        'shipping_changed' => 'Le tarif de livraison a changé ou ne correspond plus à votre panier. Merci de vérifier votre panier puis de valider à nouveau.',
     ],
     'register_email_message' => 'Un e-mail de confirmation vous a été envoyé. Merci de cliquer sur le lien pour valider votre compte. Vous n\'avez rien reçu ? Vérifiez vos spams.',
     'register_success_msg' => 'Votre compte a été activé avec succès !',

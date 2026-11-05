@@ -12,6 +12,7 @@ use App\Http\Requests\UpdateOrderRequest;
 use App\Models\Order;
 use App\Service\CartService;
 use App\Service\OrderService;
+use DomainException;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -77,6 +78,11 @@ final class OrderController extends Controller
             });
 
             return redirect()->away($redirectUrl);
+        } catch (DomainException $e) {
+            // Tarif de livraison périmé ou incohérent (panier modifié depuis l'affichage) : cas légitime.
+            session()->flash('warning', __('messages.panier.shipping_changed'));
+
+            return back();
         } catch (Throwable $e) {
             Log::error('Order failed rollback', ['error' => $e->getMessage()]);
             flash()->error('La validation a échoué. Aucune donnée enregistrée.');
