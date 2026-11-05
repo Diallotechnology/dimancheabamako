@@ -14,6 +14,7 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\URL;
 use Illuminate\View\View;
 
 final class AuthenticatedSessionController extends Controller
@@ -39,7 +40,9 @@ final class AuthenticatedSessionController extends Controller
         if (! $user->change_password) {
             Auth::logout();
 
-            return redirect()->route('change.password', ['email' => $user->email]);
+            return redirect()->to(
+                URL::temporarySignedRoute('change.password', now()->addMinutes(30), ['email' => $user->email])
+            );
         }
         // Save the 'user_id' from the session if it exists
         $cart = app(CartService::class);
@@ -55,6 +58,9 @@ final class AuthenticatedSessionController extends Controller
 
     public function update(UpdateUserProfilRequest $request, User $user)
     {
+        // authorize() garantit que {user} est l'utilisateur connecté ; on n'agit que sur lui.
+        $user = $request->user();
+
         if (! empty($request->password_confirmation) and ! empty($request->password)) {
             $user->forceFill([
                 'password' => Hash::make($request->password),

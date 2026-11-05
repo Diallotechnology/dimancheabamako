@@ -15,9 +15,8 @@
             </div>
             @enderror
             <x-auth-session-status class="mb-4" :status="session('status')" />
-            <form id="formAuthentication" class="mb-3" action="{{ route('change_password') }}" method="post">
+            <form id="formAuthentication" class="mb-3" action="{{ $action }}" method="post">
                 @csrf
-                <input type="hidden" name="email" value="{{ $email }}">
                 <div class="mb-3 form-password-toggle">
                     <label class="form-label" for="password">@lang('messages.new_password')</label>
                     <div class="input-group input-group-merge">

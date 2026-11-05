@@ -4,12 +4,12 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Stack réelle (diffère des conventions globales)
 
-Ce dépôt est un site e-commerce (« Dimanche à Bamako ») en **Laravel 12 + PHP ^8.2**, avec **deux couches front distinctes** :
+Ce dépôt est un site e-commerce (« Dimanche à Bamako ») en **Laravel 13 + PHP ^8.4**, avec **deux couches front distinctes** :
 
-- **Vitrine publique** : Blade + **Livewire 3** (`app/Livewire`, `resources/views`). Routes `shop`, `panier`, etc.
-- **Back-office admin** : **Inertia v1 + Vue 3** (JS, pas TypeScript) dans `resources/js/Pages/Admin/*`, routes préfixées `admin/`.
+- **Vitrine publique** : Blade + **Livewire 4** (`app/Livewire`, `resources/views`). Routes `shop`, `panier`, etc.
+- **Back-office admin** : **Inertia 3 + Vue 3** (JS, pas TypeScript) dans `resources/js/Pages/Admin/*`, routes préfixées `admin/`.
 
-Écarts avec le `~/.claude/CLAUDE.md` global : pas de Wayfinder (les routes Vue passent par **Ziggy**, `route('nom')`), pas de Pest/Larastan installés (PHPUnit 11 uniquement, dossier `tests/` vide), pas de TypeScript, Tailwind non configuré (pas de `tailwind.config`, PostCSS sans plugin ; `resources/css/app.css` importe un CSS maison `assets/css/main.css`, style Bootstrap-like). Ne pas migrer ces éléments sans demande explicite.
+Écarts avec le `~/.claude/CLAUDE.md` global : pas de Wayfinder (les routes Vue passent par **Ziggy**, `route('nom')`), pas de TypeScript, Tailwind non configuré (pas de `tailwind.config`, PostCSS sans plugin ; `resources/css/app.css` importe un CSS maison `assets/css/main.css`, style Bootstrap-like). Ne pas migrer ces éléments sans demande explicite. En revanche **Pest 4 + Larastan niveau 6 sont bien installés** (`phpstan.neon`, tests dans `tests/Feature`).
 
 ## Commandes
 
@@ -19,11 +19,12 @@ php artisan migrate
 npm run dev            # Vite (resources/js/app.js, SSR : resources/js/ssr.js)
 npm run build
 vendor/bin/pint        # style (preset laravel + règles strictes dans pint.json : final_class, declare_strict_types, strict_comparison…)
-php artisan test       # ou vendor/bin/phpunit ; un seul test : php artisan test --filter=NomDuTest
+vendor/bin/pest        # ou composer test ; un seul fichier : vendor/bin/pest tests/Feature/NomTest.php
+vendor/bin/phpstan analyse   # Larastan niveau 6
 php artisan schedule:work   # nécessaire en local : les paiements/commandes dépendent du scheduler
 ```
 
-DB MySQL (`.env.example` : base `laravel`), `QUEUE_CONNECTION=sync` par défaut. `phpunit.xml` a la config SQLite commentée : les tests tourneraient sur la base MySQL configurée, à vérifier avant d'écrire des tests de feature.
+DB MySQL (`.env.example` : base `laravel`), `QUEUE_CONNECTION=sync` par défaut. `phpunit.xml` force SQLite en mémoire pour les tests (`RefreshDatabase` dans `tests/Pest.php`) : les tests ne touchent pas la base MySQL.
 
 ## Architecture
 
