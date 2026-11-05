@@ -19,7 +19,7 @@ php artisan migrate
 npm run dev            # Vite (resources/js/app.js, SSR : resources/js/ssr.js)
 npm run build
 vendor/bin/pint        # style (preset laravel + règles strictes dans pint.json : final_class, declare_strict_types, strict_comparison…)
-vendor/bin/pest        # un seul fichier : vendor/bin/pest tests/Feature/NomTest.php
+vendor/bin/pest        # ou composer test ; un seul fichier : vendor/bin/pest tests/Feature/NomTest.php
 vendor/bin/phpstan analyse   # Larastan niveau 6
 php artisan schedule:work   # nécessaire en local : les paiements/commandes dépendent du scheduler
 ```
