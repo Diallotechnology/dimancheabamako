@@ -190,7 +190,12 @@
                     </Link>
                 </NavLink>
                 <NavLink :active="route().current('maintenance')">
-                    <Link class="menu-link" :href="route('maintenance')">
+                    <Link
+                        class="menu-link"
+                        :href="route('maintenance')"
+                        method="post"
+                        as="button"
+                    >
                         <i
                             class="icon material-icons md-settings_applications"
                         ></i>

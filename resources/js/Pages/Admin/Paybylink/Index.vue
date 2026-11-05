@@ -107,6 +107,8 @@ function copyMe(link) {
                         <div class="d-flex">
                             <Link
                                 :href="route('paylink.regenerate', row.id)"
+                                method="post"
+                                as="button"
                                 class="btn btn-sm font-sm rounded btn-brand m-1"
                                 :disabled="processing"
                                 @click="processing = true"

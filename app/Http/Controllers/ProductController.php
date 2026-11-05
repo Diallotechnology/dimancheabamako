@@ -9,6 +9,7 @@ use App\Http\Requests\StoreProductRequest;
 use App\Http\Requests\UpdateProductRequest;
 use App\Models\Category;
 use App\Models\Product;
+use Illuminate\Http\Response;
 use Inertia\Inertia;
 
 final class ProductController extends Controller
@@ -82,11 +83,11 @@ final class ProductController extends Controller
     /**
      * Show the form for creating a new resource.
      */
-    public function favoris_update(int $data, $product_id)
+    public function favoris_update(int $data, int $product_id): Response
     {
-        $row = Product::find($product_id);
+        Product::findOrFail($product_id)->update(['favoris' => $data]);
 
-        return $row->update(['favoris' => $data]);
+        return response()->noContent();
     }
 
     /**

@@ -34,7 +34,7 @@ const { filters, resetFilters } = useFilter(
 
 const favori = (url) => {
     axios
-        .get(url)
+        .put(url)
         .then(() => {
             notify("Produit ajouter comme favori avec success !", true);
             router.reload();

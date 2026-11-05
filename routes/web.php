@@ -45,7 +45,7 @@ Route::prefix('admin')->middleware('auth', 'verified')->group(function () {
         Route::resource('paylink', PayLinkController::class)->except('index', 'create', 'show');
         Route::resource('devise', DeviseController::class)->except('index', 'create', 'show', 'store');
         Route::get('transport/{transport}', [TransportController::class, 'get_trans_zone'])->name('transport.zone');
-        Route::get('paylink/{paylink}/regenerate', [PayLinkController::class, 'regenerate'])->name('paylink.regenerate');
+        Route::post('paylink/{paylink}/regenerate', [PayLinkController::class, 'regenerate'])->name('paylink.regenerate');
         Route::resource('slide', SlideController::class)->except('index', 'create');
 
         Route::controller(AdminController::class)->group(function () {
@@ -61,13 +61,13 @@ Route::prefix('admin')->middleware('auth', 'verified')->group(function () {
             Route::get('poids', 'poids')->name('poids');
             Route::get('devise', 'devise')->name('devise');
             Route::get('slide', 'slide')->name('slide');
-            Route::get('maintenance', 'maintenance')->name('maintenance');
+            Route::post('maintenance', 'maintenance')->name('maintenance');
             Route::get('paylink', 'paylink')->name('paylink');
         });
     });
     Route::middleware('role:'.RoleEnum::SECRTETAIRE->value)->group(function () {
         Route::resource('order', OrderController::class)->except('index', 'create', 'store');
-        Route::get('product/favoris/{data}/{product_id}', [ProductController::class, 'favoris_update'])->name('product.favori');
+        Route::put('product/favoris/{data}/{product_id}', [ProductController::class, 'favoris_update'])->whereIn('data', ['0', '1'])->name('product.favori');
         Route::resource('category', CategoryController::class)->except('index', 'create', 'show');
         Route::resource('product', ProductController::class)->except('index');
         Route::controller(AdminController::class)->group(function () {
