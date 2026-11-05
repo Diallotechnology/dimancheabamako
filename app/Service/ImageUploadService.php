@@ -24,14 +24,22 @@ final readonly class ImageUploadService
      */
     public function store(UploadedFile $file, string $directory): string
     {
+        return $this->storeFromPath((string) $file->getRealPath(), $directory);
+    }
+
+    /**
+     * Même traitement à partir d'un fichier local (import en masse).
+     */
+    public function storeFromPath(string $path, string $directory): string
+    {
         $image = $this->manager
-            ->decodePath($file->getRealPath())
+            ->decodePath($path)
             ->scaleDown(width: self::MAX_WIDTH);
 
-        $path = mb_trim($directory, '/').'/'.Str::uuid()->toString().'.webp';
+        $stored = mb_trim($directory, '/').'/'.Str::uuid()->toString().'.webp';
 
-        Storage::disk('public')->put($path, (string) $image->encodeUsingFormat(Format::WEBP, quality: self::QUALITY));
+        Storage::disk('public')->put($stored, (string) $image->encodeUsingFormat(Format::WEBP, quality: self::QUALITY));
 
-        return $path;
+        return $stored;
     }
 }

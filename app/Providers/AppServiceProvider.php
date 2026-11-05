@@ -6,6 +6,10 @@ namespace App\Providers;
 
 use App\Helper\ProductView;
 use App\Models\Product;
+use App\Service\Ai\GeminiProductDescriptionGenerator;
+use App\Service\Ai\MistralProductDescriptionGenerator;
+use App\Service\Ai\OllamaProductDescriptionGenerator;
+use App\Service\Ai\ProductDescriptionGenerator;
 use App\Service\CategoryService;
 use App\Service\PriceService;
 use Illuminate\Database\Eloquent\Model;
@@ -29,6 +33,13 @@ final class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
+        // Changer de fournisseur IA = changer cette ligne, sans toucher au job.
+        $this->app->bind(ProductDescriptionGenerator::class, fn (): ProductDescriptionGenerator => match (config('services.ai.product_provider')) {
+            'gemini' => new GeminiProductDescriptionGenerator,
+            'ollama' => new OllamaProductDescriptionGenerator,
+            default => new MistralProductDescriptionGenerator,
+        });
+
         $this->app->singleton(ImageManager::class, fn (): ImageManager => new ImageManager(
             extension_loaded('imagick') ? ImagickDriver::class : GdDriver::class,
         ));
