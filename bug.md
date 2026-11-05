@@ -55,12 +55,14 @@ Bugs rencontrés pendant d'autres chantiers, notés ici pour être corrigés ens
 - **Correction de l'audit** : le point « pas de `session()->regenerate()` / fixation de session » était un **faux positif** : `Auth::attempt()` → `SessionGuard::login()` → `updateSession()` régénère déjà la session. Les deux autres points (pas de limitation de tentatives, pas de contrôle `change_password`) étaient réels.
 - **Résolution** : nouveau `app/Service/LoginService` (limitation 5 tentatives sur la clé `email|ip`, tentative d'authentification, URL signée de changement de mot de passe) utilisé par `LoginRequest`, `AuthenticatedSessionController` et `Panier::login_submit`. Le compteur est partagé entre les deux formulaires. Les erreurs du panier s'affichent maintenant sous le champ e-mail. Tests dans `tests/Feature/PanierLoginTest.php`.
 
-## 2026-11-04 — I5 · Données personnelles dans les logs N-Genius
+## 2026-11-04 — I5 · Données personnelles dans les logs N-Genius — ✅ RÉSOLU (2026-11-05)
 
 - **Où** : `app/Helper/OrderAPI.php:39` (`'response' => $data`) et `:53-56` (`'order' => $order`) ; `app/Http/Controllers/PayLinkController.php:74-77` (`getTraceAsString()`).
 - **Cause** : le payload complet de la commande (email, adresse de facturation, nom du porteur, PAN masqué) est écrit tel quel dans `laravel.log`.
 - **Symptôme** : données personnelles et de paiement en clair dans les logs.
 - **Piste** : ne logger que `reference`, `state` et le statut HTTP. À coordonner avec l'entrée « Paiement N-Genius invisible » ci-dessus (logger le corps d'erreur utile sans fuite de données).
+- **Résolution** : `OrderAPI::ngeniusLogContext()` ne garde que `reference`, les états de paiement et les clés de premier niveau ; utilisé dans `OrderAPI` (commande sans bloc paiement, annulation sans référence de paiement) et `CheckPayment` (« Payment state missing »). `PayLinkController::store` ne logue plus la trace complète. Tests dans `tests/Feature/NgeniusLogPrivacyTest.php`.
+- **Volontairement conservé** : les corps de réponses d'erreur N-Genius (`'body' => $response->json()`), utiles au diagnostic (cf. entrée « Paiement N-Genius invisible ») et qui ne contiennent pas le payload client. À revérifier si N-Genius y renvoie un jour des données de commande. Les jobs mail loguent `$exception->getMessage()` : un message d'erreur SMTP peut contenir une adresse e-mail, non traité ici.
 
 ## 2026-11-04 — M1 · Actions sensibles déclenchées en GET
 

@@ -70,7 +70,7 @@ final class CheckPayment extends Command
                         if (! $state) {
                             Log::warning('Payment state missing', [
                                 'order_id' => $order->id,
-                                'response' => $data,
+                                'response' => $this->ngeniusLogContext($data),
                             ]);
 
                             return;

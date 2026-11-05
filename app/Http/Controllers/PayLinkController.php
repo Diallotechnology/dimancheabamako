@@ -73,7 +73,6 @@ final class PayLinkController extends Controller
 
             Log::error('Erreur PayLink::store()', [
                 'message' => $e->getMessage(),
-                'trace' => $e->getTraceAsString(),
             ]);
 
             flash()->error('Impossible de créer le lien de paiement.');

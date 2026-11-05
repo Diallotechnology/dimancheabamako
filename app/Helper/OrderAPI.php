@@ -36,7 +36,7 @@ trait OrderAPI
         $data = $response->json();
 
         if (! isset($data['_embedded']['payment'])) {
-            Log::error('NGENIUS: Missing payment embedded data', ['response' => $data]);
+            Log::error('NGENIUS: Missing payment embedded data', $this->ngeniusLogContext($data));
         }
 
         return $data;
@@ -52,7 +52,7 @@ trait OrderAPI
         if (! $payment) {
             Log::error('NGENIUS: Payment reference missing', [
                 'orderReference' => $orderReference,
-                'order' => $order,
+                'order' => $this->ngeniusLogContext($order),
             ]);
             throw new Exception('Impossible de trouver la référence du paiement.');
         }
@@ -138,6 +138,24 @@ trait OrderAPI
         }
 
         return $response->json();
+    }
+
+    /**
+     * Résumé d'une réponse N-Genius pour les logs : jamais le payload brut
+     * (e-mail, adresse de facturation, titulaire et numéro de carte masqué).
+     *
+     * @param  array<string, mixed>  $data
+     * @return array<string, mixed>
+     */
+    protected function ngeniusLogContext(array $data): array
+    {
+        $payments = data_get($data, '_embedded.payment', []);
+
+        return [
+            'reference' => data_get($data, 'reference'),
+            'payment_states' => is_array($payments) ? array_column($payments, 'state') : [],
+            'keys' => array_keys($data),
+        ];
     }
 
     /** BASE REQUEST (timeout + retry + headers) */
