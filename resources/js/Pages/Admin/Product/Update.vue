@@ -26,6 +26,7 @@ const form = useForm({
     poids: props.product.poids,
     prix: props.product.prix,
     stock: props.product.stock,
+    stock_initial: props.product.stock,
     favoris: props.product.favoris ? 1 : 0,
     is_preorder: props.product.is_preorder ? 1 : 0,
     cover: null,
@@ -50,6 +51,7 @@ const submit = () => {
             form.poids = props.product.poids;
             form.prix = props.product.prix;
             form.stock = props.product.stock;
+            form.stock_initial = props.product.stock;
             form.favoris = props.product.favoris;
             form.cover = props.product.cover;
             form.image = props.product.image;

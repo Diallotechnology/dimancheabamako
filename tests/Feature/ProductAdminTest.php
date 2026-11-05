@@ -100,7 +100,8 @@ function updatePayload(Product $product, array $overrides = []): array
         'resume' => 'x',
         'poids' => '1',
         'prix' => 1000,
-        'stock' => 1,
+        'stock' => $product->stock,
+        'stock_initial' => $product->stock,
         'favoris' => 0,
         'is_preorder' => 0,
     ], $overrides);

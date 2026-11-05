@@ -10,6 +10,8 @@ use App\Http\Requests\UpdateProductRequest;
 use App\Models\Category;
 use App\Models\Product;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Validation\ValidationException;
 use Inertia\Inertia;
 
 final class ProductController extends Controller
@@ -99,6 +101,9 @@ final class ProductController extends Controller
 
         unset($data['video'], $data['cover'], $data['image']);
 
+        $stockInitial = (int) $data['stock_initial'];
+        unset($data['stock_initial']);
+
         if ($request->hasFile('cover')) {
             $this->deleteStored($product->getRawOriginal('cover'));
 
@@ -121,7 +126,21 @@ final class ProductController extends Controller
             $this->file_uplode($request, $product);
         }
 
-        $product->update($data);
+        // Le stock saisi est une valeur absolue vue à l'ouverture du formulaire : on n'applique que
+        // l'écart sur le stock réel (verrouillé), pour ne pas écraser les réservations concurrentes.
+        DB::transaction(function () use ($product, $data, $stockInitial): void {
+            $locked = Product::query()->lockForUpdate()->findOrFail($product->id);
+            $newStock = $locked->stock + ((int) $data['stock'] - $stockInitial);
+
+            if ($newStock < 0) {
+                throw ValidationException::withMessages([
+                    'stock' => 'Le stock réel ('.$locked->stock.') est inférieur à la réduction demandée : des commandes ont réservé du stock entre-temps.',
+                ]);
+            }
+
+            $data['stock'] = $newStock;
+            $locked->update($data);
+        });
 
         return back();
     }

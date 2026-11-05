@@ -39,6 +39,8 @@ final class UpdateProductRequest extends FormRequest
             'image' => 'nullable|array',
             'prix' => 'required|integer|min:0',
             'stock' => 'required|integer|min:0',
+            // Stock affiché à l'ouverture du formulaire : sert à calculer le delta saisi par l'admin.
+            'stock_initial' => 'required|integer|min:0',
 
             'video' => ['nullable', 'file', 'mimetypes:video/mp4,video/quicktime,video/webm', 'max:51200'],
             'cover' => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp', 'max:5120'],
@@ -76,6 +78,9 @@ final class UpdateProductRequest extends FormRequest
 
             'stock.required' => 'Le stock est obligatoire.',
             'stock.integer' => 'Le stock doit être un nombre entier.',
+
+            'stock_initial.required' => 'Le stock initial est obligatoire.',
+            'stock_initial.integer' => 'Le stock initial doit être un nombre entier.',
         ];
     }
 }

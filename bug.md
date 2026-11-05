@@ -166,8 +166,10 @@ edirect()->to(...)` dont le résultat est jeté est du code mort.
 - **Symptôme** : n'importe qui peut vider son propre panier en ouvrant `/order/validate` (sans gravité de sécurité) ; la page « validée » s'affiche sans preuve de paiement.
 - **Piste** : ne vider le panier et n'afficher la confirmation que si la référence de session `pending_order_ref` correspond à une commande `PURCHASED` ; supprimer la ligne morte.
 
-## 2026-11-05 — Écriture admin du stock = valeur absolue (écrase les réservations)
+## 2026-11-05 — Écriture admin du stock = valeur absolue (écrase les réservations) — ✅ RÉSOLU (2026-11-05)
 Hors périmètre de la réservation de stock. `ProductController@update` (`$product->update($data)`) et `store` écrivent `stock` tel que saisi dans le formulaire. Une édition admin pendant des commandes en cours écrase les décréments/restitutions faits entre le chargement de la page et l'envoi (lost update) : avec la réservation à la commande, le stock réservé peut être « rendu » par erreur. À traiter séparément (delta, ou verrou + rechargement).
+
+> Résolution : `UpdateProductRequest` exige `stock_initial` (stock affiché à l'ouverture du formulaire) ; `ProductController@update` applique, sous transaction et `lockForUpdate`, `stock réel + (stock saisi − stock_initial)` et refuse (erreur sur `stock`) un résultat négatif. `Update.vue` envoie `stock_initial` (resynchronisé après succès). La création (`store`) est inchangée. Tests : `tests/Feature/AdminProductStockTest.php`.
 
 ## 2026-11-05 — Notification `STOCK` renvoyée chaque minute
 Hors périmètre. Une commande PURCHASED passée en `etat = STOCK` garde `reference` null et reste dans la sélection de `app:check-payment` : la notification `NotifOrderStockIssue` repart à chaque passage, sans mail client ni remboursement. Avec la réservation, le cas ne devrait plus se produire (filet `stock < 0` seulement), mais le comportement n'a pas été refondu.
