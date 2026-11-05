@@ -5,12 +5,13 @@ declare(strict_types=1);
 namespace App\Service;
 
 use App\Enum\RoleEnum;
+use App\Exceptions\StaleCartException;
 use App\Models\Client;
 use App\Models\Country;
 use App\Models\Order;
+use App\Models\Product;
 use App\Models\User;
 use DomainException;
-use Exception;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 
@@ -19,6 +20,25 @@ final class OrderService
     public function createOrder($request, CartService $cart): Order
     {
         return DB::transaction(function () use ($request, $cart) {
+
+            // 0. Le panier vient du cache (24 h) : prix, promo, stock et poids sont relus en base,
+            // produits verrouillés, AVANT tout calcul (poids de livraison, totaux, montant N-Genius).
+            $products = Product::query()
+                ->whereIn('id', $cart->getContent()->keys())
+                ->with('activePromotion')
+                ->lockForUpdate()
+                ->get()
+                ->keyBy('id');
+
+            if ($cart->refreshFromProducts($products)) {
+                throw new StaleCartException('Le prix ou la disponibilité d\'un produit a changé.');
+            }
+
+            foreach ($cart->getContent() as $item) {
+                if ($item['is_preorder'] === false && $item['quantity'] > $item['stock']) {
+                    throw new StaleCartException("Stock insuffisant pour {$item['name']}");
+                }
+            }
 
             // 1. Pays + contact normalisé
             $country = Country::findOrFail($request->country_id);
@@ -80,13 +100,8 @@ final class OrderService
                 'commentaire' => $request->commentaire,
             ]);
 
-            // 4. vérifier stock + attach
+            // 4. attach (prix et stock déjà revalidés en début de transaction)
             foreach ($cart->getContent() as $item) {
-
-                if ($item['is_preorder'] === false and $item['quantity'] > $item['stock']) {
-                    throw new Exception("Stock insuffisant pour {$item['name']}");
-                }
-
                 $order->products()->attach(
                     (int) $item['id'],
                     [

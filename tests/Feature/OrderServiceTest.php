@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use App\Exceptions\StaleCartException;
 use App\Models\Category;
 use App\Models\Client;
 use App\Models\Country;
@@ -13,6 +14,7 @@ use App\Models\Transport;
 use App\Models\Zone;
 use App\Service\CartService;
 use App\Service\OrderService;
+use DomainException;
 use Illuminate\Http\Request;
 
 function orderFixtures(): array
@@ -49,7 +51,7 @@ function orderRequest(array $fx, array $extra = []): Request
 
 it('creates an order, takes shipping from the database and prices lines from the cart', function () {
     $fx = orderFixtures();
-    $product = Product::factory()->create(['categorie_id' => $fx['category']->id, 'prix' => 20000, 'stock' => 10]);
+    $product = Product::factory()->create(['categorie_id' => $fx['category']->id, 'prix' => 20000, 'stock' => 10, 'poids' => 1.5]);
 
     $cart = app(CartService::class);
     $cart->add($product->id, $product->nom, 20000, 10, 1.5);
@@ -67,7 +69,7 @@ it('creates an order, takes shipping from the database and prices lines from the
 
 it('reuses the same client for the same contact and email', function () {
     $fx = orderFixtures();
-    $product = Product::factory()->create(['categorie_id' => $fx['category']->id, 'stock' => 10]);
+    $product = Product::factory()->create(['categorie_id' => $fx['category']->id, 'prix' => 1000, 'poids' => 1, 'stock' => 10]);
     $cart = app(CartService::class);
     $cart->add($product->id, $product->nom, 1000, 10, 1);
 
@@ -80,21 +82,21 @@ it('reuses the same client for the same contact and email', function () {
 
 it('rejects an order when stock is insufficient and rolls everything back', function () {
     $fx = orderFixtures();
-    $product = Product::factory()->create(['categorie_id' => $fx['category']->id, 'stock' => 0, 'is_preorder' => false]);
+    $product = Product::factory()->create(['categorie_id' => $fx['category']->id, 'prix' => 1000, 'poids' => 1, 'stock' => 0, 'is_preorder' => false]);
 
     // Panier dont la quantité (1) dépasse le stock actuel (0), comme si le stock avait baissé depuis l'ajout.
     $cart = app(CartService::class);
     $cart->add($product->id, $product->nom, 1000, 0, 1);
 
     expect(fn () => app(OrderService::class)->createOrder(orderRequest($fx), $cart))
-        ->toThrow(Exception::class, 'Stock insuffisant');
+        ->toThrow(StaleCartException::class, 'Stock insuffisant');
 
     expect(Order::count())->toBe(0);
 });
 
 it('allows ordering beyond stock for preorder products', function () {
     $fx = orderFixtures();
-    $product = Product::factory()->create(['categorie_id' => $fx['category']->id, 'stock' => 0, 'is_preorder' => true]);
+    $product = Product::factory()->create(['categorie_id' => $fx['category']->id, 'prix' => 1000, 'poids' => 1, 'stock' => 0, 'is_preorder' => true]);
 
     $cart = app(CartService::class);
     $cart->add($product->id, $product->nom, 1000, 0, 1, true);
@@ -107,7 +109,7 @@ it('allows ordering beyond stock for preorder products', function () {
 
 function cartWithWeight(array $fx, float $poids, int $quantity = 1): CartService
 {
-    $product = Product::factory()->create(['categorie_id' => $fx['category']->id, 'stock' => 20]);
+    $product = Product::factory()->create(['categorie_id' => $fx['category']->id, 'prix' => 1000, 'poids' => $poids, 'stock' => 20]);
     $cart = app(CartService::class);
     $cart->add($product->id, $product->nom, 1000, 20, $poids);
     $cart->update($product->id, $quantity);
@@ -180,4 +182,88 @@ it('rejects an unknown shipping option', function () {
 
     expect(fn () => app(OrderService::class)->createOrder(orderRequest($fx, ['livraison' => 9999]), $cart))
         ->toThrow(DomainException::class);
+});
+
+// M2 — prix et stock du panier (cache) revalidés avec la base à la commande
+
+it('refuses an order when the product price changed since it was added to the cart', function () {
+    $fx = orderFixtures();
+    $product = Product::factory()->create(['categorie_id' => $fx['category']->id, 'prix' => 20000, 'stock' => 10]);
+
+    $cart = app(CartService::class);
+    $cart->add($product->id, $product->nom, 20000, 10, 1.0);
+
+    $product->update(['prix' => 25000]);
+
+    expect(fn () => app(OrderService::class)->createOrder(orderRequest($fx), $cart))
+        ->toThrow(StaleCartException::class);
+
+    // Aucune commande créée, et le panier affiche désormais le prix réel.
+    expect(Order::count())->toBe(0)
+        ->and((int) $cart->get($product->id)['price'])->toBe(25000)
+        ->and((int) $cart->getTotal())->toBe(25000);
+});
+
+it('refuses an order when the promotion applied in the cart has expired', function () {
+    $fx = orderFixtures();
+    $product = Product::factory()->create(['categorie_id' => $fx['category']->id, 'prix' => 20000, 'stock' => 10]);
+
+    // Le panier a été rempli à -50 % ; aucune promotion active n'existe plus en base.
+    $cart = app(CartService::class);
+    $cart->add($product->id, $product->nom, 10000, 10, 1.0);
+
+    expect(fn () => app(OrderService::class)->createOrder(orderRequest($fx), $cart))
+        ->toThrow(StaleCartException::class);
+
+    expect(Order::count())->toBe(0)
+        ->and((int) $cart->getTotal())->toBe(20000);
+});
+
+it('refuses an order when stock dropped below the cart quantity', function () {
+    $fx = orderFixtures();
+    $product = Product::factory()->create(['categorie_id' => $fx['category']->id, 'prix' => 20000, 'stock' => 10, 'is_preorder' => false]);
+
+    $cart = app(CartService::class);
+    $cart->add($product->id, $product->nom, 20000, 10, 1.0);
+    $cart->update($product->id, 5);
+
+    $product->update(['stock' => 2]);
+
+    expect(fn () => app(OrderService::class)->createOrder(orderRequest($fx), $cart))
+        ->toThrow(StaleCartException::class, 'Stock insuffisant');
+
+    expect(Order::count())->toBe(0);
+});
+
+it('refuses an order when a product of the cart no longer exists', function () {
+    $fx = orderFixtures();
+    $product = Product::factory()->create(['categorie_id' => $fx['category']->id, 'prix' => 20000, 'stock' => 10]);
+
+    $cart = app(CartService::class);
+    $cart->add($product->id, $product->nom, 20000, 10, 1.0);
+
+    $product->delete();
+
+    expect(fn () => app(OrderService::class)->createOrder(orderRequest($fx), $cart))
+        ->toThrow(StaleCartException::class);
+
+    expect(Order::count())->toBe(0)
+        ->and($cart->getContent())->toBeEmpty();
+});
+
+it('computes the shipping weight from the database, not from the cached weight', function () {
+    $fx = orderFixtures();
+    $product = Product::factory()->create(['categorie_id' => $fx['category']->id, 'prix' => 20000, 'stock' => 10, 'poids' => 4.0]);
+
+    // Poids périmé dans le panier (1 kg) alors que le produit pèse maintenant 4 kg.
+    $cart = app(CartService::class);
+    $cart->add($product->id, $product->nom, 20000, 10, 1.0);
+
+    try {
+        app(OrderService::class)->createOrder(orderRequest($fx), $cart);
+    } catch (DomainException) {
+        // Le poids seul n'invalide pas le panier ; on vérifie juste qu'il est resynchronisé.
+    }
+
+    expect($cart->getTotalWeight())->toBe(4.0);
 });

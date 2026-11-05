@@ -140,6 +140,51 @@ final class CartService
         return true;
     }
 
+    /**
+     * Resynchronise le panier avec la base (prix, promo, stock, poids, précommande).
+     * Les lignes dont le produit n'existe plus sont retirées. Les quantités ne sont jamais modifiées.
+     *
+     * @param  Collection<int, Product>  $products  produits du panier, indexés par ID
+     * @return bool true si un prix a changé ou si une ligne a été retirée (le client doit revoir son panier)
+     */
+    public function refreshFromProducts(Collection $products): bool
+    {
+        $items = $this->load();
+        $changed = false;
+
+        foreach ($items as $id => $item) {
+            $product = $products->get($id);
+
+            if ($product === null) {
+                $items->forget($id);
+                $changed = true;
+
+                continue;
+            }
+
+            $price = $product->prix_final_base;
+
+            if ((int) $item['price'] !== $price) {
+                $changed = true;
+            }
+
+            $item['price'] = $price;
+            $item['total'] = $price * (int) $item['quantity'];
+            $item['stock'] = $product->stock;
+            $item['poids'] = $product->poids;
+            $item['is_preorder'] = $product->is_preorder;
+            $attributes = $item['attributes'];
+            $item['attributes'] = ($attributes instanceof Collection ? $attributes : new Collection((array) $attributes))
+                ->put('reduction', $product->reduction);
+
+            $items->put($id, $item);
+        }
+
+        $this->save($items);
+
+        return $changed;
+    }
+
     public function remove(int $id): bool
     {
         $items = $this->load();

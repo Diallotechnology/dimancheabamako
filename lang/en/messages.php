@@ -116,6 +116,7 @@ return [
     'panier' => [
         'not_transport' => 'No match found for the chosen transport.',
         'not_deliver' => 'We do not deliver to this country!',
+        'price_changed' => 'The price or availability of a product has changed since you added it to your cart. Your cart has been updated: please review it and place your order again.',
         'shipping_changed' => 'The shipping rate has changed or no longer matches your cart. Please review your cart and place your order again.',
     ],
     'register_email_message' => 'A confirmation email has been sent to you. Please click the link to verify your account. Didn\'t receive anything? Check your spam folder',

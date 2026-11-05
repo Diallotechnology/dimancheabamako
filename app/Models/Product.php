@@ -113,7 +113,10 @@ final class Product extends Model
         return number_format($montant, 0, ',', ' ').' CFA';
     }
 
-    public function activePromotion()
+    /**
+     * @return BelongsToMany<Promotion, $this>
+     */
+    public function activePromotion(): BelongsToMany
     {
         return $this->belongsToMany(Promotion::class)
             ->where('etat', 'En cours')

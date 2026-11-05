@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Http\Controllers;
 
 use App\Enum\OrderEnum;
+use App\Exceptions\StaleCartException;
 use App\Helper\DeleteAction;
 use App\Helper\OrderAPI;
 use App\Http\Requests\StoreOrderRequest;
@@ -81,6 +82,11 @@ final class OrderController extends Controller
             });
 
             return redirect()->away($redirectUrl);
+        } catch (StaleCartException) {
+            // Prix, promo ou stock modifiés depuis l'ajout au panier : le panier est déjà resynchronisé.
+            session()->flash('warning', __('messages.panier.price_changed'));
+
+            return back();
         } catch (DomainException $e) {
             // Tarif de livraison périmé ou incohérent (panier modifié depuis l'affichage) : cas légitime.
             session()->flash('warning', __('messages.panier.shipping_changed'));

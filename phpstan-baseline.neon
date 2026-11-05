@@ -607,12 +607,6 @@ parameters:
 			path: app/Http/Controllers/LinkController.php
 
 		-
-			message: '#^Relation ''activePromotion'' is not found in App\\Models\\Product model\.$#'
-			identifier: larastan.relationExistence
-			count: 2
-			path: app/Http/Controllers/LinkController.php
-
-		-
 			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$id\.$#'
 			identifier: property.notFound
 			count: 1
@@ -1995,12 +1989,6 @@ parameters:
 		-
 			message: '#^Access to an undefined property App\\Models\\Product\:\:\$pivot\.$#'
 			identifier: property.notFound
-			count: 1
-			path: app/Models/Product.php
-
-		-
-			message: '#^Method App\\Models\\Product\:\:activePromotion\(\) has no return type specified\.$#'
-			identifier: missingType.return
 			count: 1
 			path: app/Models/Product.php
 

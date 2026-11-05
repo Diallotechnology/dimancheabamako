@@ -73,12 +73,14 @@ Bugs rencontrés pendant d'autres chantiers, notés ici pour être corrigés ens
 - **Résolution** : `product.favori` passe en `PUT` (`whereIn('data', ['0','1'])`, `findOrFail` donc 404 si le produit n'existe pas, réponse 204), `paylink.regenerate` et `maintenance` en `POST`. Front adapté (`axios.put`, `<Link method="post" as="button">`) ; `npm run build` passe. Tests dans `tests/Feature/StateChangingRoutesTest.php` (méthodes des routes vérifiées sans les exécuter : un GET sur `maintenance` mettrait vraiment l'application en maintenance).
 - **À vérifier à la main** : l'apparence du lien « Mode maintenance » du menu (maintenant rendu comme un bouton) et le clic sur chaque action dans le navigateur.
 
-## 2026-11-04 — M2 · Prix et stock figés dans le panier (cache 24 h)
+## 2026-11-04 — M2 · Prix et stock figés dans le panier (cache 24 h) — ✅ RÉSOLU (2026-11-05)
 
 - **Où** : `app/Service/CartService.php` (TTL 1440 min), `app/Service/OrderService.php` (contrôle de stock sur les valeurs du cache).
 - **Cause** : prix, stock et poids sont copiés au moment de l'ajout et jamais revalidés avec la base.
 - **Symptôme** : promo expirée, hausse de prix ou rupture de stock non répercutées ; la commande peut être payée à l'ancien prix.
 - **Piste** : relire prix/stock depuis `Product` dans `createOrder` (dans la transaction, avec verrou). Test RED (financier + race condition).
+- **Résolution** : `OrderService::createOrder` relit les produits du panier en début de transaction (`lockForUpdate`, promotions actives) puis appelle `CartService::refreshFromProducts` (prix promo compris, stock, poids, précommande ; lignes orphelines retirées, quantités inchangées) avant tout calcul de poids/livraison. Si un prix a changé ou si un produit a disparu, ou si le stock est insuffisant, `StaleCartException` est levée : aucune commande créée, panier déjà resynchronisé, message `messages.panier.price_changed` (fr/en) via `OrderController::store`, qui lit ensuite le total N-Genius dans le panier à jour. Tests dans `tests/Feature/OrderServiceTest.php` (fixtures des anciens tests alignées sur le prix et le poids du produit). `Product::activePromotion()` reçoit son type de retour, ce qui retire deux entrées obsolètes de `phpstan-baseline.neon`.
+- **Limites connues** : (1) le stock n'est pas réservé à la commande, il n'est décrémenté qu'au paiement (`CheckPayment`) ; deux clients peuvent payer le dernier article, la commande passe alors en « Stock épuisé » sans remboursement automatique, à traiter séparément. (2) `lockForUpdate` n'est pas testable en SQLite mémoire : la course réelle n'est pas couverte par un test.
 
 ## 2026-11-04 — M3 · Validation trop permissive — ✅ RÉSOLU (2026-11-05)
 
