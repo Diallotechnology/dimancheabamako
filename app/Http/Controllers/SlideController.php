@@ -7,6 +7,7 @@ namespace App\Http\Controllers;
 use App\Helper\DeleteAction;
 use App\Http\Requests\UpdateSlideRequest;
 use App\Models\Slide;
+use App\Service\ImageUploadService;
 use Inertia\Inertia;
 
 final class SlideController extends Controller
@@ -24,15 +25,13 @@ final class SlideController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateSlideRequest $request, Slide $slide)
+    public function update(UpdateSlideRequest $request, Slide $slide, ImageUploadService $uploader)
     {
         $data = $request->validated();
 
         if ($request->hasFile('image')) {
             $this->deleteStored($slide->getRawOriginal('image'));
-            $filename = $request->image->hashName();
-            $chemin = $request->image->storeAs('slide/image', $filename, 'public');
-            $data['image'] = $chemin;
+            $data['image'] = $uploader->store($request->file('image'), 'slide/image');
             $slide->update($data);
         } else {
             $slide->update(data_forget($data, 'image'));

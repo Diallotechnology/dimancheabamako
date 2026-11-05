@@ -6,6 +6,7 @@ namespace App\Http\Controllers;
 
 use App\Helper\DeleteAction;
 use App\Models\Image;
+use App\Service\ImageUploadService;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
@@ -40,14 +41,12 @@ final class ImageController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Image $image)
+    public function update(Request $request, Image $image, ImageUploadService $uploader)
     {
         $data = $request->validate(['chemin' => ['required', 'image', 'mimes:jpg,jpeg,png,webp', 'max:5120']]);
         if ($request->hasFile('chemin')) {
             $this->deleteStored($image->getRawOriginal('chemin'));
-            $filename = $request->chemin->hashName();
-            $chemin = $request->chemin->storeAs('product/image', $filename, 'public');
-            $data['chemin'] = $chemin;
+            $data['chemin'] = $uploader->store($request->file('chemin'), 'product/image');
             $image->update($data);
         }
 

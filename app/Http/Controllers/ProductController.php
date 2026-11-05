@@ -9,6 +9,7 @@ use App\Http\Requests\StoreProductRequest;
 use App\Http\Requests\UpdateProductRequest;
 use App\Models\Category;
 use App\Models\Product;
+use App\Service\ImageUploadService;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\ValidationException;
@@ -33,14 +34,12 @@ final class ProductController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StoreProductRequest $request)
+    public function store(StoreProductRequest $request, ImageUploadService $uploader)
     {
         $data = $request->validated();
 
         if ($request->hasFile('cover')) {
-            $filename = $request->cover->hashName();
-            $chemin = $request->cover->storeAs('product/cover', $filename, 'public');
-            $data['cover'] = $chemin;
+            $data['cover'] = $uploader->store($request->file('cover'), 'product/cover');
         }
         if ($request->hasFile('video')) {
             $filename = $request->video->hashName();
@@ -95,7 +94,7 @@ final class ProductController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateProductRequest $request, Product $product)
+    public function update(UpdateProductRequest $request, Product $product, ImageUploadService $uploader)
     {
         $data = $request->validated();
 
@@ -107,10 +106,7 @@ final class ProductController extends Controller
         if ($request->hasFile('cover')) {
             $this->deleteStored($product->getRawOriginal('cover'));
 
-            $filename = $request->cover->hashName();
-            $path = $request->cover->storeAs('product/cover', $filename, 'public');
-
-            $data['cover'] = $path;
+            $data['cover'] = $uploader->store($request->file('cover'), 'product/cover');
         }
 
         if ($request->hasFile('video')) {

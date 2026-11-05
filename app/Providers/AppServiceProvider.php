@@ -17,6 +17,9 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
+use Intervention\Image\Drivers\Gd\Driver as GdDriver;
+use Intervention\Image\Drivers\Imagick\Driver as ImagickDriver;
+use Intervention\Image\ImageManager;
 use Opcodes\LogViewer\Facades\LogViewer;
 
 final class AppServiceProvider extends ServiceProvider
@@ -24,7 +27,12 @@ final class AppServiceProvider extends ServiceProvider
     /**
      * Register any application services.
      */
-    public function register(): void {}
+    public function register(): void
+    {
+        $this->app->singleton(ImageManager::class, fn (): ImageManager => new ImageManager(
+            extension_loaded('imagick') ? ImagickDriver::class : GdDriver::class,
+        ));
+    }
 
     /**
      * Bootstrap any application services.

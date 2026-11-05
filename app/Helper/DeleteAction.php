@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Helper;
 
 use App\Models\Image;
+use App\Service\ImageUploadService;
 use Exception;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Storage;
@@ -35,11 +36,10 @@ trait DeleteAction
     public function file_uplode($request, Model $model): void
     {
         try {
-            $path = 'product/image';
+            $uploader = app(ImageUploadService::class);
 
-            foreach ($request->file('image') as $key => $file) {
-                $filename = $file->hashName();
-                $chemin = $file->storeAs($path, $filename, 'public');
+            foreach ($request->file('image') as $file) {
+                $chemin = $uploader->store($file, 'product/image');
                 Image::create([
                     'product_id' => $model->id,
                     'chemin' => $chemin,
