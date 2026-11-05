@@ -122,7 +122,8 @@ trait OrderAPI
         $url = $this->endpoint('orders');
 
         $response = Http::timeout(10)
-            ->retry(2, 200)
+            // throw: false — sinon retry() lève une RequestException et la branche ci-dessous (log du body) n'est jamais atteinte.
+            ->retry(2, 200, throw: false)
             ->withToken($token)
             ->withHeaders([
                 'Accept' => 'application/vnd.ni-payment.v2+json',
@@ -132,9 +133,10 @@ trait OrderAPI
 
         if (! $response->successful()) {
             Log::error('NGENIUS: Create order failed', [
-                'body' => $response->json(),
+                'status' => $response->status(),
+                'body' => $response->json() ?? $response->body(),
             ]);
-            throw new Exception('Création de commande impossible via NGENIUS.');
+            throw new Exception("Création de commande impossible via NGENIUS (HTTP {$response->status()}).");
         }
 
         return $response->json();

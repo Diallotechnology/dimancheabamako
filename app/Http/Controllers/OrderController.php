@@ -95,7 +95,12 @@ final class OrderController extends Controller
 
             return back();
         } catch (Throwable $e) {
-            Log::error('Order failed rollback', ['error' => $e->getMessage()]);
+            // Le corps de la réponse N-Genius est loggé juste avant par OrderAPI::createOrder ; ici : cause + origine.
+            Log::error('Order failed rollback', [
+                'exception' => $e::class,
+                'error' => $e->getMessage(),
+                'at' => basename($e->getFile()).':'.$e->getLine(),
+            ]);
             flash()->error('La validation a échoué. Aucune donnée enregistrée.');
 
             return back();

@@ -35,6 +35,13 @@ final class AppServiceProvider extends ServiceProvider
         Model::shouldBeStrict(! app()->isProduction());
         URL::forceHttps(app()->isProduction());
 
+        // Dev derrière un tunnel HTTPS (cloudflared/ngrok) : N-Genius refuse les URLs de retour non publiques,
+        // donc route()/asset() doivent partir de APP_URL et non de l'hôte reçu.
+        if (app()->isLocal()) {
+            URL::forceRootUrl(config('app.url'));
+            URL::forceScheme(parse_url((string) config('app.url'), PHP_URL_SCHEME) ?: 'http');
+        }
+
         LogViewer::auth(function () {
             return Auth::user()->check() && Auth::user()->isAdmin();
         });

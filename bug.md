@@ -2,7 +2,9 @@
 
 Bugs rencontrés pendant d'autres chantiers, notés ici pour être corrigés ensuite (un fix = un test si sécurité/finance, puis marquer l'entrée « ✅ RÉSOLU » sans la supprimer).
 
-## 2026-11-04 — Paiement N-Genius invisible en cas d'échec de création d'ordre
+## 2026-11-04 — Paiement N-Genius invisible en cas d'échec de création d'ordre — ✅ RÉSOLU (2026-11-05)
+
+> Validé en local via tunnel : commande n°5 payée en sandbox (Visa sans 3DS), `PURCHASED` chez N-Genius, puis `app:check-payment` → `trans_state=PURCHASED`, `reference=DAB2026-1`. Note : la Visa 3DS 1.0 `4012001037141112` est refusée sur cet outlet (3DS « Not enrolled »), ce n'est pas un bug applicatif.
 
 - **Où** : `app/Http/Controllers/OrderController.php:63-65` (URLs de retour) et `:80-85` (catch), `app/Helper/OrderAPI.php:133-138`.
 - **Cause** : le sandbox N-Genius refuse les URLs de redirection non publiques (`http(s)://localhost`, `*.test`) → 422 `Invalid redirect url`. Avec `APP_URL=http://localhost`, la commande échoue en local.
@@ -17,7 +19,24 @@ Bugs rencontrés pendant d'autres chantiers, notés ici pour être corrigés ens
   }
   ```
   `forceScheme` est nécessaire car le tunnel parle HTTP en interne (sinon `http://` malgré `APP_URL=https://`). Avec ce correctif : panier → validation → redirection vers `paypage.sandbox.orabankml.ngenius-payments.com` OK. Reste non testé : saisie de carte sandbox et retour sur `order.validate` (état `PURCHASED`).
-- **Piste** : décider si ce bloc entre définitivement dans le code (local uniquement) ou si on documente seulement la procédure tunnel.
+- **Décision** : le bloc `forceRootUrl`/`forceScheme` (local uniquement) est dans `AppServiceProvider::boot()`.
+- **Corrigé le 2026-11-05 (non commité)** : `createOrder` utilise `retry(..., throw: false)` ; le statut et le body N-Genius sont loggés (`NGENIUS: Create order failed`), l'exception porte le code HTTP, `Order failed rollback` logge classe + origine. Tests : `tests/Feature/NgeniusCreateOrderFailureTest.php`.
+- **Reste à faire** : valider en local (carte sandbox + retour `order.validate` → `PURCHASED`), puis retirer cette entrée.
+
+## 2026-11-05 — Body N-Genius jamais loggé sur les appels via `api()` (à traiter avec son propre test)
+
+- **Où** : `app/Helper/OrderAPI.php` — `getOrderStatus`, `cancelPayment`, `cancelPaymentLink`, tous via `api()` (`retry(2, 200)` sans `throw: false`).
+- **Constat** : en cas d'échec HTTP, `retry()` lève une `RequestException` avant la branche `! $response->successful()` : les `Log::error(... 'body' => ...)` de ces trois méthodes ne sont jamais atteints (code mort), comme pour `createOrder` avant correctif.
+- **Piste** : même traitement que `createOrder` (`throw: false`), mais le contrat de l'exception change (type et message) : adapter les appelants qui catchent (`app:check-payment`, `OrderController::cancel`, etc.) et les vérifier un par un.
+- **Statut** : non corrigé volontairement, hors périmètre du chantier `createOrder`. À faire avec son propre test.
+
+## 2026-11-05 — `order.validate` affiche « Commande effectuée avec succès » même si le paiement a échoué
+
+- **Où** : `app/Http/Controllers/OrderController.php:130-137` (`valid()`).
+- **Constat** (test sandbox, commande n°3) : N-Genius redirige vers `redirectUrl` (`order.validate`) quel que soit le résultat du paiement. Paiement `FAILED` (3DS « Not enrolled »), mais la page « Opération terminée / Votre commande a été effectuée avec succès » s'affiche et le panier est vidé. `valid()` ne lit pas l'état du paiement ; le `redirect()->to(...)` est jeté (code mort).
+- **Impact** : message trompeur pour le client (il croit avoir payé) ; commande restée impayée jusqu'à `app:check-payment`. Aucun risque de marquer `PURCHASED` à tort (c'est le scheduler qui tranche).
+- **Piste** : interroger `getOrderStatus` (ou la référence en session `pending_order_ref`) dans `valid()` et afficher succès / échec / « en cours de vérification » selon l'état ; ne vider le panier qu'en cas de succès. Logique financière : RED test d'abord.
+- **Statut** : non corrigé, à traiter à part.
 
 # Audit sécurité du 2026-11-04 (C1 et C2 corrigés avec tests : `tests/Feature/AccountTakeoverTest.php`)
 
