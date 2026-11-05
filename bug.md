@@ -23,7 +23,9 @@ Bugs rencontrés pendant d'autres chantiers, notés ici pour être corrigés ens
 - **Corrigé le 2026-11-05 (non commité)** : `createOrder` utilise `retry(..., throw: false)` ; le statut et le body N-Genius sont loggés (`NGENIUS: Create order failed`), l'exception porte le code HTTP, `Order failed rollback` logge classe + origine. Tests : `tests/Feature/NgeniusCreateOrderFailureTest.php`.
 - **Reste à faire** : valider en local (carte sandbox + retour `order.validate` → `PURCHASED`), puis retirer cette entrée.
 
-## 2026-11-05 — Body N-Genius jamais loggé sur les appels via `api()` (à traiter avec son propre test)
+## 2026-11-05 — Body N-Genius jamais loggé sur les appels via `api()` (à traiter avec son propre test) — ✅ RÉSOLU (2026-11-05)
+
+> Résolution : `api()` et `getAccessToken()` utilisent `retry(..., throw: false)` ; les 4 logs d'erreur passent par `ngeniusErrorContext()` (statut + body). Les appelants (`CheckPayment`, `DeleteOrderPaymentExpire`, `CheckPayByLink`, `DeletePayByLink`, `PayLinkController`, `OrderController`) catchent tous `Exception`/`Throwable` : aucun ne dépendait de `RequestException`, le contrat « ça lève » est inchangé (seuls type et message changent). Test : `tests/Feature/NgeniusApiFailureLogTest.php`.
 
 - **Où** : `app/Helper/OrderAPI.php` — `getOrderStatus`, `cancelPayment`, `cancelPaymentLink`, tous via `api()` (`retry(2, 200)` sans `throw: false`).
 - **Constat** : en cas d'échec HTTP, `retry()` lève une `RequestException` avant la branche `! $response->successful()` : les `Log::error(... 'body' => ...)` de ces trois méthodes ne sont jamais atteints (code mort), comme pour `createOrder` avant correctif.

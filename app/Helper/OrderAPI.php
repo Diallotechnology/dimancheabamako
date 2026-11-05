@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Helper;
 
 use Exception;
+use Illuminate\Http\Client\Response;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
@@ -25,11 +26,7 @@ trait OrderAPI
         $response = $this->api()->get($url);
 
         if (! $response->successful()) {
-            Log::error('NGENIUS: Failed to fetch order status', [
-                'url' => $url,
-                'status' => $response->status(),
-                'body' => $response->json(),
-            ]);
+            Log::error('NGENIUS: Failed to fetch order status', ['url' => $url] + $this->ngeniusErrorContext($response));
             throw new Exception('Erreur API NGENIUS : impossible de récupérer le statut de la commande.');
         }
 
@@ -65,8 +62,7 @@ trait OrderAPI
             Log::error('NGENIUS: Payment cancel error', [
                 'url' => $url,
                 'orderReference' => $orderReference,
-                'body' => $response->json(),
-            ]);
+            ] + $this->ngeniusErrorContext($response));
             throw new Exception('L’API NGENIUS a refusé l’annulation du paiement.');
         }
 
@@ -83,8 +79,7 @@ trait OrderAPI
         if (! $response->successful()) {
             Log::error('NGENIUS: Cancel payment link failed', [
                 'orderReference' => $orderReference,
-                'body' => $response->json(),
-            ]);
+            ] + $this->ngeniusErrorContext($response));
             throw new Exception("Impossible d'annuler le lien de paiement.");
         }
 
@@ -132,10 +127,7 @@ trait OrderAPI
             ->post($url, $postData);
 
         if (! $response->successful()) {
-            Log::error('NGENIUS: Create order failed', [
-                'status' => $response->status(),
-                'body' => $response->json() ?? $response->body(),
-            ]);
+            Log::error('NGENIUS: Create order failed', $this->ngeniusErrorContext($response));
             throw new Exception("Création de commande impossible via NGENIUS (HTTP {$response->status()}).");
         }
 
@@ -160,11 +152,26 @@ trait OrderAPI
         ];
     }
 
+    /**
+     * Contexte de log d'une réponse N-Genius refusée : statut + body d'erreur (jamais de payload de succès).
+     *
+     * @return array<string, mixed>
+     */
+    protected function ngeniusErrorContext(Response $response): array
+    {
+        return [
+            'status' => $response->status(),
+            'body' => $response->json() ?? $response->body(),
+        ];
+    }
+
     /** BASE REQUEST (timeout + retry + headers) */
     protected function api()
     {
+        // throw: false — sinon retry() lève une RequestException avant les `! successful()` des appelants
+        // (log du body jamais atteint). Les appelants lèvent leur propre Exception après avoir loggé.
         return Http::timeout(10)
-            ->retry(2, 200)
+            ->retry(2, 200, throw: false)
             ->withHeaders($this->getHeaders());
     }
 
@@ -204,7 +211,7 @@ trait OrderAPI
         }
 
         $response = Http::timeout(10)
-            ->retry(1, 100)
+            ->retry(1, 100, throw: false)
             ->withHeaders([
                 'Accept' => 'application/vnd.ni-identity.v1+json',
                 'Authorization' => 'Basic '.config('services.ngenius.api_key'),
@@ -215,9 +222,7 @@ trait OrderAPI
             ]);
 
         if (! $response->successful()) {
-            Log::error('NGENIUS: Failed to get access token', [
-                'body' => $response->json(),
-            ]);
+            Log::error('NGENIUS: Failed to get access token', $this->ngeniusErrorContext($response));
             throw new Exception('Impossible d’obtenir un jeton NGENIUS.');
         }
 
