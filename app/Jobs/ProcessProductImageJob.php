@@ -92,6 +92,8 @@ final class ProcessProductImageJob implements ShouldQueue
                 'favoris' => false,
                 'cover' => $cover,
                 'status' => ProductStatus::Draft,
+                // Lie le brouillon à son import pour la page de revue groupée.
+                'batch_id' => $this->batch()?->id,
             ]);
         } catch (Throwable $e) {
             Storage::disk('public')->delete($cover);

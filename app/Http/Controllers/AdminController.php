@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Http\Controllers;
 
 use App\Enum\OrderEnum;
+use App\Enum\ProductStatus;
 use App\Enum\RoleEnum;
 use App\Models\Category;
 use App\Models\Client;
@@ -89,6 +90,7 @@ final class AdminController extends Controller
             ->when($request->filled('category'), fn ($query) => $query->where('categorie_id', $request->integer('category')))
             ->when($request->filled('favoris'), fn ($query) => $query->where('favoris', $request->boolean('favoris')))
             ->when($request->filled('status'), fn ($query) => $query->where('is_preorder', $request->boolean('status')))
+            ->when($request->enum('statut', ProductStatus::class), fn ($query, ProductStatus $statut) => $query->where('status', $statut))
             ->latest('id')->paginate(10)->withQueryString();
 
         $category = Category::select('id', 'nom')->get();

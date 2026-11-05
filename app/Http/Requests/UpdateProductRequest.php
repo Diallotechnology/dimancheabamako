@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Http\Requests;
 
+use App\Enum\ProductStatus;
 use App\Models\Product;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
@@ -41,6 +42,9 @@ final class UpdateProductRequest extends FormRequest
             'stock' => 'required|integer|min:0',
             // Stock affiché à l'ouverture du formulaire : sert à calculer le delta saisi par l'admin.
             'stock_initial' => 'required|integer|min:0',
+
+            // Optionnel : la revue d'import envoie `published` pour publier un brouillon relu.
+            'status' => ['sometimes', Rule::enum(ProductStatus::class)],
 
             'video' => ['nullable', 'file', 'mimetypes:video/mp4,video/quicktime,video/webm', 'max:51200'],
             'cover' => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp', 'max:5120'],

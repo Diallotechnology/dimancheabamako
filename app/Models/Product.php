@@ -69,6 +69,7 @@ use Illuminate\Support\Str;
  * @property string|null $slug
  * @property bool $is_preorder
  * @property ProductStatus $status
+ * @property string|null $batch_id
  * @property-read \Illuminate\Database\Eloquent\Collection<int, Promotion> $activePromotion
  * @property-read int|null $active_promotion_count
  * @property-read int $prix_final_base
@@ -89,7 +90,7 @@ final class Product extends Model
      *
      * @var array
      */
-    protected $fillable = ['categorie_id', 'reference', 'nom', 'color', 'taille', 'description', 'resume', 'poids', 'video', 'prix', 'cover', 'stock', 'favoris', 'slug', 'is_preorder', 'status'];
+    protected $fillable = ['categorie_id', 'reference', 'nom', 'color', 'taille', 'description', 'resume', 'poids', 'video', 'prix', 'cover', 'stock', 'favoris', 'slug', 'is_preorder', 'status', 'batch_id'];
 
     /**
      * Scope to get nature by structure.

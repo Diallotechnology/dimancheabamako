@@ -60,6 +60,13 @@
                     >
                         Tous les produits
                     </Link>
+
+                    <Link
+                        :href="route('product.import')"
+                        :class="{ active: route().current('product.import') }"
+                    >
+                        Import par photos
+                    </Link>
                 </div>
             </li>
 

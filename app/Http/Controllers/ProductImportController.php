@@ -1,0 +1,90 @@
+<?php
+
+declare(strict_types=1);
+
+namespace App\Http\Controllers;
+
+use App\Http\Requests\ProductImportRequest;
+use App\Jobs\ProcessProductImageJob;
+use App\Models\Category;
+use App\Models\Product;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\Bus;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
+use Inertia\Inertia;
+use Inertia\Response;
+
+final class ProductImportController extends Controller
+{
+    public const string CONNECTION = 'database';
+
+    public function create(): Response
+    {
+        return Inertia::render('Admin/Product/Import');
+    }
+
+    public function store(ProductImportRequest $request): JsonResponse
+    {
+        $importId = Str::uuid()->toString();
+        $disk = Storage::disk('local');
+        $directory = 'imports/'.$importId;
+
+        // Chargées une seule fois pour tout le batch (sinon une requête par job).
+        $categories = Category::query()->orderBy('nom')->pluck('nom', 'id')->all();
+
+        $jobs = [];
+        foreach ($request->file('images', []) as $file) {
+            $stored = $file->storeAs($directory, Str::uuid()->toString().'.'.$file->extension(), 'local');
+            $jobs[] = new ProcessProductImageJob($disk->path((string) $stored), $importId, $categories);
+        }
+
+        $batch = Bus::batch($jobs)
+            ->name('import-'.$importId)
+            ->onConnection(self::CONNECTION)
+            ->allowFailures()
+            ->finally(static function () use ($directory): void {
+                Storage::disk('local')->deleteDirectory($directory);
+            })
+            ->dispatch();
+
+        return response()->json(['batch_id' => $batch->id, 'total' => $batch->totalJobs], 202);
+    }
+
+    public function review(string $batchId): Response
+    {
+        abort_if(Bus::findBatch($batchId) === null, 404);
+
+        $products = Product::query()
+            ->where('batch_id', $batchId)
+            ->orderBy('id')
+            ->get([
+                'id', 'categorie_id', 'reference', 'nom', 'resume', 'description',
+                'color', 'taille', 'poids', 'prix', 'stock', 'favoris', 'is_preorder', 'cover', 'status',
+            ]);
+
+        $category = Category::query()->orderBy('nom')->get(['id', 'nom'])
+            ->map(fn (Category $row): array => ['label' => (string) $row->nom, 'value' => (string) $row->id]);
+
+        return Inertia::render('Admin/Product/ImportReview', [
+            'batchId' => $batchId,
+            'products' => $products,
+            'category' => $category,
+        ]);
+    }
+
+    public function show(string $batchId): JsonResponse
+    {
+        $batch = Bus::findBatch($batchId);
+
+        abort_if($batch === null, 404);
+
+        return response()->json([
+            'total' => $batch->totalJobs,
+            'processed' => $batch->processedJobs(),
+            'failed' => $batch->failedJobs,
+            'finished' => $batch->finished(),
+            'progress' => $batch->progress(),
+        ]);
+    }
+}

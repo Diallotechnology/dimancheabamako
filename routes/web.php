@@ -16,6 +16,7 @@ use App\Http\Controllers\PayLinkController;
 use App\Http\Controllers\PendingRegistrationController;
 use App\Http\Controllers\PoidsController;
 use App\Http\Controllers\ProductController;
+use App\Http\Controllers\ProductImportController;
 use App\Http\Controllers\PromotionController;
 use App\Http\Controllers\ShippingController;
 use App\Http\Controllers\SitemapController;
@@ -69,6 +70,11 @@ Route::prefix('admin')->middleware('auth', 'verified')->group(function () {
         Route::resource('order', OrderController::class)->except('index', 'create', 'store');
         Route::put('product/favoris/{data}/{product_id}', [ProductController::class, 'favoris_update'])->whereIn('data', ['0', '1'])->name('product.favori');
         Route::resource('category', CategoryController::class)->except('index', 'create', 'show');
+        // Avant la resource : sinon `product/import` serait pris pour `product/{product}`.
+        Route::get('product/import', [ProductImportController::class, 'create'])->name('product.import');
+        Route::post('product/import', [ProductImportController::class, 'store'])->middleware('throttle:10,1')->name('product.import.store');
+        Route::get('product/import/{batchId}', [ProductImportController::class, 'show'])->whereUuid('batchId')->name('product.import.show');
+        Route::get('product/import/{batchId}/review', [ProductImportController::class, 'review'])->whereUuid('batchId')->name('product.import.review');
         Route::resource('product', ProductController::class)->except('index');
         Route::controller(AdminController::class)->group(function () {
             Route::get('dashboard', 'dashboard')->name('dashboard');

@@ -206,3 +206,11 @@ it('uses the categories passed to the job and keys the cache on them', function 
 
     expect(Product::pluck('categorie_id')->unique()->all())->toBe([$robe->id]);
 });
+
+it('links the created draft to its job batch', function () {
+    fakeGemini();
+
+    $batch = Bus::batch([new ProcessProductImageJob(aiTestImage(), 'import-1')])->onConnection('sync')->dispatch();
+
+    expect(Product::sole()->batch_id)->toBe($batch->id);
+});

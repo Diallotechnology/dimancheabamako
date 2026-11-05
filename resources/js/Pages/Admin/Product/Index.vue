@@ -28,6 +28,7 @@ const { filters, resetFilters } = useFilter(
         category: "",
         favoris: "",
         status: "",
+        statut: "",
     },
     "/admin/product"
 );
@@ -62,6 +63,11 @@ const favori = (url) => {
                     <i class="material-icons md-plus md-18"></i>
 
                     Nouveau</Link
+                >
+                <Link
+                    :href="route('product.import')"
+                    class="btn btn-light btn-sm rounded ms-2"
+                    >Import par photos</Link
                 >
             </div>
         </div>
@@ -102,7 +108,13 @@ const favori = (url) => {
                             <option value="0">Non</option>
                         </select>
                     </div>
-                    <div class="col-md-2"></div>
+                    <div class="col-md-2">
+                        <select class="form-select" v-model="filters.statut">
+                            <option value="">Publication</option>
+                            <option value="draft">Brouillons</option>
+                            <option value="published">Publiés</option>
+                        </select>
+                    </div>
                     <div class="col-auto">
                         <button
                             @click="resetFilters"
@@ -130,6 +142,11 @@ const favori = (url) => {
                                 />
                             </a>
                             <div class="info-wrap">
+                                <span
+                                    v-if="row.status === 'draft'"
+                                    class="badge rounded-pill alert-warning mb-1"
+                                    >Brouillon</span
+                                >
                                 <p class="title">{{ row.nom }}</p>
                                 <p class="title">
                                     Reférence {{ row.reference }}
