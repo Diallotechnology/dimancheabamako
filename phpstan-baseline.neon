@@ -367,12 +367,6 @@ parameters:
 			path: app/Http/Controllers/CategoryController.php
 
 		-
-			message: '#^Call to an undefined method Illuminate\\Database\\Eloquent\\Model\:\:DocLink\(\)\.$#'
-			identifier: method.notFound
-			count: 2
-			path: app/Http/Controllers/CategoryController.php
-
-		-
 			message: '#^Method App\\Http\\Controllers\\CategoryController\:\:destroy\(\) has no return type specified\.$#'
 			identifier: missingType.return
 			count: 1
@@ -381,12 +375,6 @@ parameters:
 		-
 			message: '#^Method App\\Http\\Controllers\\CategoryController\:\:edit\(\) has no return type specified\.$#'
 			identifier: missingType.return
-			count: 1
-			path: app/Http/Controllers/CategoryController.php
-
-		-
-			message: '#^Method App\\Http\\Controllers\\CategoryController\:\:file_multiple_delete\(\) has parameter \$path with generic class Illuminate\\Support\\Collection but does not specify its types\: TKey, TValue$#'
-			identifier: missingType.generics
 			count: 1
 			path: app/Http/Controllers/CategoryController.php
 
@@ -427,12 +415,6 @@ parameters:
 			path: app/Http/Controllers/ClientController.php
 
 		-
-			message: '#^Call to an undefined method Illuminate\\Database\\Eloquent\\Model\:\:DocLink\(\)\.$#'
-			identifier: method.notFound
-			count: 2
-			path: app/Http/Controllers/ClientController.php
-
-		-
 			message: '#^Method App\\Http\\Controllers\\ClientController\:\:destroy\(\) has no return type specified\.$#'
 			identifier: missingType.return
 			count: 1
@@ -441,12 +423,6 @@ parameters:
 		-
 			message: '#^Method App\\Http\\Controllers\\ClientController\:\:edit\(\) has no return type specified\.$#'
 			identifier: missingType.return
-			count: 1
-			path: app/Http/Controllers/ClientController.php
-
-		-
-			message: '#^Method App\\Http\\Controllers\\ClientController\:\:file_multiple_delete\(\) has parameter \$path with generic class Illuminate\\Support\\Collection but does not specify its types\: TKey, TValue$#'
-			identifier: missingType.generics
 			count: 1
 			path: app/Http/Controllers/ClientController.php
 
@@ -493,12 +469,6 @@ parameters:
 			path: app/Http/Controllers/CountryController.php
 
 		-
-			message: '#^Call to an undefined method Illuminate\\Database\\Eloquent\\Model\:\:DocLink\(\)\.$#'
-			identifier: method.notFound
-			count: 2
-			path: app/Http/Controllers/CountryController.php
-
-		-
 			message: '#^Method App\\Http\\Controllers\\CountryController\:\:destroy\(\) has no return type specified\.$#'
 			identifier: missingType.return
 			count: 1
@@ -507,12 +477,6 @@ parameters:
 		-
 			message: '#^Method App\\Http\\Controllers\\CountryController\:\:edit\(\) has no return type specified\.$#'
 			identifier: missingType.return
-			count: 1
-			path: app/Http/Controllers/CountryController.php
-
-		-
-			message: '#^Method App\\Http\\Controllers\\CountryController\:\:file_multiple_delete\(\) has parameter \$path with generic class Illuminate\\Support\\Collection but does not specify its types\: TKey, TValue$#'
-			identifier: missingType.generics
 			count: 1
 			path: app/Http/Controllers/CountryController.php
 
@@ -547,12 +511,6 @@ parameters:
 			path: app/Http/Controllers/DeviseController.php
 
 		-
-			message: '#^Call to an undefined method Illuminate\\Database\\Eloquent\\Model\:\:DocLink\(\)\.$#'
-			identifier: method.notFound
-			count: 2
-			path: app/Http/Controllers/DeviseController.php
-
-		-
 			message: '#^Method App\\Http\\Controllers\\DeviseController\:\:destroy\(\) has no return type specified\.$#'
 			identifier: missingType.return
 			count: 1
@@ -561,12 +519,6 @@ parameters:
 		-
 			message: '#^Method App\\Http\\Controllers\\DeviseController\:\:edit\(\) has no return type specified\.$#'
 			identifier: missingType.return
-			count: 1
-			path: app/Http/Controllers/DeviseController.php
-
-		-
-			message: '#^Method App\\Http\\Controllers\\DeviseController\:\:file_multiple_delete\(\) has parameter \$path with generic class Illuminate\\Support\\Collection but does not specify its types\: TKey, TValue$#'
-			identifier: missingType.generics
 			count: 1
 			path: app/Http/Controllers/DeviseController.php
 
@@ -601,12 +553,6 @@ parameters:
 			path: app/Http/Controllers/ImageController.php
 
 		-
-			message: '#^Call to an undefined method Illuminate\\Database\\Eloquent\\Model\:\:DocLink\(\)\.$#'
-			identifier: method.notFound
-			count: 2
-			path: app/Http/Controllers/ImageController.php
-
-		-
 			message: '#^Method App\\Http\\Controllers\\ImageController\:\:destroy\(\) has no return type specified\.$#'
 			identifier: missingType.return
 			count: 1
@@ -615,12 +561,6 @@ parameters:
 		-
 			message: '#^Method App\\Http\\Controllers\\ImageController\:\:edit\(\) has no return type specified\.$#'
 			identifier: missingType.return
-			count: 1
-			path: app/Http/Controllers/ImageController.php
-
-		-
-			message: '#^Method App\\Http\\Controllers\\ImageController\:\:file_multiple_delete\(\) has parameter \$path with generic class Illuminate\\Support\\Collection but does not specify its types\: TKey, TValue$#'
-			identifier: missingType.generics
 			count: 1
 			path: app/Http/Controllers/ImageController.php
 
@@ -685,12 +625,6 @@ parameters:
 			path: app/Http/Controllers/OrderController.php
 
 		-
-			message: '#^Call to an undefined method Illuminate\\Database\\Eloquent\\Model\:\:DocLink\(\)\.$#'
-			identifier: method.notFound
-			count: 2
-			path: app/Http/Controllers/OrderController.php
-
-		-
 			message: '#^Method App\\Http\\Controllers\\OrderController\:\:api\(\) has no return type specified\.$#'
 			identifier: missingType.return
 			count: 1
@@ -735,12 +669,6 @@ parameters:
 		-
 			message: '#^Method App\\Http\\Controllers\\OrderController\:\:edit\(\) has no return type specified\.$#'
 			identifier: missingType.return
-			count: 1
-			path: app/Http/Controllers/OrderController.php
-
-		-
-			message: '#^Method App\\Http\\Controllers\\OrderController\:\:file_multiple_delete\(\) has parameter \$path with generic class Illuminate\\Support\\Collection but does not specify its types\: TKey, TValue$#'
-			identifier: missingType.generics
 			count: 1
 			path: app/Http/Controllers/OrderController.php
 
@@ -817,12 +745,6 @@ parameters:
 			path: app/Http/Controllers/PayLinkController.php
 
 		-
-			message: '#^Call to an undefined method Illuminate\\Database\\Eloquent\\Model\:\:DocLink\(\)\.$#'
-			identifier: method.notFound
-			count: 2
-			path: app/Http/Controllers/PayLinkController.php
-
-		-
 			message: '#^Method App\\Http\\Controllers\\PayLinkController\:\:api\(\) has no return type specified\.$#'
 			identifier: missingType.return
 			count: 1
@@ -861,12 +783,6 @@ parameters:
 		-
 			message: '#^Method App\\Http\\Controllers\\PayLinkController\:\:edit\(\) has no return type specified\.$#'
 			identifier: missingType.return
-			count: 1
-			path: app/Http/Controllers/PayLinkController.php
-
-		-
-			message: '#^Method App\\Http\\Controllers\\PayLinkController\:\:file_multiple_delete\(\) has parameter \$path with generic class Illuminate\\Support\\Collection but does not specify its types\: TKey, TValue$#'
-			identifier: missingType.generics
 			count: 1
 			path: app/Http/Controllers/PayLinkController.php
 
@@ -937,12 +853,6 @@ parameters:
 			path: app/Http/Controllers/PoidsController.php
 
 		-
-			message: '#^Call to an undefined method Illuminate\\Database\\Eloquent\\Model\:\:DocLink\(\)\.$#'
-			identifier: method.notFound
-			count: 2
-			path: app/Http/Controllers/PoidsController.php
-
-		-
 			message: '#^Method App\\Http\\Controllers\\PoidsController\:\:destroy\(\) has no return type specified\.$#'
 			identifier: missingType.return
 			count: 1
@@ -951,12 +861,6 @@ parameters:
 		-
 			message: '#^Method App\\Http\\Controllers\\PoidsController\:\:edit\(\) has no return type specified\.$#'
 			identifier: missingType.return
-			count: 1
-			path: app/Http/Controllers/PoidsController.php
-
-		-
-			message: '#^Method App\\Http\\Controllers\\PoidsController\:\:file_multiple_delete\(\) has parameter \$path with generic class Illuminate\\Support\\Collection but does not specify its types\: TKey, TValue$#'
-			identifier: missingType.generics
 			count: 1
 			path: app/Http/Controllers/PoidsController.php
 
@@ -991,12 +895,6 @@ parameters:
 			path: app/Http/Controllers/ProductController.php
 
 		-
-			message: '#^Call to an undefined method Illuminate\\Database\\Eloquent\\Model\:\:DocLink\(\)\.$#'
-			identifier: method.notFound
-			count: 2
-			path: app/Http/Controllers/ProductController.php
-
-		-
 			message: '#^Method App\\Http\\Controllers\\ProductController\:\:create\(\) has no return type specified\.$#'
 			identifier: missingType.return
 			count: 1
@@ -1011,24 +909,6 @@ parameters:
 		-
 			message: '#^Method App\\Http\\Controllers\\ProductController\:\:edit\(\) has no return type specified\.$#'
 			identifier: missingType.return
-			count: 1
-			path: app/Http/Controllers/ProductController.php
-
-		-
-			message: '#^Method App\\Http\\Controllers\\ProductController\:\:favoris_update\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/Http/Controllers/ProductController.php
-
-		-
-			message: '#^Method App\\Http\\Controllers\\ProductController\:\:favoris_update\(\) has parameter \$product_id with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: app/Http/Controllers/ProductController.php
-
-		-
-			message: '#^Method App\\Http\\Controllers\\ProductController\:\:file_multiple_delete\(\) has parameter \$path with generic class Illuminate\\Support\\Collection but does not specify its types\: TKey, TValue$#'
-			identifier: missingType.generics
 			count: 1
 			path: app/Http/Controllers/ProductController.php
 
@@ -1069,12 +949,6 @@ parameters:
 			path: app/Http/Controllers/PromotionController.php
 
 		-
-			message: '#^Call to an undefined method Illuminate\\Database\\Eloquent\\Model\:\:DocLink\(\)\.$#'
-			identifier: method.notFound
-			count: 2
-			path: app/Http/Controllers/PromotionController.php
-
-		-
 			message: '#^Method App\\Http\\Controllers\\PromotionController\:\:create\(\) has no return type specified\.$#'
 			identifier: missingType.return
 			count: 1
@@ -1089,12 +963,6 @@ parameters:
 		-
 			message: '#^Method App\\Http\\Controllers\\PromotionController\:\:edit\(\) has no return type specified\.$#'
 			identifier: missingType.return
-			count: 1
-			path: app/Http/Controllers/PromotionController.php
-
-		-
-			message: '#^Method App\\Http\\Controllers\\PromotionController\:\:file_multiple_delete\(\) has parameter \$path with generic class Illuminate\\Support\\Collection but does not specify its types\: TKey, TValue$#'
-			identifier: missingType.generics
 			count: 1
 			path: app/Http/Controllers/PromotionController.php
 
@@ -1135,12 +1003,6 @@ parameters:
 			path: app/Http/Controllers/ShippingController.php
 
 		-
-			message: '#^Call to an undefined method Illuminate\\Database\\Eloquent\\Model\:\:DocLink\(\)\.$#'
-			identifier: method.notFound
-			count: 2
-			path: app/Http/Controllers/ShippingController.php
-
-		-
 			message: '#^Method App\\Http\\Controllers\\ShippingController\:\:destroy\(\) has no return type specified\.$#'
 			identifier: missingType.return
 			count: 1
@@ -1149,12 +1011,6 @@ parameters:
 		-
 			message: '#^Method App\\Http\\Controllers\\ShippingController\:\:edit\(\) has no return type specified\.$#'
 			identifier: missingType.return
-			count: 1
-			path: app/Http/Controllers/ShippingController.php
-
-		-
-			message: '#^Method App\\Http\\Controllers\\ShippingController\:\:file_multiple_delete\(\) has parameter \$path with generic class Illuminate\\Support\\Collection but does not specify its types\: TKey, TValue$#'
-			identifier: missingType.generics
 			count: 1
 			path: app/Http/Controllers/ShippingController.php
 
@@ -1219,12 +1075,6 @@ parameters:
 			path: app/Http/Controllers/SlideController.php
 
 		-
-			message: '#^Call to an undefined method Illuminate\\Database\\Eloquent\\Model\:\:DocLink\(\)\.$#'
-			identifier: method.notFound
-			count: 2
-			path: app/Http/Controllers/SlideController.php
-
-		-
 			message: '#^Method App\\Http\\Controllers\\SlideController\:\:destroy\(\) has no return type specified\.$#'
 			identifier: missingType.return
 			count: 1
@@ -1233,12 +1083,6 @@ parameters:
 		-
 			message: '#^Method App\\Http\\Controllers\\SlideController\:\:edit\(\) has no return type specified\.$#'
 			identifier: missingType.return
-			count: 1
-			path: app/Http/Controllers/SlideController.php
-
-		-
-			message: '#^Method App\\Http\\Controllers\\SlideController\:\:file_multiple_delete\(\) has parameter \$path with generic class Illuminate\\Support\\Collection but does not specify its types\: TKey, TValue$#'
-			identifier: missingType.generics
 			count: 1
 			path: app/Http/Controllers/SlideController.php
 
@@ -1261,12 +1105,6 @@ parameters:
 			path: app/Http/Controllers/SlideController.php
 
 		-
-			message: '#^Unreachable statement \- code above always terminates\.$#'
-			identifier: deadCode.unreachable
-			count: 1
-			path: app/Http/Controllers/SlideController.php
-
-		-
 			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$id\.$#'
 			identifier: property.notFound
 			count: 2
@@ -1279,12 +1117,6 @@ parameters:
 			path: app/Http/Controllers/TransportController.php
 
 		-
-			message: '#^Call to an undefined method Illuminate\\Database\\Eloquent\\Model\:\:DocLink\(\)\.$#'
-			identifier: method.notFound
-			count: 2
-			path: app/Http/Controllers/TransportController.php
-
-		-
 			message: '#^Method App\\Http\\Controllers\\TransportController\:\:destroy\(\) has no return type specified\.$#'
 			identifier: missingType.return
 			count: 1
@@ -1293,12 +1125,6 @@ parameters:
 		-
 			message: '#^Method App\\Http\\Controllers\\TransportController\:\:edit\(\) has no return type specified\.$#'
 			identifier: missingType.return
-			count: 1
-			path: app/Http/Controllers/TransportController.php
-
-		-
-			message: '#^Method App\\Http\\Controllers\\TransportController\:\:file_multiple_delete\(\) has parameter \$path with generic class Illuminate\\Support\\Collection but does not specify its types\: TKey, TValue$#'
-			identifier: missingType.generics
 			count: 1
 			path: app/Http/Controllers/TransportController.php
 
@@ -1345,12 +1171,6 @@ parameters:
 			path: app/Http/Controllers/UserController.php
 
 		-
-			message: '#^Call to an undefined method Illuminate\\Database\\Eloquent\\Model\:\:DocLink\(\)\.$#'
-			identifier: method.notFound
-			count: 2
-			path: app/Http/Controllers/UserController.php
-
-		-
 			message: '#^Method App\\Http\\Controllers\\UserController\:\:destroy\(\) has no return type specified\.$#'
 			identifier: missingType.return
 			count: 1
@@ -1359,12 +1179,6 @@ parameters:
 		-
 			message: '#^Method App\\Http\\Controllers\\UserController\:\:edit\(\) has no return type specified\.$#'
 			identifier: missingType.return
-			count: 1
-			path: app/Http/Controllers/UserController.php
-
-		-
-			message: '#^Method App\\Http\\Controllers\\UserController\:\:file_multiple_delete\(\) has parameter \$path with generic class Illuminate\\Support\\Collection but does not specify its types\: TKey, TValue$#'
-			identifier: missingType.generics
 			count: 1
 			path: app/Http/Controllers/UserController.php
 
@@ -1405,12 +1219,6 @@ parameters:
 			path: app/Http/Controllers/ZoneController.php
 
 		-
-			message: '#^Call to an undefined method Illuminate\\Database\\Eloquent\\Model\:\:DocLink\(\)\.$#'
-			identifier: method.notFound
-			count: 2
-			path: app/Http/Controllers/ZoneController.php
-
-		-
 			message: '#^Method App\\Http\\Controllers\\ZoneController\:\:destroy\(\) has no return type specified\.$#'
 			identifier: missingType.return
 			count: 1
@@ -1419,12 +1227,6 @@ parameters:
 		-
 			message: '#^Method App\\Http\\Controllers\\ZoneController\:\:edit\(\) has no return type specified\.$#'
 			identifier: missingType.return
-			count: 1
-			path: app/Http/Controllers/ZoneController.php
-
-		-
-			message: '#^Method App\\Http\\Controllers\\ZoneController\:\:file_multiple_delete\(\) has parameter \$path with generic class Illuminate\\Support\\Collection but does not specify its types\: TKey, TValue$#'
-			identifier: missingType.generics
 			count: 1
 			path: app/Http/Controllers/ZoneController.php
 

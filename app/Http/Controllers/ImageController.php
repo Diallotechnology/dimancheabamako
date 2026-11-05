@@ -44,7 +44,7 @@ final class ImageController extends Controller
     {
         $data = $request->validate(['chemin' => ['required', 'image', 'mimes:jpg,jpeg,png,webp', 'max:5120']]);
         if ($request->hasFile('chemin')) {
-            $this->file_delete($image);
+            $this->deleteStored($image->getRawOriginal('chemin'));
             $filename = $request->chemin->hashName();
             $chemin = $request->chemin->storeAs('product/image', $filename, 'public');
             $data['chemin'] = $chemin;
@@ -59,7 +59,7 @@ final class ImageController extends Controller
      */
     public function destroy(Image $image)
     {
-        $this->file_delete($image);
+        $this->deleteStored($image->getRawOriginal('chemin'));
 
         return $this->supp($image);
     }

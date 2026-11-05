@@ -105,3 +105,46 @@ it('accepts a real image on gallery image update', function () {
 
     expect(Storage::disk('public')->allFiles())->toHaveCount(1);
 });
+
+// M5 — les fichiers remplacés ou supprimés disparaissent bien du disque public
+
+it('deletes the slide image file when the slide is deleted', function () {
+    Storage::disk('public')->put('slide/image/old.jpg', 'x');
+
+    $this->actingAs($this->admin)->delete("/admin/slide/{$this->slide->id}")->assertSuccessful();
+
+    Storage::disk('public')->assertMissing('slide/image/old.jpg');
+    expect(Slide::find($this->slide->id))->toBeNull();
+});
+
+it('removes the previous slide image file when it is replaced', function () {
+    Storage::disk('public')->put('slide/image/old.jpg', 'x');
+
+    $this->actingAs($this->admin)
+        ->post("/admin/slide/{$this->slide->id}", slidePayload(UploadedFile::fake()->image('new.jpg')))
+        ->assertSessionHasNoErrors();
+
+    Storage::disk('public')->assertMissing('slide/image/old.jpg');
+    expect(Storage::disk('public')->allFiles())->toHaveCount(1);
+});
+
+it('deletes the gallery image file when the image is deleted', function () {
+    Storage::disk('public')->put('product/image/old.jpg', 'x');
+
+    $this->actingAs($this->admin)->delete("/admin/image/{$this->galleryImage->id}")->assertSuccessful();
+
+    Storage::disk('public')->assertMissing('product/image/old.jpg');
+});
+
+it('removes the previous gallery image file when it is replaced', function () {
+    Storage::disk('public')->put('product/image/old.jpg', 'x');
+
+    $this->actingAs($this->admin)
+        ->post("/admin/image/{$this->galleryImage->id}", [
+            '_method' => 'put',
+            'chemin' => UploadedFile::fake()->image('new.png'),
+        ])->assertSessionHasNoErrors();
+
+    Storage::disk('public')->assertMissing('product/image/old.jpg');
+    expect(Storage::disk('public')->allFiles())->toHaveCount(1);
+});

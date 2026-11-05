@@ -7,8 +7,6 @@ namespace App\Helper;
 use App\Models\Image;
 use Exception;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Storage;
 use Throwable;
 
@@ -24,17 +22,6 @@ trait DeleteAction
         ]);
     }
 
-    public function file_delete(Model $model): bool
-    {
-
-        $fileDeleted = false;
-        if (File::exists(public_path($model->DocLink()))) {
-            $fileDeleted = File::delete(public_path($model->DocLink()));
-        }
-
-        return $fileDeleted;
-    }
-
     /**
      * Supprime un fichier du disque public à partir de son chemin relatif (ex: product/cover/x.jpg).
      */
@@ -43,18 +30,6 @@ trait DeleteAction
         if ($path !== null && $path !== '') {
             Storage::disk('public')->delete($path);
         }
-    }
-
-    public function file_multiple_delete(Collection $path): bool
-    {
-        $fileDeleted = false;
-        foreach ($path as $key => $row) {
-            if (File::exists(public_path($row))) {
-                $fileDeleted = File::delete(public_path($row));
-            }
-        }
-
-        return $fileDeleted;
     }
 
     public function file_uplode($request, Model $model): void

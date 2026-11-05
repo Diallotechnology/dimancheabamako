@@ -29,7 +29,7 @@ final class SlideController extends Controller
         $data = $request->validated();
 
         if ($request->hasFile('image')) {
-            $this->file_delete($slide);
+            $this->deleteStored($slide->getRawOriginal('image'));
             $filename = $request->image->hashName();
             $chemin = $request->image->storeAs('slide/image', $filename, 'public');
             $data['image'] = $chemin;
@@ -46,7 +46,8 @@ final class SlideController extends Controller
      */
     public function destroy(Slide $slide)
     {
+        $this->deleteStored($slide->getRawOriginal('image'));
+
         return $this->supp($slide);
-        $this->file_delete($slide);
     }
 }
