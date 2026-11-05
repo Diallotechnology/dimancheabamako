@@ -30,7 +30,9 @@ Bugs rencontrés pendant d'autres chantiers, notés ici pour être corrigés ens
 - **Piste** : même traitement que `createOrder` (`throw: false`), mais le contrat de l'exception change (type et message) : adapter les appelants qui catchent (`app:check-payment`, `OrderController::cancel`, etc.) et les vérifier un par un.
 - **Statut** : non corrigé volontairement, hors périmètre du chantier `createOrder`. À faire avec son propre test.
 
-## 2026-11-05 — `order.validate` affiche « Commande effectuée avec succès » même si le paiement a échoué
+## 2026-11-05 — `order.validate` affiche « Commande effectuée avec succès » même si le paiement a échoué — ✅ RÉSOLU (2026-11-05)
+
+> Résolution : `valid()` compare `?ref=` à `session('pending_order_ref')` (retour sandbox réel vérifié : N-Genius envoie bien `?ref=<trans_ref>`), interroge N-Genius et affiche succès (`PURCHASED`, panier vidé) / échec (`FAILED|CANCELLED|EXPIRED`, panier conservé) / en cours de vérification (ref absente ou autre session, erreur API, état inconnu). Tests : `tests/Feature/OrderValidateTest.php`.
 
 - **Où** : `app/Http/Controllers/OrderController.php:130-137` (`valid()`).
 - **Constat** (test sandbox, commande n°3) : N-Genius redirige vers `redirectUrl` (`order.validate`) quel que soit le résultat du paiement. Paiement `FAILED` (3DS « Not enrolled »), mais la page « Opération terminée / Votre commande a été effectuée avec succès » s'affiche et le panier est vidé. `valid()` ne lit pas l'état du paiement ; le `redirect()->to(...)` est jeté (code mort).
@@ -168,3 +170,10 @@ Hors périmètre. Une commande PURCHASED passée en `etat = STOCK` garde `refere
 
 ## 2026-11-05 — Déploiement de la réservation de stock
 Avant de déployer : vérifier que `Order` avec `reference IS NULL AND trans_ref IS NOT NULL` = 0 ligne. Les commandes en cours créées avant la bascule n'ont pas réservé de stock : `check-payment` ne décrémente plus et `delete-order-payment-expire` / annulation restitueraient un stock jamais pris.
+
+## 2026-11-05 — Limitation de test : `order.validate` non couvert pour un invité
+
+- **Où** : `tests/Feature/OrderValidateTest.php`.
+- **Constat** : les tests utilisent un acheteur connecté (clé de panier `cart_user_{id}`), car l'id de session d'un invité change pendant la requête de test et casse la clé `cart_guest_{sessionId}` seedée avant. `valid()` n'a aucune branche spécifique aux invités (même mapping d'état), donc le risque est faible.
+- **Piste** : couvrir le cas invité (panier vidé / conservé) en seedant le panier via `CartService` pendant la même requête, ou en fixant l'id de session de test.
+- **Statut** : non bloquant, à combler plus tard.

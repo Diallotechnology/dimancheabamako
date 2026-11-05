@@ -769,12 +769,6 @@ parameters:
 			path: app/Http/Controllers/OrderController.php
 
 		-
-			message: '#^Method App\\Http\\Controllers\\OrderController\:\:valid\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/Http/Controllers/OrderController.php
-
-		-
 			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$id\.$#'
 			identifier: property.notFound
 			count: 1

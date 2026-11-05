@@ -127,13 +127,42 @@ final class OrderController extends Controller
         return $this->renderInvoice($id);
     }
 
-    public function valid()
+    /**
+     * Retour du client depuis N-Genius (redirectUrl). N-Genius redirige ici quel que soit le
+     * résultat du paiement : on ne l'affiche comme réussi que si la passerelle confirme PURCHASED
+     * pour la commande de cette session. Lecture seule : `app:check-payment` reste seul à modifier
+     * l'état de la commande.
+     */
+    public function valid(Request $request): View
     {
+        $reference = (string) $request->query('ref', '');
+        $pending = (string) $request->session()->get('pending_order_ref', '');
 
-        $this->cart->clear();
-        \redirect()->to(request()->fullUrlWithQuery(['ref' => null]));
+        $status = 'pending';
 
-        return view('validate');
+        if ($reference !== '' && $pending !== '' && hash_equals($pending, $reference)) {
+            try {
+                $state = data_get($this->getOrderStatus($reference), '_embedded.payment.0.state');
+
+                if ($state === 'PURCHASED') {
+                    $status = 'success';
+                } elseif (in_array($state, ['FAILED', 'CANCELLED', 'EXPIRED'], true)) {
+                    $status = 'failed';
+                }
+            } catch (Throwable $e) {
+                Log::warning('Order validate: payment status unavailable', ['trans_ref' => $reference]);
+            }
+        }
+
+        if ($status === 'success') {
+            $this->cart->clear();
+        }
+
+        if ($status !== 'pending') {
+            $request->session()->forget('pending_order_ref');
+        }
+
+        return view('validate', ['status' => $status]);
     }
 
     /**
