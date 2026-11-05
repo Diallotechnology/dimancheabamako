@@ -74,6 +74,9 @@ final class OrderController extends Controller
 
                 $order->update(['trans_ref' => $response['reference']]);
 
+                // Seule cette session pourra annuler la commande via order.cancel.
+                session(['pending_order_ref' => $response['reference']]);
+
                 return $response['_links']['payment']['href'];
             });
 
@@ -109,17 +112,46 @@ final class OrderController extends Controller
         return view('validate');
     }
 
+    /**
+     * Retour du client depuis la page de paiement N-Genius (annulation).
+     *
+     * Ne supprime qu'une commande impayée, et seulement depuis la session qui l'a passée.
+     * La commande n'est supprimée que si N-Genius confirme l'annulation du lien de paiement ;
+     * sinon `app:check-payment` tranche (PURCHASED / CANCELLED / EXPIRED).
+     */
     public function cancel(Request $request)
     {
-        $orderReference = $request->query('ref');
-        if ($orderReference && ! empty($orderReference)) {
-            $order = Order::whereTransRef($orderReference)->firstOrFail();
-            $order->delete();
-            $this->cancelPaymentLink($order->trans_ref);
-        }
-        flash()->success('Commande annulée avec succès!');
+        $reference = (string) $request->query('ref', '');
+        $pending = (string) $request->session()->get('pending_order_ref', '');
 
-        // Redirect to the home page or a URL without the 'ref' parameter
+        $cancelled = false;
+
+        if ($reference !== '' && $pending !== '' && hash_equals($pending, $reference)) {
+            try {
+                $cancelled = DB::transaction(function () use ($reference): bool {
+                    $order = Order::whereTransRef($reference)->lockForUpdate()->first();
+
+                    if ($order === null || $order->reference !== null || $order->trans_state === 'PURCHASED') {
+                        return false;
+                    }
+
+                    $this->cancelPaymentLink($reference);
+                    $order->delete();
+
+                    return true;
+                });
+            } catch (Throwable $e) {
+                Log::warning('Order cancel refused by gateway, order kept', ['trans_ref' => $reference]);
+            }
+        }
+
+        if ($cancelled) {
+            $request->session()->forget('pending_order_ref');
+            flash()->success('Commande annulée avec succès!');
+        } else {
+            flash()->warning("Aucune commande n'a été annulée.");
+        }
+
         return redirect()->route('home');
     }
 

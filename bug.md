@@ -29,12 +29,14 @@ Bugs rencontrés pendant d'autres chantiers, notés ici pour être corrigés ens
 - **Piste** : recalculer côté serveur via `CartAction::getShippingCost($country_id, $transport_id)` et ignorer `livraison`. Test RED obligatoire (logique financière).
 - **Résolution** : nouveau `app/Service/ShippingService::resolve()` (source unique, aussi utilisé par `CartAction::getShippingCost`) ; `OrderService::createOrder` recalcule le tarif (pays, transport, poids du panier via `CartService::getTotalWeight()`) et rejette la commande (`DomainException`) si `livraison` diffère ou s'il n'existe aucun tarif. Tests dans `tests/Feature/OrderServiceTest.php`.
 
-## 2026-11-04 — I2 · `GET order/cancel` supprime n'importe quelle commande
+## 2026-11-04 — I2 · `GET order/cancel` supprime n'importe quelle commande — ✅ RÉSOLU (2026-11-05)
 
 - **Où** : `app/Http/Controllers/OrderController.php:cancel`, route `order/cancel`.
 - **Cause** : suppression sur simple GET, sans contrôle de l'état (`PURCHASED` inclus) ni du propriétaire ; seule la référence est requise.
 - **Symptôme** : une référence qui fuit (historique, Referer, URL de retour) permet d'effacer une commande déjà payée.
 - **Piste** : ne supprimer que les commandes non payées, vérifier l'appartenance (session / client), ne plus faire d'action destructive en GET. Test RED obligatoire (financier + permissions).
+- **Résolution** : `OrderController::store` mémorise la référence en session (`pending_order_ref`) ; `cancel` ne traite que cette référence, jamais une commande payée (`reference` ou `PURCHASED`), prend un `lockForUpdate`, annule d'abord le lien chez N-Genius et ne supprime la commande que si l'annulation est confirmée (sinon `app:check-payment` tranche). Référence inconnue ou refusée : même redirection, plus de 404. Tests dans `tests/Feature/OrderCancelTest.php`.
+- **À surveiller en prod** : l'appel N-Genius se fait dans la transaction (`Http::retry` : verrou de ligne tenu jusqu'à ~30 s si N-Genius est lent). Cela peut bloquer `app:check-payment` sur cette ligne, et plusieurs annulations lentes en parallèle peuvent saturer les connexions DB. Pas corrigé volontairement ; piste si ça se produit : réduire timeout/retry sur `cancelPaymentLink`, ou passer à un état intermédiaire « annulation en cours » et appeler N-Genius hors transaction. Retour dans un autre navigateur que celui de la commande : rien n'est supprimé, `app:check-payment` purge l'impayé à expiration.
 
 ## 2026-11-04 — I3 · Upload de fichiers sans filtre de type — ✅ RÉSOLU (2026-11-05)
 
@@ -113,3 +115,11 @@ Bugs rencontrés pendant d'autres chantiers, notés ici pour être corrigés ens
 - **Cause** : `poids` est une clé de premier niveau de chaque ligne du panier, pas dans `attributes` (qui ne contient que `cover` et `reduction`). Le `pluck` ne trouve rien et, en plus, ne multiplie pas par la quantité.
 - **Symptôme** : la colonne `orders.poids` vaut `0 Kg` pour toutes les commandes (à confirmer en base), donc le poids affiché dans l'admin et sur la facture est faux.
 - **Piste** : utiliser `$cart->getTotalWeight()` (ajouté pour I1). Pas de test RED obligatoire (affichage), mais un test dans `OrderServiceTest` est peu coûteux.
+
+## 2026-11-05 — `OrderController::valid()` vide le panier sans vérifier de paiement
+
+- **Où** : `app/Http/Controllers/OrderController.php:valid` (route `GET order/validate`).
+- **Cause** : la méthode vide le panier à chaque appel, sans vérifier qu'une commande a été payée ; la ligne `
+edirect()->to(...)` dont le résultat est jeté est du code mort.
+- **Symptôme** : n'importe qui peut vider son propre panier en ouvrant `/order/validate` (sans gravité de sécurité) ; la page « validée » s'affiche sans preuve de paiement.
+- **Piste** : ne vider le panier et n'afficher la confirmation que si la référence de session `pending_order_ref` correspond à une commande `PURCHASED` ; supprimer la ligne morte.
