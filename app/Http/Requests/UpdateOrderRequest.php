@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace App\Http\Requests;
 
+use App\Enum\OrderEnum;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 final class UpdateOrderRequest extends FormRequest
 {
@@ -24,7 +26,7 @@ final class UpdateOrderRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'etat' => 'required|string',
+            'etat' => ['required', Rule::enum(OrderEnum::class)],
         ];
     }
 }

@@ -25,7 +25,7 @@ final class StorePromotionRequest extends FormRequest
     {
         return [
             'nom' => 'required|string',
-            'reduction' => 'required|integer',
+            'reduction' => 'required|integer|between:1,100',
             'debut' => 'required|date',
             'fin' => 'required|date',
             'product_id' => 'required|array|exists:products,id',

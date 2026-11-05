@@ -37,8 +37,8 @@ final class UpdateProductRequest extends FormRequest
             'favoris' => 'required|boolean',
             'is_preorder' => 'required|boolean',
             'image' => 'nullable|array',
-            'prix' => 'required|integer',
-            'stock' => 'required|integer',
+            'prix' => 'required|integer|min:0',
+            'stock' => 'required|integer|min:0',
 
             'video' => ['nullable', 'file', 'mimetypes:video/mp4,video/quicktime,video/webm', 'max:51200'],
             'cover' => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp', 'max:5120'],

@@ -34,12 +34,12 @@ final class StoreProductRequest extends FormRequest
             'favoris' => 'required|boolean',
             'is_preorder' => 'required|boolean',
             'poids' => 'required|string',
-            'prix' => 'required|integer',
+            'prix' => 'required|integer|min:0',
             'video' => ['nullable', 'file', 'mimetypes:video/mp4,video/quicktime,video/webm', 'max:51200'],
             'cover' => ['required', 'image', 'mimes:jpg,jpeg,png,webp', 'max:5120'],
             'image' => ['required', 'array'],
             'image.*' => ['image', 'mimes:jpg,jpeg,png,webp', 'max:5120'],
-            'stock' => 'required|integer',
+            'stock' => 'required|integer|min:0',
         ];
     }
 

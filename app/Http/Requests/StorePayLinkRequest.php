@@ -26,7 +26,7 @@ final class StorePayLinkRequest extends FormRequest
         return [
             'name' => 'required|string',
             'contact' => 'required|string',
-            'montant' => 'required|integer',
+            'montant' => 'required|integer|min:1',
         ];
     }
 }

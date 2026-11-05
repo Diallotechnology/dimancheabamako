@@ -36,7 +36,7 @@ final class StoreOrderRequest extends FormRequest
             'adresse' => 'required|string',
             'postal' => 'nullable|string',
             'commentaire' => 'nullable|string',
-            'password' => 'nullable|string',
+            'password' => ['nullable', 'string', Rules\Password::defaults()],
         ];
     }
 

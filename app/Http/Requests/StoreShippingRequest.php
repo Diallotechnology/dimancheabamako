@@ -28,7 +28,7 @@ final class StoreShippingRequest extends FormRequest
             'zone_id' => 'required|exists:zones,id',
             'poids_id' => 'required|exists:poids,id',
             'temps' => 'required|string',
-            'montant' => 'required|integer',
+            'montant' => 'required|integer|min:0',
         ];
     }
 }

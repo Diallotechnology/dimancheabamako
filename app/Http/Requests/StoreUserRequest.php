@@ -4,8 +4,10 @@ declare(strict_types=1);
 
 namespace App\Http\Requests;
 
+use App\Enum\RoleEnum;
 use App\Models\User;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 final class StoreUserRequest extends FormRequest
 {
@@ -26,7 +28,7 @@ final class StoreUserRequest extends FormRequest
     {
         return [
             'name' => ['required', 'string'],
-            'role' => ['required'],
+            'role' => ['required', Rule::enum(RoleEnum::class)],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:'.User::class],
         ];
     }
