@@ -42,7 +42,7 @@ final class ImageController extends Controller
      */
     public function update(Request $request, Image $image)
     {
-        $data = $request->validate(['chemin' => 'required|file']);
+        $data = $request->validate(['chemin' => ['required', 'image', 'mimes:jpg,jpeg,png,webp', 'max:5120']]);
         if ($request->hasFile('chemin')) {
             $this->file_delete($image);
             $filename = $request->chemin->hashName();

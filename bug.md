@@ -1,6 +1,6 @@
 # Bugs hors périmètre
 
-Bugs rencontrés pendant d'autres chantiers, notés ici pour être corrigés ensuite (un fix = un test si sécurité/finance, puis retirer l'entrée).
+Bugs rencontrés pendant d'autres chantiers, notés ici pour être corrigés ensuite (un fix = un test si sécurité/finance, puis marquer l'entrée « ✅ RÉSOLU » sans la supprimer).
 
 ## 2026-11-04 — Paiement N-Genius invisible en cas d'échec de création d'ordre
 
@@ -35,12 +35,13 @@ Bugs rencontrés pendant d'autres chantiers, notés ici pour être corrigés ens
 - **Symptôme** : une référence qui fuit (historique, Referer, URL de retour) permet d'effacer une commande déjà payée.
 - **Piste** : ne supprimer que les commandes non payées, vérifier l'appartenance (session / client), ne plus faire d'action destructive en GET. Test RED obligatoire (financier + permissions).
 
-## 2026-11-04 — I3 · Upload de fichiers sans filtre de type
+## 2026-11-04 — I3 · Upload de fichiers sans filtre de type — ✅ RÉSOLU (2026-11-05)
 
 - **Où** : `app/Http/Requests/UpdateSlideRequest.php` (`'image' => 'nullable'`), `app/Http/Controllers/ImageController.php:update` (`'chemin' => 'required|file'`).
 - **Cause** : aucun contrôle de MIME ni de taille ; `hashName()` déduit l'extension du contenu et le fichier est stocké sur le disque `public`.
 - **Symptôme** : un fichier `.php` ou `.html` déposé via l'admin devient accessible depuis le web (exécution de code / XSS stocké). Combiné à un compte admin compromis, risque maximal.
 - **Piste** : `['image', 'mimes:jpg,jpeg,png,webp', 'max:5120']` comme dans `StoreProductRequest`. Test RED (sécurité).
+- **Résolution** : `image|mimes:jpg,jpeg,png,webp|max:5120` sur `UpdateSlideRequest` et `ImageController::update` ; tests dans `tests/Feature/AdminUploadValidationTest.php`.
 
 ## 2026-11-04 — I4 · Login du panier sans les protections du login principal
 

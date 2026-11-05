@@ -27,7 +27,7 @@ final class UpdateSlideRequest extends FormRequest
             'text_one' => 'required|string',
             'text_two' => 'required|string',
             'paragraph' => 'required|string',
-            'image' => 'nullable',
+            'image' => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp', 'max:5120'],
         ];
     }
 }
