@@ -79,7 +79,7 @@ Route::prefix('admin')->middleware('auth', 'verified')->group(function () {
     });
 });
 
-Route::resource('order', OrderController::class)->only('store');
+Route::resource('order', OrderController::class)->only('store')->middleware('throttle:10,1');
 Route::controller(LinkController::class)->group(function () {
     Route::get('/', 'home')->name('home');
     Route::get('getcategory', 'getCategory')->name('getCategory');
@@ -95,7 +95,7 @@ Route::view('livraison', 'livraison')->name('livraison');
 Route::view('register/confirm/{show}', 'auth.register-confirm')->name('register-email');
 
 Route::controller(OrderController::class)->group(function () {
-    Route::get('order/invoice/{id}', 'invoice')->name('order.invoice');
+    Route::get('order/invoice/{id}', 'invoice')->name('order.invoice')->middleware('throttle:30,1');
     Route::get('order/validate', 'valid')->name('order.validate');
     Route::get('order/cancel', 'cancel')->name('order.cancel');
 });
