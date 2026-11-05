@@ -15,7 +15,8 @@ final class UpdateUserProfilRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return true;
+        // Un utilisateur ne peut modifier que son propre profil.
+        return $this->user()?->is($this->route('user')) === true;
     }
 
     /**
@@ -28,7 +29,7 @@ final class UpdateUserProfilRequest extends FormRequest
         return [
             'name' => 'required|string',
             'password' => ['nullable', 'confirmed', Rules\Password::defaults()],
-            'email' => ['required', 'string', 'email', 'max:255', Rule::unique('users', 'email')->ignore($this->user->id)],
+            'email' => ['required', 'string', 'email', 'max:255', Rule::unique('users', 'email')->ignore($this->user()->id)],
         ];
     }
 }

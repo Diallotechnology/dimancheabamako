@@ -18,7 +18,7 @@ use Laravel\Sanctum\HasApiTokens;
  * @property string $email
  * @property \Illuminate\Support\Carbon|null $email_verified_at
  * @property mixed $password
- * @property int $change_password
+ * @property bool $change_password
  * @property RoleEnum $role
  * @property int $etat
  * @property string|null $remember_token
@@ -89,6 +89,7 @@ final class User extends Authenticatable implements MustVerifyEmail
     protected $casts = [
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
+        'change_password' => 'boolean',
         'role' => RoleEnum::class,
     ];
 

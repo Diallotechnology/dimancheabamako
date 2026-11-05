@@ -34,8 +34,12 @@ Route::middleware('guest')->group(function () {
         ->name('password.reset');
 
     Route::post('reset-password', [NewPasswordController::class, 'store'])->name('password.store');
-    Route::get('password/change/{email}', [NewPasswordController::class, 'form_change_password'])->name('change.password');
-    Route::post('password/change', [NewPasswordController::class, 'store_change_password'])->name('change_password');
+    Route::get('password/change/{email}', [NewPasswordController::class, 'form_change_password'])
+        ->middleware('signed')
+        ->name('change.password');
+    Route::post('password/change', [NewPasswordController::class, 'store_change_password'])
+        ->middleware(['signed', 'throttle:6,1'])
+        ->name('change_password');
 });
 
 Route::middleware('auth')->group(function () {

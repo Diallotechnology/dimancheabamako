@@ -12,6 +12,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Password;
+use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Str;
 use Illuminate\Validation\Rules;
 use Illuminate\View\View;
@@ -26,19 +27,31 @@ final class NewPasswordController extends Controller
         return view('auth.reset-password', ['request' => $request]);
     }
 
+    /**
+     * Formulaire de premier changement de mot de passe (route protégée par `signed`).
+     */
     public function form_change_password(string $email): View
     {
-        return view('auth.change-password', ['email' => $email]);
+        $action = URL::temporarySignedRoute('change_password', now()->addMinutes(30), ['email' => $email]);
+
+        return view('auth.change-password', ['email' => $email, 'action' => $action]);
     }
 
+    /**
+     * Route protégée par `signed` : l'e-mail vient de l'URL signée, jamais du corps de la requête.
+     */
     public function store_change_password(Request $request): RedirectResponse
     {
         $request->validate([
-            'email' => ['required', 'email'],
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
         ]);
-        DB::transaction(function () use ($request) {
-            $user = User::where('email', $request->email)->first();
+
+        $user = User::where('email', (string) $request->query('email'))->firstOrFail();
+
+        // Le changement initial n'est autorisé qu'une seule fois.
+        abort_if($user->change_password, 403);
+
+        DB::transaction(function () use ($request, $user) {
             $user->forceFill([
                 'change_password' => true,
                 'password' => Hash::make($request->password),
