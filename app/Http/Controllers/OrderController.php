@@ -155,6 +155,7 @@ final class OrderController extends Controller
                     }
 
                     $this->cancelPaymentLink($reference);
+                    $order->releaseStock();
                     $order->delete();
 
                     return true;

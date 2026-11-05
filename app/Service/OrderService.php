@@ -100,7 +100,8 @@ final class OrderService
                 'commentaire' => $request->commentaire,
             ]);
 
-            // 4. attach (prix et stock déjà revalidés en début de transaction)
+            // 4. attach + réservation du stock (prix et stock déjà revalidés, produits verrouillés).
+            // Restitué si la commande est annulée, refusée ou expire (Order::releaseStock).
             foreach ($cart->getContent() as $item) {
                 $order->products()->attach(
                     (int) $item['id'],
@@ -109,6 +110,10 @@ final class OrderService
                         'montant' => $item['price'] * $item['quantity'],
                     ]
                 );
+
+                if ($item['is_preorder'] === false) {
+                    $products[(int) $item['id']]->decrement('stock', (int) $item['quantity']);
+                }
             }
 
             return $order;

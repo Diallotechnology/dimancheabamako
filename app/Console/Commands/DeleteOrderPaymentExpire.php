@@ -4,13 +4,18 @@ declare(strict_types=1);
 
 namespace App\Console\Commands;
 
+use App\Helper\OrderAPI;
 use App\Models\Client;
 use App\Models\Order;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
+use Throwable;
 
 final class DeleteOrderPaymentExpire extends Command
 {
+    use OrderAPI;
+
     /**
      * The name and signature of the console command.
      *
@@ -49,7 +54,27 @@ final class DeleteOrderPaymentExpire extends Command
                             return;
                         }
 
-                        // 1️⃣ Supprimer la commande (cause)
+                        // 0️⃣ Statut réel chez N-Genius avant de libérer le stock
+                        if ($order->trans_ref !== null) {
+                            try {
+                                $data = $this->getOrderStatus($order->trans_ref);
+                            } catch (Throwable $e) {
+                                Log::error('Payment status fetch failed', [
+                                    'order_id' => $order->id,
+                                    'error' => $e->getMessage(),
+                                ]);
+
+                                return; // on ne touche à rien, prochain passage
+                            }
+
+                            // Payée : check-payment la traitera normalement.
+                            if (data_get($data, '_embedded.payment.0.state') === 'PURCHASED') {
+                                return;
+                            }
+                        }
+
+                        // 1️⃣ Restituer le stock réservé, puis supprimer la commande (cause)
+                        $order->releaseStock();
                         $order->delete();
 
                         // 2️⃣ Recharger + verrouiller le client

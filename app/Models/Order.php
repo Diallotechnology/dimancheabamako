@@ -107,6 +107,22 @@ final class Order extends Model
         return $this->belongsTo(Client::class);
     }
 
+    /**
+     * Restitue le stock réservé à la création de la commande (hors précommandes).
+     * À appeler une seule fois, juste avant de supprimer une commande impayée.
+     */
+    public function releaseStock(): void
+    {
+        $lines = DB::table('order_product')->where('order_id', $this->id)->get(['product_id', 'quantity']);
+
+        foreach ($lines as $line) {
+            Product::query()
+                ->whereKey($line->product_id)
+                ->where('is_preorder', false)
+                ->increment('stock', (int) $line->quantity);
+        }
+    }
+
     public function getShipping(): int|string
     {
         if (PriceService::isEuro()) {

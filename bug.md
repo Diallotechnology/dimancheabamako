@@ -140,3 +140,12 @@ Bugs rencontrés pendant d'autres chantiers, notés ici pour être corrigés ens
 edirect()->to(...)` dont le résultat est jeté est du code mort.
 - **Symptôme** : n'importe qui peut vider son propre panier en ouvrant `/order/validate` (sans gravité de sécurité) ; la page « validée » s'affiche sans preuve de paiement.
 - **Piste** : ne vider le panier et n'afficher la confirmation que si la référence de session `pending_order_ref` correspond à une commande `PURCHASED` ; supprimer la ligne morte.
+
+## 2026-11-05 — Écriture admin du stock = valeur absolue (écrase les réservations)
+Hors périmètre de la réservation de stock. `ProductController@update` (`$product->update($data)`) et `store` écrivent `stock` tel que saisi dans le formulaire. Une édition admin pendant des commandes en cours écrase les décréments/restitutions faits entre le chargement de la page et l'envoi (lost update) : avec la réservation à la commande, le stock réservé peut être « rendu » par erreur. À traiter séparément (delta, ou verrou + rechargement).
+
+## 2026-11-05 — Notification `STOCK` renvoyée chaque minute
+Hors périmètre. Une commande PURCHASED passée en `etat = STOCK` garde `reference` null et reste dans la sélection de `app:check-payment` : la notification `NotifOrderStockIssue` repart à chaque passage, sans mail client ni remboursement. Avec la réservation, le cas ne devrait plus se produire (filet `stock < 0` seulement), mais le comportement n'a pas été refondu.
+
+## 2026-11-05 — Déploiement de la réservation de stock
+Avant de déployer : vérifier que `Order` avec `reference IS NULL AND trans_ref IS NOT NULL` = 0 ligne. Les commandes en cours créées avant la bascule n'ont pas réservé de stock : `check-payment` ne décrémente plus et `delete-order-payment-expire` / annulation restitueraient un stock jamais pris.

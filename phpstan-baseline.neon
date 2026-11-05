@@ -67,12 +67,6 @@ parameters:
 			path: app/Console/Commands/CheckPayByLink.php
 
 		-
-			message: '#^Access to an undefined property App\\Models\\Product\:\:\$pivot\.$#'
-			identifier: property.notFound
-			count: 2
-			path: app/Console/Commands/CheckPayment.php
-
-		-
 			message: '#^Method App\\Console\\Commands\\CheckPayment\:\:api\(\) has no return type specified\.$#'
 			identifier: missingType.return
 			count: 1
@@ -131,6 +125,60 @@ parameters:
 			identifier: missingType.iterableValue
 			count: 1
 			path: app/Console/Commands/CheckPayment.php
+
+		-
+			message: '#^Method App\\Console\\Commands\\DeleteOrderPaymentExpire\:\:api\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: app/Console/Commands/DeleteOrderPaymentExpire.php
+
+		-
+			message: '#^Method App\\Console\\Commands\\DeleteOrderPaymentExpire\:\:cancelPayment\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Console/Commands/DeleteOrderPaymentExpire.php
+
+		-
+			message: '#^Method App\\Console\\Commands\\DeleteOrderPaymentExpire\:\:cancelPaymentLink\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Console/Commands/DeleteOrderPaymentExpire.php
+
+		-
+			message: '#^Method App\\Console\\Commands\\DeleteOrderPaymentExpire\:\:createOrder\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: app/Console/Commands/DeleteOrderPaymentExpire.php
+
+		-
+			message: '#^Method App\\Console\\Commands\\DeleteOrderPaymentExpire\:\:createOrder\(\) has parameter \$postData with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Console/Commands/DeleteOrderPaymentExpire.php
+
+		-
+			message: '#^Method App\\Console\\Commands\\DeleteOrderPaymentExpire\:\:getHeaders\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Console/Commands/DeleteOrderPaymentExpire.php
+
+		-
+			message: '#^Method App\\Console\\Commands\\DeleteOrderPaymentExpire\:\:getOrderStatus\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Console/Commands/DeleteOrderPaymentExpire.php
+
+		-
+			message: '#^Method App\\Console\\Commands\\DeleteOrderPaymentExpire\:\:prepareTransactionData\(\) has parameter \$lang with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: app/Console/Commands/DeleteOrderPaymentExpire.php
+
+		-
+			message: '#^Method App\\Console\\Commands\\DeleteOrderPaymentExpire\:\:prepareTransactionData\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Console/Commands/DeleteOrderPaymentExpire.php
 
 		-
 			message: '#^Method App\\Console\\Commands\\DeleteOrderPaymentExpire\:\:handle\(\) has no return type specified\.$#'

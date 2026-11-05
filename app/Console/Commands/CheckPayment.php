@@ -80,6 +80,7 @@ final class CheckPayment extends Command
                         if (in_array($state, ['FAILED', 'CANCELLED', 'EXPIRED'], true)) {
                             $order->update(['trans_state' => $state]);
 
+                            $order->releaseStock();
                             $order->delete(); // autorisé ici
 
                             return;
@@ -92,29 +93,21 @@ final class CheckPayment extends Command
                                 'trans_state' => $state,
                             ]);
 
-                            // Vérification stock AVANT décrément
+                            // Le stock est réservé à la création de la commande (OrderService) :
+                            // plus de décrément ici. Filet anti-survente : un stock négatif
+                            // signale une réservation qui n'aurait pas dû passer.
                             foreach ($order->products as $product) {
 
                                 if ($product->is_preorder) {
                                     continue;
                                 }
 
-                                if ($product->stock < $product->pivot->quantity) {
+                                if ($product->stock < 0) {
                                     $order->update(['etat' => OrderEnum::STOCK->value]);
                                     Notification::route('mail', 'topmariage.mali@gmail.com')
                                         ->notify(new NotifOrderStockIssue($order, $product));
 
                                     return;
-                                }
-                            }
-
-                            // Décrément réel
-                            foreach ($order->products as $product) {
-                                if (! $product->is_preorder) {
-                                    $product->decrement(
-                                        'stock',
-                                        $product->pivot->quantity
-                                    );
                                 }
                             }
 
