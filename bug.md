@@ -171,8 +171,10 @@ Hors périmètre de la réservation de stock. `ProductController@update` (`$prod
 
 > Résolution : `UpdateProductRequest` exige `stock_initial` (stock affiché à l'ouverture du formulaire) ; `ProductController@update` applique, sous transaction et `lockForUpdate`, `stock réel + (stock saisi − stock_initial)` et refuse (erreur sur `stock`) un résultat négatif. `Update.vue` envoie `stock_initial` (resynchronisé après succès). La création (`store`) est inchangée. Tests : `tests/Feature/AdminProductStockTest.php`.
 
-## 2026-11-05 — Notification `STOCK` renvoyée chaque minute
+## 2026-11-05 — Notification `STOCK` renvoyée chaque minute — ✅ RÉSOLU (2026-11-05)
 Hors périmètre. Une commande PURCHASED passée en `etat = STOCK` garde `reference` null et reste dans la sélection de `app:check-payment` : la notification `NotifOrderStockIssue` repart à chaque passage, sans mail client ni remboursement. Avec la réservation, le cas ne devrait plus se produire (filet `stock < 0` seulement), mais le comportement n'a pas été refondu.
+
+> Résolution : `app:check-payment` ignore les commandes déjà en `etat = STOCK` : une seule alerte, la commande payée reste sans référence ni mail client jusqu'au traitement manuel (réassort ou remboursement N-Genius). **Attention** : repasser une telle commande à un autre `etat` la fait reprendre par `check-payment` comme une commande `PURCHASED` normale. Test : `tests/Feature/StockReservationTest.php`.
 
 ## 2026-11-05 — Déploiement de la réservation de stock
 Avant de déployer : vérifier que `Order` avec `reference IS NULL AND trans_ref IS NOT NULL` = 0 ligne. Les commandes en cours créées avant la bascule n'ont pas réservé de stock : `check-payment` ne décrémente plus et `delete-order-payment-expire` / annulation restitueraient un stock jamais pris.

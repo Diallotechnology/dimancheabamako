@@ -167,6 +167,19 @@ it('flags an oversell (negative stock) on PURCHASED as a safety net', function (
     Notification::assertSentOnDemand(NotifOrderStockIssue::class);
 });
 
+it('alerts only once for a PURCHASED order flagged as out of stock', function () {
+    Bus::fake();
+    Notification::fake();
+    $product = reservationProduct(['stock' => -1, 'prix' => 1000, 'is_preorder' => false]);
+    reservedOrder($product, 1);
+    fakeGatewayState('PURCHASED');
+
+    $this->artisan('app:check-payment')->assertSuccessful();
+    $this->artisan('app:check-payment')->assertSuccessful();
+
+    Notification::assertSentOnDemandTimes(NotifOrderStockIssue::class, 1);
+});
+
 // 3. OrderController::cancel restitue après le succès de cancelPaymentLink
 
 it('restores the stock when the customer cancels at the gateway', function () {

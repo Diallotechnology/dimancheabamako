@@ -43,6 +43,8 @@ final class CheckPayment extends Command
         Order::query()
             ->whereNotNull('trans_ref')
             ->whereNull('reference')
+            // Commande payée déjà signalée en rupture : traitée à la main, une seule alerte.
+            ->where('etat', '!=', OrderEnum::STOCK->value)
             ->chunkById(100, function ($orders) {
 
                 foreach ($orders as $order) {
