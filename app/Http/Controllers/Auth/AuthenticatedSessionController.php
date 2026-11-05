@@ -10,11 +10,11 @@ use App\Http\Requests\UpdateUserProfilRequest;
 use App\Models\User;
 use App\Providers\RouteServiceProvider;
 use App\Service\CartService;
+use App\Service\LoginService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\URL;
 use Illuminate\View\View;
 
 final class AuthenticatedSessionController extends Controller
@@ -40,9 +40,7 @@ final class AuthenticatedSessionController extends Controller
         if (! $user->change_password) {
             Auth::logout();
 
-            return redirect()->to(
-                URL::temporarySignedRoute('change.password', now()->addMinutes(30), ['email' => $user->email])
-            );
+            return redirect()->to(app(LoginService::class)->changePasswordUrl($user));
         }
         // Save the 'user_id' from the session if it exists
         $cart = app(CartService::class);

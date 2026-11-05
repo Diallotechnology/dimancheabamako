@@ -8,6 +8,7 @@ use App\Helper\CartAction;
 use App\Models\Client;
 use App\Models\Country;
 use App\Service\CartService;
+use App\Service\LoginService;
 use App\Service\PriceService;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Attributes\On;
@@ -45,20 +46,22 @@ final class Panier extends Component
         $this->validate();
 
         $oldSessionId = session()->getId(); // ⚠️ Crutial
-        if (Auth::attempt([
-            'email' => $this->email,
-            'password' => $this->password,
-        ])) {
 
-            $cart = app(CartService::class);
-            $cart->mergeGuestCartToUser(Auth::id(), $oldSessionId);
+        // Mêmes règles que le login principal : limitation partagée (ValidationException → erreur sur `email`).
+        $login = app(LoginService::class);
+        $user = $login->attempt((string) $this->email, (string) $this->password, false, (string) request()->ip());
 
-            flash()->success('Connexion réussie.');
+        if (! $user->change_password) {
+            Auth::logout();
 
-            return $this->redirectRoute('panier');
+            return $this->redirect($login->changePasswordUrl($user));
         }
 
-        flash()->error(__('auth.failed'));
+        app(CartService::class)->mergeGuestCartToUser($user->id, $oldSessionId);
+
+        flash()->success('Connexion réussie.');
+
+        return $this->redirectRoute('panier');
     }
 
     public function updatingCountryid()

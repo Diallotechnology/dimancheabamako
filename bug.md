@@ -46,12 +46,14 @@ Bugs rencontrés pendant d'autres chantiers, notés ici pour être corrigés ens
 - **Piste** : `['image', 'mimes:jpg,jpeg,png,webp', 'max:5120']` comme dans `StoreProductRequest`. Test RED (sécurité).
 - **Résolution** : `image|mimes:jpg,jpeg,png,webp|max:5120` sur `UpdateSlideRequest` et `ImageController::update` ; tests dans `tests/Feature/AdminUploadValidationTest.php`.
 
-## 2026-11-04 — I4 · Login du panier sans les protections du login principal
+## 2026-11-04 — I4 · Login du panier sans les protections du login principal — ✅ RÉSOLU (2026-11-05)
 
 - **Où** : `app/Livewire/Panier.php:login_submit`.
 - **Cause** : `Auth::attempt` direct, sans `RateLimiter` (contrairement à `LoginRequest`), sans `session()->regenerate()`, et sans le contrôle `change_password`.
 - **Symptôme** : brute-force possible sans limite, fixation de session, un compte au mot de passe initial peut se connecter sans le changer.
 - **Piste** : factoriser la logique de `LoginRequest::authenticate()` et la réutiliser ici. Test RED (sécurité).
+- **Correction de l'audit** : le point « pas de `session()->regenerate()` / fixation de session » était un **faux positif** : `Auth::attempt()` → `SessionGuard::login()` → `updateSession()` régénère déjà la session. Les deux autres points (pas de limitation de tentatives, pas de contrôle `change_password`) étaient réels.
+- **Résolution** : nouveau `app/Service/LoginService` (limitation 5 tentatives sur la clé `email|ip`, tentative d'authentification, URL signée de changement de mot de passe) utilisé par `LoginRequest`, `AuthenticatedSessionController` et `Panier::login_submit`. Le compteur est partagé entre les deux formulaires. Les erreurs du panier s'affichent maintenant sous le champ e-mail. Tests dans `tests/Feature/PanierLoginTest.php`.
 
 ## 2026-11-04 — I5 · Données personnelles dans les logs N-Genius
 
@@ -81,12 +83,13 @@ Bugs rencontrés pendant d'autres chantiers, notés ici pour être corrigés ens
 - **Symptôme** : rôle invalide → erreur 500 ; état de commande arbitraire ; prix, stock ou montant négatifs acceptés.
 - **Piste** : `Rule::enum(RoleEnum::class)`, `Rule::enum(OrderEnum::class)`, `min:0` / `min:1`, `Rules\Password::defaults()`.
 
-## 2026-11-04 — M4 · Session non régénérée à la confirmation d'inscription
+## 2026-11-04 — M4 · Session non régénérée à la confirmation d'inscription — ❌ FAUX POSITIF (2026-11-05)
 
 - **Où** : `app/Http/Controllers/PendingRegistrationController.php` (`Auth::login($user)`).
 - **Cause** : pas de `session()->regenerate()` après la connexion automatique.
 - **Symptôme** : fixation de session possible ; `mergeGuestCartToUser` utilise l'ID de session d'avant connexion.
 - **Piste** : régénérer la session après avoir récupéré `$oldSessionId`.
+- **Vérification** : `Auth::login()` appelle `SessionGuard::updateSession()` qui fait `session->regenerate(true)`. La session est bien régénérée ; rien à corriger. Seul reste vrai le point secondaire : `mergeGuestCartToUser` doit recevoir l'ancien ID de session, ce que le code fait déjà (`$oldSessionId` capturé avant `Auth::login`).
 
 ## 2026-11-04 — M5 · Fichiers jamais supprimés du disque
 

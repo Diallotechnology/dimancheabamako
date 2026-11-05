@@ -1489,12 +1489,6 @@ parameters:
 			path: app/Http/Requests/Auth/LoginRequest.php
 
 		-
-			message: '#^Parameter \#1 \$value of static method Illuminate\\Support\\Str\:\:lower\(\) expects string, Illuminate\\Support\\Stringable given\.$#'
-			identifier: argument.type
-			count: 1
-			path: app/Http/Requests/Auth/LoginRequest.php
-
-		-
 			message: '#^Access to an undefined property App\\Models\\Shipping\:\:\$price\.$#'
 			identifier: property.notFound
 			count: 1
