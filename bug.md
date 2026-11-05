@@ -40,7 +40,6 @@ Bugs rencontrés pendant d'autres chantiers, notés ici pour être corrigés ens
 - **Constat** (test sandbox, commande n°3) : N-Genius redirige vers `redirectUrl` (`order.validate`) quel que soit le résultat du paiement. Paiement `FAILED` (3DS « Not enrolled »), mais la page « Opération terminée / Votre commande a été effectuée avec succès » s'affiche et le panier est vidé. `valid()` ne lit pas l'état du paiement ; le `redirect()->to(...)` est jeté (code mort).
 - **Impact** : message trompeur pour le client (il croit avoir payé) ; commande restée impayée jusqu'à `app:check-payment`. Aucun risque de marquer `PURCHASED` à tort (c'est le scheduler qui tranche).
 - **Piste** : interroger `getOrderStatus` (ou la référence en session `pending_order_ref`) dans `valid()` et afficher succès / échec / « en cours de vérification » selon l'état ; ne vider le panier qu'en cas de succès. Logique financière : RED test d'abord.
-- **Statut** : non corrigé, à traiter à part.
 
 # Audit sécurité du 2026-11-04 (C1 et C2 corrigés avec tests : `tests/Feature/AccountTakeoverTest.php`)
 
@@ -146,17 +145,20 @@ Bugs rencontrés pendant d'autres chantiers, notés ici pour être corrigés ens
 - **Cause** : le gabarit d'environnement encourage le debug activé et un cookie de session sans drapeau `Secure`.
 - **Symptôme** : si copié tel quel en production, stack traces exposées et cookie envoyé en HTTP.
 - **Piste** : vérifier le `.env` de production (`APP_DEBUG=false`, `SESSION_SECURE_COOKIE=true`) ; mettre `APP_DEBUG=false` dans `.env.example`.
+- **Résolution** : `.env.example` avec `APP_DEBUG=false` ; `config/session.php` : `secure` vaut `true` par défaut quand `APP_ENV=production` (surchargeable par `SESSION_SECURE_COOKIE`). Tests dans `tests/Feature/SafeConfigDefaultsTest.php`.
+- **Reste manuel** : vérifier le `.env` réel de production (`APP_DEBUG=false`, `APP_ENV=production`), que le dépôt ne peut pas contrôler.
 
-## 2026-11-05 — Poids de la commande toujours à `0 Kg`
+## 2026-11-05 — Poids de la commande toujours à `0 Kg` — ✅ RÉSOLU (2026-11-05)
 
 - **Où** : `app/Service/OrderService.php` (`$totalWeight = $cart->getContent()->pluck('attributes.poids')->sum()`, puis `'poids' => $totalWeight.' Kg'`).
 - **Cause** : `poids` est une clé de premier niveau de chaque ligne du panier, pas dans `attributes` (qui ne contient que `cover` et `reduction`). Le `pluck` ne trouve rien et, en plus, ne multiplie pas par la quantité.
 - **Symptôme** : la colonne `orders.poids` vaut `0 Kg` pour toutes les commandes (à confirmer en base), donc le poids affiché dans l'admin et sur la facture est faux.
 - **Piste** : utiliser `$cart->getTotalWeight()` (ajouté pour I1). Pas de test RED obligatoire (affichage), mais un test dans `OrderServiceTest` est peu coûteux.
-- **Résolution** : `.env.example` avec `APP_DEBUG=false` ; `config/session.php` : `secure` vaut `true` par défaut quand `APP_ENV=production` (surchargeable par `SESSION_SECURE_COOKIE`). Tests dans `tests/Feature/SafeConfigDefaultsTest.php`.
-- **Reste manuel** : vérifier le `.env` réel de production (`APP_DEBUG=false`, `APP_ENV=production`), que le dépôt ne peut pas contrôler.
+- **Résolution** : `OrderService::createOrder` utilise `$cart->getTotalWeight()` (poids × quantité). Assertion `poids` = `4.5 Kg` ajoutée au test de création de commande dans `tests/Feature/OrderServiceTest.php`. ✅ RÉSOLU (2026-11-05)
 
-## 2026-11-05 — `OrderController::valid()` vide le panier sans vérifier de paiement
+## 2026-11-05 — `OrderController::valid()` vide le panier sans vérifier de paiement — ✅ RÉSOLU (2026-11-05)
+
+> Doublon de l'entrée « `order.validate` affiche « Commande effectuée avec succès » même si le paiement a échoué » (plus haut), corrigé par le même changement : voir sa résolution et `tests/Feature/OrderValidateTest.php`.
 
 - **Où** : `app/Http/Controllers/OrderController.php:valid` (route `GET order/validate`).
 - **Cause** : la méthode vide le panier à chaque appel, sans vérifier qu'une commande a été payée ; la ligne `

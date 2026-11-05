@@ -61,6 +61,7 @@ it('creates an order, takes shipping from the database and prices lines from the
     $order = app(OrderService::class)->createOrder(orderRequest($fx, ['shipping' => 1]), $cart);
 
     expect($order->shipping)->toBe(15000)
+        ->and($order->poids)->toBe('4.5 Kg')
         ->and($order->products)->toHaveCount(1)
         ->and((int) $order->products->first()->pivot->montant)->toBe(60000)
         ->and((int) $order->products->first()->pivot->quantity)->toBe(3)

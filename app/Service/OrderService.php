@@ -85,9 +85,7 @@ final class OrderService
                 throw new DomainException('Tarif de livraison invalide pour cette commande.');
             }
 
-            $totalWeight = $cart->getContent()
-                ->pluck('attributes.poids')
-                ->sum();
+            $totalWeight = $cart->getTotalWeight();
 
             $order = $client->orders()->create([
                 'adresse' => $request->adresse,
