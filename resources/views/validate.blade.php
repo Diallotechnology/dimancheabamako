@@ -20,6 +20,9 @@
                         <h1 class="mb-4">{{ __('messages.payment_pending') }}</h1>
                         <h4 class="mb-4">{{ __('messages.payment_pending_hint') }}</h4>
                     @endif
+                    @if ($accountPending)
+                        <div class="alert alert-info mb-4">{{ __('messages.account_confirmation_pending') }}</div>
+                    @endif
                     <a class="btn btn-default submit-auto-width font-xs hover-up" href="{{ route('home') }}">
                         {{ __('messages.back_to_home') }}
                     </a>

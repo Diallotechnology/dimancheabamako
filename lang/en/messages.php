@@ -128,6 +128,7 @@ return [
     'register_success_msg' => 'Your account has been successfully activated!',
     'register_phone_conflict' => 'This phone number is already linked to another email address. Please use a different number or contact us.',
     'reset_link_neutral' => 'If an account matches this address, an email with a reset link has just been sent.',
+    'account_confirmation_pending' => 'To activate your account, click the confirmation link we emailed you (valid for 1 hour).',
     'current_password' => 'Current password',
     'category_text' => [
         'title' => 'Discover the :name Collection: Bazin, Boubous and Accessories',

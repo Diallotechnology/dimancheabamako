@@ -11,6 +11,7 @@ use App\Helper\OrderAPI;
 use App\Http\Requests\StoreOrderRequest;
 use App\Http\Requests\UpdateOrderRequest;
 use App\Models\Order;
+use App\Models\PendingRegistration;
 use App\Service\CartService;
 use App\Service\OrderService;
 use Carbon\Carbon;
@@ -79,6 +80,10 @@ final class OrderController extends Controller
 
                 // Seule cette session pourra annuler la commande via order.cancel.
                 session(['pending_order_ref' => $response['reference']]);
+
+                // Mot de passe saisi : le compte n'existe qu'après clic sur le lien envoyé par e-mail.
+                session(['account_confirmation_pending' => $request->filled('password')
+                    && PendingRegistration::where('email', $request->email)->exists()]);
 
                 return $response['_links']['payment']['href'];
             });
@@ -158,11 +163,13 @@ final class OrderController extends Controller
             $this->cart->clear();
         }
 
+        $accountPending = $status !== 'failed' && (bool) $request->session()->get('account_confirmation_pending', false);
+
         if ($status !== 'pending') {
-            $request->session()->forget('pending_order_ref');
+            $request->session()->forget(['pending_order_ref', 'account_confirmation_pending']);
         }
 
-        return view('validate', ['status' => $status]);
+        return view('validate', ['status' => $status, 'accountPending' => $accountPending]);
     }
 
     /**
