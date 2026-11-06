@@ -10,17 +10,23 @@ use App\Models\PendingRegistration;
 use App\Models\User;
 use App\Service\CartService;
 use App\Service\ClientResolverService;
-use Illuminate\Auth\Events\Registered;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\View\View;
 
 final class PendingRegistrationController extends Controller
 {
-    public function __invoke(string $token)
+    public function show(string $token): View
     {
-        $pending = PendingRegistration::where('token', $token)
-            ->where('expires_at', '>', now())
-            ->firstOrFail();
+        $this->findValid($token);
+
+        return view('auth.confirm-registration', ['token' => $token]);
+    }
+
+    public function store(string $token): RedirectResponse
+    {
+        $pending = $this->findValid($token);
 
         $confirmed = DB::transaction(function () use ($pending): bool {
             $resolver = app(ClientResolverService::class);
@@ -74,5 +80,12 @@ final class PendingRegistrationController extends Controller
         }
 
         return to_route('register-email', 1)->with('status', __('messages.register_success_msg'));
+    }
+
+    private function findValid(string $token): PendingRegistration
+    {
+        return PendingRegistration::where('token', $token)
+            ->where('expires_at', '>', now())
+            ->firstOrFail();
     }
 }

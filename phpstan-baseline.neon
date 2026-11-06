@@ -871,12 +871,6 @@ parameters:
 			path: app/Http/Controllers/PayLinkController.php
 
 		-
-			message: '#^Method App\\Http\\Controllers\\PendingRegistrationController\:\:__invoke\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/Http/Controllers/PendingRegistrationController.php
-
-		-
 			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$id\.$#'
 			identifier: property.notFound
 			count: 1

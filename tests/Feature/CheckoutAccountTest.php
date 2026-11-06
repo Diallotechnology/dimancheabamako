@@ -93,7 +93,7 @@ it('links the account to the order client once the e-mail link is confirmed', fu
     expect($token)->not->toBeNull()
         ->and(User::where('email', 'awa@example.com')->exists())->toBeFalse();
 
-    $this->get('/confirm-registration/'.$token);
+    $this->post('/confirm-registration/'.$token);
 
     expect(User::where('email', 'awa@example.com')->value('client_id'))->toBe($order->client_id);
 });

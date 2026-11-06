@@ -17,7 +17,7 @@ it('keeps the chosen password usable once the registration is confirmed', functi
         'contact' => '+22370000001', 'email' => 'awa@example.com',
     ], 'Secret123x', 'fr');
 
-    $this->get('/confirm-registration/'.PendingRegistration::value('token'));
+    $this->post('/confirm-registration/'.PendingRegistration::value('token'));
 
     $user = User::where('email', 'awa@example.com')->firstOrFail();
     expect(Hash::check('Secret123x', $user->password))->toBeTrue();

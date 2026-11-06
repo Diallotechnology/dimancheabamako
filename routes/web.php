@@ -129,8 +129,12 @@ Route::get('devise/{devise}', function ($devise) {
 
     return back();
 })->name('change_devise');
-Route::get('/confirm-registration/{token}', PendingRegistrationController::class)
+// GET : simple page avec bouton (un scanner de liens ne consomme rien) ; POST : crée le compte.
+Route::get('/confirm-registration/{token}', [PendingRegistrationController::class, 'show'])
     ->name('confirm-registration');
+Route::post('/confirm-registration/{token}', [PendingRegistrationController::class, 'store'])
+    ->middleware('throttle:10,1')
+    ->name('confirm-registration.store');
 
 Route::get('test', function () {
     // Mail::to('salediallo61@gmail.com')->send(new RegisterMail('test'));

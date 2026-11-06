@@ -128,6 +128,9 @@ return [
     'register_phone_conflict' => 'Ce numéro de téléphone est déjà associé à une autre adresse e-mail. Utilisez un autre numéro ou contactez-nous.',
     'reset_link_neutral' => 'Si un compte correspond à cette adresse, un e-mail contenant un lien de réinitialisation vient d\'être envoyé.',
     'account_confirmation_pending' => 'Pour activer votre compte, cliquez sur le lien de confirmation que nous vous avons envoyé par e-mail (valable 1 heure).',
+    'confirm_account_title' => 'Confirmer mon compte',
+    'confirm_account_hint' => 'Cliquez sur le bouton pour activer votre compte et vous connecter.',
+    'confirm_account_button' => 'Confirmer mon compte',
     'current_password' => 'Mot de passe actuel',
     'category_text' => [
         'title' => 'Découvrez la collection :name : Bazin, Boubous et Accessoires',
