@@ -48,14 +48,18 @@ final class PendingRegistrationController extends Controller
             $user = User::where('email', $pending->email)->first();
 
             if (! $user) {
+                // Le clic sur le lien prouve la possession de l'e-mail ; le mot de passe vient d'être choisi
+                // par l'utilisateur : pas de second changement forcé au premier login.
                 $user = User::create([
                     'name' => "{$pending->prenom} {$pending->nom}",
                     'email' => $pending->email,
+                    'change_password' => true,
                     // Déjà haché par PendingRegistrationService : le cast `hashed` de User le conserve tel quel.
                     'password' => $pending->password,
                     'role' => RoleEnum::CUSTOMER->value,
                     'client_id' => $client->id,
                 ]);
+                $user->forceFill(['email_verified_at' => now()])->save();
             } elseif ($user->client_id === null) {
                 $user->update(['client_id' => $client->id]);
             }

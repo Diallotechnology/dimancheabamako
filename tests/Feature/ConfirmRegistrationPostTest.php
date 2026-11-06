@@ -65,3 +65,13 @@ it('keeps already-sent links valid once existing clear tokens are hashed by the 
     expect(PendingRegistration::value('token'))->toBe(hash('sha256', $clear));
     $this->get(route('confirm-registration', $clear))->assertOk();
 });
+
+it('marks the e-mail as verified and skips the forced password change on confirmation', function () {
+    $token = openPending();
+
+    $this->post(route('confirm-registration.store', $token));
+
+    $user = User::where('email', 'awa@example.com')->firstOrFail();
+    expect($user->email_verified_at)->not->toBeNull()
+        ->and($user->change_password)->toBeTrue();
+});
