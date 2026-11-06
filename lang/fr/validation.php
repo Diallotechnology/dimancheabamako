@@ -190,6 +190,7 @@ return [
         'ages' => 'âges',
         'amount' => 'montant',
         'amounts' => 'montants',
+        'current_password' => 'mot de passe actuel',
         'answer' => 'réponse',
         'answers' => 'réponses',
         'available' => 'disponible',
