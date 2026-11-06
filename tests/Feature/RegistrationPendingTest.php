@@ -30,10 +30,10 @@ it('opens a pending registration and sends the confirmation link', function () {
     $pending = PendingRegistration::where('email', 'awa@example.com')->first();
     expect($pending)->not->toBeNull()
         ->and(Hash::check('Victim-Passw0rd1', $pending->password))->toBeTrue();
-    Mail::assertSent(ConfirmRegistrationMail::class, fn ($mail) => $mail->token === $pending->token);
+    Mail::assertSent(ConfirmRegistrationMail::class, fn ($mail) => PendingRegistration::hashToken($mail->token) === $pending->token);
 });
 
-it('does not let a second registration with the same e-mail replace the password or the token', function () {
+it('does not let a second registration with the same e-mail replace the password or the data', function () {
     Mail::fake();
     $this->post('/register', registerPayload());
     $before = PendingRegistration::where('email', 'awa@example.com')->first();
@@ -48,19 +48,32 @@ it('does not let a second registration with the same e-mail replace the password
     $after = PendingRegistration::where('email', 'awa@example.com')->first();
     expect(PendingRegistration::count())->toBe(1)
         ->and(Hash::check('Victim-Passw0rd1', $after->password))->toBeTrue()
-        ->and($after->token)->toBe($before->token)
         ->and($after->prenom)->toBe('Awa')
         ->and($after->contact)->toBe('+22370123456');
 });
 
-it('re-sends the existing link when the same e-mail registers again', function () {
+it('sends a fresh link to the e-mail owner when the same e-mail registers again, invalidating the old one', function () {
     Mail::fake();
     $this->post('/register', registerPayload());
-    $token = PendingRegistration::where('email', 'awa@example.com')->value('token');
+    $first = sentConfirmationToken();
 
     $this->post('/register', registerPayload());
+    $second = sentConfirmationToken();
 
-    expect(Mail::sent(ConfirmRegistrationMail::class, fn ($mail) => $mail->token === $token))->toHaveCount(2);
+    expect($second)->not->toBe($first)
+        ->and(PendingRegistration::count())->toBe(1)
+        ->and(PendingRegistration::where('token', PendingRegistration::hashToken($second))->exists())->toBeTrue()
+        ->and(PendingRegistration::where('token', PendingRegistration::hashToken($first))->exists())->toBeFalse();
+    $this->get(route('confirm-registration', $first))->assertNotFound();
+    $this->get(route('confirm-registration', $second))->assertOk();
+});
+
+it('stores only a hash of the token, never the clear value', function () {
+    Mail::fake();
+    $this->post('/register', registerPayload());
+    $token = sentConfirmationToken();
+
+    expect(PendingRegistration::value('token'))->toBe(hash('sha256', $token))->not->toBe($token);
 });
 
 it('does not hijack the pending registration of another e-mail through its phone number', function () {

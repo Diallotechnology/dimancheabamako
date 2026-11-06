@@ -60,4 +60,12 @@ final class PendingRegistration extends Model
     protected $casts = [
         'expires_at' => 'datetime',
     ];
+
+    /**
+     * Seul ce hash est stocké en base ; le jeton en clair ne vit que dans l'e-mail.
+     */
+    public static function hashToken(string $token): string
+    {
+        return hash('sha256', $token);
+    }
 }

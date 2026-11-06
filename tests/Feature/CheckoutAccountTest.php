@@ -81,16 +81,16 @@ it('creates no account at checkout but a pending registration confirmed by e-mai
         ->and(Hash::check('Str0ng-Passw0rd!', $pending->password))->toBeTrue()
         ->and($pending->expires_at->isFuture())->toBeTrue();
 
-    Mail::assertSent(ConfirmRegistrationMail::class, fn ($mail) => $mail->token === $pending->token);
+    Mail::assertSent(ConfirmRegistrationMail::class, fn ($mail) => PendingRegistration::hashToken($mail->token) === $pending->token);
 });
 
 it('links the account to the order client once the e-mail link is confirmed', function () {
     Mail::fake();
     $fx = checkoutFixtures();
     $order = checkout($fx, ['password' => 'Str0ng-Passw0rd!']);
-    $token = PendingRegistration::where('email', 'awa@example.com')->value('token');
+    $token = sentConfirmationToken();
 
-    expect($token)->not->toBeNull()
+    expect($token)->not->toBeEmpty()
         ->and(User::where('email', 'awa@example.com')->exists())->toBeFalse();
 
     $this->post('/confirm-registration/'.$token);
@@ -139,7 +139,7 @@ it('still places the order when the phone is already held by another pending reg
     PendingRegistration::create([
         'prenom' => 'Autre', 'nom' => 'Personne', 'pays' => 'Mali', 'contact' => '+22370123456',
         'email' => 'autre@example.com', 'role' => 'Client', 'password' => Hash::make('x'),
-        'token' => str_repeat('b', 64), 'expires_at' => now()->addHour(),
+        'token' => PendingRegistration::hashToken(str_repeat('b', 64)), 'expires_at' => now()->addHour(),
     ]);
 
     $order = checkout(checkoutFixtures(), ['password' => 'Str0ng-Passw0rd!']);

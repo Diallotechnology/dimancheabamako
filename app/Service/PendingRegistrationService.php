@@ -21,8 +21,8 @@ final class PendingRegistrationService
     /**
      * Ouvre (ou relance) une inscription en attente et envoie le lien de confirmation après le commit.
      *
-     * - Inscription déjà en attente pour cet e-mail : mot de passe et jeton NE sont PAS remplacés
-     *   (sinon un tiers imposerait son mot de passe au propriétaire de l'e-mail) ; le lien existant est renvoyé.
+     * - Inscription déjà en attente pour cet e-mail : le mot de passe et les données NE sont PAS remplacés
+     *   (sinon un tiers imposerait son mot de passe au propriétaire de l'e-mail) ; un nouveau lien est envoyé à cet e-mail.
      * - Téléphone déjà tenu par l'inscription en attente d'un autre e-mail : rien n'est créé.
      *
      * @param  array{prenom: string, nom: string, pays: string, contact: string, email: string}  $data  contact au format E.164
@@ -33,12 +33,15 @@ final class PendingRegistrationService
 
         $pending = PendingRegistration::where('email', $email)->first();
 
+        // Jeton en clair : uniquement dans l'e-mail. La base ne garde que son hash.
+        $token = Str::random(64);
+
         if ($pending === null) {
             if (PendingRegistration::where('contact', $data['contact'])->exists()) {
                 return false;
             }
 
-            $pending = PendingRegistration::create([
+            PendingRegistration::create([
                 'prenom' => $data['prenom'],
                 'nom' => $data['nom'],
                 'pays' => $data['pays'],
@@ -46,14 +49,17 @@ final class PendingRegistrationService
                 'email' => $email,
                 'role' => RoleEnum::CUSTOMER->value,
                 'password' => Hash::make($plainPassword),
-                'token' => Str::random(64),
+                'token' => PendingRegistration::hashToken($token),
                 'expires_at' => now()->addHour(),
             ]);
         } else {
-            $pending->update(['expires_at' => now()->addHour()]);
+            // Le clair n'étant plus stocké, on ne peut pas renvoyer l'ancien lien : un nouveau jeton part
+            // vers l'e-mail du propriétaire (l'ancien devient invalide). Mot de passe et données inchangés.
+            $pending->update([
+                'token' => PendingRegistration::hashToken($token),
+                'expires_at' => now()->addHour(),
+            ]);
         }
-
-        $token = $pending->token;
 
         // Après le commit de la commande : une commande annulée n'envoie aucun lien.
         DB::afterCommit(fn () => Mail::to($email)->send(new ConfirmRegistrationMail($token, $locale)));

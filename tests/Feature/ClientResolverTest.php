@@ -134,7 +134,7 @@ it('still opens a pending registration at checkout, linked to the client once co
         cartWithOneProduct($fx),
     );
 
-    $this->post('/confirm-registration/'.PendingRegistration::where('email', 'victime@example.com')->value('token'));
+    $this->post('/confirm-registration/'.sentConfirmationToken());
 
     expect(User::where('email', 'victime@example.com')->value('client_id'))->toBe($victim->id);
 });
@@ -145,7 +145,7 @@ it('refuses to confirm a registration whose phone belongs to another client', fu
         'prenom' => 'Pirate', 'nom' => 'Pirate', 'pays' => 'France',
         'contact' => '+22370123456', 'email' => 'attaquant@example.com',
         'role' => 'Client', 'password' => Hash::make('Str0ng-Passw0rd!'),
-        'token' => str_repeat('a', 64), 'expires_at' => now()->addHour(),
+        'token' => PendingRegistration::hashToken(str_repeat('a', 64)), 'expires_at' => now()->addHour(),
     ]);
 
     $this->post('/confirm-registration/'.str_repeat('a', 64));

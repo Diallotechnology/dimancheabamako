@@ -84,7 +84,7 @@ final class PendingRegistrationController extends Controller
 
     private function findValid(string $token): PendingRegistration
     {
-        return PendingRegistration::where('token', $token)
+        return PendingRegistration::where('token', PendingRegistration::hashToken($token))
             ->where('expires_at', '>', now())
             ->firstOrFail();
     }
