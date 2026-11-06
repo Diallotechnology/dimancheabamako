@@ -4,17 +4,11 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Auth;
 
-use App\Enum\RoleEnum;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreRegisterUserRequest;
-use App\Mail\ConfirmRegistrationMail;
-use App\Models\PendingRegistration;
+use App\Service\PendingRegistrationService;
 use Countries;
-use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Mail;
-use Illuminate\Support\Str;
 use Illuminate\View\View;
 
 use function to_route;
@@ -34,41 +28,29 @@ final class RegisteredUserController extends Controller
     /**
      * Handle an incoming registration request.
      *
+     * L'inscription en attente (jamais écrasée par un tiers) et l'envoi du lien sont dans le service.
+     *
      * @throws \Illuminate\Validation\ValidationException
      */
-    public function store(StoreRegisterUserRequest $request)
+    public function store(StoreRegisterUserRequest $request, PendingRegistrationService $pendings)
     {
         if ($request->filled('website')) {
             abort(403);
         }
 
-        $contactE164 = phone($request->contact)->formatE164();
-        $token = Str::random(64);
+        $opened = $pendings->request([
+            'prenom' => (string) $request->prenom,
+            'nom' => (string) $request->nom,
+            'pays' => (string) $request->pays,
+            'contact' => phone($request->contact)->formatE164(),
+            'email' => (string) $request->email,
+        ], (string) $request->password, app()->getLocale());
 
-        $pending = PendingRegistration::where('email', $request->email)
-            ->orWhere('contact', $contactE164)
-            ->first();
-
-        $data = [
-            'prenom' => $request->prenom,
-            'nom' => $request->nom,
-            'pays' => $request->pays,
-            'contact' => $contactE164,
-            'email' => $request->email,
-            'role' => RoleEnum::CUSTOMER->value,
-            'password' => Hash::make($request->password),
-            'token' => $token,
-            'expires_at' => now()->addHour(),
-        ];
-
-        if ($pending) {
-            $pending->update($data);
-        } else {
-            PendingRegistration::create($data);
+        // Téléphone déjà tenu par l'inscription en attente d'un autre e-mail : on ne la touche pas.
+        if (! $opened) {
+            return back()->withInput($request->except('password', 'password_confirmation'))
+                ->withErrors(['contact' => __('messages.register_phone_conflict')]);
         }
-
-        Mail::to($request->email)
-            ->send(new ConfirmRegistrationMail($token, app()->getLocale()));
 
         return to_route('register-email', 0)->with('status', __('messages.register_email_message'));
     }

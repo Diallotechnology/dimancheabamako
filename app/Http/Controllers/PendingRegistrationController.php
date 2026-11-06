@@ -23,15 +23,22 @@ final class PendingRegistrationController extends Controller
             ->where('expires_at', '>', now())
             ->firstOrFail();
 
-        DB::transaction(function () use ($pending) {
-
-            $client = app(ClientResolverService::class)->resolve([
+        $confirmed = DB::transaction(function () use ($pending): bool {
+            $resolver = app(ClientResolverService::class);
+            $client = $resolver->resolve([
                 'prenom' => $pending->prenom,
                 'nom' => $pending->nom,
                 'contact' => $pending->contact,
                 'email' => $pending->email,
                 'pays' => $pending->pays,
             ]);
+
+            // Le téléphone appartient déjà à un Client d'un autre e-mail : aucun compte, aucune connexion.
+            if (! $resolver->isConfirmed($client, $pending->email)) {
+                $pending->delete();
+
+                return false;
+            }
 
             $user = User::where('email', $pending->email)->first();
 
@@ -58,7 +65,13 @@ final class PendingRegistrationController extends Controller
             app(CartService::class)->mergeGuestCartToUser(Auth::id(), $oldSessionId);
 
             $pending->delete();
+
+            return true;
         });
+
+        if (! $confirmed) {
+            return to_route('register')->withErrors(['contact' => __('messages.register_phone_conflict')]);
+        }
 
         return to_route('register-email', 1)->with('status', __('messages.register_success_msg'));
     }

@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace App\Http\Requests;
 
+use App\Rules\NotDisposableEmail;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 use Illuminate\Validation\Rules;
 
 final class StoreOrderRequest extends FormRequest
@@ -30,7 +32,8 @@ final class StoreOrderRequest extends FormRequest
             'livraison' => 'required|integer',
             'prenom' => 'required|string',
             'nom' => 'required|string',
-            'email' => 'required|string|email',
+            // Avec un mot de passe, l'e-mail ouvre une inscription en attente : pas d'adresse jetable.
+            'email' => ['required', 'string', 'email', 'max:255', Rule::when($this->filled('password'), [new NotDisposableEmail])],
             'contact' => 'required|string|phone:international',
             'ville' => 'required|string',
             'adresse' => 'required|string',

@@ -125,6 +125,8 @@ return [
     ],
     'register_email_message' => 'Un e-mail de confirmation vous a été envoyé. Merci de cliquer sur le lien pour valider votre compte. Vous n\'avez rien reçu ? Vérifiez vos spams.',
     'register_success_msg' => 'Votre compte a été activé avec succès !',
+    'register_phone_conflict' => 'Ce numéro de téléphone est déjà associé à une autre adresse e-mail. Utilisez un autre numéro ou contactez-nous.',
+    'current_password' => 'Mot de passe actuel',
     'category_text' => [
         'title' => 'Découvrez la collection :name : Bazin, Boubous et Accessoires',
         'description_1' => 'Notre collection :name propose une sélection exclusive de vêtements et accessoires, confectionnés à partir de Bazin de qualité supérieure.',

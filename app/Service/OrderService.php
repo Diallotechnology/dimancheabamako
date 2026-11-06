@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Service;
 
-use App\Enum\RoleEnum;
 use App\Exceptions\StaleCartException;
 use App\Models\Client;
 use App\Models\Country;
@@ -13,7 +12,6 @@ use App\Models\Product;
 use App\Models\User;
 use DomainException;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Hash;
 
 final class OrderService
 {
@@ -46,28 +44,30 @@ final class OrderService
             $contactE164 = phone($request->contact)->formatE164();
 
             // 2. Résoudre le client (source de vérité)
-            $client = Client::where('contact', $contactE164)->first()
-                ?? Client::where('email', $request->email)->first();
-
-            $client = app(ClientResolverService::class)->resolve([
+            $resolver = app(ClientResolverService::class);
+            $client = $resolver->resolve([
                 'prenom' => $request->prenom,
                 'nom' => $request->nom,
-                'contact' => phone($request->contact)->formatE164(),
+                'contact' => $contactE164,
                 'email' => $request->email,
-                'pays' => Country::findOrFail($request->country_id)->nom,
+                'pays' => $country->nom,
             ]);
 
-            if ($request->filled('password')) {
+            // Jamais de compte créé ici : sans preuve de possession de l'e-mail, un tiers pourrait
+            // ouvrir un compte au nom d'autrui. Le mot de passe saisi ouvre une inscription en attente,
+            // confirmée par le lien envoyé à l'e-mail. La commande reste possible dans tous les cas.
+            // Un téléphone seul ne donne pas non plus accès au Client d'un autre (isConfirmed).
+            if ($request->filled('password') && $resolver->isConfirmed($client, (string) $request->email)) {
                 $user = User::where('email', $request->email)->first();
 
-                if (! $user) {
-                    $user = User::create([
-                        'name' => "{$request->prenom} {$request->nom}",
-                        'email' => $request->email,
-                        'password' => Hash::make($request->password),
-                        'role' => RoleEnum::CUSTOMER->value,
-                        'client_id' => $client->id,
-                    ]);
+                if ($user === null) {
+                    app(PendingRegistrationService::class)->request([
+                        'prenom' => (string) $request->prenom,
+                        'nom' => (string) $request->nom,
+                        'pays' => (string) $country->nom,
+                        'contact' => $contactE164,
+                        'email' => (string) $request->email,
+                    ], (string) $request->password, app()->getLocale());
                 } elseif ($user->client_id === null) {
                     $user->update(['client_id' => $client->id]);
                 }
