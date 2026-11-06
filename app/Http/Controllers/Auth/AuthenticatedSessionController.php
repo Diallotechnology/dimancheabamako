@@ -65,6 +65,9 @@ final class AuthenticatedSessionController extends Controller
                 'email' => $request->email,
                 'name' => $request->name,
             ])->save();
+
+            // Les autres sessions et cookies « se souvenir de moi » sont invalidés ; celle-ci reste ouverte.
+            Auth::logoutOtherDevices((string) $request->password);
         } else {
             $user->update(['email' => $request->email, 'name' => $request->name]);
         }

@@ -13,6 +13,7 @@ use App\Service\Ai\ProductDescriptionGenerator;
 use App\Service\CategoryService;
 use App\Service\PriceService;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Session\Middleware\AuthenticateSession;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
@@ -21,6 +22,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
+use Illuminate\Validation\Rules\Password;
 use Intervention\Image\Drivers\Gd\Driver as GdDriver;
 use Intervention\Image\Drivers\Imagick\Driver as ImagickDriver;
 use Intervention\Image\ImageManager;
@@ -53,6 +55,12 @@ final class AppServiceProvider extends ServiceProvider
         Model::automaticallyEagerLoadRelationships();
         Model::shouldBeStrict(! app()->isProduction());
         URL::forceHttps(app()->isProduction());
+
+        // Session invalidée (mot de passe changé ailleurs) : retour au login, pas une page 401.
+        AuthenticateSession::redirectUsing(fn (): string => route('login'));
+
+        // Règle unique des mots de passe (inscription, checkout, profil, reset) : volontairement légère.
+        Password::defaults(fn (): Password => Password::min(8)->letters()->numbers());
 
         // Dev derrière un tunnel HTTPS (cloudflared/ngrok) : N-Genius refuse les URLs de retour non publiques,
         // donc route()/asset() doivent partir de APP_URL et non de l'hôte reçu.

@@ -42,7 +42,7 @@ Route::middleware('guest')->group(function () {
         ->name('change_password');
 });
 
-Route::middleware('auth')->group(function () {
+Route::middleware(['auth', 'auth.session'])->group(function () {
     Route::get('verify-email', EmailVerificationPromptController::class)
         ->name('verification.notice');
 
@@ -64,7 +64,7 @@ Route::middleware('auth')->group(function () {
     Route::post('logout', [AuthenticatedSessionController::class, 'destroy'])
         ->name('logout');
 });
-Route::middleware('auth')->group(function () {
+Route::middleware(['auth', 'auth.session'])->group(function () {
     Route::view('profil', 'profil')->name('profil');
     Route::put('profil/update/{user}', [AuthenticatedSessionController::class, 'update'])
         ->name('profil.update');

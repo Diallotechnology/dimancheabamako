@@ -26,7 +26,11 @@ final class UpdateUserProfilRequest extends FormRequest
      */
     public function rules(): array
     {
+        // Changer l'e-mail ou le mot de passe exige le mot de passe actuel (une session volée ne suffit pas).
+        $sensitiveChange = $this->filled('password') || strcasecmp((string) $this->input('email'), (string) $this->user()?->email) !== 0;
+
         return [
+            'current_password' => [Rule::requiredIf($sensitiveChange), 'nullable', 'current_password'],
             'name' => 'required|string',
             'password' => ['nullable', 'confirmed', Rules\Password::defaults()],
             'email' => ['required', 'string', 'email', 'max:255', Rule::unique('users', 'email')->ignore($this->user()->id)],

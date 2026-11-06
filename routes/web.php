@@ -32,7 +32,7 @@ use App\Mail\RegisterMail;
 use App\Models\Order;
 use Illuminate\Support\Facades\Route;
 
-Route::prefix('admin')->middleware('auth', 'verified')->group(function () {
+Route::prefix('admin')->middleware(['auth', 'auth.session', 'verified'])->group(function () {
     Route::middleware('role:'.RoleEnum::ADMIN->value)->group(function () {
         Route::resource('client', ClientController::class)->except('index', 'create');
         Route::resource('user', UserController::class)->except('index', 'create');

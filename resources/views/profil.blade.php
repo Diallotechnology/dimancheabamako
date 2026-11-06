@@ -31,6 +31,17 @@
                                                 value="{{ Auth::user()->email }}" />
                                         </div>
                                         <div class="form-group col-md-12">
+                                            <x-input-label for="current_password"
+                                                :value="__('messages.current_password')" />
+
+                                            <x-text-input id="current_password" class="block mt-1 w-full"
+                                                type="password" name="current_password"
+                                                autocomplete="current-password" />
+
+                                            <x-input-error :messages="$errors->get('current_password')"
+                                                class="mt-2" />
+                                        </div>
+                                        <div class="form-group col-md-12">
                                             <x-input-label for="password" :value="__('messages.new_password')" />
 
                                             <x-text-input id="password" class="block mt-1 w-full" type="password"
