@@ -230,7 +230,8 @@ Avant de déployer : vérifier que `Order` avec `reference IS NULL AND trans_ref
 - **Cause** : sans configuration, `Rules\Password::defaults()` = `min(8)` ; la correction M3 s'appuie donc sur une règle quasi vide.
 - **Piste** : `Password::defaults(fn () => Password::min(10)->letters()->mixedCase()->numbers()->uncompromised())` (`uncompromised` = appel réseau HIBP, à réserver à la production).
 
-## 2026-11-06 — A6 · Énumération de comptes (inscription et mot de passe oublié) — ⏳ À CORRIGER
+## 2026-11-06 — A6 · Énumération de comptes (inscription et mot de passe oublié) — ✅ RÉSOLU (2026-11-06) pour `forgot-password`
+> Résolution : `PasswordResetLinkController::store` répond par le même message neutre (`messages.reset_link_neutral`) que l'e-mail existe ou non ; seul `RESET_THROTTLED` (indépendant du compte) reste signalé. `throttle:5,1` sur `POST forgot-password`. Tests : `tests/Feature/PasswordResetEnumerationTest.php`. **Décision** : `register` garde `unique:users,email` (énumération acceptée, compromis UX).
 
 - **Où** : `StoreRegisterUserRequest` (`unique:users,email`), `PasswordResetLinkController::store` (`passwords.user` : « Aucun utilisateur n'a été trouvé »). `forgot-password` n'a pas de `throttle` de route (seul le throttle interne du broker, 60 s par e-mail).
 - **Symptôme** : on peut savoir si un e-mail est client. Le login, lui, est uniforme (`auth.failed`) : OK.

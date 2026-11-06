@@ -127,6 +127,7 @@ return [
     'register_email_message' => 'A confirmation email has been sent to you. Please click the link to verify your account. Didn\'t receive anything? Check your spam folder',
     'register_success_msg' => 'Your account has been successfully activated!',
     'register_phone_conflict' => 'This phone number is already linked to another email address. Please use a different number or contact us.',
+    'reset_link_neutral' => 'If an account matches this address, an email with a reset link has just been sent.',
     'current_password' => 'Current password',
     'category_text' => [
         'title' => 'Discover the :name Collection: Bazin, Boubous and Accessories',

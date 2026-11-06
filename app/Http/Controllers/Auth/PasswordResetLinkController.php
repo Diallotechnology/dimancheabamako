@@ -38,9 +38,13 @@ final class PasswordResetLinkController extends Controller
             $request->only('email')
         );
 
-        return $status === Password::RESET_LINK_SENT
-                    ? back()->with('status', __($status))
-                    : back()->withInput($request->only('email'))
-                        ->withErrors(['email' => __($status)]);
+        // Réponse neutre : ne pas révéler si l'e-mail correspond à un compte.
+        // Seul le throttle du broker (indépendant de l'existence du compte) est signalé.
+        if ($status === Password::RESET_THROTTLED) {
+            return back()->withInput($request->only('email'))
+                ->withErrors(['email' => __($status)]);
+        }
+
+        return back()->with('status', __('messages.reset_link_neutral'));
     }
 }
