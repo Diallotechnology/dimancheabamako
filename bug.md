@@ -185,3 +185,68 @@ Avant de déployer : vérifier que `Order` avec `reference IS NULL AND trans_ref
 - **Constat** : les tests utilisent un acheteur connecté (clé de panier `cart_user_{id}`), car l'id de session d'un invité change pendant la requête de test et casse la clé `cart_guest_{sessionId}` seedée avant. `valid()` n'a aucune branche spécifique aux invités (même mapping d'état), donc le risque est faible.
 - **Piste** : couvrir le cas invité (panier vidé / conservé) en seedant le panier via `CartService` pendant la même requête, ou en fixant l'id de session de test.
 - **Statut** : non bloquant, à combler plus tard.
+
+# Audit sécurité auth du 2026-11-06 (login principal, login panier, inscription différée) — constats, aucun correctif appliqué
+
+> Vérifié sans problème : régénération de session (`Auth::attempt`/`Auth::login` → `updateSession`), logout (`invalidate()` + rotation du `remember_token` par `Auth::logout()`), compteur de tentatives partagé entre les deux formulaires de login, `change_password` contrôlé aux deux points d'entrée, jeton d'inscription à usage unique (supprimé dans la transaction) avec expiration 1 h et purge horaire, `RoleMiddleware` (`default => false`), `Rule::enum` sur les rôles, aucun mot de passe ni jeton dans les logs, cookies de session (`http_only`, `lax`, `secure` en production).
+
+## 2026-11-06 — A1 · Compte créé au checkout pour n'importe quel e-mail, sans preuve de possession — ✅ RÉSOLU (2026-11-06)
+> Résolution : le checkout ne crée plus de `User`. Un mot de passe saisi ouvre une `PendingRegistration` via le nouveau `app/Service/PendingRegistrationService` (mot de passe haché, jeton 64 car., 1 h) et le lien `ConfirmRegistrationMail` part après le commit (`DB::afterCommit`). Une inscription déjà en attente pour l'e-mail n'est ni écrasée ni re-jetonnée (le lien est renvoyé) ; un téléphone tenu par une autre inscription en attente est ignoré ; la commande n'est jamais bloquée. `StoreOrderRequest` : `NotDisposableEmail` (si mot de passe) et `max:255`. Tests : `tests/Feature/CheckoutAccountTest.php`. **Reste** : informer le client sur la page de confirmation de commande qu'il doit cliquer le lien reçu.
+
+- **Où** : `app/Service/OrderService.php` (bloc `if ($request->filled('password'))`), `app/Http/Requests/StoreOrderRequest.php` (`email` : `required|string|email` seulement).
+- **Cause** : un invité peut fournir l'e-mail d'un tiers + un mot de passe de son choix ; si aucun `User` n'existe pour cet e-mail, le compte est créé et rattaché au `Client` trouvé par contact **ou** e-mail. Pas de confirmation par e-mail, pas de `NotDisposableEmail`, pas de `lowercase`/`max:255`.
+- **Symptôme** : pré-détournement de compte : l'attaquant détient le compte lié à l'e-mail de la victime (et à son `Client` : e-mail, contact, pays visibles dans `profil`). Quand la victime s'inscrit ensuite, `unique:users,email` la bloque.
+- **Piste** : ne pas créer de `User` au checkout (ou passer par `PendingRegistration` avec jeton e-mail) ; sinon au minimum `NotDisposableEmail`, `lowercase`, `max:255`. Test RED (sécurité).
+- **TODO UX** : après une commande avec mot de passe saisi, afficher sur la page de confirmation de commande (et/ou dans le flash de retour) un message du type « Un e-mail vous a été envoyé : cliquez le lien pour activer votre compte », fr + en. Sans lui, le client ignore que son compte n'existe pas encore.
+
+## 2026-11-06 — A2 · `ClientResolverService` rattache un compte à un `Client` existant via le téléphone seul — ✅ RÉSOLU (2026-11-06)
+> Résolution : `ClientResolverService::resolve()` met à jour un `Client` seulement si l'e-mail correspond ; un téléphone connu avec un autre e-mail renvoie le `Client` inchangé. `isConfirmed()` conditionne la création/le rattachement d'un `User` (`OrderService`) et la confirmation d'inscription (`PendingRegistrationController` : jeton consommé, pas de compte ni de connexion, retour sur `register` avec le message `messages.register_phone_conflict`). La commande invité reste possible. Résolution redondante retirée de `OrderService`. Tests : `tests/Feature/ClientResolverTest.php`.
+
+- **Où** : `app/Service/ClientResolverService.php::resolve` (priorité `contact`), appelé par `OrderService` et `PendingRegistrationController`.
+- **Cause** : le `Client` est retrouvé par numéro de téléphone sans preuve de possession, puis **mis à jour** (`prenom`, `nom`, `pays`) avec les valeurs saisies.
+- **Symptôme** : en s'inscrivant (avec son propre e-mail, confirmé) ou en commandant avec le numéro d'une victime, l'attaquant (1) écrase nom/prénom/pays du `Client` de la victime, (2) obtient un compte lié à ce `Client` (e-mail/contact affichés dans `profil`, commandes rattachées au même `Client`). Cross-tenant : test RED obligatoire.
+- **Piste** : ne mettre à jour un `Client` existant que si l'e-mail correspond aussi (ou s'il n'a aucun `User`) ; ne jamais écraser nom/pays sans correspondance ; sinon créer un `Client` distinct.
+
+## 2026-11-06 — A3 · Réinscription en attente : le mot de passe de la victime est écrasé — ✅ RÉSOLU (2026-11-06)
+> Résolution : `RegisteredUserController::store` passe par `PendingRegistrationService::request()` (code dupliqué supprimé). Une inscription déjà en attente pour l'e-mail garde son mot de passe, son jeton et ses données ; le lien existant est renvoyé. Un téléphone tenu par l'inscription en attente d'un autre e-mail renvoie l'erreur `contact` (`messages.register_phone_conflict`) sans rien modifier. Tests : `tests/Feature/RegistrationPendingTest.php`. **Effet de bord** : un utilisateur qui se réinscrit avec un autre mot de passe garde le premier ; il doit utiliser « mot de passe oublié » après confirmation.
+
+- **Où** : `app/Http/Controllers/Auth/RegisteredUserController.php::store` (`where('email')->orWhere('contact')` puis `update($data)`).
+- **Cause** : un second POST `register` avec le même e-mail (ou le même téléphone) remplace `password`, `token` et même `email` de l'inscription en attente d'un autre, sans preuve de possession.
+- **Symptôme** : (a) avec l'e-mail de la victime + mot de passe de l'attaquant, le lien reçu par la victime crée un compte dont l'attaquant connaît le mot de passe ; (b) avec le téléphone de la victime + e-mail de l'attaquant, l'inscription en attente de la victime est détournée. Limité par `throttle:5,10`.
+- **Piste** : matcher uniquement sur l'e-mail ; gérer la contrainte `unique` sur `contact` par un message d'erreur, pas par écrasement. Test RED.
+
+## 2026-11-06 — A4 · Profil : changement d'e-mail et de mot de passe sans mot de passe actuel — ✅ RÉSOLU (2026-11-06)
+> Résolution : `UpdateUserProfilRequest` exige `current_password` (règle `current_password`) dès que l'e-mail change ou qu'un mot de passe est saisi ; le nom seul reste libre. `Auth::logoutOtherDevices()` après changement de mot de passe (profil et `PasswordController`), avec le middleware `auth.session` ajouté aux trois groupes `auth` (`routes/auth.php` ×2, groupe `admin` de `routes/web.php`) : sans lui l'appel n'aurait aucun effet. `AuthenticateSession::redirectUsing` renvoie vers `login` (sinon 401). Champ « Mot de passe actuel » dans `profil.blade.php`. Tests : `tests/Feature/ProfileSecurityTest.php`. **À vérifier à la main** : le formulaire de profil dans le navigateur, et qu'un reset de mot de passe par e-mail déconnecte bien les autres appareils.
+
+- **Où** : `AuthenticatedSessionController::update` + `UpdateUserProfilRequest` (route `profil.update`).
+- **Cause** : aucun `current_password` exigé (contrairement à `PasswordController::update`) ; l'e-mail change sans re-vérification ; les autres sessions ne sont pas invalidées.
+- **Symptôme** : une session volée (poste partagé, XSS) suffit à prendre le compte durablement (nouveau mot de passe + nouvel e-mail pour le reset).
+- **Piste** : exiger `current_password` pour toute modification d'e-mail/mot de passe ; `Auth::logoutOtherDevices` après changement. Test RED.
+
+## 2026-11-06 — A5 · `Password::defaults()` jamais configuré (minimum 8 caractères seulement) — ✅ RÉSOLU (2026-11-06)
+> Résolution : `Password::defaults()` configuré dans `AppServiceProvider::boot()` : 8 caractères minimum, lettres + chiffres (volontairement léger, décision du propriétaire ; ni casse mixte, ni vérification HIBP). Tests : `tests/Feature/PasswordRulesTest.php`.
+
+- **Où** : `app/Providers/AppServiceProvider.php` (aucun `Password::defaults(...)`), utilisé par 6 requêtes (register, checkout, profil, reset, changement initial, `PasswordController`).
+- **Cause** : sans configuration, `Rules\Password::defaults()` = `min(8)` ; la correction M3 s'appuie donc sur une règle quasi vide.
+- **Piste** : `Password::defaults(fn () => Password::min(10)->letters()->mixedCase()->numbers()->uncompromised())` (`uncompromised` = appel réseau HIBP, à réserver à la production).
+
+## 2026-11-06 — A6 · Énumération de comptes (inscription et mot de passe oublié) — ⏳ À CORRIGER
+
+- **Où** : `StoreRegisterUserRequest` (`unique:users,email`), `PasswordResetLinkController::store` (`passwords.user` : « Aucun utilisateur n'a été trouvé »). `forgot-password` n'a pas de `throttle` de route (seul le throttle interne du broker, 60 s par e-mail).
+- **Symptôme** : on peut savoir si un e-mail est client. Le login, lui, est uniforme (`auth.failed`) : OK.
+- **Piste** : réponse identique « si ce compte existe, un e-mail a été envoyé » pour `forgot-password` + `throttle` de route. Pour `register`, accepter l'énumération (compromis UX) ou répondre de façon neutre.
+
+## 2026-11-06 — A7 · Limitation de tentatives de login contournable ou retournable — ⏳ À CORRIGER (priorité basse)
+
+- **Où** : `app/Service/LoginService.php::throttleKey` (`email|ip`), `routes/auth.php` (`POST login` sans `throttle`), `TrustProxies::$proxies = null`.
+- **Cause / symptôme** : (1) aucune limite par IP seule : 1 mot de passe sur N comptes (password spraying) n'atteint jamais 5 par clé ; (2) si la production est derrière un proxy/CDN non déclaré dans `$proxies`, `ip()` vaut l'IP du proxy : tous les clients partagent la clé par e-mail, donc 5 échecs volontaires verrouillent le compte de n'importe qui ; (3) si on déclare `'*'` sans proxy réel, `X-Forwarded-For` falsifiable contourne la limite.
+- **Piste** : seconde clé par IP (ex. 20/min) ; configurer `trustProxies` selon l'infra réelle de production (à vérifier au déploiement).
+
+## 2026-11-06 — A8 · Points faibles divers — ⏳ NOTÉ
+
+- `confirm-registration/{token}` : action d'état + connexion en **GET** (cf. M1) ; un scanner de liens d'e-mail peut consommer le jeton avant l'utilisateur. Piste : page de confirmation + POST.
+- `PendingRegistration.token` stocké en clair en base (préférer un hash) ; `email_verified_at` reste `null` après confirmation par lien.
+- `AuthenticatedSessionController::destroy` n'appelle pas `regenerateToken()` (inoffensif : `invalidate()` vide la session et `start()` en recrée un).
+- Comptes créés au checkout/inscription : `change_password = false` (défaut de la colonne), donc le premier login force un second changement de mot de passe. À arbitrer côté UX.
+- `Panier::$password` est une propriété publique Livewire : elle transite dans le snapshot et n'est pas vidée après un échec. Piste : `$this->reset('password')`.
+- `AuthenticatedSessionController::store` relit `User::where('email', $request->email)` au lieu d'utiliser l'utilisateur renvoyé par `attempt()` (sensibilité à la casse selon le collation).
