@@ -13,7 +13,6 @@ use App\Service\ClientResolverService;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Hash;
 
 final class PendingRegistrationController extends Controller
 {
@@ -46,7 +45,8 @@ final class PendingRegistrationController extends Controller
                 $user = User::create([
                     'name' => "{$pending->prenom} {$pending->nom}",
                     'email' => $pending->email,
-                    'password' => Hash::make($pending->password),
+                    // Déjà haché par PendingRegistrationService : le cast `hashed` de User le conserve tel quel.
+                    'password' => $pending->password,
                     'role' => RoleEnum::CUSTOMER->value,
                     'client_id' => $client->id,
                 ]);
