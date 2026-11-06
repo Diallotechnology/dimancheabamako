@@ -237,7 +237,8 @@ Avant de déployer : vérifier que `Order` avec `reference IS NULL AND trans_ref
 - **Symptôme** : on peut savoir si un e-mail est client. Le login, lui, est uniforme (`auth.failed`) : OK.
 - **Piste** : réponse identique « si ce compte existe, un e-mail a été envoyé » pour `forgot-password` + `throttle` de route. Pour `register`, accepter l'énumération (compromis UX) ou répondre de façon neutre.
 
-## 2026-11-06 — A7 · Limitation de tentatives de login contournable ou retournable — ⏳ À CORRIGER (priorité basse)
+## 2026-11-06 — A7 · Limitation de tentatives de login contournable ou retournable — ✅ RÉSOLU partiellement (2026-11-06)
+> Résolution : `LoginService` ajoute une limite par IP seule (20 échecs/min, clé `login-ip|<ip>`, non remise à zéro par un login réussi), partagée par le login principal et celui du panier. Test : `tests/Feature/LoginIpThrottleTest.php`. **Reste manuel (prod)** : configurer `TrustProxies` selon l'infra réelle (points 2 et 3 ci-dessous), impossible à vérifier depuis le dépôt.
 
 - **Où** : `app/Service/LoginService.php::throttleKey` (`email|ip`), `routes/auth.php` (`POST login` sans `throttle`), `TrustProxies::$proxies = null`.
 - **Cause / symptôme** : (1) aucune limite par IP seule : 1 mot de passe sur N comptes (password spraying) n'atteint jamais 5 par clé ; (2) si la production est derrière un proxy/CDN non déclaré dans `$proxies`, `ip()` vaut l'IP du proxy : tous les clients partagent la clé par e-mail, donc 5 échecs volontaires verrouillent le compte de n'importe qui ; (3) si on déclare `'*'` sans proxy réel, `X-Forwarded-For` falsifiable contourne la limite.

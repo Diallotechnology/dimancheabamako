@@ -20,17 +20,27 @@ final class LoginService
 {
     private const MAX_ATTEMPTS = 5;
 
+    // Limite par IP seule (toutes adresses e-mail confondues) : freine le password spraying.
+    private const MAX_ATTEMPTS_PER_IP = 20;
+
     /**
      * @throws ValidationException si trop de tentatives ou identifiants invalides
      */
     public function attempt(string $email, string $password, bool $remember, string $ip): User
     {
         $key = $this->throttleKey($email, $ip);
+        $ipKey = 'login-ip|'.$ip;
 
-        if (RateLimiter::tooManyAttempts($key, self::MAX_ATTEMPTS)) {
+        $lockedKey = match (true) {
+            RateLimiter::tooManyAttempts($key, self::MAX_ATTEMPTS) => $key,
+            RateLimiter::tooManyAttempts($ipKey, self::MAX_ATTEMPTS_PER_IP) => $ipKey,
+            default => null,
+        };
+
+        if ($lockedKey !== null) {
             event(new Lockout(request()));
 
-            $seconds = RateLimiter::availableIn($key);
+            $seconds = RateLimiter::availableIn($lockedKey);
 
             throw ValidationException::withMessages([
                 'email' => trans('auth.throttle', [
@@ -42,6 +52,7 @@ final class LoginService
 
         if (! Auth::attempt(['email' => $email, 'password' => $password], $remember)) {
             RateLimiter::hit($key);
+            RateLimiter::hit($ipKey);
 
             throw ValidationException::withMessages([
                 'email' => trans('auth.failed'),
