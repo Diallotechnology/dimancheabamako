@@ -11,6 +11,7 @@ use App\Service\CartService;
 use App\Service\LoginService;
 use App\Service\PriceService;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Validation\ValidationException;
 use Livewire\Attributes\On;
 use Livewire\Attributes\Validate;
 use Livewire\Component;
@@ -49,7 +50,15 @@ final class Panier extends Component
 
         // Mêmes règles que le login principal : limitation partagée (ValidationException → erreur sur `email`).
         $login = app(LoginService::class);
-        $user = $login->attempt((string) $this->email, (string) $this->password, false, (string) request()->ip());
+
+        try {
+            $user = $login->attempt((string) $this->email, (string) $this->password, false, (string) request()->ip());
+        } catch (ValidationException $e) {
+            // Le mot de passe ne doit pas rester dans le snapshot Livewire après un échec.
+            $this->reset('password');
+
+            throw $e;
+        }
 
         if (! $user->change_password) {
             Auth::logout();

@@ -244,7 +244,8 @@ Avant de déployer : vérifier que `Order` avec `reference IS NULL AND trans_ref
 - **Cause / symptôme** : (1) aucune limite par IP seule : 1 mot de passe sur N comptes (password spraying) n'atteint jamais 5 par clé ; (2) si la production est derrière un proxy/CDN non déclaré dans `$proxies`, `ip()` vaut l'IP du proxy : tous les clients partagent la clé par e-mail, donc 5 échecs volontaires verrouillent le compte de n'importe qui ; (3) si on déclare `'*'` sans proxy réel, `X-Forwarded-For` falsifiable contourne la limite.
 - **Piste** : seconde clé par IP (ex. 20/min) ; configurer `trustProxies` selon l'infra réelle de production (à vérifier au déploiement).
 
-## 2026-11-06 — A8 · Points faibles divers — ⏳ NOTÉ
+## 2026-11-06 — A8 · Points faibles divers — ✅ partiellement traité (2026-11-06)
+> Fait : `Panier::login_submit` vide `password` après un échec ; `AuthenticatedSessionController::store` utilise `Auth::user()` au lieu de relire par e-mail. **Reste (flux d'inscription, à valider séparément)** : `confirm-registration` en GET → page + POST ; hash du jeton `PendingRegistration` ; `email_verified_at` ; `change_password` des comptes créés ; `regenerateToken()` au logout (inoffensif).
 
 - `confirm-registration/{token}` : action d'état + connexion en **GET** (cf. M1) ; un scanner de liens d'e-mail peut consommer le jeton avant l'utilisateur. Piste : page de confirmation + POST.
 - `PendingRegistration.token` stocké en clair en base (préférer un hash) ; `email_verified_at` reste `null` après confirmation par lien.

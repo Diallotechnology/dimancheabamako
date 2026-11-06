@@ -35,7 +35,8 @@ final class AuthenticatedSessionController extends Controller
         $oldSessionId = session()->getId();
         $request->authenticate();
 
-        $user = User::where('email', $request->email)->first();
+        /** @var User $user */
+        $user = Auth::user();
 
         if (! $user->change_password) {
             Auth::logout();
