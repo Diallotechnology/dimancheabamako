@@ -38,7 +38,7 @@ Route::prefix('admin')->middleware(['auth', 'auth.session', 'verified'])->group(
         Route::resource('user', UserController::class)->except('index', 'create');
         Route::resource('image', ImageController::class)->except('index', 'create', 'show', 'store');
         Route::resource('promotion', PromotionController::class)->except('index');
-        Route::resource('transport', TransportController::class)->except('index', 'create');
+        Route::resource('transport', TransportController::class)->except('index', 'create', 'show');
         Route::resource('zone', ZoneController::class)->except('index', 'create');
         Route::resource('country', CountryController::class)->except('index', 'create');
         Route::resource('shipping', ShippingController::class)->except('index', 'create');
@@ -67,7 +67,7 @@ Route::prefix('admin')->middleware(['auth', 'auth.session', 'verified'])->group(
         });
     });
     Route::middleware('role:'.RoleEnum::SECRTETAIRE->value)->group(function () {
-        Route::resource('order', OrderController::class)->except('index', 'create', 'store');
+        Route::resource('order', OrderController::class)->except('index', 'create', 'store', 'edit');
         Route::put('product/favoris/{data}/{product_id}', [ProductController::class, 'favoris_update'])->whereIn('data', ['0', '1'])->name('product.favori');
         Route::resource('category', CategoryController::class)->except('index', 'create', 'show');
         // Avant la resource : sinon `product/import` serait pris pour `product/{product}`.

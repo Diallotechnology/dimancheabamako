@@ -32,14 +32,6 @@ final class TransportController extends Controller
     }
 
     /**
-     * Display the specified resource.
-     */
-    public function show(Transport $transport)
-    {
-        return Inertia::render('Admin/Transport/Show', compact('transport'));
-    }
-
-    /**
      * Show the form for editing the specified resource.
      */
     public function edit(Transport $transport)
