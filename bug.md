@@ -332,7 +332,7 @@ Avant de déployer : vérifier que `Order` avec `reference IS NULL AND trans_ref
 
 - **Où (avant)** : `app/Service/ImageUploadService.php::store`, `ProductController::store`/`update` (`storeAs`).
 - **Constat (avant)** : le fichier uploadé est reçu (`isValid()` vrai) dans `C:\Windows\Temp\phpXXXX.tmp` mais `getRealPath()` renvoie `false` et Intervention refuse de lire le dossier : `POST /admin/product` en 500 (« Unable to decode from empty string »), quelle que soit l'UI.
-- **Reste** : `ProductImportController::store` utilise toujours `$file->storeAs(..., 'local')` (même cause possible sur l'import par photos en local). Non corrigé, hors périmètre de cette entrée ; à reproduire avant de toucher.
+- **Import par photos** : `ProductImportController::store` avait le même défaut (`storeAs`) ; il copie maintenant la photo en flux depuis `getPathname()`. Test : `tests/Feature/ProductImportTest.php` (« stores imported photos even when the uploaded file has no resolvable real path »).
 
 ## 2026-11-11 — `public/storage` n'est pas un lien vers `storage/app/public` en local — ✅ RÉSOLU (2026-11-11)
 
