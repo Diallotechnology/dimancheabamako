@@ -306,3 +306,16 @@ Avant de déployer : vérifier que `Order` avec `reference IS NULL AND trans_ref
 - **Constat** : `validated()` contient des champs de relation absents de `$fillable`. En mode strict (hors production) Eloquent lève `Add fillable property [product_id] to allow mass assignment on [App\Models\Promotion]` → 500 ; en production le champ est ignoré silencieusement, donc le bug est masqué. Reproduit en local par POST `admin/promotion` (422 de validation OK, puis 500).
 - **Piste** : utiliser `$request->safe()->except('product_id')` (ou `only([...])`) avant `create`/`update`, + test Feature (création + `products` attachés).
 - **Résolution** : `$request->safe()->except([champ de relation])` dans `store`/`update` des 3 contrôleurs. Pas d'ajout à `$fillable` : ce ne sont pas des colonnes. Les relations étaient déjà persistées explicitement (`attach`/`sync`/`saveMany`), donc en production seule la création du modèle ignorait ces clés (aucune donnée perdue). Tests : `tests/Feature/AdminRelationFieldsTest.php`.
+
+## 2026-11-11 — Tarifs `shippings` existants avec une zone non desservie par leur transporteur
+
+- **Où** : table `shippings` (local : ids 1, 2, 4, 7, 9), `database/factories/ShippingFactory.php` (`transport_id`/`zone_id` tirés au hasard par `rand(1, 2)`, sans tenir compte de la table pivot `transport_zone`).
+- **Constat** : ces tarifs ne seront jamais retenus par `ShippingService::resolve` (filtre transport + zone). Depuis la règle ajoutée à `StoreShippingRequest`, leur édition exige de choisir une zone desservie par le transporteur ; la création/édition de nouveaux tarifs incohérents est refusée.
+- **Piste** : revoir la factory (zone choisie parmi `transport->zones`) ; en production, lister les lignes incohérentes avec `Shipping::whereNotExists(... transport_zone ...)` et les corriger ou les supprimer à la main.
+- **Statut** : non corrigé, hors périmètre.
+
+## 2026-11-11 — Messages de validation « Le champ zone id est obligatoire »
+
+- **Où** : `lang/fr/validation.php` (pas de traduction des attributs `zone_id`, `transport_id`, `poids_id`…), visible dans `Shipping/Index` et `Shipping/Update`.
+- **Piste** : ajouter ces clés dans `attributes` (« zone », « transporteur », « tranche de poids »).
+- **Statut** : non corrigé, cosmétique, hors périmètre.
