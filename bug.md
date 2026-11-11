@@ -326,14 +326,13 @@ Avant de déployer : vérifier que `Order` avec `reference IS NULL AND trans_ref
 - **Constat** : `revenu` somme les lignes de **toutes** les commandes du mois (`whereMonth` sans filtre d'année ni d'état de paiement), tandis que « Ventes » ne compte que `trans_state = PURCHASED`, et le graphique compte **toutes** les commandes par jour. Les trois chiffres ne sont donc pas comparables (ex. local : 1 vente réglée, 3 commandes affichées, revenu incluant les non payées). `whereMonth` ignore aussi l'année (novembre 2025 + 2026 mélangés).
 - **Statut** : non corrigé (migration front uniquement). Libellé du KPI renommé « Revenu du mois » côté Vue pour refléter la réalité actuelle.
 
-## 2026-11-11 — Uploads impossibles en local : `getRealPath()` vide sur `C:\Windows\Temp` — ✅ RÉSOLU (2026-11-11)
+## 2026-11-11 — Uploads impossibles en local : `getRealPath()` vide sur `C:\Windows\Temp` — ✅ RÉSOLU (code, 2026-11-11)
 
-> Résolution : `upload_tmp_dir = "C:/laragon/tmp"` dans le `php.ini` du PHP web (`php-8.5.12`, sauvegarde `php.ini.bak-20261111`). Validé après redémarrage d'Apache : création du produit 49 avec cover, 2 images et vidéo en 200, fichiers servis en 200. Aucun changement de code.
+> Résolution : `ImageUploadService::store` décode le contenu du fichier (`$file->get()`) et le nouveau `VideoUploadService::store` copie la vidéo en flux depuis `getPathname()` ; plus aucun `getRealPath()`/`storeAs()` sur ce chemin, donc l'upload ne dépend plus de `upload_tmp_dir`. Test RED reproduisant l'échec (fichier dont `getRealPath()` renvoie `false`) : `tests/Feature/ImageUploadServiceTest.php`. Le réglage `upload_tmp_dir` du `php.ini` local n'est plus nécessaire pour cela (il peut rester ou être retiré, sauvegarde `php.ini.bak-20261111`).
 
-- **Où** : `app/Service/ImageUploadService.php::store` (`getRealPath()`), `ProductController::store`/`update` (`$request->video->storeAs(...)`), tout upload multipart en local (PHP web Laragon).
-- **Constat** : le fichier uploadé est bien reçu (`isValid()` vrai, `file_exists` vrai, `C:\Windows\Temp\phpXXXX.tmp`) mais `getRealPath()` renvoie `false` et Intervention refuse de lire le dossier (« Directory "C:\Windows\Temp" is not readable »). Résultat : `POST /admin/product` en 500 (« Unable to decode from empty string ») dès qu'une cover est envoyée, indépendamment de l'UI.
-- **Piste** : définir `upload_tmp_dir` (ex. `C:\laragon\tmp`) dans le `php.ini` du PHP web, ou décoder depuis `$file->get()` au lieu du chemin. Test de la migration Product faite avec un contournement temporaire (retiré, non commité).
-- **Statut** : non corrigé, hors périmètre (environnement local).
+- **Où (avant)** : `app/Service/ImageUploadService.php::store`, `ProductController::store`/`update` (`storeAs`).
+- **Constat (avant)** : le fichier uploadé est reçu (`isValid()` vrai) dans `C:\Windows\Temp\phpXXXX.tmp` mais `getRealPath()` renvoie `false` et Intervention refuse de lire le dossier : `POST /admin/product` en 500 (« Unable to decode from empty string »), quelle que soit l'UI.
+- **Reste** : `ProductImportController::store` utilise toujours `$file->storeAs(..., 'local')` (même cause possible sur l'import par photos en local). Non corrigé, hors périmètre de cette entrée ; à reproduire avant de toucher.
 
 ## 2026-11-11 — `public/storage` n'est pas un lien vers `storage/app/public` en local — ✅ RÉSOLU (2026-11-11)
 
