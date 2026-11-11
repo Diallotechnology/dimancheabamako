@@ -1,143 +1,152 @@
-<script setup>
-import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
-import { useForm, Link } from "@inertiajs/vue3";
-import notify from "@/helper";
-import { ref, onMounted } from "vue";
+<script setup lang="ts">
+import { Link, useForm } from '@inertiajs/vue3';
+import { ArrowLeft, Loader2 } from '@lucide/vue';
+import { computed, onMounted, watch } from 'vue';
+import { toast } from 'vue-sonner';
+import { shipping as shippingIndex } from '@/actions/App/Http/Controllers/AdminController';
+import { update } from '@/actions/App/Http/Controllers/ShippingController';
+import Combobox from '@/Components/Admin/Combobox.vue';
+import FormField from '@/Components/Admin/FormField.vue';
+import { Button } from '@/Components/ui/button';
+import { Input } from '@/Components/ui/input';
+import { useTransportZones } from '@/Composables/useTransportZones';
+import AdminLayoutV2 from '@/Layouts/AdminLayoutV2.vue';
+import type { Option, Shipping, Transport } from '@/types';
 
-const props = defineProps({
-    shipping: {
-        type: Object,
-        required: true,
-        default: () => ({}),
-    },
-    transport: {
-        type: Object,
-        required: true,
-        default: () => ({}),
-    },
-    poids: {
-        type: Object,
-        required: true,
-        default: () => ({}),
-    },
-});
-const zone = ref([]);
-const getzone = async (url) => {
-    await axios
-        .get(url)
-        .then((response) => {
-            zone.value = response.data;
-        })
-        .catch(function (error) {
-            // handle error
-            console.log(error.response);
-        });
-};
-onMounted(() => {
-    getzone(route("transport.zone", props.shipping.transport_id));
-});
+const props = defineProps<{
+    shipping: Shipping;
+    transport: Transport[];
+    /** Tranches de poids : valeur = id (chaîne). */
+    poids: Option[];
+}>();
+
+const transportOptions = computed<Option[]>(() =>
+    props.transport.map((row) => ({ label: row.nom, value: String(row.id) })),
+);
+
 const form = useForm({
+    transport_id: String(props.shipping.transport_id),
+    zone_id: String(props.shipping.zone_id),
+    poids_id: String(props.shipping.poids_id),
     temps: props.shipping.temps,
-    montant: props.shipping.montant,
-    poids_id: `${props.shipping.poids_id}`,
-    transport_id: props.shipping.transport_id,
-    zone_id: `${props.shipping.zone_id}`,
+    montant: String(props.shipping.montant),
 });
 
-const submit = () => {
-    form.patch(route("shipping.update", props.shipping.id), {
+const { zones, loading: zonesLoading, failed: zonesFailed, load: loadZones } = useTransportZones();
+
+onMounted(() => {
+    void loadZones(form.transport_id);
+});
+
+// Liste dépendante : une zone choisie pour l'ancien transporteur n'est pas forcément desservie par le nouveau.
+watch(
+    () => form.transport_id,
+    (transportId) => {
+        form.zone_id = '';
+        form.clearErrors('zone_id');
+        void loadZones(transportId);
+    },
+);
+
+const submit = (): void => {
+    form.submit(update(props.shipping.id), {
         onSuccess: () => {
-            form.poids = props.shipping.poids;
-            form.temps = props.shipping.temps;
-            form.montant = props.shipping.montant;
-            form.poids_id = `${props.shipping.poids_id}`;
-            form.transport_id = props.shipping.transport_id;
-            form.zone_id = `${props.shipping.zone_id}`;
-            notify("livraison mise à jour avec success !", true);
+            form.defaults();
+            toast.success('Tarif de livraison mis à jour.');
         },
         onError: () => {
-            notify(false);
+            toast.error('Le formulaire contient des erreurs.');
         },
     });
 };
 </script>
+
 <template>
-    <AuthenticatedLayout>
-        <div class="card">
-            <h2 class="p-4 text-center">Formulaire de mise à jour</h2>
-            <div class="card-body">
-                <form @submit.prevent="submit">
-                    <Select
-                        v-model="form.transport_id"
-                        :message="form.errors.transport_id"
-                        label="Nom du transporteur"
-                        @change="
-                            getzone(route('transport.zone', form.transport_id))
-                        "
-                    >
-                        <option
-                            v-for="row in transport"
-                            :key="row.id"
-                            :value="row.id"
-                        >
-                            {{ row.nom }}
-                        </option>
-                    </Select>
-                    <Select2
-                        label="Nom de la zone"
-                        :message="form.errors.zone_id"
-                    >
-                        <VueSelect
-                            placeholder="selectionner"
-                            v-model="form.zone_id"
-                            :options="zone"
-                        />
-                    </Select2>
+    <AdminLayoutV2
+        :title="`Modifier le tarif n°${shipping.id}`"
+        description="Changez le transporteur, la zone, la tranche de poids, le délai ou le montant."
+    >
+        <template #actions>
+            <Button as-child variant="outline">
+                <Link :href="shippingIndex()">
+                    <ArrowLeft />
+                    Retour aux livraisons
+                </Link>
+            </Button>
+        </template>
 
-                    <Select2 label="Poids" :message="form.errors.poids_id">
-                        <VueSelect
-                            placeholder="selectionner"
-                            v-model="form.poids_id"
-                            :options="poids"
-                        />
-                    </Select2>
-
-                    <Input
-                        input_type="text"
-                        place="le temps du transport"
-                        label="Temps"
-                        v-model="form.temps"
-                        :message="form.errors.temps"
-                        required
-                    />
-
-                    <Input
-                        input_type="number"
-                        place="le prix du transport"
-                        label="montant en cfa"
-                        v-model="form.montant"
-                        :message="form.errors.montant"
-                        required
-                    />
-                    <div class="modal-footer">
-                        <Link
-                            :href="route('shipping')"
-                            class="btn btn-danger rounded"
-                            data-bs-dismiss="modal"
-                        >
-                            Annuler
-                        </Link>
-                        <button
-                            :class="{ 'opacity-25': form.processing }"
-                            :disabled="form.processing"
-                            type="submit"
-                            class="btn btn-primary rounded"
-                        >
-                            Valider
-                        </button>
-                    </div>
-                </form>
+        <form class="grid max-w-2xl gap-5 rounded-lg border bg-card p-6 shadow-sm" novalidate @submit.prevent="submit">
+            <FormField label="Transporteur" :error="form.errors.transport_id" required v-slot="field">
+                <Combobox
+                    :id="field.id"
+                    v-model="form.transport_id"
+                    :options="transportOptions"
+                    placeholder="Choisir un transporteur"
+                    search-placeholder="Rechercher un transporteur…"
+                    :invalid="field.invalid"
+                    :described-by="field.describedBy"
+                />
+            </FormField>
+            <FormField
+                label="Zone"
+                :error="form.errors.zone_id || (zonesFailed ? 'Impossible de charger les zones, réessayez.' : undefined)"
+                required
+                v-slot="field"
+            >
+                <Combobox
+                    :id="field.id"
+                    v-model="form.zone_id"
+                    :options="zones"
+                    :disabled="zonesLoading"
+                    :placeholder="zonesLoading ? 'Chargement…' : 'Choisir une zone'"
+                    search-placeholder="Rechercher une zone…"
+                    empty-text="Ce transporteur ne dessert aucune zone."
+                    :invalid="field.invalid"
+                    :described-by="field.describedBy"
+                />
+            </FormField>
+            <FormField label="Poids" :error="form.errors.poids_id" required v-slot="field">
+                <Combobox
+                    :id="field.id"
+                    v-model="form.poids_id"
+                    :options="poids"
+                    placeholder="Choisir une tranche de poids"
+                    search-placeholder="Rechercher une tranche…"
+                    :invalid="field.invalid"
+                    :described-by="field.describedBy"
+                />
+            </FormField>
+            <FormField label="Délai de livraison" :error="form.errors.temps" required v-slot="field">
+                <Input
+                    :id="field.id"
+                    v-model="form.temps"
+                    placeholder="Ex. 3 à 5 jours"
+                    :aria-invalid="field.invalid"
+                    :aria-describedby="field.describedBy"
+                />
+            </FormField>
+            <FormField label="Montant (CFA)" :error="form.errors.montant" required v-slot="field">
+                <Input
+                    :id="field.id"
+                    v-model="form.montant"
+                    type="number"
+                    min="0"
+                    step="1"
+                    inputmode="numeric"
+                    placeholder="Prix du transport"
+                    :aria-invalid="field.invalid"
+                    :aria-describedby="field.describedBy"
+                />
+            </FormField>
+            <div class="flex justify-end gap-2">
+                <Button as-child variant="outline" type="button">
+                    <Link :href="shippingIndex()">Annuler</Link>
+                </Button>
+                <Button type="submit" :disabled="form.processing || !form.isDirty">
+                    <Loader2 v-if="form.processing" class="animate-spin" />
+                    Enregistrer
+                </Button>
             </div>
-        </div>
-    </AuthenticatedLayout>
+        </form>
+    </AdminLayoutV2>
 </template>

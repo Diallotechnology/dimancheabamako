@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 final class StoreShippingRequest extends FormRequest
 {
@@ -25,7 +26,11 @@ final class StoreShippingRequest extends FormRequest
     {
         return [
             'transport_id' => 'required|exists:transports,id',
-            'zone_id' => 'required|exists:zones,id',
+            // La zone doit être desservie par le transporteur choisi (table pivot transport_zone).
+            'zone_id' => [
+                'required',
+                Rule::exists('transport_zone', 'zone_id')->where('transport_id', $this->input('transport_id')),
+            ],
             'poids_id' => 'required|exists:poids,id',
             'temps' => 'required|string',
             'montant' => 'required|integer|min:0',
