@@ -52,6 +52,8 @@ export interface Product extends Timestamps {
     cover: string;
     categorie?: Pick<Category, 'id' | 'nom'>;
     images?: Image[];
+    /** Commandes contenant le produit (`ProductController::show` charge `orders`, sans leur pays). */
+    orders?: Order[];
     /** Ligne de commande (pivot order_product), présente via Order.products. */
     pivot?: { quantity: number; montant: number };
 }
