@@ -2,6 +2,37 @@
 
 Bugs rencontrés pendant d'autres chantiers, notés ici pour être corrigés ensuite (un fix = un test si sécurité/finance, puis marquer l'entrée « ✅ RÉSOLU » sans la supprimer).
 
+## Dette technique restante (état au 2026-11-11)
+
+Index des entrées encore ouvertes, regroupées ici pour être visibles sans tout relire. Le détail de chaque point reste dans son entrée plus bas (inchangée) ; mettre cette liste à jour à chaque résolution.
+
+**Sécurité / permissions**
+- Migration Poids/Devise/User : `DELETE devise` possible (casse `PriceService`), `role: null` accepté sur `UpdateUserRequest`, suppression ou rétrogradation de soi-même et du dernier administrateur sans garde-fou. *(RED test : permissions)*
+- A7 · Login : configurer `TrustProxies` selon l'infra réelle de production (manuel, à vérifier au déploiement).
+- A8 · Points faibles divers restants : `PendingRegistration.token` en clair, `email_verified_at` jamais renseigné après confirmation, `change_password = false` à arbitrer côté UX.
+
+**Finance / paiement**
+- PayLinkController : échec N-Genius invisible dans le back-office.
+- Déploiement de la réservation de stock : vérifier `reference IS NULL AND trans_ref IS NOT NULL` = 0 ligne avant la bascule en production.
+- Dashboard : `revenu` du mois et « ventes » comptées sur des bases différentes.
+- Tarifs `shippings` existants dont la zone n'est pas desservie par leur transporteur.
+
+**Données / règles métier**
+- Slide / Image : ancien fichier supprimé avant l'enregistrement du nouveau, routes sans méthode.
+- Création produit : erreurs `image.*` et validation d'`image` incohérente entre Store et Update.
+- Lot d'import jamais « terminé » dès qu'un job échoue (`ProductImportController::show`, contournement côté Vue).
+- `Promotion/Show` : catégorie du produit jamais affichée.
+- `Product/Show` : colonne « Pays » toujours vide.
+- Messages de validation « Le champ zone id est obligatoire » (cosmétique).
+
+**Tests / outillage / environnement local**
+- `order.validate` non couvert pour un invité (non bloquant).
+- `queue:work` manuel rejoue des `RegisterMailJob` en attente : préférer `MAIL_MAILER=log` en local.
+- Données de test conservées (lot d'import, produits `REF-IA-1` / `REF-IA-2`) : ne pas supprimer.
+
+**Résolu depuis la rédaction de l'entrée (entrée conservée telle quelle)**
+- Transport/Show morte et `TransportController::show` : supprimées avec `Order/Update` et `AuthenticatedLayout` (commit `45fd877`, nettoyage de la migration shadcn-vue).
+
 ## 2026-11-04 — Paiement N-Genius invisible en cas d'échec de création d'ordre — ✅ RÉSOLU (2026-11-05)
 
 > Validé en local via tunnel : commande n°5 payée en sandbox (Visa sans 3DS), `PURCHASED` chez N-Genius, puis `app:check-payment` → `trans_state=PURCHASED`, `reference=DAB2026-1`. Note : la Visa 3DS 1.0 `4012001037141112` est refusée sur cet outlet (3DS « Not enrolled »), ce n'est pas un bug applicatif.
