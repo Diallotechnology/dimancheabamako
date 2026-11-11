@@ -1,74 +1,80 @@
-<script setup>
-import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
-import { useForm, Link } from "@inertiajs/vue3";
-import notify from "@/helper";
-const props = defineProps({
-    poid: {
-        type: Object,
-        required: true,
-        default: () => ({}),
-    },
-});
+<script setup lang="ts">
+import { Link, useForm } from '@inertiajs/vue3';
+import { ArrowLeft, Loader2 } from '@lucide/vue';
+import { toast } from 'vue-sonner';
+import { poids as poidsIndex } from '@/actions/App/Http/Controllers/AdminController';
+import { update } from '@/actions/App/Http/Controllers/PoidsController';
+import FormField from '@/Components/Admin/FormField.vue';
+import { Button } from '@/Components/ui/button';
+import { Input } from '@/Components/ui/input';
+import AdminLayoutV2 from '@/Layouts/AdminLayoutV2.vue';
+import type { Poids } from '@/types';
+
+const props = defineProps<{
+    poid: Poids;
+}>();
+
+// Champs en texte : la règle serveur `decimal:2` exige la chaîne « 5.00 ».
 const form = useForm({
-    min: props.poid.min,
-    max: props.poid.max,
+    min: String(props.poid.min),
+    max: String(props.poid.max),
 });
 
-const submit = () => {
-    form.patch(route("poid.update", props.poid.id), {
+const submit = (): void => {
+    form.submit(update(props.poid.id), {
         onSuccess: () => {
-            form.min = props.poid.min;
-            form.max = props.poid.max;
-            notify("poids mise à jour avec success !", true);
+            form.defaults();
+            toast.success('Tranche de poids mise à jour.');
         },
         onError: () => {
-            notify(false);
+            toast.error('Le formulaire contient des erreurs.');
         },
     });
 };
 </script>
 
 <template>
-    <AuthenticatedLayout>
-        <div class="card">
-            <h2 class="p-4 text-center">Formulaire de mise à jour</h2>
-            <div class="card-body">
-                <form @submit.prevent="submit">
-                    <Input
-                        input_type="number"
-                        place="le minimum du poids"
-                        label="Minimum en Kg"
-                        v-model="form.min"
-                        :message="form.errors.min"
-                        required
-                    />
-                    <Input
-                        input_type="number"
-                        place="le maximum du poids"
-                        label="Maximum en Kg"
-                        v-model="form.max"
-                        :message="form.errors.max"
-                        required
-                    />
-                    <div class="modal-footer">
-                        <Link
-                            :href="route('poids')"
-                            class="btn btn-danger rounded"
-                            data-bs-dismiss="modal"
-                        >
-                            Annuler
-                        </Link>
-                        <button
-                            :class="{ 'opacity-25': form.processing }"
-                            :disabled="form.processing"
-                            type="submit"
-                            class="btn btn-primary rounded"
-                        >
-                            Valider
-                        </button>
-                    </div>
-                </form>
+    <AdminLayoutV2
+        :title="`Modifier la tranche ${poid.min} – ${poid.max} kg`"
+        description="Mettez à jour les bornes de la tranche de poids."
+    >
+        <template #actions>
+            <Button as-child variant="outline">
+                <Link :href="poidsIndex()">
+                    <ArrowLeft />
+                    Retour aux poids
+                </Link>
+            </Button>
+        </template>
+
+        <form class="grid max-w-2xl gap-5 rounded-lg border bg-card p-6 shadow-sm" novalidate @submit.prevent="submit">
+            <FormField label="Minimum (kg)" hint="Avec deux décimales, par exemple 0.50." :error="form.errors.min" required v-slot="field">
+                <Input
+                    :id="field.id"
+                    v-model="form.min"
+                    inputmode="decimal"
+                    :aria-invalid="field.invalid"
+                    :aria-describedby="field.describedBy"
+                />
+            </FormField>
+            <FormField label="Maximum (kg)" hint="Avec deux décimales, par exemple 5.00." :error="form.errors.max" required v-slot="field">
+                <Input
+                    :id="field.id"
+                    v-model="form.max"
+                    inputmode="decimal"
+                    :aria-invalid="field.invalid"
+                    :aria-describedby="field.describedBy"
+                />
+            </FormField>
+            <div class="flex justify-end gap-2">
+                <Button as-child variant="outline" type="button">
+                    <Link :href="poidsIndex()">Annuler</Link>
+                </Button>
+                <Button type="submit" :disabled="form.processing || !form.isDirty">
+                    <Loader2 v-if="form.processing" class="animate-spin" />
+                    Enregistrer
+                </Button>
             </div>
-        </div>
-    </AuthenticatedLayout>
+        </form>
+    </AdminLayoutV2>
 </template>
