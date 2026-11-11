@@ -1,72 +1,93 @@
-<script setup>
-import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
-import ButtonShow from "@/Components/ButtonShow.vue";
-import { Price_format } from "@/helper";
-const props = defineProps({
-    promotion: {
-        type: Object,
-        default: () => ({}),
-    },
-});
+<script setup lang="ts">
+import { Link } from '@inertiajs/vue3';
+import { ArrowLeft, Eye, Pencil } from '@lucide/vue';
+import { promotion as promotionIndex } from '@/actions/App/Http/Controllers/AdminController';
+import { show as productShow } from '@/actions/App/Http/Controllers/ProductController';
+import { edit } from '@/actions/App/Http/Controllers/PromotionController';
+import { Badge } from '@/Components/ui/badge';
+import { Button } from '@/Components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/Components/ui/card';
+import AdminLayoutV2 from '@/Layouts/AdminLayoutV2.vue';
+import type { Promotion } from '@/types';
+
+defineProps<{
+    /** `debut` et `fin` sont les valeurs brutes de la base (PromotionController::show). */
+    promotion: Promotion;
+}>();
+
+const price = new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'XOF' });
 </script>
+
 <template>
-    <AuthenticatedLayout>
-        <div class="card mb-4">
-            <div class="card-body">
-                <div class="row g-4">
-                    <!--  col.// -->
-                    <div class="col-sm-6 col-lg-4 col-xl-3">
-                        <p>Nom: {{ promotion.nom }}</p>
-                        <p>reduction: {{ promotion.reduction }} %</p>
-                        <p>debut: {{ promotion.debut }}</p>
-                        <p>fin: {{ promotion.fin }}</p>
+    <AdminLayoutV2 :title="promotion.nom" description="Détail de la promotion et produits concernés.">
+        <template #actions>
+            <Button as-child variant="outline">
+                <Link :href="promotionIndex()">
+                    <ArrowLeft />
+                    Retour aux promotions
+                </Link>
+            </Button>
+            <Button as-child>
+                <Link :href="edit(promotion.id)">
+                    <Pencil />
+                    Modifier
+                </Link>
+            </Button>
+        </template>
+
+        <Card class="mb-6">
+            <CardContent>
+                <dl class="grid gap-4 sm:grid-cols-3">
+                    <div>
+                        <dt class="text-sm text-muted-foreground">Réduction</dt>
+                        <dd class="text-lg font-medium">{{ promotion.reduction }} %</dd>
                     </div>
-                </div>
-            </div>
-        </div>
-        <div class="card">
-            <div class="card-body">
-                <div
-                    class="row gx-3 row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-xl-4"
-                >
-                    <div
-                        class="col"
-                        v-for="row in promotion.products"
-                        :key="row.id"
-                    >
-                        <div class="card card-product-grid">
-                            <a href="#" class="img-wrap">
-                                <img
-                                    v-bind:src="'/admin/assets/imgs/items/1.jpg'"
-                                    alt="Product"
-                                />
-                            </a>
-                            <div class="info-wrap">
-                                <p class="title">{{ row.nom }}</p>
-                                <p class="title">
-                                    Categorie {{ row.categorie?.nom }}
-                                </p>
-                                <p class="title">Couleur {{ row.color }}</p>
-                                <p class="title">Taille {{ row.taille }}</p>
-                                <p class="title">Poids {{ row.poids }}</p>
-                                <p class="title">Stock {{ row.stock }}</p>
-                                <p class="title">
-                                    favori {{ row.favoris ? "OUI" : "NON" }}
-                                </p>
-                                <div class="price mb-2">
-                                    {{ Price_format.format(row.prix) }}
-                                </div>
-                                <!-- price.// -->
-                                <ButtonShow
-                                    :href="route('product.show', row.id)"
-                                />
-                            </div>
-                        </div>
-                        <!-- card-product  end// -->
+                    <div>
+                        <dt class="text-sm text-muted-foreground">Début</dt>
+                        <dd class="font-medium">{{ promotion.debut }}</dd>
                     </div>
-                </div>
-                <!-- row.// -->
-            </div>
+                    <div>
+                        <dt class="text-sm text-muted-foreground">Fin</dt>
+                        <dd class="font-medium">{{ promotion.fin }}</dd>
+                    </div>
+                </dl>
+            </CardContent>
+        </Card>
+
+        <h2 class="mb-3 text-base font-semibold">Produits concernés ({{ promotion.products?.length ?? 0 }})</h2>
+        <p v-if="!promotion.products?.length" class="text-sm text-muted-foreground">
+            Aucun produit rattaché à cette promotion.
+        </p>
+        <div v-else class="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
+            <Card v-for="product in promotion.products" :key="product.id">
+                <CardHeader>
+                    <CardTitle class="text-base">{{ product.nom }}</CardTitle>
+                </CardHeader>
+                <CardContent class="grid gap-3">
+                    <p class="text-lg font-semibold">{{ price.format(product.prix) }}</p>
+                    <dl class="grid grid-cols-2 gap-x-3 gap-y-1 text-sm">
+                        <dt class="text-muted-foreground">Couleur</dt>
+                        <dd>{{ product.color ?? '—' }}</dd>
+                        <dt class="text-muted-foreground">Taille</dt>
+                        <dd>{{ product.taille ?? '—' }}</dd>
+                        <dt class="text-muted-foreground">Poids</dt>
+                        <dd>{{ product.poids }}</dd>
+                        <dt class="text-muted-foreground">Stock</dt>
+                        <dd>{{ product.stock }}</dd>
+                    </dl>
+                    <div>
+                        <Badge :variant="product.favoris ? 'default' : 'secondary'">
+                            {{ product.favoris ? 'Favori' : 'Non favori' }}
+                        </Badge>
+                    </div>
+                    <Button as-child variant="outline" size="sm" class="justify-self-start">
+                        <Link :href="productShow(product.id)">
+                            <Eye />
+                            Voir le produit
+                        </Link>
+                    </Button>
+                </CardContent>
+            </Card>
         </div>
-    </AuthenticatedLayout>
+    </AdminLayoutV2>
 </template>
