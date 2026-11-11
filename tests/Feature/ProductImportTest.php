@@ -65,6 +65,23 @@ it('dispatches one batched job per photo with the categories loaded once', funct
     });
 });
 
+it('stores imported photos even when the uploaded file has no resolvable real path', function () {
+    Bus::fake();
+
+    $response = $this->actingAs($this->secretary)->call(
+        'POST',
+        '/admin/product/import',
+        [],
+        [],
+        ['images' => [uploadWithoutRealPath(UploadedFile::fake()->image('a.jpg'))]],
+        ['HTTP_ACCEPT' => 'application/json'],
+    );
+
+    $response->assertStatus(202)->assertJson(['total' => 1]);
+
+    Bus::assertBatched(fn ($batch) => $batch->jobs->count() === 1 && is_file($batch->jobs->first()->imagePath));
+});
+
 it('reports batch progress and 404s on an unknown batch', function () {
     $this->actingAs($this->secretary)
         ->getJson('/admin/product/import/'.fake()->uuid())

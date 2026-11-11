@@ -15,6 +15,7 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Inertia\Inertia;
 use Inertia\Response;
+use RuntimeException;
 
 final class ProductImportController extends Controller
 {
@@ -36,8 +37,22 @@ final class ProductImportController extends Controller
 
         $jobs = [];
         foreach ($request->file('images', []) as $file) {
-            $stored = $file->storeAs($directory, Str::uuid()->toString().'.'.$file->extension(), 'local');
-            $jobs[] = new ProcessProductImageJob($disk->path((string) $stored), $importId, $categories);
+            // Copie en flux depuis le chemin reçu par PHP : `storeAs()` passe par `getRealPath()`, qui
+            // échoue quand le dossier temporaire d'upload est illisible pour le serveur web (Windows).
+            $stored = $directory.'/'.Str::uuid()->toString().'.'.$file->extension();
+            $stream = fopen($file->getPathname(), 'rb');
+
+            if ($stream === false) {
+                throw new RuntimeException('Impossible de lire la photo envoyée.');
+            }
+
+            try {
+                $disk->put($stored, $stream);
+            } finally {
+                fclose($stream);
+            }
+
+            $jobs[] = new ProcessProductImageJob($disk->path($stored), $importId, $categories);
         }
 
         $batch = Bus::batch($jobs)
