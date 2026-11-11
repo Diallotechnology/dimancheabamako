@@ -1,214 +1,228 @@
-<script setup>
-import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
-import ButtonEdit from "@/Components/ButtonEdit.vue";
-import ButtonDelete from "@/Components/ButtonDelete.vue";
-import ButtonShow from "@/Components/ButtonShow.vue";
-import Modal from "@/Components/Modal.vue";
-import notify, { Price_format } from "@/helper";
-import Pagination from "@/Components/Pagination.vue";
-import { Head, Link, router, useForm } from "@inertiajs/vue3";
-import { useFilter } from "@/Composables/useFilter";
+<script setup lang="ts">
+import { Link, router } from '@inertiajs/vue3';
+import { Eye, Heart, ImageOff, Pencil, Plus, Search, Upload, X } from '@lucide/vue';
+import { ref } from 'vue';
+import { toast } from 'vue-sonner';
+import { product as productIndex } from '@/actions/App/Http/Controllers/AdminController';
+import { create, destroy, edit, favoris_update, show } from '@/actions/App/Http/Controllers/ProductController';
+import { create as importCreate } from '@/actions/App/Http/Controllers/ProductImportController';
+import ConfirmDelete from '@/Components/Admin/ConfirmDelete.vue';
+import DataTable from '@/Components/Admin/DataTable.vue';
+import { Badge } from '@/Components/ui/badge';
+import { Button } from '@/Components/ui/button';
+import { Input } from '@/Components/ui/input';
+import { NativeSelect } from '@/Components/ui/native-select';
+import { TableCell, TableHead } from '@/Components/ui/table';
+import { useFilter } from '@/Composables/useFilter';
+import AdminLayoutV2 from '@/Layouts/AdminLayoutV2.vue';
+import type { Category, Paginated, Product } from '@/types';
 
-const props = defineProps({
-    rows: {
-        required: true,
-        type: Object,
-        default: () => ({}),
-    },
-    category: {
-        required: true,
-        type: Object,
-        default: () => ({}),
-    },
-});
+const props = defineProps<{
+    rows: Paginated<Product>;
+    category: Pick<Category, 'id' | 'nom'>[];
+}>();
 
+// Une valeur vide = « pas de filtre » : « Tous les produits » ne doit jamais envoyer favoris=0.
 const { filters, resetFilters } = useFilter(
     {
-        search: "",
-        category: "",
-        favoris: "",
-        status: "",
-        statut: "",
+        search: '',
+        category: '',
+        favoris: '',
+        status: '',
+        statut: '',
     },
-    "/admin/product"
+    productIndex,
 );
 
-const favori = (url) => {
-    axios
-        .put(url)
-        .then(() => {
-            notify("Produit ajouter comme favori avec success !", true);
-            router.reload();
-        })
-        .catch(function (error) {
-            console.log(error);
-        });
+const hasFilter = (): boolean => Object.values(filters.value).some((value) => value !== '');
+
+const price = new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'XOF', maximumFractionDigits: 0 });
+
+// Produits dont le favori est en cours de bascule : évite le double clic pendant l'appel.
+const pending = ref<Set<number>>(new Set());
+
+/** Bascule le favori par un appel axios (réponse 204) puis recharge uniquement les lignes. */
+const toggleFavori = async (row: Product): Promise<void> => {
+    if (pending.value.has(row.id)) {
+        return;
+    }
+
+    const next = row.favoris ? 0 : 1;
+    pending.value.add(row.id);
+
+    try {
+        await window.axios.put(favoris_update({ data: next, product_id: row.id }).url);
+        toast.success(next === 1 ? `« ${row.nom} » ajouté aux favoris.` : `« ${row.nom} » retiré des favoris.`);
+        router.reload({ only: ['rows'] });
+    } catch {
+        toast.error('Impossible de modifier le favori. Réessayez ou rechargez la page.');
+    } finally {
+        pending.value.delete(row.id);
+    }
+};
+
+// Supprimer la dernière ligne d'une page > 1 ramène à la page précédente.
+const afterDelete = (): void => {
+    if (props.rows.data.length === 1 && props.rows.current_page > 1) {
+        const url = new URL(window.location.href);
+        url.searchParams.set('page', String(props.rows.current_page - 1));
+        router.get(url.pathname + url.search, {}, { preserveState: true, replace: true });
+    }
 };
 </script>
 
 <template>
-    <Head title="Produit" />
+    <AdminLayoutV2 title="Produits" description="Le catalogue de la boutique : stock, prix, favoris et publication.">
+        <template #actions>
+            <Button as-child variant="outline">
+                <Link :href="importCreate()">
+                    <Upload />
+                    Import par photos
+                </Link>
+            </Button>
+            <Button as-child>
+                <Link :href="create()">
+                    <Plus />
+                    Nouveau produit
+                </Link>
+            </Button>
+        </template>
 
-    <AuthenticatedLayout>
-        <div class="content-header">
-            <div>
-                <h2 class="content-title card-title">Liste des produits</h2>
+        <div class="mb-4 flex flex-wrap items-center gap-2">
+            <div class="relative w-full max-w-xs">
+                <Search class="pointer-events-none absolute top-1/2 left-3 size-4 -translate-y-1/2 text-muted-foreground" />
+                <Input
+                    v-model="filters.search"
+                    type="search"
+                    placeholder="Rechercher un produit…"
+                    aria-label="Rechercher un produit"
+                    class="pl-9"
+                />
             </div>
-            <div>
-                <Link
-                    :href="route('product.create')"
-                    class="btn btn-primary btn-sm rounded"
-                    type="button"
-                >
-                    <i class="material-icons md-plus md-18"></i>
-
-                    Nouveau</Link
-                >
-                <Link
-                    :href="route('product.import')"
-                    class="btn btn-light btn-sm rounded ms-2"
-                    >Import par photos</Link
-                >
-            </div>
+            <NativeSelect v-model="filters.category" aria-label="Filtrer par catégorie">
+                <option value="">Toutes les catégories</option>
+                <option v-for="item in category" :key="item.id" :value="String(item.id)">{{ item.nom }}</option>
+            </NativeSelect>
+            <NativeSelect v-model="filters.favoris" aria-label="Filtrer par favori">
+                <option value="">Tous les produits</option>
+                <option value="1">Favoris</option>
+                <option value="0">Hors favoris</option>
+            </NativeSelect>
+            <NativeSelect v-model="filters.status" aria-label="Filtrer par disponibilité">
+                <option value="">Toute disponibilité</option>
+                <option value="1">Sur commande</option>
+                <option value="0">En stock</option>
+            </NativeSelect>
+            <NativeSelect v-model="filters.statut" aria-label="Filtrer par publication">
+                <option value="">Toute publication</option>
+                <option value="draft">Brouillons</option>
+                <option value="published">Publiés</option>
+            </NativeSelect>
+            <Button v-if="hasFilter()" variant="ghost" @click="resetFilters">
+                <X />
+                Réinitialiser
+            </Button>
         </div>
-        <div class="card mb-4">
-            <header class="card-header">
-                <div class="row gx-3">
-                    <div class="col-md-4 mb-lg-0 mb-15 me-auto">
-                        <input
-                            type="text"
-                            placeholder="Search..."
-                            v-model="filters.search"
-                            class="form-control"
+
+        <DataTable :rows="rows" :columns="8" item-label="produits">
+            <template #head>
+                <TableHead class="w-16">Photo</TableHead>
+                <TableHead>Produit</TableHead>
+                <TableHead>Catégorie</TableHead>
+                <TableHead>Prix</TableHead>
+                <TableHead>Stock</TableHead>
+                <TableHead>Poids</TableHead>
+                <TableHead>État</TableHead>
+                <TableHead class="w-44 text-right">Actions</TableHead>
+            </template>
+
+            <template #row="{ row }">
+                <TableCell>
+                    <img
+                        v-if="row.cover"
+                        :src="row.cover"
+                        :alt="`Cover de ${row.nom}`"
+                        class="size-12 rounded-md border object-cover"
+                    />
+                    <div v-else class="flex size-12 items-center justify-center rounded-md border bg-muted/40">
+                        <ImageOff class="size-5 text-muted-foreground" aria-hidden="true" />
+                    </div>
+                </TableCell>
+                <TableCell>
+                    <p class="font-medium">{{ row.nom }}</p>
+                    <p class="text-xs text-muted-foreground">
+                        Réf. {{ row.reference }}<template v-if="row.color"> · {{ row.color }}</template>
+                        <template v-if="row.taille"> · {{ row.taille }} M</template>
+                    </p>
+                </TableCell>
+                <TableCell>{{ row.categorie?.nom ?? '—' }}</TableCell>
+                <TableCell class="whitespace-nowrap">{{ price.format(row.prix) }}</TableCell>
+                <TableCell>{{ row.stock }}</TableCell>
+                <TableCell class="whitespace-nowrap">{{ row.poids }} Kg</TableCell>
+                <TableCell>
+                    <div class="flex flex-wrap gap-1">
+                        <Badge v-if="row.status === 'draft'" variant="outline">Brouillon</Badge>
+                        <Badge v-if="row.is_preorder" variant="secondary">Sur commande</Badge>
+                    </div>
+                </TableCell>
+                <TableCell>
+                    <div class="flex justify-end gap-1">
+                        <Button
+                            variant="ghost"
+                            size="icon-sm"
+                            :class="row.favoris ? 'text-rose-600' : 'text-muted-foreground'"
+                            :disabled="pending.has(row.id)"
+                            :aria-pressed="row.favoris"
+                            :aria-label="row.favoris ? `Retirer ${row.nom} des favoris` : `Ajouter ${row.nom} aux favoris`"
+                            @click="toggleFavori(row)"
+                        >
+                            <Heart :class="{ 'fill-current': row.favoris }" />
+                        </Button>
+                        <Button
+                            as-child
+                            variant="ghost"
+                            size="icon-sm"
+                            class="text-muted-foreground"
+                            :aria-label="`Voir le produit ${row.nom}`"
+                        >
+                            <Link :href="show(row.id)">
+                                <Eye />
+                            </Link>
+                        </Button>
+                        <Button
+                            as-child
+                            variant="ghost"
+                            size="icon-sm"
+                            class="text-muted-foreground"
+                            :aria-label="`Modifier le produit ${row.nom}`"
+                        >
+                            <Link :href="edit(row.id)">
+                                <Pencil />
+                            </Link>
+                        </Button>
+                        <ConfirmDelete
+                            :action="destroy(row.id)"
+                            :what="`le produit ${row.nom}`"
+                            consequence="Le produit, sa cover, sa vidéo et ses images seront supprimés."
+                            success-message="Produit supprimé."
+                            @deleted="afterDelete"
                         />
                     </div>
-                    <div class="col-md-2">
-                        <select class="form-select" v-model="filters.category">
-                            <option value="">Toutes les catégories</option>
-                            <option
-                                v-for="item in category"
-                                :key="item.id"
-                                :value="item.id"
-                            >
-                                {{ item.nom }}
-                            </option>
-                        </select>
-                    </div>
-                    <div class="col-md-2">
-                        <select class="form-select" v-model="filters.favoris">
-                            <option value="">Produits favoris</option>
-                            <option value="1">OUI</option>
-                            <option value="0">NO</option>
-                        </select>
-                    </div>
-                    <div class="col-md-2">
-                        <select class="form-select" v-model="filters.status">
-                            <option value="">Produits Status</option>
-                            <option value="1">Sur commande</option>
-                            <option value="0">Non</option>
-                        </select>
-                    </div>
-                    <div class="col-md-2">
-                        <select class="form-select" v-model="filters.statut">
-                            <option value="">Publication</option>
-                            <option value="draft">Brouillons</option>
-                            <option value="published">Publiés</option>
-                        </select>
-                    </div>
-                    <div class="col-auto">
-                        <button
-                            @click="resetFilters"
-                            class="btn btn-danger rounded"
-                        >
-                            Reset<i
-                                class="material-icons md-delete_forever md-18"
-                            ></i>
-                        </button>
-                    </div>
-                </div>
-            </header>
+                </TableCell>
+            </template>
 
-            <!-- card-header end// -->
-            <div class="card-body">
-                <div
-                    class="row gx-3 row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-xl-4"
-                >
-                    <div class="col" v-for="row in rows.data" :key="row.id">
-                        <div class="card card-product-grid">
-                            <a href="#" class="img-wrap">
-                                <img
-                                    v-bind:src="row.cover"
-                                    alt="Produit cover"
-                                />
-                            </a>
-                            <div class="info-wrap">
-                                <span
-                                    v-if="row.status === 'draft'"
-                                    class="badge rounded-pill alert-warning mb-1"
-                                    >Brouillon</span
-                                >
-                                <p class="title">{{ row.nom }}</p>
-                                <p class="title">
-                                    Reférence {{ row.reference }}
-                                </p>
-                                <p class="title">
-                                    Categorie {{ row.categorie?.nom }}
-                                </p>
-                                <p class="title">Couleur {{ row.color }}</p>
-                                <p class="title">Taille {{ row.taille }} M</p>
-                                <p class="title">Poids {{ row.poids }} Kg</p>
-                                <p class="title">Stock {{ row.stock }}</p>
-                                <p class="title">
-                                    Favoris {{ row.favoris ? "Oui" : "Non" }}
-                                </p>
-                                <div class="price mb-2">
-                                    {{ Price_format.format(row.prix) }}
-                                </div>
-                                <!-- price.// -->
-                                <ButtonShow
-                                    :href="route('product.show', row.id)"
-                                />
-                                <ButtonEdit
-                                    :href="route('product.edit', row.id)"
-                                />
-                                <ButtonDelete
-                                    :url="route('product.destroy', row.id)"
-                                />
-                                <button
-                                    type="button"
-                                    @click.prevent="
-                                        favori(
-                                            route('product.favori', [
-                                                !row.favoris ? 1 : 0,
-                                                row.id,
-                                            ])
-                                        )
-                                    "
-                                    class="btn btn-sm btn-success font-sm rounded mx-1"
-                                >
-                                    <i
-                                        :class="[
-                                            !row.favoris
-                                                ? 'material-icons md-favorite_border text-light'
-                                                : 'material-icons md-favorite text-light',
-                                        ]"
-                                    ></i>
-                                    <!-- Edit -->
-                                </button>
-                            </div>
-                        </div>
-                        <!-- card-product  end// -->
-                    </div>
+            <template #empty>
+                <template v-if="hasFilter()">Aucun produit ne correspond à ces filtres.</template>
+                <div v-else class="flex flex-col items-center gap-3">
+                    Aucun produit pour le moment.
+                    <Button as-child size="sm">
+                        <Link :href="create()">
+                            <Plus />
+                            Créer un produit
+                        </Link>
+                    </Button>
                 </div>
-                <h4 class="text-center my-3" v-if="rows.data.length === 0">
-                    Aucun element
-                </h4>
-                <!-- row.// -->
-            </div>
-            <!-- card-body end// -->
-        </div>
-        <!-- card end// -->
-        <Pagination :pagination="rows" />
-        <Modal name="Formulaire de nouveau produit"> </Modal>
-    </AuthenticatedLayout>
+            </template>
+        </DataTable>
+    </AdminLayoutV2>
 </template>
