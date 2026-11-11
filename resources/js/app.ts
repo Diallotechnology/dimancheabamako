@@ -7,7 +7,6 @@ import { createApp, h } from 'vue';
 import type { DefineComponent } from 'vue';
 import VueSelect from 'vue3-select-component';
 import 'vue3-select-component/dist/style.css';
-import { ZiggyVue } from '../../vendor/tightenco/ziggy';
 
 // Composants globaux des pages pas encore migrées : retirés au nettoyage final.
 import Input from '@/Components/Input.vue';
@@ -28,7 +27,6 @@ createInertiaApp({
     setup({ el, App, props, plugin }) {
         createApp({ render: () => h(App, props) })
             .use(plugin)
-            .use(ZiggyVue)
             .component('Select', Select)
             .component('Select2', Select2)
             .component('VueSelect', VueSelect)

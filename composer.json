@@ -20,8 +20,7 @@
         "monarobase/country-list": "^3.5",
         "opcodesio/log-viewer": "^3.21",
         "php-flasher/flasher-laravel": "*",
-        "propaganistas/laravel-phone": "^6.0",
-        "tightenco/ziggy": "^2.0"
+        "propaganistas/laravel-phone": "^6.0"
     },
     "require-dev": {
         "barryvdh/laravel-debugbar": "^4.0",

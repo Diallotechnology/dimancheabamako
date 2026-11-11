@@ -6,8 +6,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title data-inertia>{{ config('app.name') }}</title>
     <link rel="icon" href="{{ asset('assets/imgs/theme/favicon.svg') }}" type="image/svg+xml">
-    {{-- Ziggy reste exposé tant que des pages non migrées appellent route() ; retiré au nettoyage final. --}}
-    @routes
     @fonts
     @vite(['resources/js/app.ts', "resources/js/Pages/{$page['component']}.vue"])
     @inertiaHead
