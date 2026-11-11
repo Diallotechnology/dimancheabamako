@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Intervention\Image\Format;
 use Intervention\Image\ImageManager;
+use Intervention\Image\Interfaces\ImageInterface;
 
 final readonly class ImageUploadService
 {
@@ -24,7 +25,9 @@ final readonly class ImageUploadService
      */
     public function store(UploadedFile $file, string $directory): string
     {
-        return $this->storeFromPath((string) $file->getRealPath(), $directory);
+        // Le contenu est lu depuis le chemin tel que PHP l'a reçu, sans `getRealPath()` : celui-ci
+        // échoue quand le dossier temporaire d'upload n'est pas lisible pour le serveur web (Windows).
+        return $this->storeFromContent($file->get(), $directory);
     }
 
     /**
@@ -32,9 +35,17 @@ final readonly class ImageUploadService
      */
     public function storeFromPath(string $path, string $directory): string
     {
-        $image = $this->manager
-            ->decodePath($path)
-            ->scaleDown(width: self::MAX_WIDTH);
+        return $this->storeDecoded($this->manager->decodePath($path), $directory);
+    }
+
+    private function storeFromContent(string $content, string $directory): string
+    {
+        return $this->storeDecoded($this->manager->decode($content), $directory);
+    }
+
+    private function storeDecoded(ImageInterface $decoded, string $directory): string
+    {
+        $image = $decoded->scaleDown(width: self::MAX_WIDTH);
 
         $stored = mb_trim($directory, '/').'/'.Str::uuid()->toString().'.webp';
 

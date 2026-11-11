@@ -10,6 +10,7 @@ use App\Http\Requests\UpdateProductRequest;
 use App\Models\Category;
 use App\Models\Product;
 use App\Service\ImageUploadService;
+use App\Service\VideoUploadService;
 use App\Support\Options;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\DB;
@@ -30,7 +31,7 @@ final class ProductController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StoreProductRequest $request, ImageUploadService $uploader)
+    public function store(StoreProductRequest $request, ImageUploadService $uploader, VideoUploadService $videoUploader)
     {
         $data = $request->validated();
 
@@ -38,9 +39,7 @@ final class ProductController extends Controller
             $data['cover'] = $uploader->store($request->file('cover'), 'product/cover');
         }
         if ($request->hasFile('video')) {
-            $filename = $request->video->hashName();
-            $chemin = $request->video->storeAs('product/video', $filename, 'public');
-            $data['video'] = $chemin;
+            $data['video'] = $videoUploader->store($request->file('video'), 'product/video');
         }
 
         $item = Product::create(data_forget($data, 'image'));
@@ -85,7 +84,7 @@ final class ProductController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateProductRequest $request, Product $product, ImageUploadService $uploader)
+    public function update(UpdateProductRequest $request, Product $product, ImageUploadService $uploader, VideoUploadService $videoUploader)
     {
         $data = $request->validated();
 
@@ -103,10 +102,7 @@ final class ProductController extends Controller
         if ($request->hasFile('video')) {
             $this->deleteStored($product->getRawOriginal('video'));
 
-            $filename = $request->video->hashName();
-            $path = $request->video->storeAs('product/video', $filename, 'public');
-
-            $data['video'] = $path;
+            $data['video'] = $videoUploader->store($request->file('video'), 'product/video');
         }
 
         if ($request->hasFile('image')) {
