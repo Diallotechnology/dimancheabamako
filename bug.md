@@ -11,7 +11,6 @@ Index des entrées encore ouvertes, regroupées ici pour être visibles sans tou
 - A8 · Points faibles divers restants : `PendingRegistration.token` en clair, `email_verified_at` jamais renseigné après confirmation, `change_password = false` à arbitrer côté UX.
 
 **Finance / paiement**
-- PayLinkController : échec N-Genius invisible dans le back-office.
 - Déploiement de la réservation de stock : vérifier `reference IS NULL AND trans_ref IS NOT NULL` = 0 ligne avant la bascule en production.
 - Dashboard : `revenu` du mois et « ventes » comptées sur des bases différentes.
 - Tarifs `shippings` existants dont la zone n'est pas desservie par leur transporteur.
@@ -305,12 +304,14 @@ Avant de déployer : vérifier que `Order` avec `reference IS NULL AND trans_ref
 
 - **Où** : `app/Http/Controllers/AdminController.php::client` (options `value => $row->id`, puis `Options::from` sans valeur personnalisée en phase 0), `resources/js/Pages/Admin/Client/Show.vue` (anciennement `row.pays`, `row.payment`).
 
-## 2026-11-11 — PayLinkController : échec N-Genius invisible dans le back-office (non corrigé)
+## 2026-11-11 — PayLinkController : échec N-Genius invisible dans le back-office — ✅ RÉSOLU (2026-11-11)
+
+> Résolution : `store`, `regenerate` et `update` renvoient l'échec par `back()->withErrors(['ngenius' => …])` (donc `onError` côté Inertia) au lieu d'un `flash()->error()` invisible en XHR. `update` est maintenant transactionnel : montant et lien changent ensemble ou pas du tout (réponse sans lien/référence, jeton ou HTTP en échec → rollback + erreur, plus de lien périmé à l'ancien montant). `Paybylink/Index.vue` et `Update.vue` : `onSuccess` ne s'affiche plus qu'en vrai succès, `onError` affiche `errors.ngenius` ; le contournement par comparaison des données rechargées est supprimé. Tests : `tests/Feature/PayLinkFailureFeedbackTest.php`.
 
 - **Où** : `app/Http/Controllers/PayLinkController.php` — `store`, `regenerate` (blocs `catch`), `update` (régénération silencieuse si le jeton ou la réponse manque).
 - **Constat** : en cas d'échec, le contrôleur logge puis fait `flash()->error(...)` + `back()`. Les requêtes Inertia (XHR) ne rendent pas la vue HTML qui affiche les messages PHPFlasher : le message reste en session et apparaît au prochain chargement complet de page, sans rapport avec l'action. Côté Vue, `onSuccess` se déclenche quand même. La page migrée contourne le problème en comparant les données rechargées (total de lignes, `lien` modifié) avant d'annoncer un succès.
 - **Piste** : renvoyer l'échec via `back()->withErrors([...])` (donc `onError`) ou une prop partagée `flash` ; même contrôle pour `update` (changement de montant sans nouveau lien = lien périmé avec l'ancien montant).
-- **Statut** : non corrigé, hors périmètre front.
+- **Statut** : corrigé (voir résolution ci-dessus).
 
 ## 2026-11-11 — Slide / Image : ancien fichier supprimé avant l'enregistrement du nouveau, routes sans méthode (non corrigé)
 

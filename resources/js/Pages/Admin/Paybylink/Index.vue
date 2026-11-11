@@ -39,24 +39,16 @@ watch(creating, (open) => {
     }
 });
 
-// `store` et `regenerate` répondent par un simple `back()` même quand N-Genius refuse
-// (l'erreur n'est que loguée côté serveur, cf. bug.md) : le succès se lit donc dans les
-// données rechargées, pas dans le callback `onSuccess`.
+// Un refus N-Genius revient côté contrôleur comme erreur de validation `ngenius` :
+// `onSuccess` ne se déclenche donc que si le lien a réellement été créé / régénéré.
 const submit = (): void => {
-    const totalBefore = props.rows.total;
-
     form.submit(store(), {
-        onSuccess: (page) => {
+        onSuccess: () => {
             creating.value = false;
-
-            if ((page.props.rows as Paginated<PayLink>).total > totalBefore) {
-                toast.success('Lien de paiement créé.');
-            } else {
-                toast.error('Le lien de paiement n’a pas pu être créé. Réessayez.');
-            }
+            toast.success('Lien de paiement créé.');
         },
-        onError: () => {
-            toast.error('Le formulaire contient des erreurs.');
+        onError: (errors) => {
+            toast.error(errors.ngenius ?? 'Le formulaire contient des erreurs.');
         },
     });
 };
@@ -66,17 +58,11 @@ const regenerateLink = (row: PayLink): void => {
 
     router.post(regenerate(row.id), {}, {
         preserveScroll: true,
-        onSuccess: (page) => {
-            const updated = (page.props.rows as Paginated<PayLink>).data.find((item) => item.id === row.id);
-
-            if (updated !== undefined && updated.lien !== row.lien) {
-                toast.success('Lien de paiement régénéré.');
-            } else {
-                toast.error('Le lien n’a pas pu être régénéré. Réessayez.');
-            }
+        onSuccess: () => {
+            toast.success('Lien de paiement régénéré.');
         },
-        onError: () => {
-            toast.error('La régénération a échoué.');
+        onError: (errors) => {
+            toast.error(errors.ngenius ?? 'La régénération a échoué.');
         },
         onFinish: () => {
             regeneratingId.value = null;

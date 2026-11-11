@@ -75,9 +75,7 @@ final class PayLinkController extends Controller
                 'message' => $e->getMessage(),
             ]);
 
-            flash()->error('Impossible de créer le lien de paiement.');
-
-            return back();
+            return back()->withErrors(['ngenius' => 'Impossible de créer le lien de paiement.']);
         }
     }
 
@@ -131,9 +129,7 @@ final class PayLinkController extends Controller
                 'message' => $e->getMessage(),
             ]);
 
-            flash()->error('Impossible de régénérer le lien. Veuillez réessayer.');
-
-            return back();
+            return back()->withErrors(['ngenius' => 'Impossible de régénérer le lien. Veuillez réessayer.']);
         }
     }
 
@@ -151,26 +147,46 @@ final class PayLinkController extends Controller
      */
     public function update(StorePayLinkRequest $request, PayLink $paylink)
     {
-        $paylink->update($request->validated());
-        if ($paylink->wasChanged('montant')) {
-            $currencyCode = 'XOF';
-            $emailAddress = '';
-            $redirectUrl = route('home');
-            $cancelUrl = route('home');
+        DB::beginTransaction();
 
-            $accessToken = $this->getAccessToken();
-            if ($accessToken) {
-                $postData = $this->prepareTransactionData($request->integer('montant'), $currencyCode, $emailAddress, $redirectUrl, $cancelUrl);
-                $response = $this->createOrder($postData, $accessToken);
-                if ($response && isset($response['_links']['payment']['href'])) {
-                    $link = $response['_links']['payment']['href'];
-                    // save temporaly order
-                    $paylink->update(['lien' => $link, 'trans_ref' => $response['reference']]);
+        try {
+            $paylink->update($request->validated());
+
+            if ($paylink->wasChanged('montant')) {
+                $postData = $this->prepareTransactionData(
+                    $request->integer('montant'),
+                    'XOF',
+                    '',
+                    route('home'),
+                    route('home')
+                );
+
+                $response = $this->createOrder($postData, $this->getAccessToken());
+
+                if (! isset($response['_links']['payment']['href'], $response['reference'])) {
+                    throw new Exception('Réponse API invalide : lien de paiement absent');
                 }
-            }
-        }
 
-        return back();
+                // Montant et lien changent ensemble ou pas du tout : jamais un lien périmé à l'ancien montant.
+                $paylink->update([
+                    'lien' => $response['_links']['payment']['href'],
+                    'trans_ref' => $response['reference'],
+                ]);
+            }
+
+            DB::commit();
+
+            return back();
+        } catch (Throwable $e) {
+            DB::rollBack();
+
+            Log::error('Erreur PayLink::update()', [
+                'paylink_id' => $paylink->id,
+                'message' => $e->getMessage(),
+            ]);
+
+            return back()->withErrors(['ngenius' => 'Le nouveau lien n’a pas pu être généré : le lien et le montant n’ont pas été modifiés.']);
+        }
     }
 
     /**

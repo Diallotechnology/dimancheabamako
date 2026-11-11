@@ -26,8 +26,8 @@ const submit = (): void => {
             form.defaults();
             toast.success('Lien de paiement mis à jour.');
         },
-        onError: () => {
-            toast.error('Le formulaire contient des erreurs.');
+        onError: (errors) => {
+            toast.error(errors.ngenius ?? 'Le formulaire contient des erreurs.');
         },
     });
 };
