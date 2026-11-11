@@ -319,3 +319,9 @@ Avant de déployer : vérifier que `Order` avec `reference IS NULL AND trans_ref
 - **Où** : `lang/fr/validation.php` (pas de traduction des attributs `zone_id`, `transport_id`, `poids_id`…), visible dans `Shipping/Index` et `Shipping/Update`.
 - **Piste** : ajouter ces clés dans `attributes` (« zone », « transporteur », « tranche de poids »).
 - **Statut** : non corrigé, cosmétique, hors périmètre.
+
+## 2026-11-11 — Dashboard : `revenu` du mois et « ventes » comptées sur des bases différentes
+
+- **Où** : `app/Http/Controllers/AdminController.php` (`dashboard`).
+- **Constat** : `revenu` somme les lignes de **toutes** les commandes du mois (`whereMonth` sans filtre d'année ni d'état de paiement), tandis que « Ventes » ne compte que `trans_state = PURCHASED`, et le graphique compte **toutes** les commandes par jour. Les trois chiffres ne sont donc pas comparables (ex. local : 1 vente réglée, 3 commandes affichées, revenu incluant les non payées). `whereMonth` ignore aussi l'année (novembre 2025 + 2026 mélangés).
+- **Statut** : non corrigé (migration front uniquement). Libellé du KPI renommé « Revenu du mois » côté Vue pour refléter la réalité actuelle.
