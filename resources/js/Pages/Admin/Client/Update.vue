@@ -1,111 +1,112 @@
-<script setup>
-import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
-import Input from "@/Components/Input.vue";
-import { useForm, Link } from "@inertiajs/vue3";
-import notify from "@/helper";
+<script setup lang="ts">
+import { Link, useForm } from '@inertiajs/vue3';
+import { ArrowLeft, Loader2 } from '@lucide/vue';
+import { toast } from 'vue-sonner';
+import { client as clientIndex } from '@/actions/App/Http/Controllers/AdminController';
+import { update } from '@/actions/App/Http/Controllers/ClientController';
+import Combobox from '@/Components/Admin/Combobox.vue';
+import FormField from '@/Components/Admin/FormField.vue';
+import { Button } from '@/Components/ui/button';
+import { Input } from '@/Components/ui/input';
+import AdminLayoutV2 from '@/Layouts/AdminLayoutV2.vue';
+import type { Client, Option } from '@/types';
 
-const props = defineProps({
-    client: {
-        type: Object,
-        required: true,
-        default: () => ({}),
-    },
-    country: {
-        type: Object,
-        required: true,
-        default: () => ({}),
-    },
-});
-const form = useForm({
+const props = defineProps<{
+    client: Client;
+    country: Option[];
+}>();
+
+const form = useForm<{ prenom: string; nom: string; email: string; contact: string; pays: string | null }>({
     prenom: props.client.prenom,
     nom: props.client.nom,
-    contact: props.client.contact,
     email: props.client.email,
+    contact: props.client.contact,
     pays: props.client.pays,
 });
 
-const submit = () => {
-    form.patch(route("client.update", props.client.id), {
+const submit = (): void => {
+    form.submit(update(props.client.id), {
         onSuccess: () => {
-            form.prenom = props.client.prenom;
-            form.nom = props.client.nom;
-            form.contact = props.client.contact;
-            form.email = props.client.email;
-            form.pays = props.client.pays;
-            notify("client mise à jour avec success !", true);
+            form.defaults();
+            toast.success('Client mis à jour.');
         },
         onError: () => {
-            notify(false);
+            toast.error('Le formulaire contient des erreurs.');
         },
     });
 };
 </script>
+
 <template>
-    <AuthenticatedLayout>
-        <div class="card">
-            <h2 class="p-4 text-center">Formulaire de mise à jour</h2>
-            <div class="card-body">
-                <form @submit.prevent="submit">
+    <AdminLayoutV2
+        :title="`Modifier ${client.prenom} ${client.nom}`"
+        description="Mettez à jour les coordonnées du client."
+    >
+        <template #actions>
+            <Button as-child variant="outline">
+                <Link :href="clientIndex()">
+                    <ArrowLeft />
+                    Retour aux clients
+                </Link>
+            </Button>
+        </template>
+
+        <form class="grid max-w-2xl gap-5 rounded-lg border bg-card p-6 shadow-sm" novalidate @submit.prevent="submit">
+            <div class="grid gap-5 sm:grid-cols-2">
+                <FormField label="Prénom" :error="form.errors.prenom" required v-slot="field">
                     <Input
-                        input_type="text"
-                        label="Nom"
-                        place="le prenom de la client"
+                        :id="field.id"
                         v-model="form.prenom"
-                        :message="form.errors.prenom"
-                        required
+                        :aria-invalid="field.invalid"
+                        :aria-describedby="field.describedBy"
                     />
+                </FormField>
+                <FormField label="Nom" :error="form.errors.nom" required v-slot="field">
                     <Input
-                        input_type="text"
-                        place="le nom du client"
-                        label="Nom"
+                        :id="field.id"
                         v-model="form.nom"
-                        :message="form.errors.nom"
-                        required
+                        :aria-invalid="field.invalid"
+                        :aria-describedby="field.describedBy"
                     />
+                </FormField>
+                <FormField label="E-mail" :error="form.errors.email" required v-slot="field">
                     <Input
-                        input_type="email"
-                        place="email du client"
-                        label="email"
+                        :id="field.id"
                         v-model="form.email"
-                        :message="form.errors.email"
-                        required
+                        type="email"
+                        :aria-invalid="field.invalid"
+                        :aria-describedby="field.describedBy"
                     />
+                </FormField>
+                <FormField label="Contact" :error="form.errors.contact" required v-slot="field">
                     <Input
-                        input_type="text"
-                        place="contact du client"
-                        label="contact"
+                        :id="field.id"
                         v-model="form.contact"
-                        :message="form.errors.contact"
-                        required
+                        :aria-invalid="field.invalid"
+                        :aria-describedby="field.describedBy"
                     />
-                    <Select v-model="form.pays" label="pays">
-                        <option
-                            v-for="row in country"
-                            :key="row.id"
-                            :value="row.nom"
-                        >
-                            {{ row.nom }}
-                        </option>
-                    </Select>
-                    <div class="modal-footer">
-                        <Link
-                            :href="route('client')"
-                            class="btn btn-danger rounded"
-                            data-bs-dismiss="modal"
-                        >
-                            Annuler
-                        </Link>
-                        <button
-                            :class="{ 'opacity-25': form.processing }"
-                            :disabled="form.processing"
-                            type="submit"
-                            class="btn btn-primary rounded"
-                        >
-                            Valider
-                        </button>
-                    </div>
-                </form>
+                </FormField>
             </div>
-        </div>
-    </AuthenticatedLayout>
+            <FormField label="Pays" :error="form.errors.pays" required v-slot="field">
+                <Combobox
+                    :id="field.id"
+                    v-model="form.pays"
+                    :options="country"
+                    placeholder="Choisir un pays"
+                    search-placeholder="Rechercher un pays…"
+                    :invalid="field.invalid"
+                    :described-by="field.describedBy"
+                />
+            </FormField>
+            <div class="flex justify-end gap-2">
+                <Button as-child variant="outline" type="button">
+                    <Link :href="clientIndex()">Annuler</Link>
+                </Button>
+                <Button type="submit" :disabled="form.processing || !form.isDirty">
+                    <Loader2 v-if="form.processing" class="animate-spin" />
+                    Enregistrer
+                </Button>
+            </div>
+        </form>
+    </AdminLayoutV2>
 </template>

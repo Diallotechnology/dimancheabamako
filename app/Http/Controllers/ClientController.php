@@ -8,6 +8,7 @@ use App\Helper\DeleteAction;
 use App\Http\Requests\StoreClientRequest;
 use App\Models\Client;
 use App\Models\Country;
+use App\Support\Options;
 use Inertia\Inertia;
 
 final class ClientController extends Controller
@@ -29,7 +30,7 @@ final class ClientController extends Controller
      */
     public function show(Client $client)
     {
-        $client->load('orders');
+        $client->load('orders.country:id,nom');
 
         return Inertia::render('Admin/Client/Show', compact('client'));
     }
@@ -39,7 +40,7 @@ final class ClientController extends Controller
      */
     public function edit(Client $client)
     {
-        $country = Country::all();
+        $country = Options::fromNames(Country::orderBy('nom')->pluck('nom'));
 
         return Inertia::render('Admin/Client/Update', compact('client', 'country'));
     }

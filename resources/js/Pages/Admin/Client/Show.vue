@@ -1,83 +1,98 @@
-<script setup>
-import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
-import ButtonShow from "@/Components/ButtonShow.vue";
-import Table from "@/Components/Table.vue";
+<script setup lang="ts">
+import { Link, router } from '@inertiajs/vue3';
+import { ArrowLeft, Eye, Mail, MapPin, Phone } from '@lucide/vue';
+import { client as clientIndex } from '@/actions/App/Http/Controllers/AdminController';
+import { show as showOrder } from '@/actions/App/Http/Controllers/OrderController';
+import DataTable from '@/Components/Admin/DataTable.vue';
+import { Badge } from '@/Components/ui/badge';
+import { Button } from '@/Components/ui/button';
+import { TableCell, TableHead } from '@/Components/ui/table';
+import AdminLayoutV2 from '@/Layouts/AdminLayoutV2.vue';
+import type { Client } from '@/types';
 
-const props = defineProps({
-    client: {
-        type: Object,
-        required: true,
-        default: () => ({}),
-    },
-});
+const props = defineProps<{
+    client: Client;
+}>();
+
+const orders = props.client.orders ?? [];
 </script>
+
 <template>
-    <AuthenticatedLayout>
-        <div class="card mb-4">
-            <div class="card-body">
-                <div class="row">
-                    <!--  col.// -->
-                    <div class="col-xl col-lg">
-                        <h3>{{ client.prenom }} {{ client.nom }}</h3>
-                        <p>{{ client.email }}</p>
-                        <p>{{ client.contact }}</p>
-                        <p>{{ client.pays }}</p>
+    <AdminLayoutV2 :title="`${client.prenom} ${client.nom}`" description="Coordonnées et historique d'achats du client.">
+        <template #actions>
+            <Button as-child variant="outline">
+                <Link :href="clientIndex()">
+                    <ArrowLeft />
+                    Retour aux clients
+                </Link>
+            </Button>
+        </template>
+
+        <dl class="mb-8 grid gap-4 rounded-lg border bg-card p-6 text-sm shadow-sm sm:grid-cols-3">
+            <div class="flex items-center gap-3">
+                <Mail class="size-4 text-muted-foreground" aria-hidden="true" />
+                <div>
+                    <dt class="text-xs text-muted-foreground">E-mail</dt>
+                    <dd class="font-medium break-all">{{ client.email }}</dd>
+                </div>
+            </div>
+            <div class="flex items-center gap-3">
+                <Phone class="size-4 text-muted-foreground" aria-hidden="true" />
+                <div>
+                    <dt class="text-xs text-muted-foreground">Contact</dt>
+                    <dd class="font-medium">{{ client.contact }}</dd>
+                </div>
+            </div>
+            <div class="flex items-center gap-3">
+                <MapPin class="size-4 text-muted-foreground" aria-hidden="true" />
+                <div>
+                    <dt class="text-xs text-muted-foreground">Pays</dt>
+                    <dd class="font-medium">{{ client.pays }}</dd>
+                </div>
+            </div>
+        </dl>
+
+        <h2 class="mb-3 text-lg font-semibold">Achats</h2>
+        <DataTable :rows="orders" :columns="9">
+            <template #head>
+                <TableHead class="w-16">#</TableHead>
+                <TableHead>Référence</TableHead>
+                <TableHead>Adresse</TableHead>
+                <TableHead>Postal</TableHead>
+                <TableHead>Pays</TableHead>
+                <TableHead>Ville</TableHead>
+                <TableHead>Paiement</TableHead>
+                <TableHead>État</TableHead>
+                <TableHead class="w-16 text-right">Voir</TableHead>
+            </template>
+
+            <template #row="{ row }">
+                <TableCell class="text-muted-foreground">{{ row.id }}</TableCell>
+                <TableCell class="font-medium">{{ row.reference }}</TableCell>
+                <TableCell>{{ row.adresse }}</TableCell>
+                <TableCell>{{ row.postal }}</TableCell>
+                <TableCell>{{ row.country?.nom }}</TableCell>
+                <TableCell>{{ row.ville }}</TableCell>
+                <TableCell>{{ row.trans_state }}</TableCell>
+                <TableCell><Badge variant="outline" size="sm">{{ row.etat }}</Badge></TableCell>
+                <TableCell>
+                    <div class="flex justify-end">
+                        <Button
+                            as-child
+                            variant="ghost"
+                            size="icon-sm"
+                            class="text-muted-foreground"
+                            :aria-label="`Voir la commande ${row.reference ?? row.id}`"
+                        >
+                            <a :href="showOrder(row.id).url" @click.prevent="router.visit(showOrder(row.id))">
+                                <Eye />
+                            </a>
+                        </Button>
                     </div>
-                </div>
+                </TableCell>
+            </template>
 
-                <!--  row.// -->
-            </div>
-            <div class="row">
-                <div class="col-md-12">
-                    <header class="card-header">
-                        <h4 class="card-title">Liste des Achats</h4>
-                    </header>
-                    <Table>
-                        <thead>
-                            <tr>
-                                <th>#ID</th>
-                                <th scope="col">Reference</th>
-                                <th scope="col">Adresse</th>
-                                <th scope="col">Postal</th>
-                                <th scope="col">Pays</th>
-                                <th scope="col">Ville</th>
-                                <th scope="col">Payment</th>
-                                <th scope="col">Etat</th>
-                                <th scope="col">Date</th>
-                                <th scope="col">Action</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr v-for="row in client.orders" :key="row.id">
-                                <td>{{ row.id }}</td>
-                                <td class="fw-bold">{{ row.reference }}</td>
-                                <td>{{ row.adresse }}</td>
-                                <td>{{ row.postal }}</td>
-                                <td>{{ row.pays }}</td>
-                                <td>{{ row.ville }}</td>
-                                <td>
-                                    <i
-                                        class="material-icons md-payment font-xxl text-muted mr-5"
-                                    ></i>
-                                    {{ row.payment }}
-                                </td>
-
-                                <td>{{ row.etat }}</td>
-                                <td>{{ row.created_at }}</td>
-                                <td>
-                                    <ButtonShow
-                                        :href="route('order.show', row.id)"
-                                    />
-                                </td>
-                            </tr>
-                        </tbody>
-                    </Table>
-                </div>
-            </div>
-            <!--  card-body.// -->
-        </div>
-        <!--  card.// -->
-
-        <!-- content-main end// -->
-    </AuthenticatedLayout>
+            <template #empty>Ce client n'a encore passé aucune commande.</template>
+        </DataTable>
+    </AdminLayoutV2>
 </template>

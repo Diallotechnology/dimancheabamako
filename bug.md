@@ -263,3 +263,16 @@ Avant de déployer : vérifier que `Order` avec `reference IS NULL AND trans_ref
   3. Aucun garde-fou sur `UserController::destroy` / `update` : un administrateur peut supprimer son propre compte ou se rétrograder, y compris le dernier administrateur.
 - **Piste** : retirer `destroy` de la resource `devise` ; `role` en `required` dans `UpdateUserRequest` ; refuser (403/422) la suppression ou la rétrogradation de soi-même et du dernier administrateur (test RED : permissions).
 - **Statut** : non corrigé, hors périmètre de la migration front.
+
+## 2026-11-11 — Admin Client : pays stocké en id (avant phase 0) et colonnes vides sur la fiche — ✅ RÉSOLU (2026-11-11)
+
+> Résolution (migration Client) : `AdminController::client` et `ClientController::edit` fournissent des options dont la valeur est le **nom** du pays (`Options::fromNames`), comme le fait la colonne `clients.pays` ; `ClientController::show` charge `orders.country:id,nom` et la fiche affiche le pays et `trans_state` (au lieu des attributs inexistants `pays` / `payment`). Test : `tests/Feature/AdminClientCountryTest.php`. **Reste manuel** : des clients créés depuis le back-office avant le 2026-11-11 peuvent avoir un `pays` numérique (id de pays) — à contrôler en base (`select id, pays from clients where pays regexp '^[0-9]+$'`).
+
+- **Où** : `app/Http/Controllers/AdminController.php::client` (options `value => $row->id`, puis `Options::from` sans valeur personnalisée en phase 0), `resources/js/Pages/Admin/Client/Show.vue` (anciennement `row.pays`, `row.payment`).
+
+## 2026-11-11 — PayLinkController : échec N-Genius invisible dans le back-office (non corrigé)
+
+- **Où** : `app/Http/Controllers/PayLinkController.php` — `store`, `regenerate` (blocs `catch`), `update` (régénération silencieuse si le jeton ou la réponse manque).
+- **Constat** : en cas d'échec, le contrôleur logge puis fait `flash()->error(...)` + `back()`. Les requêtes Inertia (XHR) ne rendent pas la vue HTML qui affiche les messages PHPFlasher : le message reste en session et apparaît au prochain chargement complet de page, sans rapport avec l'action. Côté Vue, `onSuccess` se déclenche quand même. La page migrée contourne le problème en comparant les données rechargées (total de lignes, `lien` modifié) avant d'annoncer un succès.
+- **Piste** : renvoyer l'échec via `back()->withErrors([...])` (donc `onError`) ou une prop partagée `flash` ; même contrôle pour `update` (changement de montant sans nouveau lien = lien périmé avec l'ancien montant).
+- **Statut** : non corrigé, hors périmètre front.

@@ -1,192 +1,216 @@
-<script setup>
-import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
-import { Head, router, useForm } from "@inertiajs/vue3";
-import ButtonEdit from "@/Components/ButtonEdit.vue";
-import ButtonDelete from "@/Components/ButtonDelete.vue";
-import ButtonShow from "@/Components/ButtonShow.vue";
-import Table from "@/Components/Table.vue";
-import Modal from "@/Components/Modal.vue";
-import Input from "@/Components/Input.vue";
-import notify from "@/helper";
-import { useFilter } from "@/Composables/useFilter";
-import { ref, watch } from "vue";
-const props = defineProps({
-    rows: {
-        type: Object,
-        default: () => ({}),
-    },
-    country: {
-        type: Object,
-        default: () => ({}),
-    },
-    filter: {
-        type: Object,
-        default: () => ({}),
-    },
+<script setup lang="ts">
+import { router, useForm } from '@inertiajs/vue3';
+import { Eye, Pencil, Plus, Search, X } from '@lucide/vue';
+import { ref, watch } from 'vue';
+import { toast } from 'vue-sonner';
+import { client as clientIndex } from '@/actions/App/Http/Controllers/AdminController';
+import { destroy, edit, show, store } from '@/actions/App/Http/Controllers/ClientController';
+import Combobox from '@/Components/Admin/Combobox.vue';
+import ConfirmDelete from '@/Components/Admin/ConfirmDelete.vue';
+import CrudDialog from '@/Components/Admin/CrudDialog.vue';
+import DataTable from '@/Components/Admin/DataTable.vue';
+import FormField from '@/Components/Admin/FormField.vue';
+import { Button } from '@/Components/ui/button';
+import { Input } from '@/Components/ui/input';
+import { TableCell, TableHead } from '@/Components/ui/table';
+import { useFilter } from '@/Composables/useFilter';
+import AdminLayoutV2 from '@/Layouts/AdminLayoutV2.vue';
+import type { Client, Option, Paginated } from '@/types';
+
+const props = defineProps<{
+    rows: Paginated<Client>;
+    country: Option[];
+}>();
+
+const { filters, resetFilters } = useFilter({ search: '' }, clientIndex);
+
+const creating = ref(false);
+
+const form = useForm<{ prenom: string; nom: string; email: string; contact: string; pays: string | null }>({
+    prenom: '',
+    nom: '',
+    email: '',
+    contact: '',
+    pays: null,
 });
 
-const { filters, resetFilters } = useFilter({ search: "" }, "/admin/client");
-
-const form = useForm({
-    prenom: "",
-    nom: "",
-    email: "",
-    contact: "",
-    pays: "",
+watch(creating, (open) => {
+    if (!open) {
+        form.reset();
+        form.clearErrors();
+    }
 });
 
-const submit = () => {
-    form.post(route("client.store"), {
+const submit = (): void => {
+    form.submit(store(), {
         onSuccess: () => {
-            form.reset();
-            notify("client ajouter avec success !", true);
+            creating.value = false;
+            toast.success('Client créé.');
         },
         onError: () => {
-            notify(false);
+            toast.error('Le formulaire contient des erreurs.');
         },
     });
+};
+
+// Supprimer la dernière ligne d'une page > 1 ramène à la page précédente.
+const afterDelete = (): void => {
+    if (props.rows.data.length === 1 && props.rows.current_page > 1) {
+        const url = new URL(window.location.href);
+        url.searchParams.set('page', String(props.rows.current_page - 1));
+        router.get(url.pathname + url.search, {}, { preserveState: true, replace: true });
+    }
 };
 </script>
 
 <template>
-    <Head title="Categorie" />
+    <AdminLayoutV2 title="Clients" description="Les clients qui ont passé commande ou ont été créés depuis le back-office.">
+        <template #actions>
+            <Button @click="creating = true">
+                <Plus />
+                Nouveau client
+            </Button>
+        </template>
 
-    <AuthenticatedLayout>
-        <div class="content-header">
-            <div>
-                <h2 class="content-title card-title">Listes des clients</h2>
+        <div class="mb-4 flex flex-wrap items-center gap-2">
+            <div class="relative w-full max-w-sm">
+                <Search class="pointer-events-none absolute top-1/2 left-3 size-4 -translate-y-1/2 text-muted-foreground" />
+                <Input
+                    v-model="filters.search"
+                    type="search"
+                    placeholder="Nom, e-mail ou contact…"
+                    aria-label="Rechercher un client"
+                    class="pl-9"
+                />
             </div>
-            <div>
-                <a
-                    href="#"
-                    class="btn btn-primary btn-sm rounded"
-                    type="button"
-                    data-bs-toggle="modal"
-                    data-bs-target="#exampleModal"
-                >
-                    <i class="material-icons md-plus md-18"></i>
-
-                    Nouveau</a
-                >
-            </div>
+            <Button v-if="filters.search" variant="ghost" @click="resetFilters">
+                <X />
+                Réinitialiser
+            </Button>
         </div>
-        <div class="card mb-4">
-            <header class="card-header">
-                <div class="row gx-3">
-                    <div class="col-lg-4 col-md-6 me-auto">
-                        <input
-                            v-model="filters.search"
-                            type="text"
-                            placeholder="Recherche..."
-                            class="form-control"
+
+        <DataTable :rows="rows" :columns="8" item-label="clients">
+            <template #head>
+                <TableHead class="w-16">#</TableHead>
+                <TableHead>Prénom</TableHead>
+                <TableHead>Nom</TableHead>
+                <TableHead>E-mail</TableHead>
+                <TableHead>Contact</TableHead>
+                <TableHead>Pays</TableHead>
+                <TableHead>Créé le</TableHead>
+                <TableHead class="w-32 text-right">Actions</TableHead>
+            </template>
+
+            <template #row="{ row }">
+                <TableCell class="text-muted-foreground">{{ row.id }}</TableCell>
+                <TableCell class="font-medium">{{ row.prenom }}</TableCell>
+                <TableCell class="font-medium">{{ row.nom }}</TableCell>
+                <TableCell class="text-muted-foreground">{{ row.email }}</TableCell>
+                <TableCell class="whitespace-nowrap">{{ row.contact }}</TableCell>
+                <TableCell>{{ row.pays }}</TableCell>
+                <TableCell class="whitespace-nowrap text-muted-foreground">{{ row.created_at }}</TableCell>
+                <TableCell>
+                    <div class="flex justify-end gap-1">
+                        <Button
+                            as-child
+                            variant="ghost"
+                            size="icon-sm"
+                            class="text-muted-foreground"
+                            :aria-label="`Voir le client ${row.prenom} ${row.nom}`"
+                        >
+                            <a :href="show(row.id).url" @click.prevent="router.visit(show(row.id))">
+                                <Eye />
+                            </a>
+                        </Button>
+                        <Button
+                            as-child
+                            variant="ghost"
+                            size="icon-sm"
+                            class="text-muted-foreground"
+                            :aria-label="`Modifier le client ${row.prenom} ${row.nom}`"
+                        >
+                            <a :href="edit(row.id).url" @click.prevent="router.visit(edit(row.id))">
+                                <Pencil />
+                            </a>
+                        </Button>
+                        <ConfirmDelete
+                            :action="destroy(row.id)"
+                            :what="`le client ${row.prenom} ${row.nom}`"
+                            success-message="Client supprimé."
+                            @deleted="afterDelete"
                         />
                     </div>
-                    <div class="col-auto">
-                        <button
-                            @click="resetFilters"
-                            class="btn btn-danger rounded"
-                        >
-                            Reset<i
-                                class="material-icons md-delete_forever md-18"
-                            ></i>
-                        </button>
-                    </div>
-                </div>
-            </header>
-            <Table :rows="rows">
-                <thead>
-                    <tr>
-                        <th>#ID</th>
-                        <th scope="col">prenom</th>
-                        <th scope="col">Nom</th>
-                        <th scope="col">email</th>
-                        <th scope="col">contact</th>
-                        <th scope="col">pays</th>
-                        <th scope="col">Date</th>
-                        <th scope="col">Action</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr v-for="row in rows.data" :key="row.id">
-                        <td>{{ row.id }}</td>
-                        <td>{{ row.prenom }}</td>
-                        <td>{{ row.nom }}</td>
-                        <td>{{ row.email }}</td>
-                        <td>{{ row.contact }}</td>
-                        <td>{{ row.pays }}</td>
-                        <td>{{ row.created_at }}</td>
-                        <td>
-                            <ButtonShow :href="route('client.show', row.id)" />
-                            <ButtonEdit :href="route('client.edit', row.id)" />
-                            <ButtonDelete
-                                :url="route('client.destroy', row.id)"
-                            />
-                        </td>
-                    </tr>
-                </tbody>
-            </Table>
-        </div>
-        <!-- card end// -->
-        <Modal name="Formulaire de nouveaux client">
-            <form @submit.prevent="submit">
-                <Input
-                    input_type="text"
-                    place="le prenom du client"
-                    label="preNom"
-                    v-model="form.prenom"
-                    :message="form.errors.prenom"
-                    required
-                />
-                <Input
-                    input_type="text"
-                    place="le nom du client"
-                    label="Nom"
-                    v-model="form.nom"
-                    :message="form.errors.nom"
-                    required
-                />
-                <Input
-                    input_type="email"
-                    place="email du client"
-                    label="email"
-                    v-model="form.email"
-                    :message="form.errors.email"
-                    required
-                />
-                <Input
-                    input_type="text"
-                    place="contact du client"
-                    label="contact"
-                    v-model="form.contact"
-                    :message="form.errors.contact"
-                    required
-                />
-                <Select2 label="pays" :message="form.errors.pays">
-                    <VueSelect
-                        placeholder="selectionner"
-                        v-model="form.pays"
-                        :options="country"
-                    />
-                </Select2>
+                </TableCell>
+            </template>
 
-                <div class="modal-footer">
-                    <button
-                        type="button"
-                        class="btn btn-danger rounded"
-                        data-bs-dismiss="modal"
-                    >
-                        Fermer
-                    </button>
-                    <button
-                        :class="{ 'opacity-25': form.processing }"
-                        :disabled="form.processing"
-                        type="submit"
-                        class="btn btn-primary rounded"
-                    >
-                        Valider
-                    </button>
+            <template #empty>
+                <template v-if="filters.search">Aucun client ne correspond à « {{ filters.search }} ».</template>
+                <div v-else class="flex flex-col items-center gap-3">
+                    Aucun client pour le moment.
+                    <Button size="sm" @click="creating = true">
+                        <Plus />
+                        Créer un client
+                    </Button>
                 </div>
-            </form>
-        </Modal>
-    </AuthenticatedLayout>
+            </template>
+        </DataTable>
+
+        <CrudDialog
+            v-model:open="creating"
+            title="Nouveau client"
+            submit-label="Créer le client"
+            size="lg"
+            :processing="form.processing"
+            @submit="submit"
+        >
+            <div class="grid gap-4 sm:grid-cols-2">
+                <FormField label="Prénom" :error="form.errors.prenom" required v-slot="field">
+                    <Input
+                        :id="field.id"
+                        v-model="form.prenom"
+                        :aria-invalid="field.invalid"
+                        :aria-describedby="field.describedBy"
+                    />
+                </FormField>
+                <FormField label="Nom" :error="form.errors.nom" required v-slot="field">
+                    <Input
+                        :id="field.id"
+                        v-model="form.nom"
+                        :aria-invalid="field.invalid"
+                        :aria-describedby="field.describedBy"
+                    />
+                </FormField>
+                <FormField label="E-mail" :error="form.errors.email" required v-slot="field">
+                    <Input
+                        :id="field.id"
+                        v-model="form.email"
+                        type="email"
+                        placeholder="adresse@exemple.com"
+                        :aria-invalid="field.invalid"
+                        :aria-describedby="field.describedBy"
+                    />
+                </FormField>
+                <FormField label="Contact" :error="form.errors.contact" required v-slot="field">
+                    <Input
+                        :id="field.id"
+                        v-model="form.contact"
+                        placeholder="Téléphone"
+                        :aria-invalid="field.invalid"
+                        :aria-describedby="field.describedBy"
+                    />
+                </FormField>
+            </div>
+            <FormField label="Pays" :error="form.errors.pays" required v-slot="field">
+                <Combobox
+                    :id="field.id"
+                    v-model="form.pays"
+                    :options="country"
+                    placeholder="Choisir un pays"
+                    search-placeholder="Rechercher un pays…"
+                    :invalid="field.invalid"
+                    :described-by="field.describedBy"
+                />
+            </FormField>
+        </CrudDialog>
+    </AdminLayoutV2>
 </template>

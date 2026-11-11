@@ -180,7 +180,8 @@ final class AdminController extends Controller
             ->paginate(10)
             ->withQueryString();
 
-        $country = Options::from(Country::select('id', 'nom')->get(), fn (Country $row): string => $row->nom);
+        // `clients.pays` stocke le nom du pays (et non son id) : le nom sert aussi de valeur.
+        $country = Options::fromNames(Country::orderBy('nom')->pluck('nom'));
 
         return Inertia::render('Admin/Client/Index', compact('rows', 'country'));
     }
