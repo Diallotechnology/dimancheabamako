@@ -143,10 +143,6 @@
             </div>
         </div>
     </section>
-    <script src="{{ asset('admin/assets/js/vendors/jquery-3.6.0.min.js') }}"></script>
-    <script src="{{ asset('admin/assets/js/vendors/bootstrap.bundle.min.js') }}"></script>
-    <script src="{{ asset('admin/assets/js/vendors/perfect-scrollbar.js') }}"></script>
-    <script src="{{ asset('admin/assets/js/vendors/jquery.fullscreen.min.js') }}"></script>
     <script>
         (function () {
         var printContents = document.getElementById("printableArea").innerHTML;
