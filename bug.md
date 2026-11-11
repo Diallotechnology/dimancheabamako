@@ -355,3 +355,19 @@ Avant de déployer : vérifier que `Order` avec `reference IS NULL AND trans_ref
 - **Où** : `UpdateProductRequest` (`color`/`taille` `required` alors que `StoreProductRequest` les accepte `nullable`).
 - **Constat** : un produit créé sans couleur ni taille ne peut plus être modifié sans les renseigner.
 - **Statut** : non corrigé, à arbitrer (règles incohérentes entre Store et Update).
+
+## 2026-11-11 — Lot d'import jamais « terminé » dès qu'un job échoue (`ProductImportController::show`)
+
+- **Où** : `app/Http/Controllers/ProductImportController.php` (`show`, `Bus::batch(...)->allowFailures()`).
+- **Constat** (test navigateur, Ollama absent) : avec `allowFailures()`, les jobs en échec restent dans `pending_jobs` et `finished_at` n'est jamais renseigné. Base : `total_jobs=3, pending_jobs=3, failed_jobs=3, finished_at=NULL`. `finished()` reste donc faux et `processed` (= total − pending) ne compte que les réussites.
+- **Impact** : l'ancienne page restait sur « Traitement en cours » à vie dès le premier échec (même un lot 2 réussies + 1 échec n'affichait jamais « Relire et publier »), et `processed - failed` sous-comptait les brouillons créés.
+- **Contournement** : `Product/Import.vue` (migrée) déduit la fin du lot par `processed + failed >= total` et lit `processed` comme nombre de réussites. Le backend n'a pas été modifié.
+- **Piste** : exposer côté `show` un champ `finished` calculé (`pendingJobs === failedJobs`) pour que le contrat soit correct à la source ; test Feature dédié.
+
+## 2026-11-11 — `queue:work` manuel rejoue des `RegisterMailJob` en attente
+
+- **Constat** : lancer `php artisan queue:work database --stop-when-empty` pour tester l'import a aussi consommé des `RegisterMailJob` déjà présents dans la queue locale (échec : mail non configuré). Rien à corriger dans le code ; à savoir avant de lancer un worker sur la base de dev (envois d'e-mails réels si le SMTP est configuré).
+
+## 2026-11-11 — Données de test conservées
+
+- Lot `742d9cbe-f2f9-41dd-9c8f-d83e89badbe5` (table `job_batches`) et produits `REF-IA-1` (publié) / `REF-IA-2` (brouillon) créés pour tester `Product/ImportReview` ; cover factice `product/cover/x.webp` (image inexistante).
