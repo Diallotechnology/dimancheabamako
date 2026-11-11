@@ -9,6 +9,7 @@ use App\Http\Requests\StoreShippingRequest;
 use App\Models\Poids;
 use App\Models\Shipping;
 use App\Models\Transport;
+use App\Support\Options;
 use Inertia\Inertia;
 
 final class ShippingController extends Controller
@@ -39,11 +40,7 @@ final class ShippingController extends Controller
     public function edit(Shipping $shipping)
     {
         $transport = Transport::all();
-        $poids = Poids::all()->map(function ($row) {
-            return [
-                'label' => "$row->min à $row->max Kg", 'value' => "$row->id",
-            ];
-        });
+        $poids = Options::from(Poids::all(), fn (Poids $row): string => "{$row->min} à {$row->max} Kg");
 
         return Inertia::render('Admin/Shipping/Update', compact('shipping', 'transport', 'poids'));
     }

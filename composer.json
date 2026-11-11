@@ -15,6 +15,7 @@
         "laravel/framework": "^13.0",
         "laravel/sanctum": "^4.0",
         "laravel/tinker": "^3.0",
+        "laravel/wayfinder": "^0.1.23",
         "livewire/livewire": "^4.4",
         "monarobase/country-list": "^3.5",
         "opcodesio/log-viewer": "^3.21",

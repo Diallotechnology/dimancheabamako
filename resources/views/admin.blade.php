@@ -5,22 +5,16 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title data-inertia>{{ config('app.name') }}</title>
-    <link href="{{ asset('admin/assets/css/main.css') }}" rel="stylesheet" type="text/css" />
+    <link rel="icon" href="{{ asset('assets/imgs/theme/favicon.svg') }}" type="image/svg+xml">
+    {{-- Ziggy reste exposé tant que des pages non migrées appellent route() ; retiré au nettoyage final. --}}
     @routes
-    @vite(['resources/js/app.js', "resources/js/Pages/{$page['component']}.vue"])
-    {{--
-    <link href="{{ asset('build/assets/app-ga_5tWk4.css') }}" rel="stylesheet" /> --}}
-    {{-- <script type="module" src="{{ asset('build/assets/app-B--hnlUV.js') }}"></script> --}}
+    @fonts
+    @vite(['resources/js/app.ts', "resources/js/Pages/{$page['component']}.vue"])
     @inertiaHead
 </head>
 
 <body>
     @inertia
-    <script src="{{ asset('admin/assets/js/vendors/jquery-3.6.0.min.js') }}"></script>
-    <script src="{{ asset('admin/assets/js/vendors/bootstrap.bundle.min.js') }}"></script>
-    <script src="{{ asset('admin/assets/js/vendors/perfect-scrollbar.js') }}"></script>
-    <script src="{{ asset('admin/assets/js/vendors/jquery.fullscreen.min.js') }}"></script>
-    <script src="{{ asset('admin/assets/js/vendors/chart.js') }}"></script>
 </body>
 
 </html>

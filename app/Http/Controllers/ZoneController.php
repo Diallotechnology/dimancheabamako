@@ -8,8 +8,8 @@ use App\Helper\DeleteAction;
 use App\Http\Requests\StoreZoneRequest;
 use App\Models\Country;
 use App\Models\Zone;
+use App\Support\Options;
 use Countries;
-use Illuminate\Support\Collection;
 use Inertia\Inertia;
 
 final class ZoneController extends Controller
@@ -45,12 +45,7 @@ final class ZoneController extends Controller
     public function edit(Zone $zone)
     {
         $zone->load('countries');
-        $countryNames = new Collection(Countries::getList('fr'));
-        $pays = $countryNames->values()->map(function ($row) {
-            return [
-                'label' => $row, 'value' => $row,
-            ];
-        });
+        $pays = Options::fromNames(Countries::getList('fr'));
 
         return Inertia::render('Admin/Zone/Update', compact('zone', 'pays'));
     }

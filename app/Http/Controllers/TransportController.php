@@ -8,6 +8,7 @@ use App\Helper\DeleteAction;
 use App\Http\Requests\StoreTransportRequest;
 use App\Models\Transport;
 use App\Models\Zone;
+use App\Support\Options;
 use Inertia\Inertia;
 
 final class TransportController extends Controller
@@ -16,11 +17,7 @@ final class TransportController extends Controller
 
     public function get_trans_zone(Transport $transport)
     {
-        return $transport->zones()->get()->map(function ($row) {
-            return [
-                'label' => "$row->nom", 'value' => "$row->id",
-            ];
-        });
+        return Options::from($transport->zones()->get(), fn (Zone $row): string => $row->nom);
     }
 
     /**
@@ -48,11 +45,7 @@ final class TransportController extends Controller
     public function edit(Transport $transport)
     {
         $transport->load('zones');
-        $zone = Zone::all()->map(function ($row) {
-            return [
-                'label' => "$row->nom", 'value' => "$row->id",
-            ];
-        });
+        $zone = Options::from(Zone::all(), fn (Zone $row): string => $row->nom);
 
         return Inertia::render('Admin/Transport/Update', compact('zone', 'transport'));
 

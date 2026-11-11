@@ -8,6 +8,7 @@ use App\Helper\DeleteAction;
 use App\Http\Requests\StorePromotionRequest;
 use App\Models\Product;
 use App\Models\Promotion;
+use App\Support\Options;
 use Inertia\Inertia;
 
 final class PromotionController extends Controller
@@ -19,12 +20,7 @@ final class PromotionController extends Controller
      */
     public function create()
     {
-        $product = Product::doesntHave('promotions')->get()->map(function ($row) {
-            return [
-                'label' => 'Ref '.$row->reference.' '.$row->nom,
-                'value' => "$row->id",
-            ];
-        });
+        $product = Options::from(Product::doesntHave('promotions')->get(), fn (Product $row): string => 'Ref '.$row->reference.' '.$row->nom);
 
         return Inertia::render('Admin/Promotion/Create', compact('product'));
     }
@@ -56,12 +52,7 @@ final class PromotionController extends Controller
     public function edit(Promotion $promotion)
     {
         $promotion->load('products');
-        $product = Product::with('promotions')->get()->map(function ($row) {
-            return [
-                'label' => 'Ref '.$row->reference.' '.$row->nom,
-                'value' => "$row->id",
-            ];
-        });
+        $product = Options::from(Product::with('promotions')->get(), fn (Product $row): string => 'Ref '.$row->reference.' '.$row->nom);
 
         return Inertia::render('Admin/Promotion/Update', compact('promotion', 'product'));
     }

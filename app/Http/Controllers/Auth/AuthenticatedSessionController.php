@@ -16,6 +16,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\View\View;
+use Inertia\Inertia;
+use Symfony\Component\HttpFoundation\Response;
 
 final class AuthenticatedSessionController extends Controller
 {
@@ -80,7 +82,7 @@ final class AuthenticatedSessionController extends Controller
     /**
      * Destroy an authenticated session.
      */
-    public function destroy(Request $request): RedirectResponse
+    public function destroy(Request $request): Response
     {
         // $oldSessionId = session()->getId();
 
@@ -90,7 +92,8 @@ final class AuthenticatedSessionController extends Controller
         // Invalidate the session
         $request->session()->invalidate();
 
-        // Redirect to the login route
-        return to_route('login');
+        // Inertia::location : depuis l'admin (requête Inertia), force un rechargement complet vers la page
+        // Blade de connexion au lieu de l'afficher dans une modale ; ailleurs, simple redirection.
+        return Inertia::location(route('login'));
     }
 }

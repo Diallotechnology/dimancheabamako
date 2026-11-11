@@ -53,6 +53,8 @@ final class Transport extends Model
 
     /**
      * The zones that belong to the Transport
+     *
+     * @return BelongsToMany<Zone, $this>
      */
     public function zones(): BelongsToMany
     {

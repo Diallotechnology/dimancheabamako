@@ -24,19 +24,9 @@ export let Price_format = new Intl.NumberFormat("fr-FR", {
     currency: "XOF",
 });
 
+// Pages non migrées : ferme la modale (Components/Modal.vue), Bootstrap n'étant plus chargé.
 const hidemodal = () => {
-    // Using vanilla JavaScript to trigger the modal
-    const modal = document.getElementById("exampleModal");
-    if (modal) {
-        // Ensure the modal is hidden initially
-        modal.style.display = "none";
-        // Use Bootstrap's modal method to show the modal
-        const modalInstance = bootstrap.Modal.getInstance(modal);
-        if (modalInstance) {
-            modalInstance.hide();
-            modal.focus();
-        }
-    }
+    window.dispatchEvent(new Event("legacy-modal:close"));
 };
 
 export default notify;

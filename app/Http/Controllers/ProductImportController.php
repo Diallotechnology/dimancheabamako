@@ -8,6 +8,7 @@ use App\Http\Requests\ProductImportRequest;
 use App\Jobs\ProcessProductImageJob;
 use App\Models\Category;
 use App\Models\Product;
+use App\Support\Options;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Bus;
 use Illuminate\Support\Facades\Storage;
@@ -63,8 +64,7 @@ final class ProductImportController extends Controller
                 'color', 'taille', 'poids', 'prix', 'stock', 'favoris', 'is_preorder', 'cover', 'status',
             ]);
 
-        $category = Category::query()->orderBy('nom')->get(['id', 'nom'])
-            ->map(fn (Category $row): array => ['label' => (string) $row->nom, 'value' => (string) $row->id]);
+        $category = Options::from(Category::query()->orderBy('nom')->get(['id', 'nom']), fn (Category $row): string => $row->nom);
 
         return Inertia::render('Admin/Product/ImportReview', [
             'batchId' => $batchId,

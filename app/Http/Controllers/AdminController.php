@@ -21,6 +21,7 @@ use App\Models\Slide;
 use App\Models\Transport;
 use App\Models\User;
 use App\Models\Zone;
+use App\Support\Options;
 use Countries;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\App;
@@ -29,6 +30,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Str;
 use Inertia\Inertia;
+use Symfony\Component\HttpFoundation\Response as SymfonyResponse;
 
 final class AdminController extends Controller
 {
@@ -178,11 +180,7 @@ final class AdminController extends Controller
             ->paginate(10)
             ->withQueryString();
 
-        $country = Country::select('id', 'nom')->get()
-            ->map(fn ($row) => [
-                'label' => $row->nom,
-                'value' => $row->id,
-            ]);
+        $country = Options::from(Country::select('id', 'nom')->get(), fn (Country $row): string => $row->nom);
 
         return Inertia::render('Admin/Client/Index', compact('rows', 'country'));
     }
@@ -223,13 +221,7 @@ final class AdminController extends Controller
         $allCountries = collect(Countries::getList('fr'));
         $existing = Country::pluck('nom')->all();
 
-        $pays = $allCountries
-            ->reject(fn ($name) => in_array($name, $existing))
-            ->values()
-            ->map(fn ($name) => [
-                'label' => $name,
-                'value' => $name,
-            ]);
+        $pays = Options::fromNames($allCountries->reject(fn ($name) => in_array($name, $existing)));
 
         return Inertia::render('Admin/Zone/Index', compact('rows', 'pays'));
     }
@@ -245,18 +237,9 @@ final class AdminController extends Controller
             ->paginate(10)
             ->withQueryString();
 
-        $countries = collect(Countries::getList('fr'))
-            ->values()
-            ->map(fn ($name) => [
-                'label' => $name,
-                'value' => $name,
-            ]);
+        $countries = Options::fromNames(Countries::getList('fr'));
 
-        $zone = Zone::orderBy('nom')->get()
-            ->map(fn ($row) => [
-                'label' => $row->nom,
-                'value' => $row->id,
-            ]);
+        $zone = Options::from(Zone::orderBy('nom')->get(), fn (Zone $row): string => $row->nom);
 
         return Inertia::render('Admin/Pays/Index', compact('rows', 'zone', 'countries'));
     }
@@ -279,10 +262,7 @@ final class AdminController extends Controller
             ->get()
             ->groupBy(fn ($row) => $row->transport?->nom ?? 'Autre');
 
-        $poids = Poids::orderBy('min')->get()->map(fn ($row) => [
-            'label' => "{$row->min} à {$row->max} Kg",
-            'value' => $row->id,
-        ]);
+        $poids = Options::from(Poids::orderBy('min')->get(), fn (Poids $row): string => "{$row->min} à {$row->max} Kg");
 
         $transport = Transport::orderBy('nom')->get();
 
@@ -301,7 +281,6 @@ final class AdminController extends Controller
 
         return Inertia::render('Admin/Poids/Index', [
             'rows' => $rows,
-            'filter' => $request->only('search'),
         ]);
     }
 
@@ -323,15 +302,11 @@ final class AdminController extends Controller
             ->paginate(10)
             ->withQueryString();
 
-        $zone = Zone::orderBy('nom')->get()->map(fn ($row) => [
-            'label' => $row->nom,
-            'value' => $row->id,
-        ]);
+        $zone = Options::from(Zone::orderBy('nom')->get(), fn (Zone $row): string => $row->nom);
 
         return Inertia::render('Admin/Transport/Index', [
             'rows' => $rows,
             'zone' => $zone,
-            'filter' => $request->only('search'),
         ]);
     }
 
@@ -348,7 +323,6 @@ final class AdminController extends Controller
 
         return Inertia::render('Admin/User/Index', [
             'rows' => $rows,
-            'filter' => $request->only('search'),
         ]);
     }
 
@@ -365,24 +339,26 @@ final class AdminController extends Controller
 
         return Inertia::render('Admin/User/Client', [
             'rows' => $rows,
-            'filter' => $request->only('search'),
         ]);
     }
 
-    public function maintenance()
+    /**
+     * Bascule le mode maintenance. Inertia::location force un rechargement complet :
+     * la cible (vitrine ou lien secret de contournement) n'est pas une page Inertia.
+     */
+    public function maintenance(): SymfonyResponse
     {
-
         if (App::isDownForMaintenance()) {
             Artisan::call('up');
             Session::put('down_message', 'Le mode maintenance a été désactivé avec succès!');
 
-            return to_route('home');
+            return Inertia::location(route('home'));
         }
         $token = Str::random(60);
         Artisan::call("down --secret='$token'");
         Session::put('down_token', $token);
         Session::put('down_message', 'Le mode maintenance a été activer avec succès!');
 
-        return redirect('/'.$token);
+        return Inertia::location(url('/'.$token));
     }
 }

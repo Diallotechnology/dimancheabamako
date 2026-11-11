@@ -10,6 +10,7 @@ use App\Http\Requests\UpdateProductRequest;
 use App\Models\Category;
 use App\Models\Product;
 use App\Service\ImageUploadService;
+use App\Support\Options;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\ValidationException;
@@ -21,12 +22,7 @@ final class ProductController extends Controller
 
     public function create()
     {
-        $category = Category::select('id', 'nom')->get()->map(function ($row) {
-            return [
-                'label' => "$row->nom",
-                'value' => "$row->id",
-            ];
-        });
+        $category = Options::from(Category::select('id', 'nom')->get(), fn (Category $row): string => $row->nom);
 
         return Inertia::render('Admin/Product/Create', compact('category'));
     }
@@ -70,12 +66,7 @@ final class ProductController extends Controller
      */
     public function edit(Product $product)
     {
-        $category = Category::all()->map(function ($row) {
-            return [
-                'label' => "$row->nom",
-                'value' => "$row->id",
-            ];
-        });
+        $category = Options::from(Category::all(), fn (Category $row): string => $row->nom);
         $product->load('images');
 
         return Inertia::render('Admin/Product/Update', compact('product', 'category'));
