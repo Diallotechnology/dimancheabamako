@@ -21,7 +21,7 @@ final class ZoneController extends Controller
      */
     public function store(StoreZoneRequest $request)
     {
-        $item = Zone::create($request->validated());
+        $item = Zone::create($request->safe()->except('pays'));
         $data = [];
         foreach ($request->pays as $value) {
             $data[] = new Country(['nom' => $value]);
@@ -73,7 +73,7 @@ final class ZoneController extends Controller
             $zone->countries()->saveMany($data); // Save the updated list of countries
         }
 
-        $zone->update($request->validated());
+        $zone->update($request->safe()->except('pays'));
 
         return back();
     }

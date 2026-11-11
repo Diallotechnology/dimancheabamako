@@ -300,9 +300,9 @@ Avant de déployer : vérifier que `Order` avec `reference IS NULL AND trans_ref
 - **Piste** : `load('products.categorie')` puis réafficher la catégorie (et éventuellement `cover`) dans `Show.vue`.
 - **Statut** : non corrigé, hors périmètre.
 
-## 2026-11-11 — Création/édition de promotion, zone et transporteur impossible en local (`MassAssignmentException`)
+## 2026-11-11 — Création/édition de promotion, zone et transporteur impossible en local (`MassAssignmentException`)  — ✅ RÉSOLU (2026-11-11)
 
 - **Où** : `PromotionController::store/update` (`Promotion::create($request->validated())`, champ `product_id`), `ZoneController::store/update` (`pays`), `TransportController::store/update` (`zone_id`). `app/Providers/AppServiceProvider.php:56` (`Model::shouldBeStrict(! app()->isProduction())`).
 - **Constat** : `validated()` contient des champs de relation absents de `$fillable`. En mode strict (hors production) Eloquent lève `Add fillable property [product_id] to allow mass assignment on [App\Models\Promotion]` → 500 ; en production le champ est ignoré silencieusement, donc le bug est masqué. Reproduit en local par POST `admin/promotion` (422 de validation OK, puis 500).
 - **Piste** : utiliser `$request->safe()->except('product_id')` (ou `only([...])`) avant `create`/`update`, + test Feature (création + `products` attachés).
-- **Statut** : non corrigé, hors périmètre. Données de test locales : promotion « Promo test DateTimePicker » insérée par tinker.
+- **Résolution** : `$request->safe()->except([champ de relation])` dans `store`/`update` des 3 contrôleurs. Pas d'ajout à `$fillable` : ce ne sont pas des colonnes. Les relations étaient déjà persistées explicitement (`attach`/`sync`/`saveMany`), donc en production seule la création du modèle ignorait ces clés (aucune donnée perdue). Tests : `tests/Feature/AdminRelationFieldsTest.php`.

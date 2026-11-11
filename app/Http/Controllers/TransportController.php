@@ -25,7 +25,7 @@ final class TransportController extends Controller
      */
     public function store(StoreTransportRequest $request)
     {
-        $item = Transport::create($request->validated());
+        $item = Transport::create($request->safe()->except('zone_id'));
         $item->zones()->attach($request->zone_id);
 
         return back();
@@ -56,7 +56,7 @@ final class TransportController extends Controller
      */
     public function update(StoreTransportRequest $request, Transport $transport)
     {
-        $transport->update($request->validated());
+        $transport->update($request->safe()->except('zone_id'));
         $transport->zones()->sync($request->zone_id);
 
         return back();

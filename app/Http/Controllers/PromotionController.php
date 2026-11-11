@@ -30,7 +30,7 @@ final class PromotionController extends Controller
      */
     public function store(StorePromotionRequest $request)
     {
-        $item = Promotion::create($request->validated());
+        $item = Promotion::create($request->safe()->except('product_id'));
         $item->products()->attach($request->product_id);
 
         return back();
@@ -62,7 +62,7 @@ final class PromotionController extends Controller
      */
     public function update(StorePromotionRequest $request, Promotion $promotion)
     {
-        $promotion->update($request->validated());
+        $promotion->update($request->safe()->except('product_id'));
         $promotion->products()->sync($request->product_id);
 
         return back();
