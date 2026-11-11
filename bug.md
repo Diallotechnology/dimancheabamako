@@ -325,3 +325,30 @@ Avant de déployer : vérifier que `Order` avec `reference IS NULL AND trans_ref
 - **Où** : `app/Http/Controllers/AdminController.php` (`dashboard`).
 - **Constat** : `revenu` somme les lignes de **toutes** les commandes du mois (`whereMonth` sans filtre d'année ni d'état de paiement), tandis que « Ventes » ne compte que `trans_state = PURCHASED`, et le graphique compte **toutes** les commandes par jour. Les trois chiffres ne sont donc pas comparables (ex. local : 1 vente réglée, 3 commandes affichées, revenu incluant les non payées). `whereMonth` ignore aussi l'année (novembre 2025 + 2026 mélangés).
 - **Statut** : non corrigé (migration front uniquement). Libellé du KPI renommé « Revenu du mois » côté Vue pour refléter la réalité actuelle.
+
+## 2026-11-11 — Uploads impossibles en local : `getRealPath()` vide sur `C:\Windows\Temp`
+
+- **Où** : `app/Service/ImageUploadService.php::store` (`getRealPath()`), `ProductController::store`/`update` (`$request->video->storeAs(...)`), tout upload multipart en local (PHP web Laragon).
+- **Constat** : le fichier uploadé est bien reçu (`isValid()` vrai, `file_exists` vrai, `C:\Windows\Temp\phpXXXX.tmp`) mais `getRealPath()` renvoie `false` et Intervention refuse de lire le dossier (« Directory "C:\Windows\Temp" is not readable »). Résultat : `POST /admin/product` en 500 (« Unable to decode from empty string ») dès qu'une cover est envoyée, indépendamment de l'UI.
+- **Piste** : définir `upload_tmp_dir` (ex. `C:\laragon\tmp`) dans le `php.ini` du PHP web, ou décoder depuis `$file->get()` au lieu du chemin. Test de la migration Product faite avec un contournement temporaire (retiré, non commité).
+- **Statut** : non corrigé, hors périmètre (environnement local).
+
+## 2026-11-11 — `public/storage` n'est pas un lien vers `storage/app/public` en local
+
+- **Où** : `public/storage` (dossier réel contenant seulement `product/cover`, `LinkType` vide).
+- **Constat** : les fichiers récents (images, vidéos, covers) sont écrits dans `storage/app/public` mais renvoient 404 via `/storage/...` ; les fiches produit affichent des images cassées.
+- **Piste** : supprimer ce dossier puis `php artisan storage:link` (vérifier d'abord que son contenu existe aussi dans `storage/app/public`).
+- **Statut** : non corrigé, hors périmètre.
+
+## 2026-11-11 — Product/Show : colonne « Pays » toujours vide
+
+- **Où** : `ProductController::show` charge `orders` sans `orders.country` ; l'ancienne page lisait `row.pays` (attribut inexistant sur `Order`).
+- **Constat** : colonne supprimée dans la nouvelle page. Ancien bug visible : « stock » affichait `product.taille`, corrigé à la migration.
+- **Piste** : `$product->load('images', 'orders.country')` puis réafficher `row.country?.nom`.
+- **Statut** : non corrigé côté serveur, hors périmètre.
+
+## 2026-11-11 — Création produit : les erreurs `image.*` et validation d'`image` sur Update
+
+- **Où** : `UpdateProductRequest` (`color`/`taille` `required` alors que `StoreProductRequest` les accepte `nullable`).
+- **Constat** : un produit créé sans couleur ni taille ne peut plus être modifié sans les renseigner.
+- **Statut** : non corrigé, à arbitrer (règles incohérentes entre Store et Update).
