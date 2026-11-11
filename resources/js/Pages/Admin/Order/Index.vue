@@ -1,177 +1,146 @@
-<script setup>
-import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
-import { Head, router } from "@inertiajs/vue3";
-import ButtonDelete from "@/Components/ButtonDelete.vue";
-import Table from "@/Components/Table.vue";
-import { Price_format } from "@/helper";
-import { useFilter } from "@/Composables/useFilter";
-import ButtonShow from "@/Components/ButtonShow.vue";
+<script setup lang="ts">
+import { Link, router } from '@inertiajs/vue3';
+import { Eye, Search, X } from '@lucide/vue';
+import { order as orderIndex } from '@/actions/App/Http/Controllers/AdminController';
+import { destroy, show } from '@/actions/App/Http/Controllers/OrderController';
+import ConfirmDelete from '@/Components/Admin/ConfirmDelete.vue';
+import DataTable from '@/Components/Admin/DataTable.vue';
+import { Badge } from '@/Components/ui/badge';
+import { Button } from '@/Components/ui/button';
+import { Input } from '@/Components/ui/input';
+import { NativeSelect } from '@/Components/ui/native-select';
+import { TableCell, TableHead } from '@/Components/ui/table';
+import { useFilter } from '@/Composables/useFilter';
+import AdminLayoutV2 from '@/Layouts/AdminLayoutV2.vue';
+import { formatXof } from '@/lib/format';
+import type { Client, Option, Order, Paginated } from '@/types';
 
-const props = defineProps({
-    rows: {
-        type: Object,
-        default: () => ({}),
-    },
-    client: {
-        type: Object,
-        default: () => ({}),
-    },
-    order_status: {
-        type: Object,
-        default: () => ({}),
-    },
-});
+const props = defineProps<{
+    rows: Paginated<Order>;
+    client: Pick<Client, 'id' | 'nom' | 'prenom'>[];
+    /** États possibles : `id` et `name` portent le même libellé (`OrderEnum::all()`). */
+    order_status: { id: string; name: string }[];
+}>();
 
 const { filters, resetFilters } = useFilter(
     {
-        search: "",
-        date: "",
-        client: "",
-        status: "",
+        search: '',
+        client: '',
+        status: '',
+        date: '',
     },
-    "/admin/order"
+    orderIndex,
 );
+
+const hasFilter = (): boolean => Object.values(filters.value).some((value) => value !== '');
+
+const clientOptions: Option[] = props.client.map((item) => ({
+    label: `${item.prenom} ${item.nom}`,
+    value: String(item.id),
+}));
+
+// Supprimer la dernière ligne d'une page > 1 ramène à la page précédente.
+const afterDelete = (): void => {
+    if (props.rows.data.length === 1 && props.rows.current_page > 1) {
+        const url = new URL(window.location.href);
+        url.searchParams.set('page', String(props.rows.current_page - 1));
+        router.get(url.pathname + url.search, {}, { preserveState: true, replace: true });
+    }
+};
 </script>
 
 <template>
-    <Head title="Vente" />
-
-    <AuthenticatedLayout>
-        <div class="content-header">
-            <div>
-                <h2 class="content-title card-title">Listes des ventes</h2>
+    <AdminLayoutV2 title="Ventes" description="Les commandes de la boutique : paiement, livraison et état.">
+        <div class="mb-4 flex flex-wrap items-center gap-2">
+            <div class="relative w-full max-w-xs">
+                <Search class="pointer-events-none absolute top-1/2 left-3 size-4 -translate-y-1/2 text-muted-foreground" />
+                <Input
+                    v-model="filters.search"
+                    type="search"
+                    placeholder="Rechercher une vente…"
+                    aria-label="Rechercher une vente"
+                    class="pl-9"
+                />
             </div>
+            <NativeSelect v-model="filters.client" aria-label="Filtrer par client">
+                <option value="">Tous les clients</option>
+                <option v-for="item in clientOptions" :key="item.value" :value="item.value">{{ item.label }}</option>
+            </NativeSelect>
+            <NativeSelect v-model="filters.status" aria-label="Filtrer par état">
+                <option value="">Tous les états</option>
+                <option v-for="item in order_status" :key="item.id" :value="item.id">{{ item.name }}</option>
+            </NativeSelect>
+            <Input v-model="filters.date" type="date" aria-label="Filtrer par date" class="w-auto" />
+            <Button v-if="hasFilter()" variant="ghost" @click="resetFilters">
+                <X />
+                Réinitialiser
+            </Button>
         </div>
-        <div class="card mb-4">
-            <header class="card-header">
-                <div class="row gx-3">
-                    <div class="col-lg-4 col-md-6 me-auto">
-                        <input
-                            v-model="filters.search"
-                            type="text"
-                            placeholder="Recherche..."
-                            class="form-control"
-                        />
-                    </div>
-                    <div class="col-md-2">
-                        <select class="form-select" v-model="filters.client">
-                            <option value="">Tous les clients</option>
-                            <option
-                                v-for="item in client"
-                                :key="item.id"
-                                :value="item.id"
-                            >
-                                {{ item.nom }}
-                            </option>
-                        </select>
-                    </div>
-                    <div class="col-md-2">
-                        <select class="form-select" v-model="filters.status">
-                            <option value="">Ventes Status</option>
-                            <option
-                                v-for="item in order_status"
-                                :key="item.id"
-                                :value="item.id"
-                            >
-                                {{ item.name }}
-                            </option>
-                        </select>
-                    </div>
 
-                    <div class="col-md-2 col-6">
-                        <input
-                            type="date"
-                            v-model="filters.date"
-                            class="form-control"
+        <DataTable :rows="rows" :columns="9" item-label="ventes">
+            <template #head>
+                <TableHead class="w-16">#</TableHead>
+                <TableHead>Facture</TableHead>
+                <TableHead>Paiement</TableHead>
+                <TableHead>Client</TableHead>
+                <TableHead>Livraison</TableHead>
+                <TableHead class="text-right">Total</TableHead>
+                <TableHead>État</TableHead>
+                <TableHead>Date</TableHead>
+                <TableHead class="w-24 text-right">Actions</TableHead>
+            </template>
+
+            <template #row="{ row }">
+                <TableCell class="text-muted-foreground">{{ row.id }}</TableCell>
+                <TableCell class="font-medium whitespace-nowrap">{{ row.reference }}</TableCell>
+                <TableCell>
+                    <p class="whitespace-nowrap">{{ row.trans_ref }}</p>
+                    <Badge v-if="row.trans_state" variant="outline" size="sm">{{ row.trans_state }}</Badge>
+                </TableCell>
+                <TableCell>
+                    <p class="font-medium whitespace-nowrap">{{ row.client?.prenom }} {{ row.client?.nom }}</p>
+                    <p class="text-xs text-muted-foreground">{{ row.client?.email }}</p>
+                    <p class="text-xs text-muted-foreground">{{ row.client?.contact }}</p>
+                </TableCell>
+                <TableCell>
+                    <p>{{ row.adresse }}</p>
+                    <p class="text-xs text-muted-foreground">
+                        {{ row.postal }} {{ row.ville }}, {{ row.country?.nom }}
+                    </p>
+                    <p class="text-xs text-muted-foreground">
+                        {{ row.transport?.nom }} · {{ row.poids }} · {{ formatXof(Number(row.shipping)) }}
+                    </p>
+                </TableCell>
+                <TableCell class="text-right whitespace-nowrap tabular-nums">{{ formatXof(Number(row.totaux ?? 0)) }}</TableCell>
+                <TableCell><Badge variant="secondary" size="sm">{{ row.etat }}</Badge></TableCell>
+                <TableCell class="whitespace-nowrap text-muted-foreground">{{ row.created_at }}</TableCell>
+                <TableCell>
+                    <div class="flex justify-end gap-1">
+                        <Button
+                            as-child
+                            variant="ghost"
+                            size="icon-sm"
+                            class="text-muted-foreground"
+                            :aria-label="`Voir la vente ${row.reference}`"
+                        >
+                            <Link :href="show(row.id)">
+                                <Eye />
+                            </Link>
+                        </Button>
+                        <ConfirmDelete
+                            :action="destroy(row.id)"
+                            :what="`la vente ${row.reference}`"
+                            success-message="Vente supprimée."
+                            @deleted="afterDelete"
                         />
                     </div>
-                    <div class="col-auto">
-                        <button
-                            @click="resetFilters"
-                            class="btn btn-danger rounded"
-                        >
-                            Reset<i
-                                class="material-icons md-delete_forever md-18"
-                            ></i>
-                        </button>
-                    </div>
-                </div>
-            </header>
-            <Table :rows="rows">
-                <thead>
-                    <tr>
-                        <th>#ID</th>
-                        <th scope="col">Facture N°</th>
-                        <th scope="col">transaction</th>
-                        <th scope="col">Client</th>
-                        <th scope="col">Adresse</th>
-                        <th scope="col">shipping</th>
-                        <th scope="col">Postal</th>
-                        <th scope="col">Pays/Ville</th>
-                        <th scope="col">Total</th>
-                        <th scope="col">Etat</th>
-                        <th scope="col">Date</th>
-                        <th scope="col">Action</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr v-for="row in rows.data" :key="row.id">
-                        <td>{{ row.id }}</td>
-                        <td class="fw-bold">{{ row.reference }}</td>
-                        <td class="fw-bold">
-                            {{ row.trans_ref }} <br />
-                            <span
-                                class="badge rounded-pill alert-success text-success"
-                                >{{ row.trans_state }}</span
-                            >
-                        </td>
-                        {{
-                            row.client.prenom
-                        }}
-                        {{
-                            row.client.nom
-                        }}
-                        <br />
-                        {{
-                            row.client.email
-                        }}
-                        <br />
-                        {{
-                            row.client.contact
-                        }}
-                        <td>{{ row.adresse }}</td>
-                        <td>
-                            {{ row.transport.nom }} <br />
-                            {{ row.poids }}Kg <br />{{
-                                Price_format.format(row.shipping)
-                            }}
-                        </td>
-                        <td>{{ row.postal }}</td>
-                        <td>{{ row.country.nom }} <br />{{ row.ville }}</td>
-                        <td>{{ Price_format.format(row.totaux) }}</td>
-                        <td>
-                            <span
-                                class="badge rounded-pill alert-success text-success"
-                            >
-                                {{ row.etat }}
-                            </span>
-                        </td>
-                        <td>{{ row.created_at }}</td>
-                        <td>
-                            <div class="d-flex gap-2">
-                                <ButtonShow
-                                    :href="route('order.show', row.id)"
-                                />
-                                <!-- <ButtonEdit :href="route('order.edit', row.id)" /> -->
-                                <ButtonDelete
-                                    :url="route('order.destroy', row.id)"
-                                />
-                            </div>
-                        </td>
-                    </tr>
-                </tbody>
-            </Table>
-        </div>
-        <!-- card end// -->
-    </AuthenticatedLayout>
+                </TableCell>
+            </template>
+
+            <template #empty>
+                <template v-if="hasFilter()">Aucune vente ne correspond à ces filtres.</template>
+                <template v-else>Aucune vente pour le moment.</template>
+            </template>
+        </DataTable>
+    </AdminLayoutV2>
 </template>

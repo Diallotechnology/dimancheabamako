@@ -242,7 +242,6 @@ final class OrderController extends Controller
     public function update(UpdateOrderRequest $request, Order $order)
     {
         $order->update($request->validated());
-        flash()->success('Commande mise à jour avec succès!');
 
         return back();
     }
@@ -252,8 +251,7 @@ final class OrderController extends Controller
      */
     public function destroy(Order $order)
     {
-        $order->delete();
-        flash()->success('Commande supprimer avec succès!');
+        return $this->supp($order);
     }
 
     private function renderInvoice(string $ref, ?Carbon $createdBefore = null): View

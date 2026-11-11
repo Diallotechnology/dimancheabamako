@@ -104,8 +104,8 @@ final class AdminController extends Controller
     {
         $rows = Order::query()
             ->withSum('products as totaux', 'order_product.montant')
-            ->with(['transport:id,nom', 'client:id,nom,prenom', 'country:id,nom'])
-            ->when($request->filled('search'), function ($query, $search) {
+            ->with(['transport:id,nom', 'client:id,nom,prenom,email,contact', 'country:id,nom'])
+            ->when($request->string('search')->trim()->toString(), function ($query, string $search) {
                 $query->where(function ($q) use ($search) {
                     $q->whereAny(
                         ['reference', 'adresse', 'ville', 'postal', 'trans_state', 'trans_ref', 'etat'],

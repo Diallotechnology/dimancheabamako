@@ -1,248 +1,170 @@
-<script setup>
-import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
-import { Head, useForm } from "@inertiajs/vue3";
-import notify, { Price_format } from "@/helper";
+<script setup lang="ts">
+import { Link, useForm } from '@inertiajs/vue3';
+import { ArrowLeft, ImageOff } from '@lucide/vue';
+import { computed } from 'vue';
+import { toast } from 'vue-sonner';
+import { order as orderIndex } from '@/actions/App/Http/Controllers/AdminController';
+import { update } from '@/actions/App/Http/Controllers/OrderController';
+import DataTable from '@/Components/Admin/DataTable.vue';
+import { Badge } from '@/Components/ui/badge';
+import { Button } from '@/Components/ui/button';
+import { NativeSelect } from '@/Components/ui/native-select';
+import { TableCell, TableHead } from '@/Components/ui/table';
+import AdminLayoutV2 from '@/Layouts/AdminLayoutV2.vue';
+import { formatXof } from '@/lib/format';
+import type { Order, OrderState } from '@/types';
 
-const props = defineProps({
-    order: {
-        type: Object,
-        required: true,
-        default: () => ({}),
-    },
-    state: {
-        type: Object,
-        required: true,
-        default: () => ({}),
-    },
-});
-const form = useForm({
+const props = defineProps<{
+    order: Order;
+    /** États possibles (`OrderEnum::cases()` sérialisé en valeurs). */
+    state: OrderState[];
+}>();
+
+const form = useForm<{ etat: OrderState }>({
     etat: props.order.etat,
 });
-const submit = () => {
-    form.patch(route("order.update", props.order.id), {
+
+const submit = (): void => {
+    form.submit(update(props.order.id), {
+        preserveScroll: true,
         onSuccess: () => {
-            form.etat = props.order.etat;
-            notify("vente mise à jour avec success !", true);
+            form.defaults();
+            toast.success('Vente mise à jour.');
         },
         onError: () => {
-            notify(false);
+            toast.error("L'état n'a pas pu être modifié.");
         },
     });
 };
-</script>
-<template>
-    <Head title="Detail Vente" />
-    <AuthenticatedLayout>
-        <div class="content-header">
-            <div>
-                <h2 class="content-title card-title">Vente detail</h2>
-                <p>Details de la Vente ID: {{ order.id }}</p>
-            </div>
-        </div>
-        <div class="card">
-            <header class="card-header">
-                <div class="row align-items-center">
-                    <div class="col-lg-6 col-md-6 mb-lg-0 mb-15">
-                        <span>
-                            <i class="material-icons md-calendar_today"></i>
-                            <b>{{ order.created_at }}</b>
-                        </span>
-                        <br />
-                        <small>Facture N°: {{ order.reference }}</small> <br />
-                        <small
-                            >Transaction reference: {{ order.trans_ref }}</small
-                        ><br />
-                        <small
-                            >Transaction status:
-                            <span
-                                class="badge rounded-pill alert-success text-success"
-                                >{{ order.trans_state }}</span
-                            ></small
-                        >
-                    </div>
-                    <div class="col-lg-6 col-md-6 ms-auto text-md-end">
-                        <form @submit.prevent="submit">
-                            <select
-                                class="form-select d-inline-block mb-lg-0 mb-15 mw-200"
-                                v-model="form.etat"
-                            >
-                                <option
-                                    v-for="item in props.state"
-                                    :key="item"
-                                    :selected="item == order.etat"
-                                >
-                                    {{ item }}
-                                </option>
-                            </select>
-                            <button
-                                :class="{ 'opacity-25': form.processing }"
-                                :disabled="form.processing"
-                                type="submit"
-                                class="btn btn-primary"
-                            >
-                                Valider
-                            </button>
-                        </form>
-                        <!-- <a class="btn btn-secondary print ms-2" href="#"
-                            ><i class="icon material-icons md-print"></i
-                        ></a> -->
-                    </div>
-                </div>
-            </header>
-            <!-- card-header end// -->
-            <div class="card-body">
-                <div class="row mb-50 mt-20 order-info-wrap">
-                    <div class="col-md-4">
-                        <article class="icontext align-items-start">
-                            <span
-                                class="icon icon-sm rounded-circle bg-primary-light"
-                            >
-                                <i
-                                    class="text-primary material-icons md-person"
-                                ></i>
-                            </span>
-                            <div class="text">
-                                <h6 class="mb-1">Client</h6>
-                                <p class="mb-1">
-                                    {{ order.client.prenom }}
-                                    {{ order.client.nom }} <br />
-                                    {{ order.client.email }} <br />
-                                    {{ order.client.contact }}
-                                </p>
-                            </div>
-                        </article>
-                    </div>
-                    <!-- col// -->
-                    <div class="col-md-4">
-                        <article class="icontext align-items-start">
-                            <span
-                                class="icon icon-sm rounded-circle bg-primary-light"
-                            >
-                                <i
-                                    class="text-primary material-icons md-local_shipping"
-                                ></i>
-                            </span>
-                            <div class="text">
-                                <h6 class="mb-1">Vente info</h6>
-                                <p class="mb-1">
-                                    Adress: {{ order.adresse }} <br />
-                                    Shipping:
-                                    {{ Price_format.format(order.shipping) }}
-                                    <br />
-                                    Etat: {{ order.etat }}
-                                </p>
-                            </div>
-                        </article>
-                    </div>
-                    <!-- col// -->
-                    <div class="col-md-4">
-                        <article class="icontext align-items-start">
-                            <span
-                                class="icon icon-sm rounded-circle bg-primary-light"
-                            >
-                                <i
-                                    class="text-primary material-icons md-place"
-                                ></i>
-                            </span>
-                            <div class="text">
-                                <h6 class="mb-1">Livraison infos</h6>
-                                <p class="mb-1">
-                                    Pays: {{ order.country.nom }} <br />
-                                    Poids: {{ order.poids }} <br />
-                                    Ville: {{ order.ville }}<br />
-                                    Postal: {{ order.postal }}
-                                </p>
-                            </div>
-                        </article>
-                    </div>
-                    <!-- col// -->
-                </div>
-                <!-- row // -->
-                <div class="row">
-                    <div class="col-lg-7">
-                        <div class="table-responsive">
-                            <table class="table">
-                                <thead>
-                                    <tr>
-                                        <th width="40%">Reference</th>
-                                        <th width="40%">Produit</th>
-                                        <th width="20%">Prix Unitaire</th>
-                                        <th width="20%">Quantité</th>
-                                        <th width="20%" class="text-end">
-                                            Total
-                                        </th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr
-                                        v-for="item in order.products"
-                                        :key="item"
-                                    >
-                                        <td>{{ item.reference }}</td>
-                                        <td>
-                                            <a class="itemside" href="#">
-                                                <div class="left">
-                                                    <img
-                                                        v-bind:src="item.cover"
-                                                        width="40"
-                                                        height="40"
-                                                        class="img-xs"
-                                                        alt="Item"
-                                                    />
-                                                </div>
-                                                <div class="info">
-                                                    {{ item.nom }}
-                                                </div>
-                                            </a>
-                                        </td>
 
-                                        <td>
-                                            {{ Price_format.format(item.prix) }}
-                                        </td>
-                                        <td>{{ item.pivot.quantity }}</td>
-                                        <td class="text-end">
-                                            {{
-                                                Price_format.format(
-                                                    item.pivot.montant
-                                                )
-                                            }}
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td colspan="4">
-                                            <article class="float-end">
-                                                <dl class="dlist">
-                                                    <dt>Montant total:</dt>
-                                                    <dd>
-                                                        <p class="h5">
-                                                            {{
-                                                                Price_format.format(
-                                                                    order.totaux
-                                                                )
-                                                            }}
-                                                        </p>
-                                                    </dd>
-                                                </dl>
-                                            </article>
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                    <!-- col// -->
-                    <div class="col-lg-1"></div>
-                    <div class="col-lg-4">
-                        <div class="box shadow-sm bg-light">
-                            <h6 class="mb-15">Commentaire</h6>
-                            <p>{{ order.commentaire }}</p>
-                        </div>
-                    </div>
-                    <!-- col// -->
-                </div>
+const products = computed(() => props.order.products ?? []);
+
+// Calculé : l'état affiché doit suivre la prop rechargée après « Valider ».
+const infos = computed<{ title: string; rows: { label: string; value: string }[] }[]>(() => [
+    {
+        title: 'Client',
+        rows: [
+            { label: 'Nom', value: `${props.order.client?.prenom ?? ''} ${props.order.client?.nom ?? ''}`.trim() || '—' },
+            { label: 'E-mail', value: props.order.client?.email ?? '—' },
+            { label: 'Contact', value: props.order.client?.contact ?? '—' },
+        ],
+    },
+    {
+        title: 'Vente',
+        rows: [
+            { label: 'Adresse', value: props.order.adresse },
+            { label: 'Livraison', value: formatXof(Number(props.order.shipping)) },
+            { label: 'État', value: props.order.etat },
+        ],
+    },
+    {
+        title: 'Destination',
+        rows: [
+            { label: 'Pays', value: props.order.country?.nom ?? '—' },
+            { label: 'Ville', value: props.order.ville },
+            { label: 'Code postal', value: props.order.postal ?? '—' },
+            { label: 'Poids', value: props.order.poids },
+        ],
+    },
+]);
+</script>
+
+<template>
+    <AdminLayoutV2
+        :title="`Vente n°${order.id}`"
+        :description="`Facture ${order.reference ?? '—'} · ${order.created_at}`"
+    >
+        <template #actions>
+            <Button as-child variant="outline">
+                <Link :href="orderIndex()">
+                    <ArrowLeft />
+                    Retour aux ventes
+                </Link>
+            </Button>
+        </template>
+
+        <section class="mb-6 flex flex-wrap items-end justify-between gap-4 rounded-lg border bg-card p-6 shadow-sm">
+            <div class="grid gap-1 text-sm">
+                <p>
+                    <span class="text-muted-foreground">Référence de transaction : </span>
+                    <span class="font-medium">{{ order.trans_ref ?? '—' }}</span>
+                </p>
+                <p class="flex items-center gap-2">
+                    <span class="text-muted-foreground">Statut du paiement :</span>
+                    <Badge v-if="order.trans_state" variant="outline" size="sm">{{ order.trans_state }}</Badge>
+                    <span v-else>—</span>
+                </p>
             </div>
-            <!-- card-body end// -->
+            <form class="flex items-center gap-2" @submit.prevent="submit">
+                <NativeSelect v-model="form.etat" aria-label="État de la vente">
+                    <option v-for="item in state" :key="item" :value="item">{{ item }}</option>
+                </NativeSelect>
+                <Button type="submit" :disabled="form.processing || !form.isDirty">Valider</Button>
+            </form>
+            <p v-if="form.errors.etat" class="w-full text-sm text-destructive" role="alert">{{ form.errors.etat }}</p>
+        </section>
+
+        <div class="mb-6 grid gap-4 md:grid-cols-3">
+            <section v-for="block in infos" :key="block.title" class="rounded-lg border bg-card p-5 shadow-sm">
+                <h2 class="mb-3 text-sm font-semibold">{{ block.title }}</h2>
+                <dl class="grid gap-2 text-sm">
+                    <div v-for="row in block.rows" :key="row.label">
+                        <dt class="text-xs text-muted-foreground">{{ row.label }}</dt>
+                        <dd class="font-medium break-words">{{ row.value }}</dd>
+                    </div>
+                </dl>
+            </section>
         </div>
-        <!-- card end// -->
-    </AuthenticatedLayout>
+
+        <div class="grid gap-6 lg:grid-cols-[1fr_20rem]">
+            <div>
+                <h2 class="mb-3 text-lg font-semibold">Produits ({{ products.length }})</h2>
+                <DataTable :rows="products" :columns="5">
+                    <template #head>
+                        <TableHead>Référence</TableHead>
+                        <TableHead>Produit</TableHead>
+                        <TableHead class="text-right">Prix unitaire</TableHead>
+                        <TableHead class="text-right">Quantité</TableHead>
+                        <TableHead class="text-right">Total</TableHead>
+                    </template>
+
+                    <template #row="{ row }">
+                        <TableCell class="whitespace-nowrap text-muted-foreground">{{ row.reference }}</TableCell>
+                        <TableCell>
+                            <div class="flex items-center gap-3">
+                                <img
+                                    v-if="row.cover"
+                                    :src="row.cover"
+                                    :alt="`Cover de ${row.nom}`"
+                                    class="size-10 rounded-md border object-cover"
+                                />
+                                <div v-else class="flex size-10 items-center justify-center rounded-md border bg-muted/40">
+                                    <ImageOff class="size-4 text-muted-foreground" aria-hidden="true" />
+                                </div>
+                                <span class="font-medium">{{ row.nom }}</span>
+                            </div>
+                        </TableCell>
+                        <TableCell class="text-right whitespace-nowrap tabular-nums">{{ formatXof(row.prix) }}</TableCell>
+                        <TableCell class="text-right tabular-nums">{{ row.pivot?.quantity }}</TableCell>
+                        <TableCell class="text-right whitespace-nowrap tabular-nums">
+                            {{ formatXof(row.pivot?.montant ?? 0) }}
+                        </TableCell>
+                    </template>
+
+                    <template #empty>Cette vente ne contient aucun produit.</template>
+                </DataTable>
+                <p class="mt-3 text-right text-sm">
+                    <span class="text-muted-foreground">Montant total : </span>
+                    <span class="text-lg font-semibold tabular-nums">{{ formatXof(Number(order.totaux ?? 0)) }}</span>
+                </p>
+            </div>
+
+            <section class="h-fit rounded-lg border bg-card p-5 shadow-sm">
+                <h2 class="mb-2 text-sm font-semibold">Commentaire</h2>
+                <p class="text-sm whitespace-pre-line text-muted-foreground">
+                    {{ order.commentaire || 'Aucun commentaire.' }}
+                </p>
+            </section>
+        </div>
+    </AdminLayoutV2>
 </template>
