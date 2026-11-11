@@ -49,3 +49,4 @@ export interface SharedProps {
     /** Boutique en mode maintenance (`php artisan down`). */
     maintenance: boolean;
 }
+export * from './forms';
