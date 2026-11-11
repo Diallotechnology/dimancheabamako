@@ -4,10 +4,12 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers;
 
+use App\Enum\RoleEnum;
 use App\Helper\DeleteAction;
 use App\Http\Requests\StoreUserRequest;
 use App\Http\Requests\UpdateUserRequest;
 use App\Models\User;
+use App\Support\Options;
 use Inertia\Inertia;
 
 final class UserController extends Controller
@@ -37,7 +39,13 @@ final class UserController extends Controller
      */
     public function edit(User $user)
     {
-        return Inertia::render('Admin/User/Update', compact('user'));
+        $roles = Options::from(
+            RoleEnum::cases(),
+            fn (RoleEnum $role): string => $role->label(),
+            fn (RoleEnum $role): string => $role->value,
+        );
+
+        return Inertia::render('Admin/User/Update', compact('user', 'roles'));
     }
 
     /**

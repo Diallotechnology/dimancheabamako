@@ -1,92 +1,91 @@
-<script setup>
-import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
-import Input from "@/Components/Input.vue";
-import Select from "@/Components/Select.vue";
-import { useForm, Link } from "@inertiajs/vue3";
-import notify from "@/helper";
+<script setup lang="ts">
+import { Link, useForm } from '@inertiajs/vue3';
+import { ArrowLeft, Loader2 } from '@lucide/vue';
+import { toast } from 'vue-sonner';
+import { user as userIndex } from '@/actions/App/Http/Controllers/AdminController';
+import { update } from '@/actions/App/Http/Controllers/UserController';
+import Combobox from '@/Components/Admin/Combobox.vue';
+import FormField from '@/Components/Admin/FormField.vue';
+import { Button } from '@/Components/ui/button';
+import { Input } from '@/Components/ui/input';
+import AdminLayoutV2 from '@/Layouts/AdminLayoutV2.vue';
+import type { Option, User } from '@/types';
 
-const props = defineProps({
-    user: {
-        type: Object,
-        required: true,
-        default: () => ({}),
-    },
-});
-const form = useForm({
+const props = defineProps<{
+    user: User;
+    roles: Option[];
+}>();
+
+const form = useForm<{ name: string; email: string; role: string | null }>({
     name: props.user.name,
-    role: props.user.role,
     email: props.user.email,
+    role: props.user.role,
 });
 
-const submit = () => {
-    form.patch(route("user.update", props.user.id), {
+const submit = (): void => {
+    form.submit(update(props.user.id), {
         onSuccess: () => {
-            form.name = props.user.name;
-            form.email = props.user.email;
-            form.role = props.user.role;
-            notify("utilisateur mise à jour avec success !", true);
+            form.defaults();
+            toast.success('Utilisateur mis à jour.');
         },
         onError: () => {
-            notify(false);
+            toast.error('Le formulaire contient des erreurs.');
         },
     });
 };
 </script>
-<template>
-    <AuthenticatedLayout>
-        <div class="card">
-            <h2 class="p-4 text-center">Formulaire de mise à jour</h2>
-            <div class="card-body">
-                <form @submit.prevent="submit">
-                    <Input
-                        input_type="text"
-                        place="le nom du client"
-                        label="Username"
-                        v-model="form.name"
-                        :message="form.errors.name"
-                        required
-                    />
-                    <Input
-                        input_type="email"
-                        place="email de l'utilisateur"
-                        label="email"
-                        v-model="form.email"
-                        :message="form.errors.email"
-                        required
-                    />
-                    <Select
-                        v-model="form.role"
-                        :message="form.errors.role"
-                        label="Role (Privilège)"
-                    >
-                        <option value="Administrateur">
-                            Administrateur (Acces a tout)
-                        </option>
-                        <option value="Secretaire">
-                            Secretaire (Acces limité)
-                        </option>
-                        <option value="Client">Client</option>
-                    </Select>
 
-                    <div class="modal-footer">
-                        <Link
-                            :href="route('user')"
-                            class="btn btn-danger rounded"
-                            data-bs-dismiss="modal"
-                        >
-                            Annuler
-                        </Link>
-                        <button
-                            :class="{ 'opacity-25': form.processing }"
-                            :disabled="form.processing"
-                            type="submit"
-                            class="btn btn-primary rounded"
-                        >
-                            Valider
-                        </button>
-                    </div>
-                </form>
+<template>
+    <AdminLayoutV2 :title="`Modifier « ${user.name} »`" description="Mettez à jour l'identité et le rôle de l'utilisateur.">
+        <template #actions>
+            <Button as-child variant="outline">
+                <Link :href="userIndex()">
+                    <ArrowLeft />
+                    Retour aux utilisateurs
+                </Link>
+            </Button>
+        </template>
+
+        <form class="grid max-w-2xl gap-5 rounded-lg border bg-card p-6 shadow-sm" novalidate @submit.prevent="submit">
+            <FormField label="Nom d'utilisateur" :error="form.errors.name" required v-slot="field">
+                <Input
+                    :id="field.id"
+                    v-model="form.name"
+                    placeholder="Le nom de l'utilisateur"
+                    :aria-invalid="field.invalid"
+                    :aria-describedby="field.describedBy"
+                />
+            </FormField>
+            <FormField label="E-mail" :error="form.errors.email" required v-slot="field">
+                <Input
+                    :id="field.id"
+                    v-model="form.email"
+                    type="email"
+                    placeholder="adresse@exemple.com"
+                    :aria-invalid="field.invalid"
+                    :aria-describedby="field.describedBy"
+                />
+            </FormField>
+            <FormField label="Rôle (privilège)" :error="form.errors.role" v-slot="field">
+                <Combobox
+                    :id="field.id"
+                    v-model="form.role"
+                    :options="roles"
+                    placeholder="Choisir un rôle"
+                    search-placeholder="Rechercher un rôle…"
+                    :invalid="field.invalid"
+                    :described-by="field.describedBy"
+                />
+            </FormField>
+            <div class="flex justify-end gap-2">
+                <Button as-child variant="outline" type="button">
+                    <Link :href="userIndex()">Annuler</Link>
+                </Button>
+                <Button type="submit" :disabled="form.processing || !form.isDirty">
+                    <Loader2 v-if="form.processing" class="animate-spin" />
+                    Enregistrer
+                </Button>
             </div>
-        </div>
-    </AuthenticatedLayout>
+        </form>
+    </AdminLayoutV2>
 </template>

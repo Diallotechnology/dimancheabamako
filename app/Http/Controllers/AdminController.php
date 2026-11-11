@@ -321,8 +321,15 @@ final class AdminController extends Controller
             ->paginate(10)
             ->withQueryString();
 
+        $roles = Options::from(
+            [RoleEnum::ADMIN, RoleEnum::SECRTETAIRE],
+            fn (RoleEnum $role): string => $role->label(),
+            fn (RoleEnum $role): string => $role->value,
+        );
+
         return Inertia::render('Admin/User/Index', [
             'rows' => $rows,
+            'roles' => $roles,
         ]);
     }
 
