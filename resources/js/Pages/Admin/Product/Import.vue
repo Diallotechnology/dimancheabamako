@@ -1,237 +1,303 @@
-<script setup>
-import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
-import notify from "@/helper";
-import { Head, Link } from "@inertiajs/vue3";
-import { computed, onBeforeUnmount, ref } from "vue";
+<script setup lang="ts">
+import { Link } from '@inertiajs/vue3';
+import { ArrowLeft, Loader2, TriangleAlert, X } from '@lucide/vue';
+import { computed, onBeforeUnmount, ref } from 'vue';
+import { toast } from 'vue-sonner';
+import { product as productIndex } from '@/actions/App/Http/Controllers/AdminController';
+import { review, show, store } from '@/actions/App/Http/Controllers/ProductImportController';
+import { Alert, AlertDescription } from '@/Components/ui/alert';
+import { Button } from '@/Components/ui/button';
+import { Input } from '@/Components/ui/input';
+import { Label } from '@/Components/ui/label';
+import { Progress } from '@/Components/ui/progress';
+import AdminLayoutV2 from '@/Layouts/AdminLayoutV2.vue';
 
+/** Limites alignées sur `ProductImportRequest` : le serveur reste l'autorité. */
 const MAX_IMAGES = 20;
 const MAX_SIZE = 5 * 1024 * 1024;
+const MAX_SIZE_MB = 5;
+const ACCEPTED = ['image/jpeg', 'image/png', 'image/webp'];
 const POLL_MS = 2000;
 
-const files = ref([]);
-const errors = ref([]);
+/** `ProductImportController::show` : avancement du lot de jobs. */
+interface BatchStatus {
+    total: number;
+    processed: number;
+    failed: number;
+    finished: boolean;
+    progress: number;
+}
+
+interface Preview {
+    file: File;
+    url: string;
+}
+
+const previews = ref<Preview[]>([]);
+const errors = ref<string[]>([]);
 const sending = ref(false);
-const batch = ref(null);
-const batchId = ref(null);
-let timer = null;
+const batch = ref<BatchStatus | null>(null);
+const batchId = ref<string | null>(null);
+const pollError = ref<string | null>(null);
+/** Lot introuvable côté serveur : le suivi est abandonné. */
+const lost = ref(false);
 
-const previews = computed(() =>
-    files.value.map((file) => ({
-        name: file.name,
-        url: URL.createObjectURL(file),
-    }))
+let timer: ReturnType<typeof setTimeout> | null = null;
+let stopped = false;
+
+/**
+ * Avec `allowFailures`, Laravel laisse les jobs en échec dans `pending_jobs` et ne renseigne jamais
+ * `finished_at` : `processed` ne compte donc que les réussites et `finished` reste faux dès le premier
+ * échec. Le lot est terminé quand réussites + échecs couvrent tous les jobs.
+ */
+const handled = (status: BatchStatus): number => status.processed + status.failed;
+const isDone = (status: BatchStatus): boolean => status.finished || handled(status) >= status.total;
+
+const done = computed(() => (batch.value ? isDone(batch.value) : false));
+const succeeded = computed(() => batch.value?.processed ?? 0);
+const percent = computed(() =>
+    batch.value && batch.value.total > 0 ? Math.round((handled(batch.value) / batch.value.total) * 100) : 0,
 );
 
-const done = computed(() => batch.value?.finished === true);
-const succeeded = computed(() =>
-    batch.value ? batch.value.processed - batch.value.failed : 0
-);
+/** Une URL d'aperçu vit autant que sa vignette : on la libère dès que la vignette disparaît. */
+const revokeAll = (): void => {
+    previews.value.forEach((preview) => URL.revokeObjectURL(preview.url));
+    previews.value = [];
+};
 
-const onPick = (event) => {
+const onPick = (event: Event): void => {
+    const input = event.target as HTMLInputElement;
+    const picked = Array.from(input.files ?? []);
+    // Le champ ne sert que de sélecteur : les fichiers retenus vivent dans `previews`.
+    input.value = '';
     errors.value = [];
-    const picked = Array.from(event.target.files);
-    event.target.value = "";
 
     for (const file of picked) {
-        if (files.value.length >= MAX_IMAGES) {
+        if (previews.value.length >= MAX_IMAGES) {
             errors.value.push(`Maximum ${MAX_IMAGES} photos par import.`);
             break;
         }
-        if (!/^image\/(jpeg|png|webp)$/.test(file.type)) {
+        if (!ACCEPTED.includes(file.type)) {
             errors.value.push(`${file.name} : format non accepté (jpg, png, webp).`);
         } else if (file.size > MAX_SIZE) {
-            errors.value.push(`${file.name} : dépasse 5 Mo.`);
+            errors.value.push(`${file.name} : dépasse ${MAX_SIZE_MB} Mo.`);
         } else {
-            files.value.push(file);
+            previews.value.push({ file, url: URL.createObjectURL(file) });
         }
     }
 };
 
-const remove = (index) => files.value.splice(index, 1);
+const remove = (index: number): void => {
+    const [removed] = previews.value.splice(index, 1);
 
-const poll = async (batchId) => {
+    if (removed) {
+        URL.revokeObjectURL(removed.url);
+    }
+};
+
+const stopPolling = (): void => {
+    stopped = true;
+
+    if (timer !== null) {
+        clearTimeout(timer);
+        timer = null;
+    }
+};
+
+const poll = async (id: string): Promise<void> => {
+    if (stopped) {
+        return;
+    }
+
     try {
-        const { data } = await axios.get(route("product.import.show", batchId));
+        const { data } = await window.axios.get<BatchStatus>(show(id).url);
+
+        // La réponse peut arriver après le démontage de la page : on ne reprogramme alors rien.
+        if (stopped) {
+            return;
+        }
+
         batch.value = data;
-        if (data.finished) {
+        pollError.value = null;
+
+        if (isDone(data)) {
             return;
         }
     } catch (error) {
-        console.log(error);
+        if (stopped) {
+            return;
+        }
+
+        // Lot introuvable (404) : inutile de réessayer. Autre erreur : on réessaie au prochain tour.
+        const status = (error as { response?: { status?: number } }).response?.status;
+
+        if (status === 404) {
+            pollError.value = "Ce lot d'import est introuvable : relancez un import.";
+            lost.value = true;
+
+            return;
+        }
+
+        pollError.value = 'Suivi interrompu momentanément, nouvelle tentative…';
     }
-    timer = setTimeout(() => poll(batchId), POLL_MS);
+
+    timer = setTimeout(() => void poll(id), POLL_MS);
 };
 
-const start = async () => {
-    if (files.value.length === 0 || sending.value) {
+const start = async (): Promise<void> => {
+    if (previews.value.length === 0 || sending.value) {
         return;
     }
+
     errors.value = [];
     sending.value = true;
 
     const form = new FormData();
-    files.value.forEach((file) => form.append("images[]", file));
+    previews.value.forEach((preview) => form.append('images[]', preview.file));
 
     try {
-        const { data } = await axios.post(route("product.import.store"), form);
-        batch.value = {
-            total: data.total,
-            processed: 0,
-            failed: 0,
-            finished: false,
-            progress: 0,
-        };
-        files.value = [];
+        const { data } = await window.axios.post<{ batch_id: string; total: number }>(store().url, form);
+
+        batch.value = { total: data.total, processed: 0, failed: 0, finished: false, progress: 0 };
         batchId.value = data.batch_id;
-        poll(data.batch_id);
+        revokeAll();
+        stopped = false;
+        void poll(data.batch_id);
     } catch (error) {
-        const messages = error.response?.data?.errors;
-        errors.value = messages
-            ? Object.values(messages).flat()
-            : ["L'envoi a échoué, réessayez."];
-        notify("Import impossible.", false);
+        const messages = (error as { response?: { data?: { errors?: Record<string, string[]> } } }).response?.data?.errors;
+
+        errors.value = messages ? Object.values(messages).flat() : ["L'envoi a échoué, réessayez."];
+        toast.error('Import impossible.');
     } finally {
         sending.value = false;
     }
 };
 
-const reset = () => {
+const reset = (): void => {
+    stopPolling();
     batch.value = null;
     batchId.value = null;
-    files.value = [];
+    pollError.value = null;
+    lost.value = false;
+    revokeAll();
 };
 
-onBeforeUnmount(() => clearTimeout(timer));
+onBeforeUnmount(() => {
+    stopPolling();
+    revokeAll();
+});
 </script>
 
 <template>
-    <Head title="Import par photos" />
+    <AdminLayoutV2
+        title="Import de produits par photos"
+        description="Déposez des photos : l'IA prépare une fiche produit par photo."
+    >
+        <template #actions>
+            <Button as-child variant="outline">
+                <Link :href="productIndex()">
+                    <ArrowLeft />
+                    Retour aux produits
+                </Link>
+            </Button>
+        </template>
 
-    <AuthenticatedLayout>
-        <div class="content-header">
-            <h2 class="content-title card-title">
-                Import de produits par photos
-            </h2>
-            <Link :href="route('product')" class="btn btn-light btn-sm rounded">
-                Retour aux produits
-            </Link>
-        </div>
+        <div class="grid max-w-4xl gap-5">
+            <Alert variant="warning">
+                <TriangleAlert />
+                <AlertDescription>
+                    <p>
+                        L'IA crée des <strong>brouillons</strong> invisibles de la boutique. Prix, poids et stock sont à 0 :
+                        à la fin de l'import, une page de revue vous permet de tout compléter et de publier d'un coup.
+                    </p>
+                </AlertDescription>
+            </Alert>
 
-        <div class="alert alert-warning">
-            L'IA crée des <strong>brouillons</strong> invisibles de la boutique.
-            Prix, poids et stock sont à 0 : à la fin de l'import, une page de
-            revue vous permet de tout compléter et de publier d'un coup.
-        </div>
-
-        <div class="card mb-4">
-            <div class="card-body">
+            <div class="rounded-lg border bg-card p-6 shadow-sm">
                 <!-- Sélection -->
-                <div v-if="!batch">
-                    <label class="form-label">
-                        Photos (jpg, png, webp — {{ MAX_IMAGES }} max, 5 Mo
-                        chacune)
-                    </label>
-                    <input
-                        type="file"
-                        class="form-control mb-3"
-                        accept="image/jpeg,image/png,image/webp"
-                        multiple
-                        :disabled="sending"
-                        @change="onPick"
-                    />
+                <div v-if="!batch" class="grid gap-4">
+                    <div class="grid gap-1.5">
+                        <Label for="import-photos" class="text-sm font-medium">Photos</Label>
+                        <Input
+                            id="import-photos"
+                            type="file"
+                            multiple
+                            :accept="ACCEPTED.join(',')"
+                            :disabled="sending"
+                            aria-describedby="import-photos-hint"
+                            @change="onPick"
+                        />
+                        <p id="import-photos-hint" class="text-xs text-muted-foreground">
+                            JPG, PNG ou WebP, {{ MAX_IMAGES }} photos maximum, {{ MAX_SIZE_MB }} Mo chacune.
+                        </p>
+                    </div>
 
-                    <ul v-if="errors.length" class="text-danger">
-                        <li v-for="message in errors" :key="message">
-                            {{ message }}
+                    <ul v-if="errors.length" class="grid gap-1 text-sm font-medium text-destructive" role="alert">
+                        <li v-for="message in errors" :key="message">{{ message }}</li>
+                    </ul>
+
+                    <ul v-if="previews.length" class="grid grid-cols-2 gap-3 sm:grid-cols-4 lg:grid-cols-5">
+                        <li
+                            v-for="(preview, index) in previews"
+                            :key="preview.url"
+                            class="relative overflow-hidden rounded-md border bg-muted"
+                        >
+                            <img :src="preview.url" :alt="preview.file.name" class="aspect-square w-full object-cover" />
+                            <Button
+                                type="button"
+                                variant="secondary"
+                                size="icon-xs"
+                                class="absolute top-1.5 right-1.5 shadow"
+                                :disabled="sending"
+                                :aria-label="`Retirer ${preview.file.name}`"
+                                @click="remove(index)"
+                            >
+                                <X />
+                            </Button>
                         </li>
                     </ul>
 
-                    <div class="row g-2 mb-3">
-                        <div
-                            v-for="(preview, index) in previews"
-                            :key="preview.url"
-                            class="col-6 col-md-3 col-xl-2 text-center"
-                        >
-                            <img
-                                :src="preview.url"
-                                :alt="preview.name"
-                                class="img-fluid rounded mb-1"
-                            />
-                            <button
-                                type="button"
-                                class="btn btn-sm btn-danger"
-                                @click="remove(index)"
-                            >
-                                Retirer
-                            </button>
-                        </div>
+                    <div>
+                        <Button type="button" :disabled="previews.length === 0 || sending" @click="start">
+                            <Loader2 v-if="sending" class="animate-spin" />
+                            {{ sending ? 'Envoi…' : `Lancer l'import (${previews.length})` }}
+                        </Button>
                     </div>
-
-                    <button
-                        type="button"
-                        class="btn btn-primary rounded"
-                        :disabled="files.length === 0 || sending"
-                        @click="start"
-                    >
-                        {{
-                            sending
-                                ? "Envoi..."
-                                : `Lancer l'import (${files.length})`
-                        }}
-                    </button>
                 </div>
 
                 <!-- Progression -->
-                <div v-else>
-                    <div class="progress mb-3" style="height: 1.5rem">
-                        <div
-                            class="progress-bar"
-                            role="progressbar"
-                            :style="{ width: batch.progress + '%' }"
-                            :aria-valuenow="batch.progress"
-                            aria-valuemin="0"
-                            aria-valuemax="100"
-                        >
-                            {{ batch.progress }}%
-                        </div>
-                    </div>
-                    <p>
-                        {{ batch.processed }} / {{ batch.total }} traitées
-                        <span v-if="batch.failed" class="text-danger">
+                <div v-else class="grid gap-4" aria-live="polite">
+                    <Progress :model-value="percent" class="h-3" aria-label="Avancement de l'import" />
+                    <p class="text-sm">
+                        {{ percent }} % — {{ handled(batch) }} / {{ batch.total }} traitées
+                        <span v-if="batch.failed" class="font-medium text-destructive">
                             — {{ batch.failed }} en échec
                         </span>
                     </p>
 
-                    <div v-if="done">
-                        <p v-if="batch.failed" class="text-danger">
-                            Les photos en échec ne sont pas importées :
-                            renvoyez-les dans un nouvel import (les fiches déjà
-                            générées sont en cache, l'IA n'est pas rappelée
-                            pour elles). Détails dans les logs.
+                    <p v-if="pollError" class="text-sm font-medium text-destructive" role="alert">{{ pollError }}</p>
+
+                    <div v-if="done" class="grid gap-3">
+                        <p v-if="batch.failed" class="text-sm text-destructive">
+                            Les photos en échec ne sont pas importées : renvoyez-les dans un nouvel import (les fiches déjà
+                            générées sont en cache, l'IA n'est pas rappelée pour elles). Détails dans les logs.
                         </p>
-                        <p v-if="succeeded > 0">
-                            {{ succeeded }} brouillon(s) créé(s).
-                        </p>
-                        <Link
-                            v-if="succeeded > 0"
-                            :href="route('product.import.review', batchId)"
-                            class="btn btn-primary rounded me-2"
-                        >
-                            Relire et publier
-                        </Link>
-                        <button
-                            type="button"
-                            class="btn btn-light rounded"
-                            @click="reset"
-                        >
-                            Nouvel import
-                        </button>
+                        <p v-if="succeeded > 0" class="text-sm">{{ succeeded }} brouillon(s) créé(s).</p>
+                        <div class="flex flex-wrap gap-2">
+                            <Button v-if="succeeded > 0 && batchId" as-child>
+                                <Link :href="review(batchId)">Relire et publier</Link>
+                            </Button>
+                            <Button type="button" variant="outline" @click="reset">Nouvel import</Button>
+                        </div>
                     </div>
-                    <p v-else class="text-muted">
+                    <p v-else-if="!lost" class="text-sm text-muted-foreground">
                         Traitement en cours, vous pouvez rester sur cette page.
                     </p>
+                    <div v-else>
+                        <Button type="button" variant="outline" @click="reset">Nouvel import</Button>
+                    </div>
                 </div>
             </div>
         </div>
-    </AuthenticatedLayout>
+    </AdminLayoutV2>
 </template>
