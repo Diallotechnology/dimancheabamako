@@ -253,3 +253,13 @@ Avant de déployer : vérifier que `Order` avec `reference IS NULL AND trans_ref
 - Comptes créés au checkout/inscription : `change_password = false` (défaut de la colonne), donc le premier login force un second changement de mot de passe. À arbitrer côté UX.
 - `Panier::$password` est une propriété publique Livewire : elle transite dans le snapshot et n'est pas vidée après un échec. Piste : `$this->reset('password')`.
 - `AuthenticatedSessionController::store` relit `User::where('email', $request->email)` au lieu d'utiliser l'utilisateur renvoyé par `attempt()` (sensibilité à la casse selon le collation).
+
+## 2026-11-11 — Migration Poids/Devise/User : comptes et devises modifiables sans garde-fou
+
+- **Où** : `routes/web.php:47` (`Route::resource('devise', …)->except('index', 'create', 'show', 'store')`), `app/Http/Controllers/DeviseController.php::destroy`, `app/Http/Requests/UpdateUserRequest.php:28`, `app/Http/Controllers/UserController.php::destroy` / `update`.
+- **Constat** :
+  1. La route `DELETE /admin/devise/{devise}` existe (et `DeviseController::destroy` supprime la ligne) alors que la page n'offre aucune suppression : supprimer `EUR` ou `CFA` casse la conversion de prix (`PriceService`, taux en cache).
+  2. `UpdateUserRequest` déclare `role` en `nullable` : une requête `PATCH` avec `role: null` met `users.role` (colonne `string` non nullable) à `null` → erreur SQL (500) en MySQL strict. Non reproduit, déduit de la migration `create_users_table`.
+  3. Aucun garde-fou sur `UserController::destroy` / `update` : un administrateur peut supprimer son propre compte ou se rétrograder, y compris le dernier administrateur.
+- **Piste** : retirer `destroy` de la resource `devise` ; `role` en `required` dans `UpdateUserRequest` ; refuser (403/422) la suppression ou la rétrogradation de soi-même et du dernier administrateur (test RED : permissions).
+- **Statut** : non corrigé, hors périmètre de la migration front.
