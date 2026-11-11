@@ -285,3 +285,17 @@ Avant de déployer : vérifier que `Order` avec `reference IS NULL AND trans_ref
   2. La resource `slide` expose `store` et `show` alors que `SlideController` n'a pas ces méthodes : `POST /admin/slide` et `GET /admin/slide/{slide}` renvoient une 500 au lieu d'un 404/405 (aucune page n'y mène).
 - **Piste** : stocker le nouveau fichier, mettre à jour la ligne, puis supprimer l'ancien (après commit) ; `->only('edit', 'update', 'destroy')` pour `slide`.
 - **Statut** : non corrigé, hors périmètre front.
+
+## 2026-11-11 — Transport/Show morte et `TransportController::show` sans route
+
+- **Où** : `resources/js/Pages/Admin/Transport/Show.vue` (page vide), `app/Http/Controllers/TransportController.php::show`.
+- **Constat** : `transport.show` a été remplacée par `transport.zone` (`GET admin/transport/{transport}` → `get_trans_zone`, vérifié par `route:list`). `show()` n'est plus routée et rend une page vide, jamais atteinte. Non migrée.
+- **Piste** : supprimer `Transport/Show.vue` et `TransportController::show`.
+- **Statut** : non corrigé, hors périmètre.
+
+## 2026-11-11 — `Promotion/Show` : catégorie du produit jamais affichée
+
+- **Où** : `app/Http/Controllers/PromotionController.php::show` (`$promotion->load('products')`).
+- **Constat** : l'ancienne page affichait `row.categorie?.nom`, mais la relation `categorie` n'est pas chargée : la ligne était toujours vide. Dans la version migrée la catégorie est omise ; l'ancienne image était un placeholder statique (`/admin/assets/imgs/items/1.jpg`), elle aussi retirée.
+- **Piste** : `load('products.categorie')` puis réafficher la catégorie (et éventuellement `cover`) dans `Show.vue`.
+- **Statut** : non corrigé, hors périmètre.
