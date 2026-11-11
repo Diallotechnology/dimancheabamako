@@ -3,10 +3,6 @@ import { renderToString } from "@vue/server-renderer";
 import { createInertiaApp } from "@inertiajs/vue3";
 import createServer from "@inertiajs/vue3/server";
 import { resolvePageComponent } from "laravel-vite-plugin/inertia-helpers";
-import Select from "@/Components/Select.vue";
-import Input from "@/Components/Input.vue";
-import TextArea from "@/Components/TextArea.vue";
-import InputDate from "@/Components/InputDate.vue";
 const appName = import.meta.env.VITE_APP_NAME;
 
 createServer((page) =>
@@ -21,11 +17,7 @@ createServer((page) =>
             ),
         setup({ App, props, plugin }) {
             return createSSRApp({ render: () => h(App, props) })
-                .use(plugin)
-                .component("Select", Select)
-                .component("InputDate", InputDate)
-                .component("Input", Input)
-                .component("TextArea", TextArea);
+                .use(plugin);
         },
     })
 );

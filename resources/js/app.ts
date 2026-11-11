@@ -5,15 +5,6 @@ import { createInertiaApp } from '@inertiajs/vue3';
 import { resolvePageComponent } from 'laravel-vite-plugin/inertia-helpers';
 import { createApp, h } from 'vue';
 import type { DefineComponent } from 'vue';
-import VueSelect from 'vue3-select-component';
-import 'vue3-select-component/dist/style.css';
-
-// Composants globaux des pages pas encore migrées : retirés au nettoyage final.
-import Input from '@/Components/Input.vue';
-import InputDate from '@/Components/InputDate.vue';
-import Select from '@/Components/Select.vue';
-import Select2 from '@/Components/Select2.vue';
-import TextArea from '@/Components/TextArea.vue';
 
 const appName = import.meta.env.VITE_APP_NAME;
 
@@ -27,12 +18,6 @@ createInertiaApp({
     setup({ el, App, props, plugin }) {
         createApp({ render: () => h(App, props) })
             .use(plugin)
-            .component('Select', Select)
-            .component('Select2', Select2)
-            .component('VueSelect', VueSelect)
-            .component('InputDate', InputDate)
-            .component('Input', Input)
-            .component('TextArea', TextArea)
             .mount(el);
     },
     progress: {
