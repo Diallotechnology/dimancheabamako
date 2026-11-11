@@ -1,88 +1,71 @@
-<script setup>
-import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
-import Input from "@/Components/Input.vue";
-import { useForm, Link } from "@inertiajs/vue3";
-import notify from "@/helper";
+<script setup lang="ts">
+import { Link, useForm } from '@inertiajs/vue3';
+import { ArrowLeft, Loader2 } from '@lucide/vue';
+import { toast } from 'vue-sonner';
+import { update } from '@/actions/App/Http/Controllers/ImageController';
+import { show as showProduct } from '@/actions/App/Http/Controllers/ProductController';
+import FormField from '@/Components/Admin/FormField.vue';
+import ImageUpload from '@/Components/Admin/ImageUpload.vue';
+import { Button } from '@/Components/ui/button';
+import AdminLayoutV2 from '@/Layouts/AdminLayoutV2.vue';
+import type { Image } from '@/types';
 
-const props = defineProps({
-    image: {
-        required: true,
-        type: Object,
-        default: () => ({}),
-    },
-});
+const props = defineProps<{
+    image: Image;
+}>();
+
+// PHP ne lit pas un multipart envoyé en PUT : envoi en POST, `_method` indique PUT à Laravel.
 const form = useForm({
-    chemin: null,
-    _method: "PUT",
+    chemin: null as File | null,
+    _method: 'PUT' as const,
 });
 
-const submit = () => {
-    form.post(route("image.update", props.image.id), {
+const submit = (): void => {
+    form.post(update(props.image.id).url, {
         forceFormData: true,
+        preserveScroll: true,
         onSuccess: () => {
-            form.chemin = props.image.chemin;
-            form.reset();
-            notify("Image mise à jour avec success !", true);
+            form.reset('chemin');
+            toast.success('Image remplacée.');
         },
         onError: () => {
-            notify(false);
+            toast.error('Le formulaire contient des erreurs.');
         },
     });
 };
 </script>
+
 <template>
-    <AuthenticatedLayout>
-        <div class="card">
-            <h2 class="p-4 text-center">Formulaire de mise à jour</h2>
-            <div class="card-body">
-                <form @submit.prevent="submit">
-                    <div class="row">
-                        <div class="col-md-6">
-                            <div class="mb-4">
-                                <label class="text-uppercase form-label"
-                                    >Image</label
-                                >
-                                <input
-                                    class="form-control"
-                                    @input="
-                                        form.chemin = $event.target.files[0]
-                                    "
-                                    type="file"
-                                />
-                                <div v-show="form.errors.chemin">
-                                    <p class="text-sm text-danger">
-                                        {{ form.errors.chemin }}
-                                    </p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <progress
-                        v-if="form.progress"
-                        :value="form.progress.percentage"
-                        max="100"
-                    >
-                        {{ form.progress.percentage }}%
-                    </progress>
-                    <div class="modal-footer">
-                        <Link
-                            :href="route('product')"
-                            class="btn btn-danger rounded"
-                            data-bs-dismiss="modal"
-                        >
-                            Annuler
-                        </Link>
-                        <button
-                            :class="{ 'opacity-25': form.processing }"
-                            :disabled="form.processing"
-                            type="submit"
-                            class="btn btn-primary rounded"
-                        >
-                            Valider
-                        </button>
-                    </div>
-                </form>
+    <AdminLayoutV2 title="Remplacer l'image" description="La nouvelle image remplace l'actuelle, qui est supprimée.">
+        <template #actions>
+            <Button as-child variant="outline">
+                <Link :href="showProduct(image.product_id)">
+                    <ArrowLeft />
+                    Retour au produit
+                </Link>
+            </Button>
+        </template>
+
+        <form class="grid max-w-2xl gap-5 rounded-lg border bg-card p-6 shadow-sm" novalidate @submit.prevent="submit">
+            <FormField label="Nouvelle image" hint="JPG, PNG ou WebP, 5 Mo maximum." :error="form.errors.chemin" required v-slot="field">
+                <ImageUpload
+                    :id="field.id"
+                    v-model="form.chemin"
+                    :current-url="image.chemin"
+                    :invalid="field.invalid"
+                    :described-by="field.describedBy"
+                    :progress="form.progress?.percentage"
+                />
+            </FormField>
+            <div class="flex justify-end gap-2">
+                <Button as-child variant="outline" type="button">
+                    <Link :href="showProduct(image.product_id)">Annuler</Link>
+                </Button>
+                <Button type="submit" :disabled="form.processing || form.chemin === null">
+                    <Loader2 v-if="form.processing" class="animate-spin" />
+                    Remplacer l'image
+                </Button>
             </div>
-        </div>
-    </AuthenticatedLayout>
+        </form>
+    </AdminLayoutV2>
 </template>
