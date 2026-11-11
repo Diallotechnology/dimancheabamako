@@ -1,279 +1,104 @@
-<script setup>
-import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
-import { useForm, Link } from "@inertiajs/vue3";
-import notify from "@/helper";
+<script setup lang="ts">
+import { Link, useForm, usePage } from '@inertiajs/vue3';
+import { ArrowLeft, Loader2 } from '@lucide/vue';
+import { toast } from 'vue-sonner';
+import { product as productIndex } from '@/actions/App/Http/Controllers/AdminController';
+import { show, update } from '@/actions/App/Http/Controllers/ProductController';
+import ProductFormFields from '@/Components/Admin/ProductFormFields.vue';
+import { Button } from '@/Components/ui/button';
+import AdminLayoutV2 from '@/Layouts/AdminLayoutV2.vue';
+import type { Option, Product, ProductFields } from '@/types';
 
-const props = defineProps({
-    category: {
-        required: true,
-        type: Object,
-        default: () => ({}),
-    },
-    product: {
-        required: true,
-        type: Object,
-        default: () => ({}),
-    },
-});
-const form = useForm({
-    categorie_id: `${props.product.categorie_id}`,
-    reference: props.product.reference,
-    nom: props.product.nom,
-    color: props.product.color,
-    taille: props.product.taille,
-    description: props.product.description ? props.product.description : "",
-    resume: props.product.resume,
-    poids: props.product.poids,
-    prix: props.product.prix,
-    stock: props.product.stock,
-    stock_initial: props.product.stock,
-    favoris: props.product.favoris ? 1 : 0,
-    is_preorder: props.product.is_preorder ? 1 : 0,
+const props = defineProps<{
+    /** Catégories : valeur = id (chaîne). */
+    category: Option[];
+    product: Product;
+}>();
+
+type UpdateFields = ProductFields & {
+    /** Stock affiché à l'ouverture : le serveur n'applique que l'écart avec `stock`. */
+    stock_initial: string;
+    _method: 'PUT';
+};
+
+/** Valeurs du formulaire à partir du produit serveur ; les fichiers restent vides (jamais un chemin ni un tableau serveur). */
+const fieldsFrom = (product: Product): UpdateFields => ({
+    nom: product.nom,
+    reference: product.reference,
+    categorie_id: product.categorie_id === null ? '' : String(product.categorie_id),
+    color: product.color ?? '',
+    taille: product.taille ?? '',
+    poids: String(product.poids),
+    prix: String(product.prix),
+    stock: String(product.stock),
+    stock_initial: String(product.stock),
+    resume: product.resume,
+    description: product.description ?? '',
+    favoris: product.favoris,
+    is_preorder: product.is_preorder,
     cover: null,
     image: [],
     video: null,
-    _method: "PUT",
+    // PHP ne lit pas un multipart envoyé en PUT : envoi en POST, `_method` indique PUT à Laravel.
+    _method: 'PUT',
 });
 
-console.log(props.product);
+const form = useForm<UpdateFields>(fieldsFrom(props.product));
+const page = usePage<{ product: Product }>();
 
-const submit = () => {
-    form.post(route("product.update", props.product.id), {
-        forceFormData: true,
-        onSuccess: () => {
-            form.categorie_id = `${props.product.categorie_id}`;
-            form.reference = props.product.reference;
-            form.nom = props.product.nom;
-            form.color = props.product.color;
-            form.taille = props.product.taille;
-            form.description = props.product.description;
-            form.resume = props.product.resume;
-            form.poids = props.product.poids;
-            form.prix = props.product.prix;
-            form.stock = props.product.stock;
-            form.stock_initial = props.product.stock;
-            form.favoris = props.product.favoris;
-            form.cover = props.product.cover;
-            form.image = props.product.image;
-            form.video = props.product.video;
-            form.is_preorder = props.product.is_preorder;
-            notify("produit mise à jour avec success !", true);
-        },
-        onError: () => {
-            notify(false);
-        },
-    });
+const submit = (): void => {
+    // Le serveur valide `boolean` : il n'accepte que true/false/1/0, pas les chaînes d'un multipart.
+    form
+        .transform((data) => ({
+            ...data,
+            favoris: data.favoris ? 1 : 0,
+            is_preorder: data.is_preorder ? 1 : 0,
+        }))
+        .post(update(props.product.id).url, {
+            forceFormData: true,
+            preserveScroll: true,
+            onSuccess: () => {
+                // La redirection a déjà rechargé le produit : on repart de lui (stock réel, médias
+                // enregistrés), sans jamais réinjecter une valeur serveur dans un champ fichier.
+                form.defaults(fieldsFrom(page.props.product));
+                form.reset();
+                toast.success('Produit mis à jour.');
+            },
+            onError: () => {
+                toast.error('Le formulaire contient des erreurs.');
+            },
+        });
 };
 </script>
-<template>
-    <AuthenticatedLayout>
-        <div class="card">
-            <h2 class="p-4 text-center">Formulaire de mise à jour</h2>
-            <div class="card-body">
-                <form @submit.prevent="submit">
-                    <div class="row">
-                        <div class="col-md-6">
-                            <Input
-                                input_type="text"
-                                place="le nom du produit"
-                                label="nom"
-                                v-model="form.nom"
-                                :message="form.errors.nom"
-                                required
-                            />
-                        </div>
-                        <div class="col-md-6">
-                            <Input
-                                input_type="text"
-                                place="la reference du produit"
-                                label="reference"
-                                v-model="form.reference"
-                                :message="form.errors.reference"
-                                required
-                            />
-                        </div>
-                        <div class="col-md-6">
-                            <Select2
-                                label="categorie"
-                                :message="form.errors.categorie_id"
-                            >
-                                <VueSelect
-                                    placeholder="selectionner"
-                                    v-model="form.categorie_id"
-                                    :options="category"
-                                />
-                            </Select2>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="mb-3">
-                                <span class="form-check-label"
-                                    >Produit Favoris ?
-                                </span>
-                                <input
-                                    v-model="form.favoris"
-                                    :true-value="1"
-                                    :false-value="0"
-                                    class="form-check-input"
-                                    type="checkbox"
-                                />
-                            </div>
 
-                            <div>
-                                <span class="form-check-label"
-                                    >Produit uniquement sur commande ?
-                                </span>
-                                <input
-                                    v-model="form.is_preorder"
-                                    :true-value="1"
-                                    :false-value="0"
-                                    class="form-check-input"
-                                    type="checkbox"
-                                />
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <Input
-                                input_type="text"
-                                place="la couleur du produit"
-                                label="Couleur"
-                                v-model="form.color"
-                                :message="form.errors.color"
-                            />
-                        </div>
-                        <div class="col-md-6">
-                            <Input
-                                input_type="text"
-                                place="la taille du produit"
-                                label="taille"
-                                v-model="form.taille"
-                                :message="form.errors.taille"
-                            />
-                        </div>
-                        <div class="col-md-6">
-                            <Input
-                                input_type="text"
-                                label="poids en Kg"
-                                place="le poids du produit"
-                                v-model="form.poids"
-                                :message="form.errors.poids"
-                                required
-                            />
-                        </div>
-                        <div class="col-md-6">
-                            <Input
-                                input_type="number"
-                                label="prix en CFA"
-                                place="le prix du produit"
-                                v-model="form.prix"
-                                :message="form.errors.prix"
-                                required
-                            />
-                        </div>
-                        <div class="col-md-6">
-                            <Input
-                                input_type="number"
-                                label="stock"
-                                place="le stock du produit"
-                                v-model="form.stock"
-                                :message="form.errors.stock"
-                                required
-                            />
-                        </div>
-                        <div class="col-md-6">
-                            <div class="mb-4">
-                                <label class="text-uppercase form-label"
-                                    >Cover (600X600)</label
-                                >
-                                <input
-                                    class="form-control"
-                                    name="cover"
-                                    @input="form.cover = $event.target.files[0]"
-                                    type="file"
-                                />
-                                <div v-show="form.errors.cover">
-                                    <p class="text-sm text-danger">
-                                        {{ form.errors.cover }}
-                                    </p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="mb-4">
-                                <label class="text-uppercase form-label"
-                                    >Images du produit</label
-                                >
-                                <input
-                                    class="form-control"
-                                    name="image"
-                                    multiple
-                                    @input="form.image = $event.target.files"
-                                    type="file"
-                                />
-                                <div v-show="form.errors.image">
-                                    <p class="text-sm text-danger">
-                                        {{ form.errors.image }}
-                                    </p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="mb-4">
-                                <label class="text-uppercase form-label"
-                                    >Video Faculatif</label
-                                >
-                                <input
-                                    class="form-control"
-                                    name="video"
-                                    @input="form.video = $event.target.files[0]"
-                                    type="file"
-                                />
-                                <div v-show="form.errors.video">
-                                    <p class="text-sm text-danger">
-                                        {{ form.errors.video }}
-                                    </p>
-                                </div>
-                            </div>
-                        </div>
-                        <TextArea
-                            place="la description courte du produit"
-                            label="description courte"
-                            v-model="form.resume"
-                            :message="form.errors.resume"
-                            required
-                        />
-                        <TextArea
-                            place="la description du produit"
-                            label="description"
-                            v-model="form.description"
-                            :message="form.errors.description"
-                        />
-                    </div>
-                    <progress
-                        v-if="form.progress"
-                        :value="form.progress.percentage"
-                        max="100"
-                    >
-                        {{ form.progress.percentage }}%
-                    </progress>
-                    <div class="modal-footer">
-                        <Link
-                            :href="route('product')"
-                            class="btn btn-danger rounded"
-                            data-bs-dismiss="modal"
-                        >
-                            Annuler
-                        </Link>
-                        <button
-                            :class="{ 'opacity-25': form.processing }"
-                            :disabled="form.processing"
-                            type="submit"
-                            class="btn btn-primary rounded"
-                        >
-                            Valider
-                        </button>
-                    </div>
-                </form>
+<template>
+    <AdminLayoutV2 :title="`Modifier « ${product.nom} »`" description="Sans nouveau fichier, la cover, la vidéo et les images actuelles sont conservées.">
+        <template #actions>
+            <Button as-child variant="outline">
+                <Link :href="show(product.id)">
+                    <ArrowLeft />
+                    Retour au produit
+                </Link>
+            </Button>
+        </template>
+
+        <form class="grid max-w-3xl gap-5 rounded-lg border bg-card p-6 shadow-sm" novalidate @submit.prevent="submit">
+            <ProductFormFields
+                :form="form"
+                :category="category"
+                :current-cover="product.cover"
+                :current-video="product.video"
+                :current-image-count="product.images?.length ?? 0"
+            />
+            <div class="flex justify-end gap-2">
+                <Button as-child variant="outline" type="button">
+                    <Link :href="productIndex()">Annuler</Link>
+                </Button>
+                <Button type="submit" :disabled="form.processing || !form.isDirty">
+                    <Loader2 v-if="form.processing" class="animate-spin" />
+                    Enregistrer
+                </Button>
             </div>
-        </div>
-    </AuthenticatedLayout>
+        </form>
+    </AdminLayoutV2>
 </template>
