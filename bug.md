@@ -276,3 +276,12 @@ Avant de déployer : vérifier que `Order` avec `reference IS NULL AND trans_ref
 - **Constat** : en cas d'échec, le contrôleur logge puis fait `flash()->error(...)` + `back()`. Les requêtes Inertia (XHR) ne rendent pas la vue HTML qui affiche les messages PHPFlasher : le message reste en session et apparaît au prochain chargement complet de page, sans rapport avec l'action. Côté Vue, `onSuccess` se déclenche quand même. La page migrée contourne le problème en comparant les données rechargées (total de lignes, `lien` modifié) avant d'annoncer un succès.
 - **Piste** : renvoyer l'échec via `back()->withErrors([...])` (donc `onError`) ou une prop partagée `flash` ; même contrôle pour `update` (changement de montant sans nouveau lien = lien périmé avec l'ancien montant).
 - **Statut** : non corrigé, hors périmètre front.
+
+## 2026-11-11 — Slide / Image : ancien fichier supprimé avant l'enregistrement du nouveau, routes sans méthode (non corrigé)
+
+- **Où** : `app/Http/Controllers/SlideController.php::update`, `ImageController::update` (`deleteStored()` avant `$uploader->store()`) ; `routes/web.php:50` (`Route::resource('slide', …)->except('index', 'create')`).
+- **Constat** :
+  1. L'ancien fichier est supprimé du disque avant que le nouveau soit stocké et que la ligne soit mise à jour : si `store()` échoue (disque plein, image illisible), la base pointe vers un fichier effacé et le slide / l'image produit s'affiche cassé.
+  2. La resource `slide` expose `store` et `show` alors que `SlideController` n'a pas ces méthodes : `POST /admin/slide` et `GET /admin/slide/{slide}` renvoient une 500 au lieu d'un 404/405 (aucune page n'y mène).
+- **Piste** : stocker le nouveau fichier, mettre à jour la ligne, puis supprimer l'ancien (après commit) ; `->only('edit', 'update', 'destroy')` pour `slide`.
+- **Statut** : non corrigé, hors périmètre front.
