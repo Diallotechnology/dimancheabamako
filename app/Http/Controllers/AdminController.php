@@ -286,7 +286,7 @@ final class AdminController extends Controller
 
     public function devise()
     {
-        $rows = Devise::paginate(10);
+        $rows = Devise::paginate(10)->withQueryString();
 
         return Inertia::render('Admin/Devise/Index', compact('rows'));
     }
