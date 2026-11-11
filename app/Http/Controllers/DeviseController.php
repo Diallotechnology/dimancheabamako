@@ -4,15 +4,12 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers;
 
-use App\Helper\DeleteAction;
 use App\Http\Requests\StoreDeviseRequest;
 use App\Models\Devise;
 use Inertia\Inertia;
 
 final class DeviseController extends Controller
 {
-    use DeleteAction;
-
     /**
      * Store a newly created resource in storage.
      */
@@ -37,13 +34,5 @@ final class DeviseController extends Controller
         $devise->update($request->validated());
 
         return back();
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(Devise $devise)
-    {
-        return $this->supp($devise);
     }
 }

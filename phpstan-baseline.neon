@@ -547,37 +547,13 @@ parameters:
 			path: app/Http/Controllers/CountryController.php
 
 		-
-			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$id\.$#'
-			identifier: property.notFound
-			count: 1
-			path: app/Http/Controllers/DeviseController.php
-
-		-
-			message: '#^Method App\\Http\\Controllers\\DeviseController\:\:destroy\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/Http/Controllers/DeviseController.php
-
-		-
 			message: '#^Method App\\Http\\Controllers\\DeviseController\:\:edit\(\) has no return type specified\.$#'
 			identifier: missingType.return
 			count: 1
 			path: app/Http/Controllers/DeviseController.php
 
 		-
-			message: '#^Method App\\Http\\Controllers\\DeviseController\:\:file_uplode\(\) has parameter \$request with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: app/Http/Controllers/DeviseController.php
-
-		-
 			message: '#^Method App\\Http\\Controllers\\DeviseController\:\:store\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/Http/Controllers/DeviseController.php
-
-		-
-			message: '#^Method App\\Http\\Controllers\\DeviseController\:\:supp\(\) has no return type specified\.$#'
 			identifier: missingType.return
 			count: 1
 			path: app/Http/Controllers/DeviseController.php

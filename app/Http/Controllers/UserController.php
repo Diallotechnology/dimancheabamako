@@ -53,6 +53,16 @@ final class UserController extends Controller
      */
     public function update(UpdateUserRequest $request, User $user)
     {
+        $newRole = RoleEnum::from($request->validated('role'));
+
+        if ($newRole !== RoleEnum::ADMIN && $user->isAdmin()) {
+            abort_if(
+                $user->is($request->user()) || ! $this->hasOtherAdmin($user),
+                403,
+                __('Impossible de rétrograder son propre compte ou le dernier administrateur.'),
+            );
+        }
+
         $user->update($request->validated());
 
         return back();
@@ -63,6 +73,20 @@ final class UserController extends Controller
      */
     public function destroy(User $user)
     {
+        abort_if(
+            $user->is(request()->user()) || ($user->isAdmin() && ! $this->hasOtherAdmin($user)),
+            403,
+            __('Impossible de supprimer son propre compte ou le dernier administrateur.'),
+        );
+
         return $this->supp($user);
+    }
+
+    private function hasOtherAdmin(User $user): bool
+    {
+        return User::query()
+            ->where('role', RoleEnum::ADMIN)
+            ->whereKeyNot($user->id)
+            ->exists();
     }
 }
