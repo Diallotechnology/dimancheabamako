@@ -7,7 +7,6 @@ Bugs rencontrés pendant d'autres chantiers, notés ici pour être corrigés ens
 Index des entrées encore ouvertes, regroupées ici pour être visibles sans tout relire. Le détail de chaque point reste dans son entrée plus bas (inchangée) ; mettre cette liste à jour à chaque résolution.
 
 **Sécurité / permissions**
-- Migration Poids/Devise/User : `DELETE devise` possible (casse `PriceService`), `role: null` accepté sur `UpdateUserRequest`, suppression ou rétrogradation de soi-même et du dernier administrateur sans garde-fou. *(RED test : permissions)*
 - A7 · Login : configurer `TrustProxies` selon l'infra réelle de production (manuel, à vérifier au déploiement).
 - A8 · Points faibles divers restants : `PendingRegistration.token` en clair, `email_verified_at` jamais renseigné après confirmation, `change_password = false` à arbitrer côté UX.
 
@@ -31,6 +30,7 @@ Index des entrées encore ouvertes, regroupées ici pour être visibles sans tou
 - Données de test conservées (lot d'import, produits `REF-IA-1` / `REF-IA-2`) : ne pas supprimer.
 
 **Résolu depuis la rédaction de l'entrée (entrée conservée telle quelle)**
+- Migration Poids/Devise/User : route `DELETE devise` retirée, `role` requis sur `UpdateUserRequest`, garde-fous suppression/rétrogradation de soi-même et du dernier administrateur (2026-11-11, `tests/Feature/AdminGuardrailsTest.php`).
 - Transport/Show morte et `TransportController::show` : supprimées avec `Order/Update` et `AuthenticatedLayout` (commit `45fd877`, nettoyage de la migration shadcn-vue).
 
 ## 2026-11-04 — Paiement N-Genius invisible en cas d'échec de création d'ordre — ✅ RÉSOLU (2026-11-05)
@@ -210,6 +210,8 @@ Hors périmètre. Une commande PURCHASED passée en `etat = STOCK` garde `refere
 ## 2026-11-05 — Déploiement de la réservation de stock
 Avant de déployer : vérifier que `Order` avec `reference IS NULL AND trans_ref IS NOT NULL` = 0 ligne. Les commandes en cours créées avant la bascule n'ont pas réservé de stock : `check-payment` ne décrémente plus et `delete-order-payment-expire` / annulation restitueraient un stock jamais pris.
 
+> **Outillé (2026-11-11)** : la vérification est disponible via `php artisan app:check-stock-reservation-migration` (code de sortie 0 si aucune ligne, 1 sinon avec la liste des 50 premières commandes). À lancer avant toute mise en production. **Entrée non résolue** : l'exécution réelle sur la base de production reste à faire manuellement au déploiement (non lancée ici ; tests : `tests/Feature/CheckStockReservationMigrationTest.php`).
+
 ## 2026-11-05 — Limitation de test : `order.validate` non couvert pour un invité
 
 - **Où** : `tests/Feature/OrderValidateTest.php`.
@@ -285,7 +287,9 @@ Avant de déployer : vérifier que `Order` avec `reference IS NULL AND trans_ref
 - `Panier::$password` est une propriété publique Livewire : elle transite dans le snapshot et n'est pas vidée après un échec. Piste : `$this->reset('password')`.
 - `AuthenticatedSessionController::store` relit `User::where('email', $request->email)` au lieu d'utiliser l'utilisateur renvoyé par `attempt()` (sensibilité à la casse selon le collation).
 
-## 2026-11-11 — Migration Poids/Devise/User : comptes et devises modifiables sans garde-fou
+## 2026-11-11 — Migration Poids/Devise/User : comptes et devises modifiables sans garde-fou — ✅ RÉSOLU (2026-11-11)
+
+> Résolution : `destroy` retiré de la resource `devise` (route et `DeviseController::destroy`, le DELETE répond 405) ; `role` passe en `required` dans `UpdateUserRequest` (422 au lieu d'une 500 SQL) ; `UserController::destroy` refuse (403) la suppression de son propre compte ou du dernier administrateur, `update` refuse (403) la rétrogradation de soi-même ou du dernier administrateur (`hasOtherAdmin`). Un administrateur garde le droit de supprimer ou rétrograder un autre administrateur. Test : `tests/Feature/AdminGuardrailsTest.php`. Entrées obsolètes retirées de `phpstan-baseline.neon`.
 
 - **Où** : `routes/web.php:47` (`Route::resource('devise', …)->except('index', 'create', 'show', 'store')`), `app/Http/Controllers/DeviseController.php::destroy`, `app/Http/Requests/UpdateUserRequest.php:28`, `app/Http/Controllers/UserController.php::destroy` / `update`.
 - **Constat** :
