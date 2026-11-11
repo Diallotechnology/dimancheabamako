@@ -39,10 +39,16 @@ final class AdminController extends Controller
         // Base query pour Sum sur pivot
         $query = Order::withSum('products as totaux', 'order_product.montant');
 
-        // Total revenus du mois courant
-        $revenu = $query->whereMonth('created_at', date('m'))->get()->sum('totaux');
+        // Base commune des KPI « Revenu du mois » et « Ventes réglées » : commandes réglées
+        // (trans_state = PURCHASED) du mois civil courant, année comprise.
+        $monthStart = now()->startOfMonth();
+        $monthEnd = now()->endOfMonth();
+        $paidThisMonth = fn () => Order::query()
+            ->whereTransState('PURCHASED')
+            ->whereBetween('created_at', [$monthStart, $monthEnd]);
 
-        $order = Order::whereTransState('PURCHASED')->count();
+        $revenu = $paidThisMonth()->withSum('products as totaux', 'order_product.montant')->get()->sum('totaux');
+        $order = $paidThisMonth()->count();
         $product = DB::table('products')->count();
         $categorie = DB::table('categories')->count();
 
@@ -58,7 +64,8 @@ final class AdminController extends Controller
             ->take(10)
             ->get();
 
-        // Statistiques
+        // Graphique : volontairement TOUTES les commandes par jour (payées ou non, toutes périodes),
+        // pour suivre l'activité brute ; il n'est donc pas comparable aux KPI ci-dessus (libellé Vue explicite).
         $order_stat = Order::selectRaw('COUNT(id) as total_order, DATE(created_at) as day')
             ->orderBy('day')
             ->groupBy('day')

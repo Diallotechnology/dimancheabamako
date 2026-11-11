@@ -14,10 +14,10 @@ import { formatXof } from '@/lib/format';
 import type { Order } from '@/types';
 
 const props = defineProps<{
-    /** Commandes réglées (`trans_state = PURCHASED`). */
+    /** Commandes réglées (`PURCHASED`) du mois courant. */
     order: number;
     product: number;
-    /** Somme des lignes de commande du mois courant. */
+    /** Somme des lignes des commandes réglées (`PURCHASED`) du mois courant : même base que `order`. */
     revenu: number;
     categorie: number;
     /** Les 10 dernières commandes, liste simple (pas de paginateur). */
@@ -36,7 +36,7 @@ interface Kpi {
 
 const kpis: Kpi[] = [
     { title: 'Revenu du mois', value: formatXof(props.revenu), icon: Banknote },
-    { title: 'Ventes réglées', value: String(props.order), icon: ShoppingBag },
+    { title: 'Ventes réglées du mois', value: String(props.order), icon: ShoppingBag },
     { title: 'Produits', value: String(props.product), icon: Package },
     { title: 'Catégories', value: String(props.categorie), icon: Tags },
 ];
@@ -60,7 +60,7 @@ const kpis: Kpi[] = [
 
         <Card class="mb-8">
             <CardHeader>
-                <CardTitle>Commandes par jour</CardTitle>
+                <CardTitle>Commandes par jour (toutes, payées ou non)</CardTitle>
             </CardHeader>
             <CardContent>
                 <OrdersChart v-if="label.length > 0" :labels="label" :values="data" />

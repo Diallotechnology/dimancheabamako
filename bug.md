@@ -12,7 +12,6 @@ Index des entrées encore ouvertes, regroupées ici pour être visibles sans tou
 
 **Finance / paiement**
 - Déploiement de la réservation de stock : vérifier `reference IS NULL AND trans_ref IS NOT NULL` = 0 ligne avant la bascule en production.
-- Dashboard : `revenu` du mois et « ventes » comptées sur des bases différentes.
 - Tarifs `shippings` existants dont la zone n'est pas desservie par leur transporteur.
 
 **Données / règles métier**
@@ -356,7 +355,9 @@ Avant de déployer : vérifier que `Order` avec `reference IS NULL AND trans_ref
 - **Piste** : ajouter ces clés dans `attributes` (« zone », « transporteur », « tranche de poids »).
 - **Statut** : non corrigé, cosmétique, hors périmètre.
 
-## 2026-11-11 — Dashboard : `revenu` du mois et « ventes » comptées sur des bases différentes
+## 2026-11-11 — Dashboard : `revenu` du mois et « ventes » comptées sur des bases différentes — ✅ RÉSOLU (2026-11-11)
+
+> Résolution : `AdminController::dashboard` calcule `revenu` et `order` (ventes) sur le même ensemble : commandes `trans_state = 'PURCHASED'` dont `created_at` est dans le mois civil courant (`whereBetween` début/fin de mois, donc année comprise ; plus de `whereMonth` seul). Le KPI ventes était en plus cumulé toutes périodes : il est désormais borné au mois (libellé Vue « Ventes réglées du mois »). **Graphique** : choix retenu = on garde **toutes** les commandes par jour (payées ou non, toutes périodes) pour suivre l'activité brute ; le titre Vue est explicite (« Commandes par jour (toutes, payées ou non) »). Effet de bord corrigé : l'ancien `$query->whereMonth(...)` mutait la requête partagée, donc « Ventes récentes » était restreint au mois courant ; il liste maintenant les 10 dernières commandes sans filtre de mois. Test : `tests/Feature/AdminDashboardTest.php`.
 
 - **Où** : `app/Http/Controllers/AdminController.php` (`dashboard`).
 - **Constat** : `revenu` somme les lignes de **toutes** les commandes du mois (`whereMonth` sans filtre d'année ni d'état de paiement), tandis que « Ventes » ne compte que `trans_state = PURCHASED`, et le graphique compte **toutes** les commandes par jour. Les trois chiffres ne sont donc pas comparables (ex. local : 1 vente réglée, 3 commandes affichées, revenu incluant les non payées). `whereMonth` ignore aussi l'année (novembre 2025 + 2026 mélangés).
