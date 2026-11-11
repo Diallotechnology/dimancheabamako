@@ -1,221 +1,278 @@
-<script setup>
-import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
-import notify from "@/helper";
-import { Head, Link, useForm } from "@inertiajs/vue3";
-import { computed } from "vue";
+<script setup lang="ts">
+import type { InertiaForm } from '@inertiajs/vue3';
+import { Link, useForm } from '@inertiajs/vue3';
+import { ArrowLeft, Loader2, TriangleAlert } from '@lucide/vue';
+import { computed } from 'vue';
+import { toast } from 'vue-sonner';
+import { product as productIndex } from '@/actions/App/Http/Controllers/AdminController';
+import { update } from '@/actions/App/Http/Controllers/ProductController';
+import Combobox from '@/Components/Admin/Combobox.vue';
+import FormField from '@/Components/Admin/FormField.vue';
+import { Alert, AlertDescription } from '@/Components/ui/alert';
+import { Badge } from '@/Components/ui/badge';
+import { Button } from '@/Components/ui/button';
+import { Input } from '@/Components/ui/input';
+import { Textarea } from '@/Components/ui/textarea';
+import AdminLayoutV2 from '@/Layouts/AdminLayoutV2.vue';
+import type { Option, Product } from '@/types';
 
-const props = defineProps({
-    batchId: { type: String, required: true },
-    products: { type: Array, required: true },
-    category: { type: Array, required: true },
+/** Colonnes lues par `ProductImportController::review` (cast décimal : `poids` peut arriver en chaîne). */
+type ReviewProduct = Pick<
+    Product,
+    | 'id'
+    | 'categorie_id'
+    | 'reference'
+    | 'nom'
+    | 'resume'
+    | 'description'
+    | 'color'
+    | 'taille'
+    | 'prix'
+    | 'stock'
+    | 'favoris'
+    | 'is_preorder'
+    | 'cover'
+    | 'status'
+> & { poids: number | string };
+
+/** Champs envoyés à `ProductController@update` (mêmes règles que l'édition normale). */
+interface ReviewFields {
+    categorie_id: string;
+    reference: string;
+    nom: string;
+    color: string;
+    taille: string;
+    description: string;
+    resume: string;
+    poids: string;
+    prix: string;
+    stock: string;
+    /** Stock affiché à l'ouverture : le serveur n'applique que l'écart avec `stock`. */
+    stock_initial: string;
+    favoris: 0 | 1;
+    is_preorder: 0 | 1;
+    status: 'published';
+    _method: 'PUT';
+}
+
+type ReviewForm = InertiaForm<ReviewFields>;
+
+const props = defineProps<{
+    batchId: string;
+    products: ReviewProduct[];
+    /** Catégories : valeur = id (chaîne). */
+    category: Option[];
+}>();
+
+const published = computed(() => props.products.filter((product) => product.status === 'published').length);
+
+/**
+ * Prix et poids à 0 sont des valeurs par défaut de l'IA, pas de vraies valeurs : on les affiche
+ * vides pour forcer la saisie.
+ */
+const positiveOrEmpty = (value: number | string): string => (Number(value) > 0 ? String(Number(value)) : '');
+
+const fieldsFrom = (product: ReviewProduct): ReviewFields => ({
+    categorie_id: product.categorie_id ? String(product.categorie_id) : '',
+    reference: product.reference,
+    nom: product.nom,
+    color: product.color ?? '',
+    taille: product.taille ?? '',
+    description: product.description ?? '',
+    resume: product.resume,
+    poids: positiveOrEmpty(product.poids),
+    prix: positiveOrEmpty(product.prix),
+    stock: String(product.stock),
+    stock_initial: String(product.stock),
+    favoris: product.favoris ? 1 : 0,
+    is_preorder: product.is_preorder ? 1 : 0,
+    status: 'published',
+    // Multipart : PHP ne lit pas un PUT, l'envoi se fait en POST avec `_method`.
+    _method: 'PUT',
 });
 
-const published = computed(
-    () => props.products.filter((p) => p.status === "published").length
+// Un formulaire par produit, indexé par id. Construits une fois : les erreurs et l'état d'envoi
+// restent propres à chaque carte.
+const forms: Record<number, ReviewForm> = Object.fromEntries(
+    props.products.map((product) => [product.id, useForm<ReviewFields>(fieldsFrom(product))]),
 );
 
-// Un formulaire par carte, soumis à ProductController@update (mêmes règles que l'édition normale).
-// Prix et poids à 0 sont affichés vides pour forcer la saisie.
-const forms = Object.fromEntries(
-    props.products.map((p) => [
-        p.id,
-        useForm({
-            categorie_id: p.categorie_id ? `${p.categorie_id}` : "",
-            reference: p.reference,
-            nom: p.nom,
-            color: p.color ?? "",
-            taille: p.taille ?? "",
-            description: p.description ?? "",
-            resume: p.resume ?? "",
-            poids: Number(p.poids) > 0 ? `${Number(p.poids)}` : "",
-            prix: p.prix > 0 ? p.prix : "",
-            stock: p.stock,
-            stock_initial: p.stock,
-            favoris: p.favoris ? 1 : 0,
-            is_preorder: p.is_preorder ? 1 : 0,
-            status: "published",
-            _method: "PUT",
-        }),
-    ])
-);
+const save = (product: ReviewProduct): void => {
+    const form = forms[product.id];
 
-const save = (product) => {
-    forms[product.id].post(route("product.update", product.id), {
+    form.post(update(product.id).url, {
         forceFormData: true,
         preserveScroll: true,
-        onSuccess: () => notify("Produit enregistré avec succès !", true),
-        onError: () => notify(false),
+        onSuccess: () => {
+            // Le stock saisi est maintenant le stock réel : un second enregistrement ne doit pas
+            // réappliquer l'écart depuis l'ouverture de la page.
+            form.stock_initial = form.stock;
+            toast.success(`« ${form.nom} » enregistré.`);
+        },
+        onError: () => {
+            toast.error('Le formulaire contient des erreurs.');
+        },
     });
 };
 </script>
 
 <template>
-    <Head title="Revue de l'import" />
+    <AdminLayoutV2 title="Revue de l'import" description="Complétez chaque fiche générée par l'IA puis publiez-la.">
+        <template #actions>
+            <Button as-child variant="outline">
+                <Link :href="productIndex({ query: { statut: 'draft' } })">
+                    <ArrowLeft />
+                    Tous les brouillons
+                </Link>
+            </Button>
+        </template>
 
-    <AuthenticatedLayout>
-        <div class="content-header">
-            <h2 class="content-title card-title">Revue de l'import</h2>
-            <Link
-                :href="route('product', { statut: 'draft' })"
-                class="btn btn-light btn-sm rounded"
+        <div class="grid max-w-5xl gap-5">
+            <Alert variant="warning">
+                <TriangleAlert />
+                <AlertDescription>
+                    <p>
+                        Complétez le prix, le poids, la couleur et la taille de chaque produit puis enregistrez : il sera
+                        publié dans la boutique. {{ published }} / {{ products.length }} publié(s).
+                    </p>
+                </AlertDescription>
+            </Alert>
+
+            <p v-if="products.length === 0" class="text-sm text-muted-foreground">Aucun produit pour cet import.</p>
+
+            <article
+                v-for="product in products"
+                :key="product.id"
+                class="grid gap-5 rounded-lg border bg-card p-5 shadow-sm md:grid-cols-[12rem_1fr]"
             >
-                Tous les brouillons
-            </Link>
-        </div>
-
-        <div class="alert alert-warning">
-            Complétez le prix, le poids, la couleur et la taille de chaque
-            produit puis enregistrez : il sera publié dans la boutique.
-            {{ published }} / {{ products.length }} publié(s).
-        </div>
-
-        <p v-if="products.length === 0" class="text-muted">
-            Aucun produit pour cet import.
-        </p>
-
-        <div v-for="product in products" :key="product.id" class="card mb-4">
-            <div class="card-body">
-                <div class="row">
-                    <div class="col-md-3 text-center mb-3">
-                        <img
-                            :src="product.cover"
-                            :alt="product.nom"
-                            class="img-fluid rounded mb-2"
-                        />
-                        <div>
-                            <span
-                                v-if="product.status === 'draft'"
-                                class="badge rounded-pill alert-warning"
-                                >Brouillon</span
-                            >
-                            <span
-                                v-else
-                                class="badge rounded-pill alert-success"
-                                >Publié</span
-                            >
-                        </div>
-                    </div>
-                    <div class="col-md-9">
-                        <form @submit.prevent="save(product)">
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <Input
-                                        input_type="text"
-                                        place="le nom du produit"
-                                        label="nom"
-                                        v-model="forms[product.id].nom"
-                                        :message="forms[product.id].errors.nom"
-                                        required
-                                    />
-                                </div>
-                                <div class="col-md-6">
-                                    <Select2
-                                        label="categorie"
-                                        :message="
-                                            forms[product.id].errors
-                                                .categorie_id
-                                        "
-                                    >
-                                        <VueSelect
-                                            placeholder="selectionner"
-                                            v-model="
-                                                forms[product.id].categorie_id
-                                            "
-                                            :options="category"
-                                        />
-                                    </Select2>
-                                </div>
-                                <div class="col-md-3">
-                                    <Input
-                                        input_type="number"
-                                        label="prix en CFA"
-                                        place="le prix"
-                                        v-model="forms[product.id].prix"
-                                        :message="forms[product.id].errors.prix"
-                                        required
-                                    />
-                                </div>
-                                <div class="col-md-3">
-                                    <Input
-                                        input_type="text"
-                                        label="poids en Kg"
-                                        place="le poids"
-                                        v-model="forms[product.id].poids"
-                                        :message="
-                                            forms[product.id].errors.poids
-                                        "
-                                        required
-                                    />
-                                </div>
-                                <div class="col-md-3">
-                                    <Input
-                                        input_type="number"
-                                        label="stock"
-                                        place="le stock"
-                                        v-model="forms[product.id].stock"
-                                        :message="
-                                            forms[product.id].errors.stock
-                                        "
-                                        required
-                                    />
-                                </div>
-                                <div class="col-md-3">
-                                    <Input
-                                        input_type="text"
-                                        label="Couleur"
-                                        place="la couleur"
-                                        v-model="forms[product.id].color"
-                                        :message="
-                                            forms[product.id].errors.color
-                                        "
-                                        required
-                                    />
-                                </div>
-                                <div class="col-md-3">
-                                    <Input
-                                        input_type="text"
-                                        label="taille"
-                                        place="la taille"
-                                        v-model="forms[product.id].taille"
-                                        :message="
-                                            forms[product.id].errors.taille
-                                        "
-                                        required
-                                    />
-                                </div>
-                                <TextArea
-                                    place="la description courte du produit"
-                                    label="description courte"
-                                    v-model="forms[product.id].resume"
-                                    :message="forms[product.id].errors.resume"
-                                    required
-                                />
-                                <TextArea
-                                    place="la description du produit"
-                                    label="description"
-                                    v-model="forms[product.id].description"
-                                    :message="
-                                        forms[product.id].errors.description
-                                    "
-                                />
-                            </div>
-                            <div class="text-end">
-                                <button
-                                    type="submit"
-                                    class="btn btn-primary rounded"
-                                    :disabled="forms[product.id].processing"
-                                >
-                                    {{
-                                        product.status === "draft"
-                                            ? "Enregistrer et publier"
-                                            : "Enregistrer"
-                                    }}
-                                </button>
-                            </div>
-                        </form>
-                    </div>
+                <div class="grid content-start justify-items-center gap-2">
+                    <img :src="product.cover" :alt="product.nom" class="aspect-square w-full rounded-md border object-cover" />
+                    <Badge v-if="product.status === 'draft'" variant="outline">Brouillon</Badge>
+                    <Badge v-else variant="success">Publié</Badge>
                 </div>
-            </div>
+
+                <form class="grid gap-5" novalidate @submit.prevent="save(product)">
+                    <div class="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+                        <FormField
+                            label="Nom"
+                            :error="forms[product.id].errors.nom"
+                            required
+                            class="sm:col-span-2"
+                            v-slot="field"
+                        >
+                            <Input
+                                :id="field.id"
+                                v-model="forms[product.id].nom"
+                                placeholder="Le nom du produit"
+                                :aria-invalid="field.invalid"
+                                :aria-describedby="field.describedBy"
+                            />
+                        </FormField>
+                        <FormField
+                            label="Catégorie"
+                            :error="forms[product.id].errors.categorie_id"
+                            class="sm:col-span-2"
+                            v-slot="field"
+                        >
+                            <Combobox
+                                :id="field.id"
+                                v-model="forms[product.id].categorie_id"
+                                :options="category"
+                                placeholder="Choisir une catégorie"
+                                search-placeholder="Rechercher une catégorie…"
+                                :invalid="field.invalid"
+                                :described-by="field.describedBy"
+                            />
+                        </FormField>
+                        <FormField label="Prix (en CFA)" :error="forms[product.id].errors.prix" required v-slot="field">
+                            <Input
+                                :id="field.id"
+                                v-model="forms[product.id].prix"
+                                type="number"
+                                min="0"
+                                step="1"
+                                placeholder="Le prix"
+                                :aria-invalid="field.invalid"
+                                :aria-describedby="field.describedBy"
+                            />
+                        </FormField>
+                        <FormField label="Poids (en Kg)" :error="forms[product.id].errors.poids" required v-slot="field">
+                            <Input
+                                :id="field.id"
+                                v-model="forms[product.id].poids"
+                                placeholder="Le poids"
+                                :aria-invalid="field.invalid"
+                                :aria-describedby="field.describedBy"
+                            />
+                        </FormField>
+                        <FormField label="Stock" :error="forms[product.id].errors.stock" required v-slot="field">
+                            <Input
+                                :id="field.id"
+                                v-model="forms[product.id].stock"
+                                type="number"
+                                min="0"
+                                step="1"
+                                :aria-invalid="field.invalid"
+                                :aria-describedby="field.describedBy"
+                            />
+                        </FormField>
+                        <FormField label="Couleur" :error="forms[product.id].errors.color" required v-slot="field">
+                            <Input
+                                :id="field.id"
+                                v-model="forms[product.id].color"
+                                placeholder="La couleur"
+                                :aria-invalid="field.invalid"
+                                :aria-describedby="field.describedBy"
+                            />
+                        </FormField>
+                        <FormField label="Taille (en M)" :error="forms[product.id].errors.taille" required v-slot="field">
+                            <Input
+                                :id="field.id"
+                                v-model="forms[product.id].taille"
+                                placeholder="La taille"
+                                :aria-invalid="field.invalid"
+                                :aria-describedby="field.describedBy"
+                            />
+                        </FormField>
+                        <FormField
+                            label="Description courte"
+                            :error="forms[product.id].errors.resume"
+                            required
+                            class="sm:col-span-2 lg:col-span-4"
+                            v-slot="field"
+                        >
+                            <Textarea
+                                :id="field.id"
+                                v-model="forms[product.id].resume"
+                                placeholder="La description courte du produit"
+                                :aria-invalid="field.invalid"
+                                :aria-describedby="field.describedBy"
+                            />
+                        </FormField>
+                        <FormField
+                            label="Description"
+                            :error="forms[product.id].errors.description"
+                            class="sm:col-span-2 lg:col-span-4"
+                            v-slot="field"
+                        >
+                            <Textarea
+                                :id="field.id"
+                                v-model="forms[product.id].description"
+                                placeholder="La description du produit"
+                                :aria-invalid="field.invalid"
+                                :aria-describedby="field.describedBy"
+                            />
+                        </FormField>
+                    </div>
+
+                    <div class="flex justify-end">
+                        <Button type="submit" :disabled="forms[product.id].processing">
+                            <Loader2 v-if="forms[product.id].processing" class="animate-spin" />
+                            {{ product.status === 'draft' ? 'Enregistrer et publier' : 'Enregistrer' }}
+                        </Button>
+                    </div>
+                </form>
+            </article>
         </div>
-    </AuthenticatedLayout>
+    </AdminLayoutV2>
 </template>
