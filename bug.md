@@ -366,7 +366,7 @@ Avant de déployer : vérifier que `Order` avec `reference IS NULL AND trans_ref
 
 ## 2026-11-11 — `queue:work` manuel rejoue des `RegisterMailJob` en attente
 
-- **Constat** : lancer `php artisan queue:work database --stop-when-empty` pour tester l'import a aussi consommé des `RegisterMailJob` déjà présents dans la queue locale (échec : mail non configuré). Rien à corriger dans le code ; à savoir avant de lancer un worker sur la base de dev (envois d'e-mails réels si le SMTP est configuré).
+- **Constat** : lancer `php artisan queue:work database --stop-when-empty` pour tester l'import a aussi consommé des `RegisterMailJob` déjà présents dans la queue locale (échec confirmé dans `failed_jobs`, id 5 : `TransportException`, DNS de `smtp.hostinger.com` non résolu, donc aucun e-mail remis). Le SMTP Hostinger de production est pourtant configuré dans `.env` local : avec un réseau normal, ce worker aurait réellement envoyé le mail. À savoir avant de lancer un worker sur la base de dev (idéalement `MAIL_MAILER=log` en local).
 
 ## 2026-11-11 — Données de test conservées
 
