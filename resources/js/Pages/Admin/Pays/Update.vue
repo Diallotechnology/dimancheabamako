@@ -1,81 +1,83 @@
-<script setup>
-import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
-import { useForm, Link } from "@inertiajs/vue3";
-import notify from "@/helper";
+<script setup lang="ts">
+import { Link, useForm } from '@inertiajs/vue3';
+import { ArrowLeft, Loader2 } from '@lucide/vue';
+import { toast } from 'vue-sonner';
+import { country as countryIndex } from '@/actions/App/Http/Controllers/AdminController';
+import { update } from '@/actions/App/Http/Controllers/CountryController';
+import Combobox from '@/Components/Admin/Combobox.vue';
+import FormField from '@/Components/Admin/FormField.vue';
+import { Button } from '@/Components/ui/button';
+import AdminLayoutV2 from '@/Layouts/AdminLayoutV2.vue';
+import type { Country, Option } from '@/types';
 
-const props = defineProps({
-    zone: {
-        type: Object,
-        required: true,
-        default: () => ({}),
-    },
-    country: {
-        type: Object,
-        required: true,
-        default: () => ({}),
-    },
-    pays: {
-        type: Object,
-        required: true,
-        default: () => ({}),
-    },
-});
-const form = useForm({
+const props = defineProps<{
+    country: Country;
+    /** Noms de pays (valeur = libellé). */
+    pays: Option[];
+    zone: Option[];
+}>();
+
+const form = useForm<{ nom: string | null; zone_id: string | null }>({
     nom: props.country.nom,
-    zone_id: `${props.country.zone_id}`,
+    zone_id: String(props.country.zone_id),
 });
-const submit = () => {
-    form.patch(route("country.update", props.country.id), {
+
+const submit = (): void => {
+    form.submit(update(props.country.id), {
         onSuccess: () => {
-            form.nom = props.country.nom;
-            form.zone_id = `${props.country.zone_id}`;
-            notify("pays mise à jour avec success !", true);
+            form.defaults();
+            toast.success('Pays mis à jour.');
         },
         onError: () => {
-            notify(false);
+            toast.error('Le formulaire contient des erreurs.');
         },
     });
 };
 </script>
+
 <template>
-    <AuthenticatedLayout>
-        <div class="card">
-            <h2 class="p-4 text-center">Formulaire de mise à jour</h2>
-            <div class="card-body">
-                <form @submit.prevent="submit">
-                    <Select2 label="Nom du pays" :message="form.errors.nom">
-                        <VueSelect
-                            placeholder="selectionner"
-                            v-model="form.nom"
-                            :options="pays"
-                        />
-                    </Select2>
-                    <Select2 label="Zone" :message="form.errors.zone_id">
-                        <VueSelect
-                            placeholder="selectionner"
-                            v-model="form.zone_id"
-                            :options="zone"
-                        />
-                    </Select2>
-                    <div class="modal-footer">
-                        <Link
-                            :href="route('pays')"
-                            class="btn btn-danger rounded"
-                            data-bs-dismiss="modal"
-                        >
-                            Annuler
-                        </Link>
-                        <button
-                            :class="{ 'opacity-25': form.processing }"
-                            :disabled="form.processing"
-                            type="submit"
-                            class="btn btn-primary rounded"
-                        >
-                            Valider
-                        </button>
-                    </div>
-                </form>
+    <AdminLayoutV2 :title="`Modifier ${country.nom}`" description="Changez le pays ou la zone tarifaire à laquelle il est rattaché.">
+        <template #actions>
+            <Button as-child variant="outline">
+                <Link :href="countryIndex()">
+                    <ArrowLeft />
+                    Retour aux pays
+                </Link>
+            </Button>
+        </template>
+
+        <form class="grid max-w-2xl gap-5 rounded-lg border bg-card p-6 shadow-sm" novalidate @submit.prevent="submit">
+            <FormField label="Nom du pays" :error="form.errors.nom" required v-slot="field">
+                <Combobox
+                    :id="field.id"
+                    v-model="form.nom"
+                    :options="pays"
+                    placeholder="Choisir un pays"
+                    search-placeholder="Rechercher un pays…"
+                    :invalid="field.invalid"
+                    :described-by="field.describedBy"
+                />
+            </FormField>
+            <FormField label="Zone" :error="form.errors.zone_id" required v-slot="field">
+                <Combobox
+                    :id="field.id"
+                    v-model="form.zone_id"
+                    :options="zone"
+                    placeholder="Choisir une zone"
+                    search-placeholder="Rechercher une zone…"
+                    :invalid="field.invalid"
+                    :described-by="field.describedBy"
+                />
+            </FormField>
+            <div class="flex justify-end gap-2">
+                <Button as-child variant="outline" type="button">
+                    <Link :href="countryIndex()">Annuler</Link>
+                </Button>
+                <Button type="submit" :disabled="form.processing || !form.isDirty">
+                    <Loader2 v-if="form.processing" class="animate-spin" />
+                    Enregistrer
+                </Button>
             </div>
-        </div>
-    </AuthenticatedLayout>
+        </form>
+    </AdminLayoutV2>
 </template>
