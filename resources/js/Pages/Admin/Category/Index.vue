@@ -1,155 +1,168 @@
-<script setup>
-import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
-import { Head, router, useForm } from "@inertiajs/vue3";
-import ButtonEdit from "@/Components/ButtonEdit.vue";
-import ButtonDelete from "@/Components/ButtonDelete.vue";
-import Table from "@/Components/Table.vue";
-import Modal from "@/Components/Modal.vue";
-import notify from "@/helper";
-import { useFilter } from "@/Composables/useFilter";
+<script setup lang="ts">
+import { router, useForm } from '@inertiajs/vue3';
+import { Pencil, Plus, Search, X } from '@lucide/vue';
+import { ref, watch } from 'vue';
+import { toast } from 'vue-sonner';
+import { category as categoryIndex } from '@/actions/App/Http/Controllers/AdminController';
+import { destroy, edit, store } from '@/actions/App/Http/Controllers/CategoryController';
+import ConfirmDelete from '@/Components/Admin/ConfirmDelete.vue';
+import CrudDialog from '@/Components/Admin/CrudDialog.vue';
+import DataTable from '@/Components/Admin/DataTable.vue';
+import FormField from '@/Components/Admin/FormField.vue';
+import { Button } from '@/Components/ui/button';
+import { Input } from '@/Components/ui/input';
+import { TableCell, TableHead } from '@/Components/ui/table';
+import { Textarea } from '@/Components/ui/textarea';
+import { useFilter } from '@/Composables/useFilter';
+import AdminLayoutV2 from '@/Layouts/AdminLayoutV2.vue';
+import type { Category, Paginated } from '@/types';
 
-const props = defineProps({
-    rows: {
-        type: Object,
-        default: () => ({}),
-    },
-    filter: {
-        type: Object,
-        default: () => ({}),
-    },
-});
+const props = defineProps<{
+    rows: Paginated<Category>;
+}>();
 
-const { filters, resetFilters } = useFilter({ search: "" }, "/admin/category");
+const { filters, resetFilters } = useFilter({ search: '' }, categoryIndex);
+
+const creating = ref(false);
 
 const form = useForm({
-    nom: "",
-    description: "",
+    nom: '',
+    description: '',
 });
 
-const submit = () => {
-    form.post(route("category.store"), {
-        onSuccess: () => {
-            form.reset();
+// Fermer la modale (bouton, Échap, clic extérieur) repart d'un formulaire propre.
+watch(creating, (open) => {
+    if (!open) {
+        form.reset();
+        form.clearErrors();
+    }
+});
 
-            notify("Categorie ajouter avec success !", true);
+const submit = (): void => {
+    form.submit(store(), {
+        onSuccess: () => {
+            creating.value = false;
+            toast.success('Catégorie créée.');
         },
         onError: () => {
-            notify(false);
+            toast.error('Le formulaire contient des erreurs.');
         },
     });
+};
+
+// Supprimer la dernière ligne d'une page > 1 ramène sur la page précédente
+// au lieu de laisser une page vide.
+const afterDelete = (): void => {
+    if (props.rows.data.length === 1 && props.rows.current_page > 1) {
+        const url = new URL(window.location.href);
+        url.searchParams.set('page', String(props.rows.current_page - 1));
+        router.get(url.pathname + url.search, {}, { preserveState: true, replace: true });
+    }
 };
 </script>
 
 <template>
-    <Head title="Categorie" />
+    <AdminLayoutV2 title="Catégories" description="Les catégories qui regroupent les produits de la boutique.">
+        <template #actions>
+            <Button @click="creating = true">
+                <Plus />
+                Nouvelle catégorie
+            </Button>
+        </template>
 
-    <AuthenticatedLayout>
-        <div class="content-header">
-            <div>
-                <h2 class="content-title card-title">Listes des categories</h2>
+        <div class="mb-4 flex flex-wrap items-center gap-2">
+            <div class="relative w-full max-w-sm">
+                <Search class="pointer-events-none absolute top-1/2 left-3 size-4 -translate-y-1/2 text-muted-foreground" />
+                <Input
+                    v-model="filters.search"
+                    type="search"
+                    placeholder="Rechercher une catégorie…"
+                    aria-label="Rechercher une catégorie"
+                    class="pl-9"
+                />
             </div>
-
-            <div>
-                <a
-                    href="#"
-                    class="btn btn-primary btn-sm rounded"
-                    type="button"
-                    data-bs-toggle="modal"
-                    data-bs-target="#exampleModal"
-                >
-                    <i class="material-icons md-plus md-18"></i>
-
-                    Nouveau</a
-                >
-            </div>
+            <Button v-if="filters.search" variant="ghost" @click="resetFilters">
+                <X />
+                Réinitialiser
+            </Button>
         </div>
-        <div class="card mb-4">
-            <header class="card-header">
-                <div class="row gx-3">
-                    <div class="col-lg-4 col-md-6 me-auto">
-                        <input
-                            v-model="filters.search"
-                            type="text"
-                            placeholder="Recherche..."
-                            class="form-control"
+
+        <DataTable :rows="rows" :columns="5" item-label="catégories">
+            <template #head>
+                <TableHead class="w-16">#</TableHead>
+                <TableHead>Nom</TableHead>
+                <TableHead>Description</TableHead>
+                <TableHead>Créée le</TableHead>
+                <TableHead class="w-24 text-right">Actions</TableHead>
+            </template>
+
+            <template #row="{ row }">
+                <TableCell class="text-muted-foreground">{{ row.id }}</TableCell>
+                <TableCell class="font-medium">{{ row.nom }}</TableCell>
+                <TableCell class="max-w-md truncate text-muted-foreground">{{ row.description }}</TableCell>
+                <TableCell class="whitespace-nowrap text-muted-foreground">{{ row.created_at }}</TableCell>
+                <TableCell>
+                    <div class="flex justify-end gap-1">
+                        <Button
+                            as-child
+                            variant="ghost"
+                            size="icon-sm"
+                            class="text-muted-foreground"
+                            :aria-label="`Modifier la catégorie ${row.nom}`"
+                        >
+                            <a :href="edit(row.id).url" @click.prevent="router.visit(edit(row.id))">
+                                <Pencil />
+                            </a>
+                        </Button>
+                        <ConfirmDelete
+                            :action="destroy(row.id)"
+                            :what="`la catégorie ${row.nom}`"
+                            success-message="Catégorie supprimée."
+                            @deleted="afterDelete"
                         />
                     </div>
-                    <div class="col-auto">
-                        <button
-                            @click="resetFilters"
-                            class="btn btn-danger rounded"
-                        >
-                            Reset<i
-                                class="material-icons md-delete_forever md-18"
-                            ></i>
-                        </button>
-                    </div>
+                </TableCell>
+            </template>
+
+            <template #empty>
+                <template v-if="filters.search">Aucune catégorie ne correspond à « {{ filters.search }} ».</template>
+                <div v-else class="flex flex-col items-center gap-3">
+                    Aucune catégorie pour le moment.
+                    <Button size="sm" @click="creating = true">
+                        <Plus />
+                        Créer une catégorie
+                    </Button>
                 </div>
-            </header>
-            <Table :rows="rows">
-                <thead>
-                    <tr>
-                        <th>#ID</th>
-                        <th scope="col">Nom</th>
-                        <th scope="col">description</th>
-                        <th scope="col">Date</th>
-                        <th scope="col">Action</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr v-for="row in rows.data" :key="row.id">
-                        <td>{{ row.id }}</td>
-                        <td>{{ row.nom }}</td>
-                        <td>{{ row.description }}</td>
-                        <td>{{ row.created_at }}</td>
-                        <td>
-                            <ButtonEdit
-                                :href="route('category.edit', row.id)"
-                            />
-                            <ButtonDelete
-                                :url="route('category.destroy', row.id)"
-                            />
-                        </td>
-                    </tr>
-                </tbody>
-            </Table>
-        </div>
-        <!-- card end// -->
-        <Modal name="Formulaire de nouvelle categorie">
-            <form @submit.prevent="submit">
+            </template>
+        </DataTable>
+
+        <CrudDialog
+            v-model:open="creating"
+            title="Nouvelle catégorie"
+            description="Elle sera proposée lors de la création d'un produit."
+            submit-label="Créer la catégorie"
+            :processing="form.processing"
+            @submit="submit"
+        >
+            <FormField label="Nom" :error="form.errors.nom" required v-slot="field">
                 <Input
-                    input_type="text"
-                    place="le nom de la category"
-                    label="Nom"
+                    :id="field.id"
                     v-model="form.nom"
-                    :message="form.errors.nom"
-                    required
+                    placeholder="Le nom de la catégorie"
+                    :aria-invalid="field.invalid"
+                    :aria-describedby="field.describedBy"
                 />
-                <TextArea
-                    place="la description courte de la categorie"
-                    label="description"
+            </FormField>
+            <FormField label="Description" :error="form.errors.description" required v-slot="field">
+                <Textarea
+                    :id="field.id"
                     v-model="form.description"
-                    :message="form.errors.description"
-                    required
+                    rows="3"
+                    placeholder="La description courte de la catégorie"
+                    :aria-invalid="field.invalid"
+                    :aria-describedby="field.describedBy"
                 />
-                <div class="modal-footer">
-                    <button
-                        type="button"
-                        class="btn btn-danger rounded"
-                        data-bs-dismiss="modal"
-                    >
-                        Fermer
-                    </button>
-                    <button
-                        :class="{ 'opacity-25': form.processing }"
-                        :disabled="form.processing"
-                        type="submit"
-                        class="btn btn-primary rounded"
-                    >
-                        Valider
-                    </button>
-                </div>
-            </form>
-        </Modal>
-    </AuthenticatedLayout>
+            </FormField>
+        </CrudDialog>
+    </AdminLayoutV2>
 </template>
