@@ -1,84 +1,89 @@
-<script setup>
-import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
-import { useForm, Link } from "@inertiajs/vue3";
-import notify from "@/helper";
-const props = defineProps({
-    paylink: {
-        type: Object,
-        required: true,
-        default: () => ({}),
-    },
-});
+<script setup lang="ts">
+import { Link, useForm } from '@inertiajs/vue3';
+import { ArrowLeft, Loader2 } from '@lucide/vue';
+import { toast } from 'vue-sonner';
+import { paylink as paylinkIndex } from '@/actions/App/Http/Controllers/AdminController';
+import { update } from '@/actions/App/Http/Controllers/PayLinkController';
+import FormField from '@/Components/Admin/FormField.vue';
+import { Button } from '@/Components/ui/button';
+import { Input } from '@/Components/ui/input';
+import AdminLayoutV2 from '@/Layouts/AdminLayoutV2.vue';
+import type { PayLink } from '@/types';
+
+const props = defineProps<{
+    paylink: PayLink;
+}>();
+
 const form = useForm({
     name: props.paylink.name,
     contact: props.paylink.contact,
-    montant: props.paylink.montant,
+    montant: String(props.paylink.montant),
 });
 
-const submit = () => {
-    form.patch(route("paylink.update", props.paylink.id), {
+const submit = (): void => {
+    form.submit(update(props.paylink.id), {
         onSuccess: () => {
-            form.name = props.paylink.name;
-            form.contact = props.paylink.contact;
-            form.montant = props.paylink.montant;
-            notify("paiement mise à jour avec success !", true);
+            form.defaults();
+            toast.success('Lien de paiement mis à jour.');
         },
         onError: () => {
-            notify(false);
+            toast.error('Le formulaire contient des erreurs.');
         },
     });
 };
 </script>
 
 <template>
-    <AuthenticatedLayout>
-        <div class="card">
-            <h2 class="p-4 text-center">Formulaire de mise à jour</h2>
-            <div class="card-body">
-                <form @submit.prevent="submit">
-                    <Input
-                        input_type="text"
-                        place="le nom du client"
-                        label="Nom"
-                        v-model="form.name"
-                        :message="form.errors.name"
-                        required
-                    />
-                    <Input
-                        input_type="text"
-                        place="le contact du client"
-                        label="contact"
-                        v-model="form.contact"
-                        :message="form.errors.contact"
-                        required
-                    />
-                    <Input
-                        input_type="number"
-                        label="Montant en CFA"
-                        place="le montant"
-                        v-model="form.montant"
-                        :message="form.errors.montant"
-                        required
-                    />
-                    <div class="modal-footer">
-                        <Link
-                            :href="route('paylink')"
-                            class="btn btn-danger rounded"
-                            data-bs-dismiss="modal"
-                        >
-                            Annuler
-                        </Link>
-                        <button
-                            :class="{ 'opacity-25': form.processing }"
-                            :disabled="form.processing"
-                            type="submit"
-                            class="btn btn-primary rounded"
-                        >
-                            Valider
-                        </button>
-                    </div>
-                </form>
+    <AdminLayoutV2
+        :title="`Modifier le lien de ${paylink.name}`"
+        description="Modifier le montant génère un nouveau lien de paiement."
+    >
+        <template #actions>
+            <Button as-child variant="outline">
+                <Link :href="paylinkIndex()">
+                    <ArrowLeft />
+                    Retour aux liens
+                </Link>
+            </Button>
+        </template>
+
+        <form class="grid max-w-2xl gap-5 rounded-lg border bg-card p-6 shadow-sm" novalidate @submit.prevent="submit">
+            <FormField label="Nom du client" :error="form.errors.name" required v-slot="field">
+                <Input
+                    :id="field.id"
+                    v-model="form.name"
+                    :aria-invalid="field.invalid"
+                    :aria-describedby="field.describedBy"
+                />
+            </FormField>
+            <FormField label="Contact" :error="form.errors.contact" required v-slot="field">
+                <Input
+                    :id="field.id"
+                    v-model="form.contact"
+                    :aria-invalid="field.invalid"
+                    :aria-describedby="field.describedBy"
+                />
+            </FormField>
+            <FormField label="Montant (CFA)" :error="form.errors.montant" required v-slot="field">
+                <Input
+                    :id="field.id"
+                    v-model="form.montant"
+                    type="number"
+                    min="1"
+                    step="1"
+                    :aria-invalid="field.invalid"
+                    :aria-describedby="field.describedBy"
+                />
+            </FormField>
+            <div class="flex justify-end gap-2">
+                <Button as-child variant="outline" type="button">
+                    <Link :href="paylinkIndex()">Annuler</Link>
+                </Button>
+                <Button type="submit" :disabled="form.processing || !form.isDirty">
+                    <Loader2 v-if="form.processing" class="animate-spin" />
+                    Enregistrer
+                </Button>
             </div>
-        </div>
-    </AuthenticatedLayout>
+        </form>
+    </AdminLayoutV2>
 </template>
