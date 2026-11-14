@@ -181,5 +181,13 @@ return [
         'page_n' => 'Page :n',
         'no_results' => 'Aucun article ne correspond à votre recherche.',
         'reset_search' => 'Effacer la recherche',
+        'related' => 'Dans la même catégorie',
+        'show_image' => "Afficher l'image :n",
+        'show_video' => 'Afficher la vidéo',
+        'gallery' => 'Galerie du produit',
+        'reference' => 'Référence : :ref',
+        'unavailable' => 'Indisponible',
+        'availability' => 'Disponibilité',
+        'default_description' => "Livré sans couture. Si vous désirez la couture en grand boubou simple, merci de le préciser en commentaire au moment de la commande ; elle est gratuite. Le format 5 m est composé de 2 pièces : un boubou de 3,15 m et 1,85 m pour le pagne et le foulard ; le tailleur séparera le foulard du pagne au moment de la couture. Ce format convient aux personnes mesurant jusqu'à 1,72 m. À noter : les boubous de 5 m n'ont pas d'écharpe. Le format 6 mètres est composé de 3 pièces : un grand boubou bien long de 3,30 m, une écharpe de 0,70 m et un pagne de 2 m ; le foulard se découpe en haut du pagne lors de la couture. Ce format convient aux personnes de grande taille (plus de 1,73 m) et à celles qui souhaitent une écharpe.",
     ],
 ];

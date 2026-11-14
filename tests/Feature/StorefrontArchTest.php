@@ -28,6 +28,7 @@ function migratedStorefrontViews(): array
             'livewire/quick-add-modal-shop.blade.php',
             'index.blade.php',
             'category.blade.php',
+            'product-show.blade.php',
             'livewire/product-list.blade.php',
         )
         ->values()

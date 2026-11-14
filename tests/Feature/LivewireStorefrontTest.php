@@ -3,11 +3,11 @@
 declare(strict_types=1);
 
 use App\Enum\RoleEnum;
-use App\Livewire\AddToCard;
 use App\Livewire\Counter;
 use App\Livewire\Delete;
 use App\Livewire\Panier;
 use App\Livewire\ProductList;
+use App\Livewire\QuickAddModal;
 use App\Models\Category;
 use App\Models\Country;
 use App\Models\Poids;
@@ -44,6 +44,31 @@ function cartWith(Product $product, int $quantity = 1): CartService
 
     return $cart;
 }
+
+it('renders the product page on the shop layout with related products and the add-to-cart event', function () {
+    $product = shopProduct(['nom' => 'Bazin vedette']);
+    $related = shopProduct(['nom' => 'Bazin voisin']);
+
+    $this->get("/shop/show/{$product->id}-{$product->slug}")
+        ->assertOk()
+        ->assertSee('Bazin vedette')
+        ->assertSee('Bazin voisin')
+        ->assertSee("add-to-cart', { id: {$product->id} }", false)
+        ->assertDontSee('swiper', false)
+        ->assertDontSee('bootstrap', false);
+
+    expect($related->exists)->toBeTrue();
+});
+
+it('redirects the product page to its canonical slug and disables the button when unavailable', function () {
+    $soldOut = shopProduct(['stock' => 0, 'is_preorder' => false]);
+
+    $this->get("/shop/show/{$soldOut->id}-mauvais-slug")->assertRedirect(route('shop.show', ['id' => $soldOut->id, 'slug' => $soldOut->slug]));
+    $this->get("/shop/show/{$soldOut->id}-{$soldOut->slug}")
+        ->assertOk()
+        ->assertSee('disabled', false)
+        ->assertDontSee("add-to-cart', { id: {$soldOut->id} }", false);
+});
 
 it('serves the shop, cart and home pages', function () {
     $product = shopProduct();
@@ -116,8 +141,8 @@ it('renders the catalogue on the shop layout with category links and no Bootstra
 it('adds a product to the cart and opens the quick modal', function () {
     $product = shopProduct();
 
-    Livewire::test(AddToCard::class, ['id' => $product->id])
-        ->call('add')
+    Livewire::test(QuickAddModal::class)
+        ->call('addToCart', $product->id)
         ->assertDispatched('openQuickModal');
 
     expect(app(CartService::class)->has($product->id))->toBeTrue();
@@ -127,7 +152,7 @@ it('does not duplicate a product already in the cart', function () {
     $product = shopProduct();
     $cart = cartWith($product, 3);
 
-    Livewire::test(AddToCard::class, ['id' => $product->id])->call('add');
+    Livewire::test(QuickAddModal::class)->call('addToCart', $product->id);
 
     expect($cart->get($product->id)['quantity'])->toBe(3);
 });

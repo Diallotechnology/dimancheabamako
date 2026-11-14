@@ -53,12 +53,16 @@ final class LinkController extends Controller
             ]);
         // Récupérer le produit par ID
         $product = (clone $baseQuery)->findOrFail($id);
-        $product->loadMissing('images');
-        $rows = ProductView::collection((clone $baseQuery)->where('categorie_id', $product->categorie_id)->ByStock()->take(4)->get(), $this->pricing);
         // Vérifier si le slug correspond
         if ($product->slug !== $slug) {
             return redirect()->route('shop.show', ['id' => $product->id, 'slug' => $product->slug]);
         }
+
+        $product->loadMissing('images');
+        $rows = ProductView::collection(
+            (clone $baseQuery)->where('categorie_id', $product->categorie_id)->whereKeyNot($product->id)->ByStock()->latest('id')->take(4)->get(),
+            $this->pricing,
+        );
 
         return view('product-show', compact('product', 'rows'));
     }

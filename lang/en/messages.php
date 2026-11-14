@@ -182,5 +182,13 @@ return [
         'page_n' => 'Page :n',
         'no_results' => 'No items match your search.',
         'reset_search' => 'Clear search',
+        'related' => 'More from this category',
+        'show_image' => 'Show image :n',
+        'show_video' => 'Show video',
+        'gallery' => 'Product gallery',
+        'reference' => 'Reference: :ref',
+        'unavailable' => 'Unavailable',
+        'availability' => 'Availability',
+        'default_description' => 'Delivered uncut. If you would like it sewn into a simple grand boubou, please say so in the comment when ordering; sewing is free. The 5 m format comes in 2 pieces: a 3.15 m boubou and 1.85 m for the wrapper and the scarf; the tailor will separate the scarf from the wrapper when sewing. This format suits people up to 1.72 m tall. Note: 5 m boubous come without a scarf. The 6 m format comes in 3 pieces: a long 3.30 m grand boubou, a 0.70 m scarf and a 2 m wrapper; the scarf is cut from the top of the wrapper when sewing. This format suits taller people (over 1.73 m) and those who want a scarf.',
     ],
 ];

@@ -428,3 +428,8 @@ Relevés pendant l'audit de la vitrine (plan : refonte page par page). Non corri
 - **Piège Livewire** : une vue de composant qui commence par `@if` (ou autre directive) perd son élément racine, le HTML s'imbrique à chaque mise à jour puis « Snapshot missing on Livewire component » casse le composant (vu sur `Counter`). Garde-fou : test d'architecture dans `StorefrontArchTest`.
 - `#[On('productCount')]` était posé sur `Counter::render()` (l'événement « appelait » render) : remplacé par une méthode d'écoute dédiée.
 - `SlideFactory` est vide (`definition()` retourne `[]`) : les tests créent les slides à la main.
+
+### Mise à jour 2026-11-14 (phases 2 et 3 de la refonte vitrine)
+
+- ✅ RÉSOLU — **Unité de précommande** sur le prix barré (ancien `cart-item.blade.php`) : composant supprimé en phase 3, la carte unique utilise `<x-shop.price :suffix>`.
+- **Images de la galerie cassées sur les produits de seed** (préexistant, hors migration) : `Image::chemin` préfixe `/storage/` même quand la valeur en base est une URL absolue (`https://via.placeholder.com/…`, générée par la factory) → `/storage/https://via.placeholder.com/…` en 404. L'ancienne fiche (Evara/Swiper) lisait déjà `$row->chemin` à l'identique. Sans effet sur les vraies images uploadées ; à corriger côté factory (chemin relatif) ou accesseur (ne pas préfixer une URL absolue).
