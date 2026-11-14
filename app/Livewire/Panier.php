@@ -12,10 +12,11 @@ use App\Service\LoginService;
 use App\Service\PriceService;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\ValidationException;
-use Livewire\Attributes\On;
+use Livewire\Attributes\Layout;
 use Livewire\Attributes\Validate;
 use Livewire\Component;
 
+#[Layout('layouts::shop')]
 final class Panier extends Component
 {
     use CartAction;
@@ -37,8 +38,6 @@ final class Panier extends Component
     public int $count = 0;
 
     public int $TotalQuantity = 0;
-
-    public string $Total = '0';
 
     public string $totalWeight = '0';
 
@@ -73,18 +72,36 @@ final class Panier extends Component
         return $this->redirectRoute('panier');
     }
 
-    public function updatingCountryid()
+    public function updatingCountryId(): void
     {
         $this->transport_id = '';
+        $this->shipping = null;
+    }
+
+    public function updatedCountryId(): void
+    {
+        $this->GetTrans();
+    }
+
+    public function updatedTransportId(): void
+    {
+        $this->calculateShipping();
     }
 
     public function GetTrans()
     {
-        // get country
-        $country = Country::with('zone')->find($this->country_id);
-        $country->loadMissing('zone.transports');
-        if ($country->zone->transports->isNotEmpty()) {
-            return $this->trans = $country->zone->transports;
+        $country = Country::with('zone.transports')->find($this->country_id);
+
+        if ($country?->zone?->transports->isNotEmpty()) {
+            $this->trans = $country->zone->transports;
+
+            // Un seul transporteur possible : inutile de le demander au client.
+            if ($this->trans->count() === 1) {
+                $this->transport_id = (string) $this->trans->first()->id;
+                $this->calculateShipping();
+            }
+
+            return $this->trans;
         }
         $this->trans = [];
         session()->flash('warning', __('messages.panier.not_deliver'));
@@ -111,6 +128,7 @@ final class Panier extends Component
     {
         $this->refreshCart();
         $this->cleanInvalidPreorders();
+        $this->prefillKnownDelivery();
     }
 
     public function getHasPreorderProperty()
@@ -118,18 +136,26 @@ final class Panier extends Component
         return $this->cart->getContent()->contains('is_preorder', true);
     }
 
-    #[On('productDelete')]
     public function refreshCart(): void
     {
         $this->count = $this->cart->getCount();
         $this->TotalQuantity = $this->cart->getTotalQuantity();
         $this->totalWeight = $this->getWeight(true);
+    }
 
-        if (PriceService::isEuro()) {
-            $this->Total = number_format($this->cart->getTotal() / PriceService::eurRate(), 2, ',', ' ');
-        } else {
-            $this->Total = number_format($this->cart->getTotal(), 0, ',', ' ');
+    /**
+     * Retire une ligne du panier de la session courante (l'id ne peut viser que ce panier).
+     */
+    public function remove(int $id): void
+    {
+        if (! $this->cart->remove($id)) {
+            flash()->warning('Suppression impossible.');
+
+            return;
         }
+
+        $this->refreshCart();
+        $this->dispatch('productCount')->to(Counter::class);
     }
 
     /**
@@ -137,13 +163,7 @@ final class Panier extends Component
      */
     public function getTotalWithShippingProperty(): string
     {
-        $totalCfa = (float) $this->cart->getTotal() + (float) ($this->shipping?->montant ?? 0);
-
-        if (PriceService::isEuro()) {
-            return number_format($totalCfa / PriceService::eurRate(), 2, ',', ' ');
-        }
-
-        return number_format($totalCfa, 0, ',', ' ');
+        return PriceService::format((float) $this->cart->getTotal() + (float) ($this->shipping?->montant ?? 0));
     }
 
     public function render()
@@ -161,6 +181,25 @@ final class Panier extends Component
         }
 
         return view('livewire.panier', compact('items', 'country', 'client'));
+    }
+
+    /**
+     * Client connecté : le pays de sa dernière commande est pré-sélectionné (et le transporteur s'il est unique).
+     */
+    private function prefillKnownDelivery(): void
+    {
+        if (! Auth::check() || ! Auth::user()->isClient()) {
+            return;
+        }
+
+        $countryId = Client::query()
+            ->where('email', Auth::user()->email)
+            ->first()?->latestOrder?->country_id;
+
+        if ($countryId !== null && $this->cart->getContent()->isNotEmpty()) {
+            $this->country_id = (string) $countryId;
+            $this->GetTrans();
+        }
     }
 
     private function cleanInvalidPreorders(): void

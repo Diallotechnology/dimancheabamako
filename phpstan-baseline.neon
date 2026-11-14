@@ -1288,48 +1288,6 @@ parameters:
 			message: '#^Access to an undefined property App\\Models\\Shipping\:\:\$price\.$#'
 			identifier: property.notFound
 			count: 1
-			path: app/Livewire/Delete.php
-
-		-
-			message: '#^Call to an undefined method Illuminate\\Database\\Eloquent\\Relations\\BelongsToMany\:\:active\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: app/Livewire/Delete.php
-
-		-
-			message: '#^Method App\\Livewire\\Delete\:\:deleteProduct\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/Livewire/Delete.php
-
-		-
-			message: '#^Method App\\Livewire\\Delete\:\:destroy\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/Livewire/Delete.php
-
-		-
-			message: '#^Method App\\Livewire\\Delete\:\:render\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/Livewire/Delete.php
-
-		-
-			message: '#^Method App\\Livewire\\Delete\:\:store\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/Livewire/Delete.php
-
-		-
-			message: '#^Property App\\Livewire\\Delete\:\:\$row with generic class Illuminate\\Support\\Collection does not specify its types\: TKey, TValue$#'
-			identifier: missingType.generics
-			count: 1
-			path: app/Livewire/Delete.php
-
-		-
-			message: '#^Access to an undefined property App\\Models\\Shipping\:\:\$price\.$#'
-			identifier: property.notFound
-			count: 1
 			path: app/Livewire/Panier.php
 
 		-
@@ -1376,12 +1334,6 @@ parameters:
 
 		-
 			message: '#^Method App\\Livewire\\Panier\:\:store\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/Livewire/Panier.php
-
-		-
-			message: '#^Method App\\Livewire\\Panier\:\:updatingCountryid\(\) has no return type specified\.$#'
 			identifier: missingType.return
 			count: 1
 			path: app/Livewire/Panier.php

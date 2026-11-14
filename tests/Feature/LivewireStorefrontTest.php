@@ -4,12 +4,13 @@ declare(strict_types=1);
 
 use App\Enum\RoleEnum;
 use App\Livewire\Counter;
-use App\Livewire\Delete;
 use App\Livewire\Panier;
 use App\Livewire\ProductList;
 use App\Livewire\QuickAddModal;
 use App\Models\Category;
+use App\Models\Client;
 use App\Models\Country;
+use App\Models\Order;
 use App\Models\Poids;
 use App\Models\Product;
 use App\Models\Shipping;
@@ -157,16 +158,24 @@ it('does not duplicate a product already in the cart', function () {
     expect($cart->get($product->id)['quantity'])->toBe(3);
 });
 
-it('removes a cart line and notifies the counter and the cart', function () {
+it('removes a cart line and notifies the counter', function () {
     $product = shopProduct();
     $cart = cartWith($product);
 
-    Livewire::test(Delete::class, ['row' => $cart->get($product->id)])
-        ->call('deleteProduct')
-        ->assertDispatched('productDelete')
+    Livewire::test(Panier::class)
+        ->call('remove', $product->id)
         ->assertDispatched('productCount');
 
     expect($cart->has($product->id))->toBeFalse();
+});
+
+it('only ever removes from the own cart of the visitor, whatever id is sent', function () {
+    $mine = shopProduct();
+    $cart = cartWith($mine);
+
+    Livewire::test(Panier::class)->call('remove', 987654)->assertNotDispatched('productCount');
+
+    expect($cart->has($mine->id))->toBeTrue();
 });
 
 it('shows the cart item count in the counter', function () {
@@ -182,10 +191,9 @@ it('recomputes the cart total when a line is deleted', function () {
     $cart = cartWith($a, 2);
     $cart->add($b->id, $b->nom, 10000, 10, 1.0);
 
-    $panier = Livewire::test(Panier::class)->assertSet('Total', '50 000');
+    $panier = Livewire::test(Panier::class)->assertSee('50 000 CFA');
 
-    $cart->remove($b->id);
-    $panier->dispatch('productDelete')->assertSet('Total', '40 000');
+    $panier->call('remove', $b->id)->assertSee('40 000 CFA')->assertDontSee('50 000 CFA');
 });
 
 it('requires email and password to log in from the cart', function () {
@@ -226,6 +234,7 @@ function shippingFor(float $weightMax = 5, int $montant = 5000): array
     $zone = Zone::factory()->create();
     $country = Country::factory()->create(['zone_id' => $zone->id]);
     $transport = Transport::factory()->create();
+    $zone->transports()->attach($transport->id);
     $poids = Poids::factory()->create(['min' => 0, 'max' => $weightMax]);
     Shipping::factory()->create([
         'zone_id' => $zone->id,
@@ -259,4 +268,50 @@ it('adds the shipping cost to the displayed cart total in EUR', function () {
         ->set('transport_id', $transport->id)
         ->call('calculateShipping')
         ->assertSee('38,11 €');
+});
+
+it('picks the only carrier by itself and shows the shipping cost', function () {
+    [$country, $transport] = shippingFor(montant: 5000);
+    cartWith(shopProduct(['prix' => 20000, 'poids' => 1]));
+
+    Livewire::test(Panier::class)
+        ->set('country_id', $country->id)
+        ->assertSet('transport_id', (string) $transport->id)
+        ->assertSee('25 000 CFA');
+});
+
+it('does not ask a known customer for what we already have', function () {
+    [$country, $transport] = shippingFor();
+    $user = User::factory()->create(['role' => RoleEnum::CUSTOMER]);
+    $client = Client::factory()->create(['email' => $user->email, 'prenom' => 'Awa', 'nom' => 'Traoré']);
+    Order::factory()->create([
+        'client_id' => $client->id,
+        'country_id' => $country->id,
+        'transport_id' => $transport->id,
+        'adresse' => '12 rue du Fleuve',
+        'ville' => 'Bamako',
+    ]);
+    $this->actingAs($user);
+    cartWith(shopProduct(['poids' => 1]));
+
+    Livewire::test(Panier::class)
+        ->assertSet('country_id', (string) $country->id)
+        ->assertSet('transport_id', (string) $transport->id)
+        ->assertSee('12 rue du Fleuve')
+        ->assertSee('Awa Traoré')
+        ->assertDontSee('champ-password');
+});
+
+it('renders the cart with every checkout field posted to the order route', function () {
+    cartWith(shopProduct(['nom' => 'Bazin panier']));
+
+    $html = Livewire::test(Panier::class)->assertSee('Bazin panier')->assertDontSeeHtml('data-bs-')->html();
+
+    $missing = array_values(array_filter(
+        ['prenom', 'nom', 'adresse', 'postal', 'ville', 'contact', 'email', 'country_id', 'transport_id', 'livraison', 'commentaire'],
+        fn (string $field): bool => ! str_contains($html, 'name="'.$field.'"'),
+    ));
+
+    expect($missing)->toBe([])
+        ->and($html)->toContain('action="'.route('order.store').'"');
 });

@@ -29,6 +29,7 @@ function migratedStorefrontViews(): array
             'index.blade.php',
             'category.blade.php',
             'product-show.blade.php',
+            'livewire/panier.blade.php',
             'livewire/product-list.blade.php',
         )
         ->values()
@@ -127,11 +128,8 @@ test('storefront views do not hardcode application links', function () {
 });
 
 test('storefront price display goes through PriceService', function () {
-    // Formatage de prix encore dupliqué (Panier), à supprimer en phase 4 de la refonte.
-    $legacy = [
-        'app/Livewire/Panier.php',
-        'resources/views/livewire/panier.blade.php',
-    ];
+    // Formatage de prix encore dupliqué : plus aucun fichier connu (Panier migré en phase 4).
+    $legacy = [];
 
     $files = collect([...File::allFiles(app_path('Livewire')), ...File::allFiles(resource_path('views/livewire')), ...File::allFiles(resource_path('views/components/shop'))])
         ->map(fn (SplFileInfo $file): string => str_replace('\\', '/', str_replace(base_path().DIRECTORY_SEPARATOR, '', $file->getPathname())));

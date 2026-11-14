@@ -433,3 +433,10 @@ Relevés pendant l'audit de la vitrine (plan : refonte page par page). Non corri
 
 - ✅ RÉSOLU — **Unité de précommande** sur le prix barré (ancien `cart-item.blade.php`) : composant supprimé en phase 3, la carte unique utilise `<x-shop.price :suffix>`.
 - **Images de la galerie cassées sur les produits de seed** (préexistant, hors migration) : `Image::chemin` préfixe `/storage/` même quand la valeur en base est une URL absolue (`https://via.placeholder.com/…`, générée par la factory) → `/storage/https://via.placeholder.com/…` en 404. L'ancienne fiche (Evara/Swiper) lisait déjà `$row->chemin` à l'identique. Sans effet sur les vraies images uploadées ; à corriger côté factory (chemin relatif) ou accesseur (ne pas préfixer une URL absolue).
+
+### Mise à jour 2026-11-14 (phase 4 de la refonte vitrine : panier)
+
+- **Prix du panier non revalidés à l'affichage** : `/panier` affiche les prix stockés dans le panier (cache de 24 h). Ils ne sont relus en base qu'à la validation de la commande (`OrderService::createOrder` → `StaleCartException`), donc le client peut voir un prix périmé puis recevoir le message « prix modifié » au moment de valider. À envisager : `CartService::refreshFromProducts` au `mount` de `Panier` (touche à la logique financière : RED test d'abord).
+- **Ligne « sur commande » supprimée sans message** : `Panier::cleanInvalidPreorders` retire du panier toute ligne précommande dont la quantité n'est pas 5 ou 6, sans prévenir le client ; la ligne disparaît silencieusement.
+- ✅ RÉSOLU — **Composant `Delete`** : la ligne du panier était une propriété publique `Collection $row` modifiable côté client ; remplacé par `Panier::remove(int $id)` (ne vise que le panier de la session).
+- ✅ RÉSOLU — **`Panier::GetTrans()`** plantait (`null`) quand le pays n'existait pas (option vide) ; double requête `wire:change` + `wire:model.live` remplacée par les hooks `updatedCountryId` / `updatedTransportId`.
