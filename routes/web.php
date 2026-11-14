@@ -25,7 +25,7 @@ use App\Http\Controllers\TransportController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\ZoneController;
 use App\Livewire\Panier;
-use App\Livewire\Produit;
+use App\Livewire\ProductList;
 use App\Mail\ConfirmRegistrationMail;
 use App\Mail\OrderAlertMail;
 use App\Mail\RegisterMail;
@@ -91,7 +91,7 @@ Route::controller(LinkController::class)->group(function () {
     Route::get('getcategory', 'getCategory')->name('getCategory');
     Route::get('shop/show/{id}-{slug}', 'product_detail')->name('shop.show');
 });
-Route::get('/shop/{category}-{slug}', Produit::class)->name('shop');
+Route::get('/shop/{category}-{slug}', ProductList::class)->name('shop');
 Route::get('/panier', Panier::class)->name('panier');
 Route::post('contact/mail', [ContactController::class, 'sendEmail'])->name('contact.email');
 Route::view('categorie', 'category')->name('categorie_mobile');

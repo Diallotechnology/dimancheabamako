@@ -1,52 +1,41 @@
-<x-app-layout>
+<x-shop-layout>
+    <x-slot:title>{{ __('messages.shop.categories') }}</x-slot:title>
 
-    <x-slot:title>
-        @lang('messages.category')
-        </x-slot>
-        <div class="page-header breadcrumb-wrap">
-            <div class="container">
-                <div class="breadcrumb">
-                    <a href="/" rel="nofollow">@lang('messages.home')</a>
-                    <span></span> Pages <span></span> @lang('messages.category')
-                </div>
-            </div>
+    <x-slot:metadata>
+        <x-shop.seo
+            title="Dimanche à Bamako - {{ __('messages.shop.categories') }}"
+            description="Parcourez toutes les catégories de Dimanche à Bamako : Bazin, Getzner, boubous, robes et accessoires de mode africaine."
+            :canonical="route('categorie_mobile')" />
+    </x-slot:metadata>
+
+    <div class="border-b border-sage bg-linen">
+        <div class="container-shop py-8 md:py-10">
+            <nav aria-label="{{ __('messages.shop.breadcrumb') }}" class="mb-3 text-sm text-ink-muted">
+                <ol class="flex flex-wrap items-center gap-x-2">
+                    <li><a href="{{ route('home') }}" class="hover:text-ink">{{ __('messages.home') }}</a></li>
+                    <li aria-hidden="true">/</li>
+                    <li aria-current="page" class="font-semibold text-ink">{{ __('messages.shop.categories') }}</li>
+                </ol>
+            </nav>
+            <h1 class="text-2xl md:text-4xl">{{ __('messages.shop.categories') }}</h1>
         </div>
-        <section class="py-4 bg-white">
-            <div class="container">
-                <h2 class="fs-5 fw-semibold text-dark mb-4">Catégories</h2>
+    </div>
 
-                <div class="row g-3">
-                    @foreach($categories as $row)
-                    <div class="col-6">
-                        <a href="{{ route('shop', ['category'=>$row->id, 'slug'=>$row->nom]) }}"
-                            class="apple-card d-flex flex-column justify-content-center align-items-start p-3 rounded-4">
-                            <span class="category-name">{{ $row->nom }}</span>
-                        </a>
-                    </div>
-                    @endforeach
-                </div>
-            </div>
-        </section>
-
-        <style>
-            .apple-card {
-                background: #f8f8f8;
-                border: 1px solid #e5e5e5;
-                border-radius: 18px;
-                transition: all .2s ease;
-            }
-
-            .apple-card:hover {
-                background: #ffffff;
-                border-color: #d1d1d1;
-                transform: translateY(-2px);
-            }
-
-            .category-name {
-                font-size: 1rem;
-                color: #000;
-                font-weight: 500;
-                letter-spacing: -0.2px;
-            }
-        </style>
-</x-app-layout>
+    <section class="container-shop py-8 md:py-12">
+        @if ($categories->isNotEmpty())
+        <ul class="grid grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-4 lg:grid-cols-4">
+            @foreach ($categories as $row)
+            <li>
+                <a href="{{ route('shop', ['category' => $row->id, 'slug' => Str::slug($row->nom)]) }}"
+                    class="group flex min-h-28 items-end justify-between gap-2 rounded-2xl border border-sage bg-sage-soft p-4 transition-colors hover:border-ink hover:bg-white">
+                    <span class="font-display text-lg font-semibold">{{ $row->nom }}</span>
+                    <x-shop.icon name="chevron-right" class="size-5 text-ink-muted transition-transform group-hover:translate-x-1" />
+                </a>
+            </li>
+            @endforeach
+        </ul>
+        @else
+        <p class="py-12 text-center text-ink-muted">{{ __('messages.no_product_available') }}</p>
+        @endif
+    </section>
+</x-shop-layout>

@@ -7,7 +7,7 @@ use App\Livewire\AddToCard;
 use App\Livewire\Counter;
 use App\Livewire\Delete;
 use App\Livewire\Panier;
-use App\Livewire\Produit;
+use App\Livewire\ProductList;
 use App\Models\Category;
 use App\Models\Country;
 use App\Models\Poids;
@@ -59,7 +59,7 @@ it('lists in-stock products of the category and hides out-of-stock ones', functi
     $hidden = shopProduct(['nom' => 'Rupture bazin', 'stock' => 0]);
     $other = shopProduct(['nom' => 'Autre categorie', 'categorie_id' => Category::factory()->create()->id]);
 
-    Livewire::test(Produit::class, ['category' => $this->category])
+    Livewire::test(ProductList::class, ['category' => $this->category])
         ->assertSee($visible->nom)
         ->assertDontSee($hidden->nom)
         ->assertDontSee($other->nom);
@@ -69,7 +69,7 @@ it('filters the product list with the live search', function () {
     shopProduct(['nom' => 'Alpha bleu', 'color' => 'Bleu']);
     shopProduct(['nom' => 'Omega rouge', 'color' => 'Rouge']);
 
-    Livewire::test(Produit::class, ['category' => $this->category])
+    Livewire::test(ProductList::class, ['category' => $this->category])
         ->set('search', 'Omega')
         ->assertSee('Omega rouge')
         ->assertDontSee('Alpha bleu');
@@ -78,10 +78,39 @@ it('filters the product list with the live search', function () {
 it('paginates the product list by 15', function () {
     Product::factory()->count(17)->create(['categorie_id' => $this->category->id, 'stock' => 5]);
 
-    $component = Livewire::test(Produit::class, ['category' => $this->category]);
+    $component = Livewire::test(ProductList::class, ['category' => $this->category]);
 
-    expect($component->viewData('rows')->count())->toBe(15)
-        ->and($component->viewData('rows')->total())->toBe(17);
+    $products = $component->instance()->products;
+
+    expect($products->count())->toBe(15)
+        ->and($products->total())->toBe(17);
+
+    $component->assertSeeHtml('aria-label="'.__('messages.shop.pagination').'"')
+        ->assertSeeHtml("wire:click=\"nextPage('page')\"")
+        ->call('nextPage')
+        ->assertSet('paginators.page', 2);
+});
+
+it('resets to page 1 and keeps the search in the URL when searching', function () {
+    Product::factory()->count(17)->create(['categorie_id' => $this->category->id, 'stock' => 5, 'nom' => 'Wax rouge']);
+
+    Livewire::withQueryParams(['page' => 2])
+        ->test(ProductList::class, ['category' => $this->category])
+        ->set('search', 'Wax')
+        ->assertSet('paginators.page', 1)
+        ->assertSeeHtml('Wax rouge');
+});
+
+it('renders the catalogue on the shop layout with category links and no Bootstrap', function () {
+    shopProduct(['nom' => 'Visible bazin']);
+    $other = Category::factory()->create(['nom' => 'Getzner']);
+
+    $this->get("/shop/{$this->category->id}-bazin")
+        ->assertOk()
+        ->assertSee('Visible bazin')
+        ->assertSee('href="'.route('shop', ['category' => $other->id, 'slug' => 'getzner']).'"', false)
+        ->assertSee('aria-current="page"', false)
+        ->assertDontSee('bootstrap', false);
 });
 
 it('adds a product to the cart and opens the quick modal', function () {

@@ -9,6 +9,7 @@ use App\Service\PriceService;
 
 final class ProductView
 {
+    /** @return array<string, mixed> */
     public static function fromModel(Product $product, PriceService $pricing): array
     {
         return [

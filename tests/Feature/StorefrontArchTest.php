@@ -27,6 +27,8 @@ function migratedStorefrontViews(): array
             'livewire/counter.blade.php',
             'livewire/quick-add-modal-shop.blade.php',
             'index.blade.php',
+            'category.blade.php',
+            'livewire/product-list.blade.php',
         )
         ->values()
         ->all();
@@ -108,7 +110,6 @@ test('storefront views do not hardcode application links', function () {
     $legacy = [
         'about.blade.php',
         'auth/register-confirm.blade.php',
-        'category.blade.php',
         'contact.blade.php',
         'layouts/nav.blade.php',
     ];
