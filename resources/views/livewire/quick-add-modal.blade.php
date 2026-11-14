@@ -25,25 +25,18 @@
                                 </div>
 
                                 <!-- Pricing -->
-                                @php
-                                $price = $addedItem['price'] ?? 0;
-                                $reduction = $addedItem['attributes']['reduction'] ?? 0;
-                                $finalPrice = $price - ($price * $reduction / 100);
-                                $total = $finalPrice * ($addedItem['quantity'] ?? 1);
-                                @endphp
-
                                 <div class="apple-price-block">
-                                    @if($reduction > 0)
+                                    @if($pricing['original'] !== null)
                                     <span class="old-price">
-                                        <x-price-format :value="$price" />
+                                        {{ \App\Service\PriceService::format($pricing['original']) }}
                                     </span>
                                     <span class="new-price">
-                                        <x-price-format :value="$finalPrice" />
+                                        {{ \App\Service\PriceService::format($pricing['unit']) }}
                                     </span>
-                                    <span class="discount-tag">-{{ $reduction }}%</span>
+                                    <span class="discount-tag">-{{ $pricing['reduction'] }}%</span>
                                     @else
                                     <span class="new-price">
-                                        <x-price-format :value="$finalPrice" />
+                                        {{ \App\Service\PriceService::format($pricing['unit']) }}
                                     </span>
                                     @endif
                                 </div>
@@ -59,7 +52,7 @@
                         <!-- TOTAL -->
                         <div class="apple-total-value mb-3">
                             Total :
-                            <x-price-format :value="$total" />
+                            {{ \App\Service\PriceService::format($pricing['total']) }}
                         </div>
                     </div>
                     @if (session()->has('warning'))

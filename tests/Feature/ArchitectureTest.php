@@ -24,6 +24,13 @@ arch('controllers do not depend on Livewire components')
     ->expect('App\Http\Controllers')
     ->not->toUse('App\Livewire');
 
+arch('Livewire components are final and stay out of the HTTP layer')
+    ->expect('App\Livewire')
+    ->classes()
+    ->toBeFinal()
+    ->toExtend(Livewire\Component::class)
+    ->not->toUse('App\Http\Controllers');
+
 arch('services and helpers do not depend on HTTP controllers')
     ->expect(['App\Service', 'App\Helper'])
     ->not->toUse('App\Http\Controllers');

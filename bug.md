@@ -13,6 +13,7 @@ Index des entrées encore ouvertes, regroupées ici pour être visibles sans tou
 **Finance / paiement**
 - Déploiement de la réservation de stock : vérifier `reference IS NULL AND trans_ref IS NOT NULL` = 0 ligne avant la bascule en production.
 - Tarifs `shippings` existants dont la zone n'est pas desservie par leur transporteur.
+- Vitrine : double remise affichée dans la modale d'ajout au panier (`QuickAddModal`), fix prévu en phase 4 de la refonte.
 
 **Données / règles métier**
 - Slide / Image : ancien fichier supprimé avant l'enregistrement du nouveau, routes sans méthode.
@@ -26,6 +27,7 @@ Index des entrées encore ouvertes, regroupées ici pour être visibles sans tou
 - `order.validate` non couvert pour un invité (non bloquant).
 - `queue:work` manuel rejoue des `RegisterMailJob` en attente : préférer `MAIL_MAILER=log` en local.
 - Données de test conservées (lot d'import, produits `REF-IA-1` / `REF-IA-2`) : ne pas supprimer.
+- Vitrine (audit 2026-11-14) : unité de précommande mal affichée (`cart-item`), `id="logout-form"` dupliqué, `resources/css/app.css` mort, Pest 5 / PHPUnit 13 à planifier.
 
 **Résolu depuis la rédaction de l'entrée (entrée conservée telle quelle)**
 - Migration Poids/Devise/User : route `DELETE devise` retirée, `role` requis sur `UpdateUserRequest`, garde-fous suppression/rétrogradation de soi-même et du dernier administrateur (2026-11-11, `tests/Feature/AdminGuardrailsTest.php`).
@@ -408,3 +410,21 @@ Avant de déployer : vérifier que `Order` avec `reference IS NULL AND trans_ref
 ## 2026-11-11 — Données de test conservées
 
 - Lot `742d9cbe-f2f9-41dd-9c8f-d83e89badbe5` (table `job_batches`) et produits `REF-IA-1` (publié) / `REF-IA-2` (brouillon) créés pour tester `Product/ImportReview` ; cover factice `product/cover/x.webp` (image inexistante).
+
+## 2026-11-14 — Audit vitrine (refonte Livewire/Tailwind) : bugs hors périmètre
+
+Relevés pendant l'audit de la vitrine (plan : refonte page par page). Non corrigés ici.
+
+- **Double remise affichée dans la modale d'ajout au panier** (finance, affichage) : `App\Helper\CartAction::store` met `price = $product->prix_final_base`, déjà remisé (`Product::getPrixFinalBaseAttribute`). `resources/views/livewire/quick-add-modal.blade.php` ré-applique `reduction` (`$price - $price * $reduction / 100`) : prix et total de la modale trop bas, et l'« ancien prix » barré est en réalité le prix remisé. Le total du panier reste juste (il lit `price`). → corriger en phase 4 de la refonte, RED test d'abord.
+- **Unité de précommande** : `resources/views/livewire/cart-item.blade.php`, prix barré : `{{ $item['is_preorder'] ?? __('messages.product_status.unit') }}` affiche `1` ou rien au lieu de « /unité ». Disparaît avec la carte produit unique (phase 1).
+- **`id="logout-form"` dupliqué** dans `resources/views/layouts/nav.blade.php` (header desktop + mobile) : HTML invalide, `getElementById` prend toujours le premier formulaire. Disparaît avec le nouveau header (phase 0/1).
+- **Pest 5 / PHPUnit 13 disponibles** (installés : Pest 4.7.8, PHPUnit 12.5.33) : montée de version majeure à planifier séparément.
+- **`resources/css/app.css`** ne fait qu'importer `assets/css/main.css` et n'est référencé nulle part : à supprimer avec la purge Evara (phase 6).
+
+### Mise à jour 2026-11-14 (phase 1 de la refonte vitrine)
+
+- ✅ RÉSOLU — **Double remise dans la modale d'ajout** : `QuickAddModal::pricing()` n'applique plus la remise une seconde fois (le prix du panier est déjà remisé) et relit le prix d'origine en base pour l'afficher barré. Les deux variantes (Evara et `shop`) passent par ce calcul. Tests : `tests/Feature/QuickAddModalTest.php` (RED écrit avant).
+- ✅ RÉSOLU — **Accueil : « Voir tout » pointait vers la page ADMIN des catégories** (`route('category')` = `admin/category`, nom réutilisé dans le groupe admin). La page d'accueil migrée utilise `categorie_mobile` ; test dans `tests/Feature/HomePageTest.php`. ⚠️ Le nom `category` est ambigu : ne jamais l'utiliser côté vitrine.
+- **Piège Livewire** : une vue de composant qui commence par `@if` (ou autre directive) perd son élément racine, le HTML s'imbrique à chaque mise à jour puis « Snapshot missing on Livewire component » casse le composant (vu sur `Counter`). Garde-fou : test d'architecture dans `StorefrontArchTest`.
+- `#[On('productCount')]` était posé sur `Counter::render()` (l'événement « appelait » render) : remplacé par une méthode d'écoute dédiée.
+- `SlideFactory` est vide (`definition()` retourne `[]`) : les tests créent les slides à la main.

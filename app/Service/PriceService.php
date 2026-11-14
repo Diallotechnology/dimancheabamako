@@ -31,25 +31,28 @@ final class PriceService
         return session('devise') === 'EUR' && self::eurRate() !== null;
     }
 
-    public function formatBase(Product $product): string
+    /**
+     * Formate un montant stocké en CFA dans la devise de la session (EUR si taux valide, sinon CFA).
+     * Point unique de conversion pour l'affichage : ne pas refaire `number_format(... eurRate())` ailleurs.
+     */
+    public static function format(int|float $amountCfa): string
     {
-        $prix = $product->prix;
+        $rate = self::isEuro() ? self::eurRate() : null;
 
-        if (self::isEuro()) {
-            return number_format($prix / self::eurRate(), 2, ',', ' ').' €';
+        if ($rate !== null) {
+            return number_format($amountCfa / $rate, 2, ',', ' ').' €';
         }
 
-        return number_format($prix, 0, ',', ' ').' CFA';
+        return number_format($amountCfa, 0, ',', ' ').' CFA';
+    }
+
+    public function formatBase(Product $product): string
+    {
+        return self::format($product->prix);
     }
 
     public function formatPromo(Product $product): string
     {
-        $prix = $product->prix_final_base; // ton accessor numérique côté modèle
-
-        if (self::isEuro()) {
-            return number_format($prix / self::eurRate(), 2, ',', ' ').' €';
-        }
-
-        return number_format($prix, 0, ',', ' ').' CFA';
+        return self::format($product->prix_final_base);
     }
 }

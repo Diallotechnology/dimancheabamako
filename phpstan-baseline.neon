@@ -1363,12 +1363,6 @@ parameters:
 			path: app/Livewire/Counter.php
 
 		-
-			message: '#^Method App\\Livewire\\Counter\:\:render\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/Livewire/Counter.php
-
-		-
 			message: '#^Method App\\Livewire\\Counter\:\:store\(\) has no return type specified\.$#'
 			identifier: missingType.return
 			count: 1
@@ -1579,18 +1573,6 @@ parameters:
 			path: app/Livewire/QuickAddModal.php
 
 		-
-			message: '#^Left side of && is always false\.$#'
-			identifier: booleanAnd.leftAlwaysFalse
-			count: 1
-			path: app/Livewire/QuickAddModal.php
-
-		-
-			message: '#^Method App\\Livewire\\QuickAddModal\:\:applyQuantity\(\) is unused\.$#'
-			identifier: method.unused
-			count: 1
-			path: app/Livewire/QuickAddModal.php
-
-		-
 			message: '#^Method App\\Livewire\\QuickAddModal\:\:destroy\(\) has no return type specified\.$#'
 			identifier: missingType.return
 			count: 1
@@ -1603,20 +1585,8 @@ parameters:
 			path: app/Livewire/QuickAddModal.php
 
 		-
-			message: '#^Method App\\Livewire\\QuickAddModal\:\:open\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/Livewire/QuickAddModal.php
-
-		-
 			message: '#^Method App\\Livewire\\QuickAddModal\:\:open\(\) has parameter \$item with no value type specified in iterable type array\.$#'
 			identifier: missingType.iterableValue
-			count: 1
-			path: app/Livewire/QuickAddModal.php
-
-		-
-			message: '#^Method App\\Livewire\\QuickAddModal\:\:render\(\) has no return type specified\.$#'
-			identifier: missingType.return
 			count: 1
 			path: app/Livewire/QuickAddModal.php
 
@@ -1625,96 +1595,6 @@ parameters:
 			identifier: missingType.return
 			count: 1
 			path: app/Livewire/QuickAddModal.php
-
-		-
-			message: '#^Negated boolean expression is always true\.$#'
-			identifier: booleanNot.alwaysTrue
-			count: 1
-			path: app/Livewire/QuickAddModal.php
-
-		-
-			message: '#^Offset ''is_preorder'' on array\<int, array\<string, mixed\>\> on left side of \?\? does not exist\.$#'
-			identifier: nullCoalesce.offset
-			count: 2
-			path: app/Livewire/QuickAddModal.php
-
-		-
-			message: '#^Property App\\Livewire\\QuickAddModal\:\:\$addedItem \(array\<int, array\<string, mixed\>\>\) does not accept array\<int\|string, array\<string, mixed\>\|int\>\.$#'
-			identifier: assign.propertyType
-			count: 1
-			path: app/Livewire/QuickAddModal.php
-
-		-
-			message: '#^Unreachable statement \- code above always terminates\.$#'
-			identifier: deadCode.unreachable
-			count: 1
-			path: app/Livewire/QuickAddModal.php
-
-		-
-			message: '#^Access to an undefined property App\\Models\\Shipping\:\:\$price\.$#'
-			identifier: property.notFound
-			count: 1
-			path: app/Livewire/Update.php
-
-		-
-			message: '#^Call to an undefined method Illuminate\\Database\\Eloquent\\Relations\\BelongsToMany\:\:active\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: app/Livewire/Update.php
-
-		-
-			message: '#^Method App\\Livewire\\Update\:\:applyQuantity\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/Livewire/Update.php
-
-		-
-			message: '#^Method App\\Livewire\\Update\:\:decrement\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/Livewire/Update.php
-
-		-
-			message: '#^Method App\\Livewire\\Update\:\:destroy\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/Livewire/Update.php
-
-		-
-			message: '#^Method App\\Livewire\\Update\:\:increment\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/Livewire/Update.php
-
-		-
-			message: '#^Method App\\Livewire\\Update\:\:mount\(\) has parameter \$row with generic class Illuminate\\Support\\Collection but does not specify its types\: TKey, TValue$#'
-			identifier: missingType.generics
-			count: 1
-			path: app/Livewire/Update.php
-
-		-
-			message: '#^Method App\\Livewire\\Update\:\:render\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/Livewire/Update.php
-
-		-
-			message: '#^Method App\\Livewire\\Update\:\:store\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/Livewire/Update.php
-
-		-
-			message: '#^Parameter \#1 \$view of function view expects view\-string\|null, string given\.$#'
-			identifier: argument.type
-			count: 1
-			path: app/Livewire/Update.php
-
-		-
-			message: '#^Property App\\Livewire\\Update\:\:\$card with generic class Illuminate\\Support\\Collection does not specify its types\: TKey, TValue$#'
-			identifier: missingType.generics
-			count: 1
-			path: app/Livewire/Update.php
 
 		-
 			message: '#^Method App\\Mail\\ContactMail\:\:__construct\(\) has parameter \$data with no value type specified in iterable type array\.$#'

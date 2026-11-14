@@ -1,0 +1,78 @@
+/*
+ * Vitrine publique (Blade + Livewire), layout `layouts/shop.blade.php`.
+ * Ne jamais charger cette feuille sur une page qui utilise encore l'ancien thème Evara
+ * (public/assets/css/main.css) : le preflight Tailwind casserait Bootstrap.
+ * Sources limitées aux vues Blade : le front Vue de l'admin a sa propre feuille (admin.css).
+ */
+@import 'tailwindcss' source(none);
+
+@source '../views';
+
+/*
+ * Identité d'origine de la vitrine, conservée :
+ * - or de la marque (logo) : accent, fonds de boutons et badges, avec un texte encre dessus ;
+ * - encre quasi noire pour le texte ;
+ * - sauge, le neutre clair du thème d'origine (bordures, fonds de section).
+ * L'or ne passe pas le contraste en texte sur blanc (2,3:1) : pour du texte doré, `text-brand-strong`.
+ */
+@theme {
+    --color-brand: #d79f01;
+    --color-brand-strong: #8a6400;
+    --color-brand-soft: #f6ebcb;
+    --color-ink: #1a1a1a;
+    --color-ink-muted: #5e6658;
+    --color-sage: #e2e9e1;
+    --color-sage-soft: #eef0ee;
+    --color-linen: #f7f8f5;
+    --color-danger: #b3261e;
+    --color-success: #2f7d4f;
+
+    --font-sans: 'Lato', ui-sans-serif, system-ui, sans-serif;
+    --font-display: 'League Spartan', 'Lato', ui-sans-serif, sans-serif;
+
+    --shadow-card: 0 1px 2px 0 rgb(26 26 26 / 0.05), 0 6px 16px -8px rgb(26 26 26 / 0.12);
+    --shadow-pop: 0 14px 32px -10px rgb(26 26 26 / 0.22);
+}
+
+@layer base {
+    html {
+        -webkit-tap-highlight-color: transparent;
+        scroll-behavior: smooth;
+    }
+
+    body {
+        @apply bg-white font-sans text-[15px] leading-relaxed text-ink antialiased;
+    }
+
+    h1,
+    h2,
+    h3,
+    h4 {
+        @apply font-display leading-tight font-semibold tracking-tight text-ink;
+    }
+
+    :focus-visible {
+        @apply outline-2 outline-offset-2 outline-brand;
+    }
+
+    [x-cloak] {
+        display: none !important;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        html {
+            scroll-behavior: auto;
+        }
+
+        *,
+        ::before,
+        ::after {
+            animation-duration: 0.01ms !important;
+            transition-duration: 0.01ms !important;
+        }
+    }
+}
+
+@utility container-shop {
+    @apply mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8;
+}

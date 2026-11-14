@@ -8,12 +8,15 @@ import { defineConfig } from 'vite';
 export default defineConfig({
     plugins: [
         laravel({
-            input: ['resources/js/app.ts'],
+            // app.ts : back-office Inertia ; shop.* : vitrine Livewire (layout `shop`).
+            input: ['resources/js/app.ts', 'resources/css/shop.css', 'resources/js/shop.ts'],
             ssr: 'resources/js/ssr.js',
             refresh: true,
             fonts: [
                 bunny('Hanken Grotesk', { weights: [400, 500, 600, 700] }),
                 bunny('League Spartan', { weights: [500, 600, 700] }),
+                // Texte courant de la vitrine (repris du thème d'origine).
+                bunny('Lato', { weights: [400, 700] }),
             ],
         }),
         tailwindcss(),

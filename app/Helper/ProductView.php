@@ -22,6 +22,8 @@ final class ProductView
             'color' => $product->color,
             'categorie' => $product->categorie?->nom,
             'reduction' => $product->reduction ?? 0,
+            'prix' => (int) $product->prix,                       // CFA, avant remise (pour <x-shop.price>)
+            'prix_final' => $product->prix_final_base,            // CFA, après promotion active
             'prix_promo' => $pricing->formatPromo($product),   // string prêt à afficher
             'prix_format' => $pricing->formatBase($product),    // string prêt à afficher
         ];

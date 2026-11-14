@@ -6,6 +6,7 @@ use App\Models\Category;
 use App\Models\Product;
 use App\Models\Promotion;
 use App\Service\PriceService;
+use Illuminate\Support\Facades\Blade;
 
 function makeProduct(int $prix = 20000): Product
 {
@@ -73,6 +74,28 @@ it('falls back to CFA when EUR is selected but no valid EUR rate exists', functi
     expect((new PriceService)->formatBase($product))->toBe('20 000 CFA')
         ->and($product->prix_format)->toBe('20 000 CFA');
 })->with([null, 0, '0', 'abc']);
+
+it('formats any CFA amount in the session currency, with the CFA fallback', function () {
+    session(['devise' => 'CFA']);
+    expect(PriceService::format(1234567))->toBe('1 234 567 CFA')
+        ->and(PriceService::format(0))->toBe('0 CFA');
+
+    session(['devise' => 'EUR', 'taux_eur' => 655.957]);
+    expect(PriceService::format(20000))->toBe('30,49 €');
+
+    session(['devise' => 'EUR', 'taux_eur' => null]);
+    expect(PriceService::format(20000))->toBe('20 000 CFA');
+});
+
+it('renders the storefront price component through PriceService', function () {
+    session(['devise' => 'CFA']);
+
+    $html = Blade::render('<x-shop.price :amount="20000" :compare-at="25000" />');
+
+    expect($html)->toContain('20 000 CFA')
+        ->toContain('25 000 CFA')
+        ->toContain('<del');
+});
 
 it('renders the storefront without crashing when the EUR rate is missing', function () {
     $this->withSession(['devise' => 'EUR', 'taux_eur' => null])->get('/')->assertOk();
