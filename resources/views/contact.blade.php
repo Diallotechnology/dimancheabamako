@@ -28,10 +28,7 @@
 
             <form method="post" action="{{ route('contact.email') }}" class="mt-6 grid gap-5 sm:grid-cols-2">
                 @csrf
-                {{-- Piège à robots : hors écran, ignoré des lecteurs d'écran et du clavier. --}}
-                <div class="absolute -left-[9999px]" aria-hidden="true">
-                    <label>Website <input type="text" name="website" tabindex="-1" autocomplete="off"></label>
-                </div>
+                <x-shop.honeypot />
                 <x-shop.field name="name" :label="__('messages.shop.contact_name')" autocomplete="name" />
                 <x-shop.field name="email" type="email" :label="__('messages.shop.contact_email')" autocomplete="email" />
                 <div class="sm:col-span-2">

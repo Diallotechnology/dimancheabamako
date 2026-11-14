@@ -33,7 +33,13 @@ function migratedStorefrontViews(): array
             'about.blade.php',
             'livraison.blade.php',
             'contact.blade.php',
+            'profil.blade.php',
+            'validate.blade.php',
+            'components/auth-session-status.blade.php',
             'livewire/product-list.blade.php',
+            ...collect(File::files(resource_path('views/auth')))
+                ->map(fn (SplFileInfo $file): string => 'auth/'.$file->getFilename())
+                ->all(),
         )
         ->values()
         ->all();
@@ -101,7 +107,7 @@ test('migrated storefront views carry no Bootstrap, jQuery or Evara markup', fun
 });
 
 test('the legacy Evara layout never pulls the new storefront assets or components', function () {
-    $hits = scanViews(['layouts/app.blade.php', 'layouts/nav.blade.php', 'layouts/guest.blade.php'], [
+    $hits = scanViews(['layouts/app.blade.php', 'layouts/nav.blade.php'], [
         '/<x-shop[.-]/',
         '/resources\/css\/shop\.css|resources\/js\/shop\.ts/',
         '/@vite/',
@@ -113,7 +119,6 @@ test('the legacy Evara layout never pulls the new storefront assets or component
 test('storefront views do not hardcode application links', function () {
     // Vues pas encore migrées qui contiennent des liens en dur (à corriger lors de leur migration).
     $legacy = [
-        'auth/register-confirm.blade.php',
         'layouts/nav.blade.php',
     ];
 

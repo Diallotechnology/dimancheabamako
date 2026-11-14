@@ -1,33 +1,30 @@
-<x-app-layout>
-    <section class="section-padding">
-        <div class="container pt-25">
-            <div class="row">
-                <div class="col-md-6 m-auto">
-                    <p class="mb-50"></p>
-                    @if ($status === 'success')
-                        <h1 class="mb-4">{{ __('messages.operation_completed') }}.</h1>
-                        <h4 class="mb-4">
-                            {{ __('messages.order_success') }}
-                        </h4>
-                        <h4 class="mb-4">{{ __('messages.email_invoice') }}</h4>
-                    @elseif ($status === 'failed')
-                        <h1 class="mb-4">{{ __('messages.payment_failed') }}</h1>
-                        <h4 class="mb-4">{{ __('messages.payment_failed_hint') }}</h4>
-                        <a class="btn btn-default submit-auto-width font-xs hover-up mb-3" href="{{ route('panier') }}">
-                            {{ __('messages.back_to_cart') }}
-                        </a>
-                    @else
-                        <h1 class="mb-4">{{ __('messages.payment_pending') }}</h1>
-                        <h4 class="mb-4">{{ __('messages.payment_pending_hint') }}</h4>
-                    @endif
-                    @if ($accountPending)
-                        <div class="alert alert-info mb-4">{{ __('messages.account_confirmation_pending') }}</div>
-                    @endif
-                    <a class="btn btn-default submit-auto-width font-xs hover-up" href="{{ route('home') }}">
-                        {{ __('messages.back_to_home') }}
-                    </a>
-                </div>
+<x-shop-layout>
+    <x-slot:title>{{ $status === 'success' ? __('messages.operation_completed') : ($status === 'failed' ? __('messages.payment_failed') : __('messages.payment_pending')) }}</x-slot:title>
+
+    <div class="container-shop py-12 md:py-20">
+        <div class="mx-auto max-w-xl text-center" role="status">
+            @if ($status === 'success')
+                <h1 class="text-3xl md:text-4xl">{{ __('messages.operation_completed') }}</h1>
+                <p class="mt-4 text-lg">{{ __('messages.order_success') }}</p>
+                <p class="mt-2 text-ink-muted">{{ __('messages.email_invoice') }}</p>
+            @elseif ($status === 'failed')
+                <h1 class="text-3xl md:text-4xl">{{ __('messages.payment_failed') }}</h1>
+                <p class="mt-4 text-ink-muted">{{ __('messages.payment_failed_hint') }}</p>
+            @else
+                <h1 class="text-3xl md:text-4xl">{{ __('messages.payment_pending') }}</h1>
+                <p class="mt-4 text-ink-muted">{{ __('messages.payment_pending_hint') }}</p>
+            @endif
+
+            @if ($accountPending)
+                <p class="mt-6 rounded-lg bg-brand-soft px-4 py-3 text-sm">{{ __('messages.account_confirmation_pending') }}</p>
+            @endif
+
+            <div class="mt-8 flex flex-wrap justify-center gap-3">
+                @if ($status === 'failed')
+                    <x-shop.button :href="route('panier')" size="lg">{{ __('messages.back_to_cart') }}</x-shop.button>
+                @endif
+                <x-shop.button :href="route('home')" size="lg" :variant="$status === 'failed' ? 'outline' : 'primary'">{{ __('messages.back_to_home') }}</x-shop.button>
             </div>
         </div>
-    </section>
-</x-app-layout>
+    </div>
+</x-shop-layout>

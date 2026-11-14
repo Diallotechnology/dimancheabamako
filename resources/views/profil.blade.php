@@ -1,87 +1,49 @@
-<x-app-layout>
-    <x-slot:title>
-        Profil
-        </x-slot>
-        <section class="section-padding">
-            <div class="container pt-25">
-                <div class="row">
-                    <div class="col-md-8 m-auto">
-                        <div class="card">
-                            <div class="card-header">
-                                <h5>Details du compte</h5>
-                                @if (session()->has('success'))
-                                <div class="apple-success mb-3">
-                                    {{ session('success') }}
-                                </div>
-                                @endif
-                            </div>
-                            <div class="card-body">
-                                <form method="post" class="needs-validation"
-                                    action="{{ route('profil.update',Auth::user()) }}" novalidate>
-                                    @csrf
-                                    @method('PUT')
-                                    <div class="row">
-                                        <div class="form-group col-md-12">
+@php
+    $user = Auth::user();
+    $client = $user->client;
+@endphp
 
-                                            <x-input type="text" place="votre nom d'utilisateur" label="Username *"
-                                                name="name" value="{{ Auth::user()->name }}" />
-                                        </div>
-                                        <div class="form-group col-md-12">
-                                            <x-input type="email" place="votre email" label="Email" name="email"
-                                                value="{{ Auth::user()->email }}" />
-                                        </div>
-                                        <div class="form-group col-md-12">
-                                            <x-input-label for="current_password"
-                                                :value="__('messages.current_password')" />
+<x-shop-layout>
+    <x-slot:title>{{ __('messages.shop.profile') }}</x-slot:title>
 
-                                            <x-text-input id="current_password" class="block mt-1 w-full"
-                                                type="password" name="current_password"
-                                                autocomplete="current-password" />
+    <x-shop.page-header :title="__('messages.shop.profile')" />
 
-                                            <x-input-error :messages="$errors->get('current_password')"
-                                                class="mt-2" />
-                                        </div>
-                                        <div class="form-group col-md-12">
-                                            <x-input-label for="password" :value="__('messages.new_password')" />
+    <div class="container-shop grid gap-8 py-10 md:py-14 lg:grid-cols-3 lg:gap-12">
+        <section aria-labelledby="compte-titre" class="lg:col-span-2">
+            <h2 id="compte-titre" class="text-xl">{{ __('messages.shop.account_details') }}</h2>
 
-                                            <x-text-input id="password" class="block mt-1 w-full" type="password"
-                                                name="password" autocomplete="new-password" />
+            @if (session()->has('success'))
+                <p role="status" class="mt-4 rounded-lg bg-success/10 px-3 py-2 text-sm font-medium text-success">{{ session('success') }}</p>
+            @endif
 
-                                            <x-input-error :messages="$errors->get('password')" class="mt-2" />
-                                        </div>
-                                        <div class="form-group col-md-12">
-                                            <x-input-label for="password_confirmation"
-                                                :value="__('messages.confirm_password')" />
+            <form method="post" action="{{ route('profil.update', $user) }}" class="mt-6 grid gap-5">
+                @csrf
+                @method('PUT')
 
-                                            <x-text-input id="password_confirmation" class="block mt-1 w-full"
-                                                type="password" name="password_confirmation"
-                                                autocomplete="new-password" />
+                <x-shop.field name="name" :label="__('messages.shop.username')" :value="$user->name" autocomplete="username" />
+                <x-shop.field name="email" type="email" label="Email" :value="$user->email" autocomplete="email" />
 
-                                            <x-input-error :messages="$errors->get('password_confirmation')"
-                                                class="mt-2" />
-                                        </div>
-                                        <div class="col-md-12">
-                                            <button type="submit" class="btn btn-fill-out submit">Enregistré</button>
-                                        </div>
-                                    </div>
-                                </form>
-                            </div>
-                        </div>
+                <div class="grid gap-5 border-t border-sage pt-5 sm:grid-cols-2">
+                    <div class="sm:col-span-2">
+                        <x-shop.field name="current_password" type="password" :label="__('messages.current_password')" :required="false" autocomplete="current-password" />
                     </div>
-                    <div class="col-md-4">
-                        <div class="card mb-3 mb-lg-0">
-                            <div class="card-header">
-                                <h5 class="mb-0">Address</h5>
-                            </div>
-                            <div class="card-body">
-                                <address>{{ Auth::user()->client?->email
-                                    }}<br>Contact: {{ Auth::user()->client?->contact }}
-                                </address>
-                                <p>Pays: {{ Auth::user()->client?->pays }}</p>
-                            </div>
-                        </div>
-                    </div>
+                    <x-shop.field name="password" type="password" :label="__('messages.new_password')" :required="false" autocomplete="new-password" />
+                    <x-shop.field name="password_confirmation" type="password" :label="__('messages.confirm_password')" :required="false" autocomplete="new-password" />
                 </div>
-            </div>
+
+                <div>
+                    <x-shop.button type="submit" size="lg" class="w-full sm:w-auto">{{ __('messages.shop.save') }}</x-shop.button>
+                </div>
+            </form>
         </section>
-</x-app-layout>
+
+        <aside aria-labelledby="adresse-titre" class="self-start rounded-2xl border border-sage bg-linen p-5">
+            <h2 id="adresse-titre" class="text-xl">{{ __('messages.address') }}</h2>
+            <address class="mt-3 space-y-1 text-sm not-italic text-ink-muted">
+                <span class="block">{{ $client?->email }}</span>
+                <span class="block">{{ __('messages.contact') }} : {{ $client?->contact }}</span>
+                <span class="block">{{ __('messages.country') }} : {{ $client?->pays }}</span>
+            </address>
+        </aside>
+    </div>
+</x-shop-layout>

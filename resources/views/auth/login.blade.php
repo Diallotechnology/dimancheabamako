@@ -1,55 +1,26 @@
-<x-guest-layout>
-    <x-slot:title>
-        @lang('messages.login')
-        </x-slot>
-        <!-- Session Status -->
-        <div class="card mx-auto card-login">
-            <div class="card-body">
-                <h4 class="card-title mb-4 h2">@lang('messages.login')</h4>
-                <x-auth-session-status class="mb-4" :status="session('status')" />
-                <form method="POST" action="{{ route('login') }}">
-                    @csrf
+<x-shop-layout>
+    <x-slot:title>{{ __('messages.login') }}</x-slot:title>
 
-                    <!-- Email Address -->
-                    <div>
-                        <x-input-label for="email" :value="__('Email')" />
-                        <x-text-input id="email" class="block mt-1 w-full" type="email" name="email"
-                            :value="old('email')" required autofocus autocomplete="username" />
-                        <x-input-error :messages="$errors->get('email')" class="mt-2" />
-                    </div>
+    <x-shop.auth-card :title="__('messages.login')">
+        <x-auth-session-status class="mb-4" :status="session('status')" />
 
-                    <!-- Password -->
-                    <div class="mt-4">
-                        <x-input-label for="password" :value="__('Password')" />
+        <form method="POST" action="{{ route('login') }}" class="space-y-4">
+            @csrf
+            <x-shop.field name="email" type="email" label="Email" autocomplete="username" autofocus />
+            <x-shop.field name="password" type="password" :label="__('messages.password')" autocomplete="current-password" />
 
-                        <x-text-input id="password" class="block mt-1 w-full" type="password" name="password" required
-                            autocomplete="current-password" />
+            @if (Route::has('password.request'))
+                <a href="{{ route('password.request') }}" class="inline-block text-sm underline hover:text-brand-strong">
+                    {{ __('messages.forgot_password') }}
+                </a>
+            @endif
 
-                        <x-input-error :messages="$errors->get('password')" class="mt-2" />
-                    </div>
+            <x-shop.button type="submit" size="lg" class="w-full">{{ __('messages.login') }}</x-shop.button>
+        </form>
 
-                    <div class="mb-3">
-                        @if (Route::has('password.request'))
-                        <a href="{{ route('password.request') }}" class="float-end font-sm text-muted">
-                            @lang('messages.forgot_password')
-                        </a>
-                        @endif
-                    </div>
-                    <div class="d-flex justify-content-center my-4">
-                        <p class="me-2">@lang('messages.no_account')</p>
-                        <div>
-                            <a href="{{ route('register') }}" class="underline text-end text-sm">
-                                @lang('messages.register')
-                            </a>
-                        </div>
-                    </div>
-                    <div class="mb-4">
-                        <button class="btn btn-brand w-100">
-                            Valider
-                        </button>
-                    </div>
-                </form>
-            </div>
-        </div>
-
-</x-guest-layout>
+        <p class="mt-6 text-center text-sm text-ink-muted">
+            {{ __('messages.no_account') }}
+            <a href="{{ route('register') }}" class="font-semibold text-ink underline hover:text-brand-strong">{{ __('messages.register') }}</a>
+        </p>
+    </x-shop.auth-card>
+</x-shop-layout>

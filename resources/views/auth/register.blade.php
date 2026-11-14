@@ -1,101 +1,42 @@
-<x-guest-layout>
-    <x-slot:title>
-        @lang('messages.register')
-        </x-slot>
-        <div class="card mx-auto card-login">
+<x-shop-layout>
+    <x-slot:title>{{ __('messages.register') }}</x-slot:title>
 
+    <x-shop.auth-card :title="__('messages.register')" width="max-w-2xl">
+        <x-auth-session-status class="mb-4" :status="session('status')" />
 
-            <div class="card-body">
-                <x-auth-session-status class="mb-4" :status="session('status')" />
-                <h4 class="card-title mb-4 h2"> @lang('messages.register')</h4>
+        <form method="POST" action="{{ route('register') }}" class="grid gap-5 sm:grid-cols-2">
+            @csrf
+            <x-shop.honeypot />
 
-                <form method="POST" action="{{ route('register') }}">
-                    @csrf
-                    <input type="text" name="website" style="display:none">
+            <x-shop.field name="prenom" :label="__('messages.first_name')" autocomplete="given-name" autofocus />
+            <x-shop.field name="nom" :label="__('messages.last_name')" autocomplete="family-name" />
 
-                    <div class="row">
-                        <div class="col-md-6">
-                            <div class="mt-4">
-                                <!-- Name -->
-                                <x-input-label for="prenom" :value="__('messages.first_name')" />
-                                <x-text-input id="prenom" class="block mt-1 w-full" type="text" name="prenom"
-                                    :value="old('prenom')" required autofocus autocomplete="prenom" />
-                                <x-input-error :messages="$errors->get('prenom')" class="mt-2" />
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="mt-4">
-                                <!-- Name -->
-                                <x-input-label for="nom" :value="__('messages.last_name')" />
-                                <x-text-input id="nom" class="block mt-1 w-full" type="text" name="nom"
-                                    :value="old('nom')" required autofocus autocomplete="nom" />
-                                <x-input-error :messages="$errors->get('nom')" class="mt-2" />
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="mt-4">
-                                <x-select name="pays" :label="__('messages.country')">
-                                    @foreach ($pays as $row)
-                                    <option {{ old('pays')==$row ? 'selected' : '' }} value="{{ $row }}">{{ $row }}
-                                    </option>
-                                    @endforeach
-                                </x-select>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="mt-4">
-                                <!-- Name -->
-                                <x-input-label for="contact" :value="__('messages.contact_with_code')" />
-                                <input type="tel" name="contact" class="form-input block mt-1 w-full form-control"
-                                    placeholder="+223XXXXXXXX" required value="{{ old('contact') }}" />
-                                <x-input-error :messages="$errors->get('contact')" class="mt-2" />
+            <x-shop.field name="pays" :label="__('messages.country')">
+                <select id="champ-pays" name="pays" required
+                    @if ($errors->has('pays')) aria-invalid="true" aria-describedby="champ-pays-erreur" @endif
+                    class="h-11 w-full rounded-xl border bg-white px-4 text-sm focus:border-ink {{ $errors->has('pays') ? 'border-danger' : 'border-sage' }}">
+                    <option value="" disabled @selected(old('pays') === null)>{{ __('messages.select_country') }}</option>
+                    @foreach ($pays as $row)
+                        <option value="{{ $row }}" @selected(old('pays') === $row)>{{ $row }}</option>
+                    @endforeach
+                </select>
+            </x-shop.field>
+            <x-shop.field name="contact" type="tel" :label="__('messages.contact_with_code')" placeholder="+223XXXXXXXX" autocomplete="tel" />
 
-                            </div>
-                        </div>
-                        <div class="col-md-12">
-                            <!-- Email Address -->
-                            <div class="mt-4">
-                                <x-input-label for="email" :value="__('Email')" />
-                                <x-text-input id="email" class="block mt-1 w-full" type="email" name="email"
-                                    :value="old('email')" required autocomplete="username" />
-                                <x-input-error :messages="$errors->get('email')" class="mt-2" />
-                            </div>
-                        </div>
-                        <!-- Password -->
-                        <div class="mt-4">
-                            <x-input-label for="password" :value="__('Mot de passe')" />
-
-                            <x-text-input id="password" class="block mt-1 w-full" type="password" name="password"
-                                required autocomplete="new-password" />
-
-                            <x-input-error :messages="$errors->get('password')" class="mt-2" />
-                        </div>
-
-                        <!-- Confirm Password -->
-                        <div class="mt-4">
-                            <x-input-label for="password_confirmation" :value="__('messages.confirm_password')" />
-
-                            <x-text-input id="password_confirmation" class="block mt-1 w-full" type="password"
-                                name="password_confirmation" required autocomplete="new-password" />
-
-                            <x-input-error :messages="$errors->get('password_confirmation')" class="mt-2" />
-                        </div>
-                    </div>
-
-                    <div class="d-flex justify-content-center my-4">
-                        <p class="me-2">@lang('messages.already_have_account')</p>
-                        <div>
-                            <a href="{{ route('login') }}" class="underline text-end text-sm">
-                                @lang('messages.login')
-                            </a>
-                        </div>
-                    </div>
-                    <div class="mb-4">
-                        <button class="btn btn-brand w-100">
-                            Valider
-                        </button>
-                    </div>
-                </form>
+            <div class="sm:col-span-2">
+                <x-shop.field name="email" type="email" label="Email" autocomplete="username" />
             </div>
-        </div>
-</x-guest-layout>
+            <x-shop.field name="password" type="password" :label="__('messages.password')" autocomplete="new-password" />
+            <x-shop.field name="password_confirmation" type="password" :label="__('messages.confirm_password')" autocomplete="new-password" />
+
+            <div class="sm:col-span-2">
+                <x-shop.button type="submit" size="lg" class="w-full">{{ __('messages.register') }}</x-shop.button>
+            </div>
+        </form>
+
+        <p class="mt-6 text-center text-sm text-ink-muted">
+            {{ __('messages.already_have_account') }}
+            <a href="{{ route('login') }}" class="font-semibold text-ink underline hover:text-brand-strong">{{ __('messages.login') }}</a>
+        </p>
+    </x-shop.auth-card>
+</x-shop-layout>

@@ -208,5 +208,8 @@ return [
         'contact_subject' => 'Objet',
         'contact_message' => 'Votre message',
         'send' => 'Envoyer',
+        'account_details' => 'Détails du compte',
+        'username' => 'Nom d\'utilisateur',
+        'save' => 'Enregistrer',
     ],
 ];

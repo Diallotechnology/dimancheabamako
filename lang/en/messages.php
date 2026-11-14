@@ -209,5 +209,8 @@ return [
         'contact_subject' => 'Subject',
         'contact_message' => 'Your message',
         'send' => 'Send',
+        'account_details' => 'Account details',
+        'username' => 'Username',
+        'save' => 'Save',
     ],
 ];
