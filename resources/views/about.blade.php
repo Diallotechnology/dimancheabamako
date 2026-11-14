@@ -1,32 +1,23 @@
-<x-app-layout>
-    <x-slot:title>
-        @lang('messages.about')
-        </x-slot>
-        <div class="page-header breadcrumb-wrap">
-            <div class="container">
-                <div class="breadcrumb">
-                    <a href="/" rel="nofollow">@lang('messages.home')</a>
-                    <span></span> Pages <span></span> @lang('messages.about')
-                </div>
-            </div>
+<x-shop-layout>
+    <x-slot:title>{{ __('messages.about') }}</x-slot:title>
+
+    <x-slot:metadata>
+        <x-shop.seo :title="'Dimanche à Bamako - '.__('messages.about')" :description="__('messages.company_description')"
+            :canonical="route('about')" />
+    </x-slot:metadata>
+
+    <x-shop.page-header :title="__('messages.about')" />
+
+    <section class="container-shop grid items-center gap-8 py-10 md:grid-cols-2 md:py-16 lg:gap-14">
+        <div class="space-y-4">
+            <p class="text-sm font-semibold tracking-wide text-brand-strong uppercase">Dimanche à Bamako</p>
+            <h2 class="text-2xl md:text-3xl">{{ __('messages.company_description') }}</h2>
+            <p>{{ __('messages.company_history') }}</p>
+            <p>{{ __('messages.team_description') }}</p>
+            <p>{{ __('messages.purchase_instruction') }}</p>
+            <p>{{ __('messages.showroom_description') }}</p>
         </div>
-        <section class="section-padding">
-            <div class="container pt-25">
-                <div class="row">
-                    <div class="col-lg-6 align-self-center mb-lg-0 mb-4">
-                        <h2 class="mt-0 mb-15 text-uppercase font-sm text-brand wow fadeIn animated">
-                            DIMANCHE A BAMAKO
-                        </h2>
-                        <h3 class="font-heading mb-40">@lang('messages.company_description')</h3>
-                        <p>@lang('messages.company_history')</p>
-                        <p>@lang('messages.team_description')</p>
-                        <p>@lang('messages.purchase_instruction')</p>
-                        <p>@lang('messages.showroom_description')</p>
-                    </div>
-                    <div class="col-lg-6">
-                        <img src="{{ asset('assets/imgs/theme/about.jpg') }}" alt="about" />
-                    </div>
-                </div>
-            </div>
-        </section>
-</x-app-layout>
+        <img src="{{ asset('assets/imgs/theme/about.jpg') }}" alt="" loading="lazy" width="800" height="600"
+            class="w-full rounded-2xl bg-sage-soft object-cover">
+    </section>
+</x-shop-layout>

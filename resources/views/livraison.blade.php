@@ -1,29 +1,28 @@
-<x-app-layout>
-    <x-slot:title>
-        @lang('messages.delivery')
-        </x-slot>
-        <section class="section-padding">
-            <div class="container pt-25">
-                <div class="row">
-                    <div class="col-lg-7 align-self-center mb-lg-0 mb-4">
-                        <div class="single-content m-5">
+<x-shop-layout>
+    <x-slot:title>{{ __('messages.delivery') }}</x-slot:title>
 
-                            <h4>@lang('messages.delivery_conditions')</h4>
-                            <p>@lang('messages.delivery_details') </p>
-                            <p>@lang('messages.international_delivery')</p>
-                            <p>@lang('messages.customs_fees')</p>
-                            <h4>@lang('messages.contact_us')</h4>
-                            <p>
-                                DIMANCHE A BAMAKO <br />
-                                ACI 2 000, près de la place CAN Bamako<br />
-                                Malitel : +223 66 03 51 54
-                            </p>
-                        </div>
-                    </div>
-                    <div class="col-lg-5">
-                        <img src="{{ asset('assets/imgs/theme/DHL.jpg') }}" alt="dhl_logo" />
-                    </div>
-                </div>
-            </div>
-        </section>
-</x-app-layout>
+    <x-slot:metadata>
+        <x-shop.seo :title="'Dimanche à Bamako - '.__('messages.delivery')" :description="__('messages.delivery_details')"
+            :canonical="route('livraison')" />
+    </x-slot:metadata>
+
+    <x-shop.page-header :title="__('messages.delivery')" />
+
+    <section class="container-shop grid items-center gap-8 py-10 md:grid-cols-5 md:py-16 lg:gap-14">
+        <div class="space-y-4 md:col-span-3">
+            <h2 class="text-2xl">{{ __('messages.delivery_conditions') }}</h2>
+            <p>{{ __('messages.delivery_details') }}</p>
+            <p>{{ __('messages.international_delivery') }}</p>
+            <p>{{ __('messages.customs_fees') }}</p>
+
+            <h2 class="pt-4 text-2xl">{{ __('messages.contact_us') }}</h2>
+            <address class="not-italic">
+                Dimanche à Bamako<br>
+                {{ __('messages.shop.address_value') }}<br>
+                <a href="tel:+22366035154" class="font-semibold hover:text-brand-strong">+223 66 03 51 54</a>
+            </address>
+        </div>
+        <img src="{{ asset('assets/imgs/theme/DHL.jpg') }}" alt="DHL" loading="lazy" width="600" height="400"
+            class="w-full rounded-2xl bg-sage-soft object-contain md:col-span-2">
+    </section>
+</x-shop-layout>

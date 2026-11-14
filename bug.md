@@ -440,3 +440,7 @@ Relevés pendant l'audit de la vitrine (plan : refonte page par page). Non corri
 - **Ligne « sur commande » supprimée sans message** : `Panier::cleanInvalidPreorders` retire du panier toute ligne précommande dont la quantité n'est pas 5 ou 6, sans prévenir le client ; la ligne disparaît silencieusement.
 - ✅ RÉSOLU — **Composant `Delete`** : la ligne du panier était une propriété publique `Collection $row` modifiable côté client ; remplacé par `Panier::remove(int $id)` (ne vise que le panier de la session).
 - ✅ RÉSOLU — **`Panier::GetTrans()`** plantait (`null`) quand le pays n'existait pas (option vide) ; double requête `wire:change` + `wire:model.live` remplacée par les hooks `updatedCountryId` / `updatedTransportId`.
+
+### Mise à jour 2026-11-14 (phase 5 : pages éditoriales)
+
+- **Formulaire de contact inopérant** : `ContactController::sendEmail` exige `'captcha' => 'required|captcha'`, mais le paquet de captcha n'est pas installé (absent de `composer.json`) et aucun champ captcha n'existe dans la vue : toute soumission échoue (« Le champ captcha est obligatoire »), aucun message n'arrive jamais. À trancher : remplacer par un honeypot + `throttle` (recommandé, sans dépendance) ou réinstaller un captcha. Sécurité (anti-spam) : RED test d'abord. La vue migrée affiche désormais l'erreur au lieu de l'avaler.

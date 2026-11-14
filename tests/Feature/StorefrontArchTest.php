@@ -30,6 +30,9 @@ function migratedStorefrontViews(): array
             'category.blade.php',
             'product-show.blade.php',
             'livewire/panier.blade.php',
+            'about.blade.php',
+            'livraison.blade.php',
+            'contact.blade.php',
             'livewire/product-list.blade.php',
         )
         ->values()
@@ -110,9 +113,7 @@ test('the legacy Evara layout never pulls the new storefront assets or component
 test('storefront views do not hardcode application links', function () {
     // Vues pas encore migrées qui contiennent des liens en dur (à corriger lors de leur migration).
     $legacy = [
-        'about.blade.php',
         'auth/register-confirm.blade.php',
-        'contact.blade.php',
         'layouts/nav.blade.php',
     ];
 

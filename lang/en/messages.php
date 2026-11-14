@@ -201,5 +201,13 @@ return [
         'login_title' => 'Log in',
         'optional' => 'optional',
         'edit' => 'Edit',
+        'store' => 'Store',
+        'see_map' => 'See on the map',
+        'new_tab' => 'opens in a new tab',
+        'contact_name' => 'Your name',
+        'contact_email' => 'Your e-mail',
+        'contact_subject' => 'Subject',
+        'contact_message' => 'Your message',
+        'send' => 'Send',
     ],
 ];

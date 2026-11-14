@@ -200,5 +200,13 @@ return [
         'login_title' => 'Se connecter',
         'optional' => 'facultatif',
         'edit' => 'Modifier',
+        'store' => 'Boutique',
+        'see_map' => 'Voir sur la carte',
+        'new_tab' => "s'ouvre dans un nouvel onglet",
+        'contact_name' => 'Votre nom',
+        'contact_email' => 'Votre e-mail',
+        'contact_subject' => 'Objet',
+        'contact_message' => 'Votre message',
+        'send' => 'Envoyer',
     ],
 ];
