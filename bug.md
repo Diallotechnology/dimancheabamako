@@ -443,4 +443,4 @@ Relevés pendant l'audit de la vitrine (plan : refonte page par page). Non corri
 
 ### Mise à jour 2026-11-14 (phase 5 : pages éditoriales)
 
-- **Formulaire de contact inopérant** : `ContactController::sendEmail` exige `'captcha' => 'required|captcha'`, mais le paquet de captcha n'est pas installé (absent de `composer.json`) et aucun champ captcha n'existe dans la vue : toute soumission échoue (« Le champ captcha est obligatoire »), aucun message n'arrive jamais. À trancher : remplacer par un honeypot + `throttle` (recommandé, sans dépendance) ou réinstaller un captcha. Sécurité (anti-spam) : RED test d'abord. La vue migrée affiche désormais l'erreur au lieu de l'avaler.
+- ✅ RÉSOLU — **Formulaire de contact inopérant** : `ContactController::sendEmail` exigeait un `captcha` sans paquet ni champ, aucun message ne partait. Remplacé par un champ piège (`website`, invisible) + `throttle:5,1` sur la route ; limites de longueur ajoutées. Tests : `tests/Feature/ContactFormTest.php` (RED écrit avant). Le texte `messages.captcha` des fichiers de langue n'est plus utilisé.

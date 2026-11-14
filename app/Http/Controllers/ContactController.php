@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Http\Controllers;
 
 use App\Mail\ContactMail;
-use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Validator;
@@ -19,16 +18,19 @@ final class ContactController extends Controller
      */
     public function sendEmail(Request $request)
     {
-        // validate fields
         Validator::make($request->all(), [
-            'name' => 'required|string',
-            'email' => 'required|email',
-            'subject' => 'required|string',
-            'message' => 'required|string',
-            'captcha' => 'required|captcha',
-        ], [
-            'captcha.captcha' => __('messages.captcha'),
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|max:255',
+            'subject' => 'required|string|max:255',
+            'message' => 'required|string|max:5000',
+            'website' => 'nullable|string',
         ])->validate();
+
+        // Piège à robots : champ invisible pour un humain. Rempli, on répond comme si tout s'était bien passé.
+        if ($request->filled('website')) {
+            return back();
+        }
+
         $data = [
             'name' => $request->name,
             'email' => $request->email,
@@ -40,9 +42,4 @@ final class ContactController extends Controller
 
         return back();
     }
-
-    // public function refreshCaptcha(): JsonResponse
-    // {
-    //     return response()->json(['captcha' => captcha_img()]);
-    // }
 }

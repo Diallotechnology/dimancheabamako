@@ -93,7 +93,7 @@ Route::controller(LinkController::class)->group(function () {
 });
 Route::get('/shop/{category}-{slug}', ProductList::class)->name('shop');
 Route::get('/panier', Panier::class)->name('panier');
-Route::post('contact/mail', [ContactController::class, 'sendEmail'])->name('contact.email');
+Route::post('contact/mail', [ContactController::class, 'sendEmail'])->name('contact.email')->middleware('throttle:5,1');
 Route::view('categorie', 'category')->name('categorie_mobile');
 Route::view('contact', 'contact')->name('contact');
 Route::view('about', 'about')->name('about');

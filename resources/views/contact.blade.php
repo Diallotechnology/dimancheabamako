@@ -26,12 +26,12 @@
         <section aria-labelledby="formulaire-titre" class="lg:col-span-2">
             <h2 id="formulaire-titre" class="text-2xl">{{ __('messages.contact_us') }}</h2>
 
-            @if ($errors->has('captcha'))
-                <p role="alert" class="mt-4 rounded-lg bg-danger/10 px-3 py-2 text-sm font-medium text-danger">{{ $errors->first('captcha') }}</p>
-            @endif
-
             <form method="post" action="{{ route('contact.email') }}" class="mt-6 grid gap-5 sm:grid-cols-2">
                 @csrf
+                {{-- Piège à robots : hors écran, ignoré des lecteurs d'écran et du clavier. --}}
+                <div class="absolute -left-[9999px]" aria-hidden="true">
+                    <label>Website <input type="text" name="website" tabindex="-1" autocomplete="off"></label>
+                </div>
                 <x-shop.field name="name" :label="__('messages.shop.contact_name')" autocomplete="name" />
                 <x-shop.field name="email" type="email" :label="__('messages.shop.contact_email')" autocomplete="email" />
                 <div class="sm:col-span-2">
