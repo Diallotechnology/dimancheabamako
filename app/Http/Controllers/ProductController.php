@@ -55,7 +55,7 @@ final class ProductController extends Controller
      */
     public function show(Product $product)
     {
-        $product->load('images', 'orders');
+        $product->load('images', 'orders.country');
 
         return Inertia::render('Admin/Product/Show', compact('product'));
     }

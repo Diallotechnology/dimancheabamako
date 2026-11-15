@@ -41,7 +41,7 @@ final class PromotionController extends Controller
      */
     public function show(Promotion $promotion)
     {
-        $promotion->load('products');
+        $promotion->load('products.categorie');
 
         return Inertia::render('Admin/Promotion/Show', compact('promotion'));
     }

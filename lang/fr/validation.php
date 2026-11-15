@@ -182,6 +182,12 @@ return [
     */
 
     'attributes' => [
+        'zone_id' => 'zone',
+        'transport_id' => 'transporteur',
+        'poids_id' => 'tranche de poids',
+        'country_id' => 'pays',
+        'categorie_id' => 'catégorie',
+        'temps' => 'délai',
         'activity' => 'activité',
         'activities' => 'activités',
         'address' => 'adresse',

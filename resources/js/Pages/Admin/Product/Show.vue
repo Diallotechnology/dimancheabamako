@@ -115,13 +115,14 @@ const details: { label: string; value: string }[] = [
         </section>
 
         <h2 class="mb-3 text-lg font-semibold">Commandes ({{ orders.length }})</h2>
-        <DataTable :rows="orders" :columns="9">
+        <DataTable :rows="orders" :columns="10">
             <template #head>
                 <TableHead class="w-16">#</TableHead>
                 <TableHead>Référence</TableHead>
                 <TableHead>Adresse</TableHead>
                 <TableHead>Postal</TableHead>
                 <TableHead>Ville</TableHead>
+                <TableHead>Pays</TableHead>
                 <TableHead>Paiement</TableHead>
                 <TableHead>État</TableHead>
                 <TableHead>Date</TableHead>
@@ -134,6 +135,7 @@ const details: { label: string; value: string }[] = [
                 <TableCell>{{ row.adresse }}</TableCell>
                 <TableCell>{{ row.postal }}</TableCell>
                 <TableCell>{{ row.ville }}</TableCell>
+                <TableCell>{{ row.country?.nom ?? '—' }}</TableCell>
                 <TableCell>
                     <p>{{ row.trans_ref }}</p>
                     <p class="text-xs text-muted-foreground">{{ row.trans_state }}</p>

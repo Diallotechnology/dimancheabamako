@@ -66,6 +66,8 @@ const price = new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'XOF
                 <CardContent class="grid gap-3">
                     <p class="text-lg font-semibold">{{ price.format(product.prix) }}</p>
                     <dl class="grid grid-cols-2 gap-x-3 gap-y-1 text-sm">
+                        <dt class="text-muted-foreground">Catégorie</dt>
+                        <dd>{{ product.categorie?.nom ?? '—' }}</dd>
                         <dt class="text-muted-foreground">Couleur</dt>
                         <dd>{{ product.color ?? '—' }}</dd>
                         <dt class="text-muted-foreground">Taille</dt>

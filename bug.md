@@ -15,9 +15,6 @@ Index des entrées encore ouvertes, regroupées ici pour être visibles sans tou
 - Vitrine : double remise affichée dans la modale d'ajout au panier (`QuickAddModal`), fix prévu en phase 4 de la refonte.
 
 **Données / règles métier**
-- `Promotion/Show` : catégorie du produit jamais affichée.
-- `Product/Show` : colonne « Pays » toujours vide.
-- Messages de validation « Le champ zone id est obligatoire » (cosmétique).
 
 **Tests / outillage / environnement local**
 - `order.validate` non couvert pour un invité (non bloquant).
@@ -328,12 +325,14 @@ Avant de déployer : vérifier que `Order` avec `reference IS NULL AND trans_ref
 - **Piste** : supprimer `Transport/Show.vue` et `TransportController::show`.
 - **Statut** : non corrigé, hors périmètre.
 
-## 2026-11-11 — `Promotion/Show` : catégorie du produit jamais affichée
+## 2026-11-11 — `Promotion/Show` : catégorie du produit jamais affichée — ✅ RÉSOLU (2026-11-15)
+
+> Résolution : `PromotionController::show` charge `products.categorie` et `Promotion/Show.vue` affiche la catégorie de chaque produit (« — » si absente). Le placeholder d'image statique reste volontairement retiré. Affichage : pas de test dédié.
 
 - **Où** : `app/Http/Controllers/PromotionController.php::show` (`$promotion->load('products')`).
 - **Constat** : l'ancienne page affichait `row.categorie?.nom`, mais la relation `categorie` n'est pas chargée : la ligne était toujours vide. Dans la version migrée la catégorie est omise ; l'ancienne image était un placeholder statique (`/admin/assets/imgs/items/1.jpg`), elle aussi retirée.
 - **Piste** : `load('products.categorie')` puis réafficher la catégorie (et éventuellement `cover`) dans `Show.vue`.
-- **Statut** : non corrigé, hors périmètre.
+- **Statut** : corrigé (voir résolution ci-dessus).
 
 ## 2026-11-11 — Création/édition de promotion, zone et transporteur impossible en local (`MassAssignmentException`)  — ✅ RÉSOLU (2026-11-11)
 
@@ -351,11 +350,13 @@ Avant de déployer : vérifier que `Order` avec `reference IS NULL AND trans_ref
 - **Piste** : revoir la factory (zone choisie parmi `transport->zones`) ; en production, lister les lignes incohérentes avec `Shipping::whereNotExists(... transport_zone ...)` et les corriger ou les supprimer à la main.
 - **Statut** : factory corrigée ; nettoyage des lignes existantes en production à faire manuellement via la commande.
 
-## 2026-11-11 — Messages de validation « Le champ zone id est obligatoire »
+## 2026-11-11 — Messages de validation « Le champ zone id est obligatoire » — ✅ RÉSOLU (2026-11-15)
+
+> Résolution : `lang/fr/validation.php` → `attributes` : `zone_id` (zone), `transport_id` (transporteur), `poids_id` (tranche de poids), `country_id` (pays), `categorie_id` (catégorie), `temps` (délai). Cosmétique : pas de test dédié.
 
 - **Où** : `lang/fr/validation.php` (pas de traduction des attributs `zone_id`, `transport_id`, `poids_id`…), visible dans `Shipping/Index` et `Shipping/Update`.
 - **Piste** : ajouter ces clés dans `attributes` (« zone », « transporteur », « tranche de poids »).
-- **Statut** : non corrigé, cosmétique, hors périmètre.
+- **Statut** : corrigé (voir résolution ci-dessus).
 
 ## 2026-11-11 — Dashboard : `revenu` du mois et « ventes » comptées sur des bases différentes — ✅ RÉSOLU (2026-11-11)
 
@@ -382,12 +383,14 @@ Avant de déployer : vérifier que `Order` avec `reference IS NULL AND trans_ref
 - **Piste** : supprimer ce dossier puis `php artisan storage:link` (vérifier d'abord que son contenu existe aussi dans `storage/app/public`).
 - **Statut** : non corrigé, hors périmètre.
 
-## 2026-11-11 — Product/Show : colonne « Pays » toujours vide
+## 2026-11-11 — Product/Show : colonne « Pays » toujours vide — ✅ RÉSOLU (2026-11-15)
+
+> Résolution : cause = relation non chargée (l'ancien `row.pays` n'existait pas sur `Order`). `ProductController::show` charge `orders.country` et `Product/Show.vue` réaffiche une colonne « Pays » (`row.country?.nom`). Affichage : pas de test dédié.
 
 - **Où** : `ProductController::show` charge `orders` sans `orders.country` ; l'ancienne page lisait `row.pays` (attribut inexistant sur `Order`).
 - **Constat** : colonne supprimée dans la nouvelle page. Ancien bug visible : « stock » affichait `product.taille`, corrigé à la migration.
 - **Piste** : `$product->load('images', 'orders.country')` puis réafficher `row.country?.nom`.
-- **Statut** : non corrigé côté serveur, hors périmètre.
+- **Statut** : corrigé (voir résolution ci-dessus).
 
 ## 2026-11-11 — Création produit : les erreurs `image.*` et validation d'`image` sur Update — ✅ RÉSOLU (2026-11-15)
 
