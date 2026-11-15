@@ -138,6 +138,22 @@ return [
         'description_1' => 'Our :name collection offers an exclusive selection of clothing and accessories, crafted with high-quality Bazin fabric.',
         'description_2' => 'Perfect for any occasion, our creations combine elegance and comfort.',
     ],
+    // Invoice (invoice.blade.php).
+    'invoice' => [
+        'title' => 'Invoice',
+        'date' => 'Date',
+        'transaction' => 'Transaction',
+        'transport' => 'Carrier',
+        'client' => 'Customer',
+        'shipping_address' => 'Shipping address',
+        'reference' => 'Reference',
+        'description' => 'Description',
+        'amount' => 'Amount',
+        'subtotal' => 'Subtotal',
+        'shipping' => 'Shipping',
+        'total' => 'Total',
+        'thanks' => 'Thank you for your trust. Dimanche à Bamako.',
+    ],
     // Error pages (errors/minimal): title and message per HTTP code.
     'error_pages' => [
         '401' => ['title' => 'Sign-in required', 'text' => 'You need to sign in to access this page.'],

@@ -137,6 +137,22 @@ return [
         'description_1' => 'Notre collection :name propose une sélection exclusive de vêtements et accessoires, confectionnés à partir de Bazin de qualité supérieure.',
         'description_2' => 'Idéale pour toutes les occasions, nos créations allient élégance et confort.',
     ],
+    // Facture (invoice.blade.php).
+    'invoice' => [
+        'title' => 'Facture',
+        'date' => 'Date',
+        'transaction' => 'Transaction',
+        'transport' => 'Transport',
+        'client' => 'Client',
+        'shipping_address' => 'Adresse de livraison',
+        'reference' => 'Référence',
+        'description' => 'Description',
+        'amount' => 'Montant',
+        'subtotal' => 'Sous-total',
+        'shipping' => 'Livraison',
+        'total' => 'Total',
+        'thanks' => 'Merci pour votre confiance. Dimanche à Bamako.',
+    ],
     // Pages d'erreur (errors/minimal) : titre et message par code HTTP.
     'error_pages' => [
         '401' => ['title' => 'Connexion requise', 'text' => 'Vous devez vous connecter pour accéder à cette page.'],
