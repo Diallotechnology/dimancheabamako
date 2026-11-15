@@ -114,16 +114,6 @@ final class Product extends Model
         return $query->where('is_preorder', 1);
     }
 
-    public function getMontant(): string
-    {
-        $montant = $this->pivot->montant;
-        if (PriceService::isEuro()) {
-            return number_format($montant / PriceService::eurRate(), 2, ',', ' ').' €';
-        }
-
-        return number_format($montant, 0, ',', ' ').' CFA';
-    }
-
     /**
      * @return BelongsToMany<Promotion, $this>
      */

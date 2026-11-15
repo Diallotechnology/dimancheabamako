@@ -3,9 +3,11 @@
 declare(strict_types=1);
 
 use App\Mail\OrderMail;
+use App\Models\Category;
 use App\Models\Client;
 use App\Models\Country;
 use App\Models\Order;
+use App\Models\Product;
 use App\Models\Transport;
 use App\Models\Zone;
 use Illuminate\Support\Facades\URL;
@@ -84,4 +86,46 @@ it('puts a signed invoice link in the order e-mail', function () {
     (new OrderMail($order))
         ->assertSeeInHtml('signature=')
         ->assertSeeInHtml($order->trans_ref);
+});
+
+// Montants de la facture : chaque ligne affiche son propre montant, une seule devise, via PriceService.
+
+function invoiceWithLines(int $shipping, array $lineAmounts): string
+{
+    $order = purchasedOrder();
+    $order->update(['shipping' => (string) $shipping]);
+
+    foreach ($lineAmounts as $montant) {
+        $order->products()->attach(
+            Product::factory()->create(['categorie_id' => Category::factory()->create()->id])->id,
+            ['quantity' => 1, 'montant' => $montant],
+        );
+    }
+
+    return URL::signedRoute('order.invoice.signed', ['id' => $order->trans_ref]);
+}
+
+it('shows each line with its own amount, the subtotal, the shipping and the total in CFA', function () {
+    session(['devise' => 'CFA', 'taux_eur' => 500]);
+
+    $this->get(invoiceWithLines(15000, [12000, 8000]))
+        ->assertOk()
+        ->assertSee('12 000 CFA')   // ligne 1 : pas le montant de toute la commande
+        ->assertSee('8 000 CFA')    // ligne 2
+        ->assertSee('20 000 CFA')   // sous-total
+        ->assertSee('15 000 CFA')   // livraison
+        ->assertSee('35 000 CFA');  // total
+});
+
+it('shows each amount once in euros, without a doubled currency sign', function () {
+    session(['devise' => 'EUR', 'taux_eur' => 500]);
+
+    $this->get(invoiceWithLines(50000, [500000, 250000]))
+        ->assertOk()
+        ->assertSee('1 000,00 €')   // ligne 1
+        ->assertSee('500,00 €')     // ligne 2
+        ->assertSee('1 500,00 €')   // sous-total
+        ->assertSee('100,00 €')     // livraison
+        ->assertSee('1 600,00 €')   // total : au-delà de 1 000 €, le séparateur de milliers ne doit pas fausser la somme
+        ->assertDontSee('€ €');
 });

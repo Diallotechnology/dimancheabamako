@@ -1675,12 +1675,6 @@ parameters:
 			path: app/Models/Poids.php
 
 		-
-			message: '#^Access to an undefined property App\\Models\\Product\:\:\$pivot\.$#'
-			identifier: property.notFound
-			count: 1
-			path: app/Models/Product.php
-
-		-
 			message: '#^Method App\\Models\\Product\:\:categorie\(\) return type with generic class Illuminate\\Database\\Eloquent\\Relations\\BelongsTo does not specify its types\: TRelatedModel, TDeclaringModel$#'
 			identifier: missingType.generics
 			count: 1

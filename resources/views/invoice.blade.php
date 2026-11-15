@@ -91,9 +91,7 @@
                                                     {{ $item->pivot->quantity }}
                                                 </div>
                                                 <div class="col-md-3 amount text-end">
-                                                    {{ \App\Service\PriceService::isEuro() ?
-                                                    $item->getMontant(). ' €' : $order->getMontant().' CFA'
-                                                    }}
+                                                    {{ \App\Service\PriceService::format((float) $item->pivot->montant) }}
                                                 </div>
                                             </div>
                                             @empty
@@ -105,30 +103,14 @@
                                         </div>
                                         <div class="total text-end">
                                             <div class="field">
-                                                Subtotal <span>
-                                                    @if (\App\Service\PriceService::isEuro())
-                                                    {{ number_format($order->totaux / $order->getTaux(), 2) }} €
-                                                    @else
-                                                    {{ number_format($order->totaux, 0, ',', ' ').' CFA' }}
-                                                    @endif
-                                                </span>
+                                                Subtotal <span>{{ \App\Service\PriceService::format((float) $order->totaux) }}</span>
                                             </div>
                                             <div class="field">
-                                                Shipping <span>{{ \App\Service\PriceService::isEuro() ?
-                                                    $order->getShipping(). ' €' : $order->getShipping().' CFA'
-                                                    }}</span>
+                                                Shipping <span>{{ \App\Service\PriceService::format((float) $order->shipping) }}</span>
                                             </div>
 
                                             <div class="field grand-total">
-                                                Total <span>
-                                                    @if (\App\Service\PriceService::isEuro())
-                                                    {{ number_format($order->totaux / $order->getTaux(), 2) +
-                                                    $order->getShipping() }} €
-                                                    @else
-                                                    {{ number_format($order->totaux + $order->getShipping(), 0,
-                                                    ',', ' ').' CFA' }}
-                                                    @endif
-                                                </span>
+                                                Total <span>{{ \App\Service\PriceService::format((float) $order->totaux + (float) $order->shipping) }}</span>
                                             </div>
                                         </div>
                                     </div>
