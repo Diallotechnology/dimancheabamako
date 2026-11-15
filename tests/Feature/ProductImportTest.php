@@ -10,6 +10,7 @@ use App\Models\Product;
 use App\Models\User;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Bus;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 
 beforeEach(function () {
@@ -94,6 +95,34 @@ it('reports batch progress and 404s on an unknown batch', function () {
         ->assertOk()
         ->assertJsonStructure(['total', 'processed', 'failed', 'finished', 'progress']);
 });
+
+// Avec allowFailures, les jobs en échec restent dans pending_jobs et finished_at n'est jamais renseigné :
+// le lot est terminé quand il ne reste plus de job en attente de succès (pending == failed).
+it('reports a batch as finished once only failed jobs remain pending', function (int $total, int $pending, int $failed, bool $finished, int $processed, int $progress) {
+    $batch = Bus::batch([])->name('t')->dispatch();
+    DB::table('job_batches')->where('id', $batch->id)->update([
+        'total_jobs' => $total,
+        'pending_jobs' => $pending,
+        'failed_jobs' => $failed,
+        'finished_at' => null,
+    ]);
+
+    $this->actingAs($this->secretary)
+        ->getJson('/admin/product/import/'.$batch->id)
+        ->assertOk()
+        ->assertJson([
+            'total' => $total,
+            'failed' => $failed,
+            'processed' => $processed,
+            'finished' => $finished,
+            'progress' => $progress,
+        ]);
+})->with([
+    'tous en échec' => [3, 3, 3, true, 0, 100],
+    '2 réussis, 1 en échec' => [3, 1, 1, true, 2, 100],
+    'un échec, il en reste à traiter' => [3, 2, 1, false, 1, 67],
+    'rien traité' => [3, 3, 0, false, 0, 0],
+]);
 
 it('filters the product list on draft status', function () {
     $category = Category::factory()->create();

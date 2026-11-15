@@ -94,12 +94,19 @@ final class ProductImportController extends Controller
 
         abort_if($batch === null, 404);
 
+        // `allowFailures()` : les jobs en échec restent dans `pendingJobs` et `finished_at` n'est jamais
+        // renseigné. `finished()` / `progress()` de Laravel sont donc faux dès le premier échec ; on les
+        // recalcule ici : il reste à traiter ce qui est en attente sans être en échec.
+        $remaining = $batch->pendingJobs - $batch->failedJobs;
+
         return response()->json([
             'total' => $batch->totalJobs,
             'processed' => $batch->processedJobs(),
             'failed' => $batch->failedJobs,
-            'finished' => $batch->finished(),
-            'progress' => $batch->progress(),
+            'finished' => $remaining <= 0,
+            'progress' => $batch->totalJobs > 0
+                ? (int) round(($batch->totalJobs - $remaining) / $batch->totalJobs * 100)
+                : 100,
         ]);
     }
 }

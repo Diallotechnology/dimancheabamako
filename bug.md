@@ -15,7 +15,6 @@ Index des entrées encore ouvertes, regroupées ici pour être visibles sans tou
 - Vitrine : double remise affichée dans la modale d'ajout au panier (`QuickAddModal`), fix prévu en phase 4 de la refonte.
 
 **Données / règles métier**
-- Lot d'import jamais « terminé » dès qu'un job échoue (`ProductImportController::show`, contournement côté Vue).
 - `Promotion/Show` : catégorie du produit jamais affichée.
 - `Product/Show` : colonne « Pays » toujours vide.
 - Messages de validation « Le champ zone id est obligatoire » (cosmétique).
@@ -398,12 +397,14 @@ Avant de déployer : vérifier que `Order` avec `reference IS NULL AND trans_ref
 - **Constat** : un produit créé sans couleur ni taille ne peut plus être modifié sans les renseigner.
 - **Statut** : corrigé (voir résolution ci-dessus).
 
-## 2026-11-11 — Lot d'import jamais « terminé » dès qu'un job échoue (`ProductImportController::show`)
+## 2026-11-11 — Lot d'import jamais « terminé » dès qu'un job échoue (`ProductImportController::show`) — ✅ RÉSOLU (2026-11-15)
+
+> Résolution : `show` recalcule `finished` (plus aucun job en attente de succès : `pendingJobs - failedJobs <= 0`) et `progress` (part des jobs réussis ou en échec) au lieu d'exposer `finished()` / `progress()` de Laravel, faux dès le premier échec avec `allowFailures()`. `processed` reste le nombre de réussites. `Product/Import.vue` : contournement `isDone` supprimé, la page lit `finished` et `progress` du serveur. Tests : `ProductImportTest` (4 cas : tous en échec, 2 réussis + 1 échec, échec avec jobs restants, rien traité).
 
 - **Où** : `app/Http/Controllers/ProductImportController.php` (`show`, `Bus::batch(...)->allowFailures()`).
 - **Constat** (test navigateur, Ollama absent) : avec `allowFailures()`, les jobs en échec restent dans `pending_jobs` et `finished_at` n'est jamais renseigné. Base : `total_jobs=3, pending_jobs=3, failed_jobs=3, finished_at=NULL`. `finished()` reste donc faux et `processed` (= total − pending) ne compte que les réussites.
 - **Impact** : l'ancienne page restait sur « Traitement en cours » à vie dès le premier échec (même un lot 2 réussies + 1 échec n'affichait jamais « Relire et publier »), et `processed - failed` sous-comptait les brouillons créés.
-- **Contournement** : `Product/Import.vue` (migrée) déduit la fin du lot par `processed + failed >= total` et lit `processed` comme nombre de réussites. Le backend n'a pas été modifié.
+- **Contournement (supprimé, voir résolution)** : `Product/Import.vue` (migrée) déduisait la fin du lot par `processed + failed >= total` et lit `processed` comme nombre de réussites. Le backend n'a pas été modifié.
 - **Piste** : exposer côté `show` un champ `finished` calculé (`pendingJobs === failedJobs`) pour que le contrat soit correct à la source ; test Feature dédié.
 
 ## 2026-11-11 — `queue:work` manuel rejoue des `RegisterMailJob` en attente

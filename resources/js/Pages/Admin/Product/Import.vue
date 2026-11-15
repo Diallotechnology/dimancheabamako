@@ -45,19 +45,12 @@ const lost = ref(false);
 let timer: ReturnType<typeof setTimeout> | null = null;
 let stopped = false;
 
-/**
- * Avec `allowFailures`, Laravel laisse les jobs en échec dans `pending_jobs` et ne renseigne jamais
- * `finished_at` : `processed` ne compte donc que les réussites et `finished` reste faux dès le premier
- * échec. Le lot est terminé quand réussites + échecs couvrent tous les jobs.
- */
+/** `processed` = réussites, `failed` = échecs ; `finished` et `progress` sont calculés côté serveur. */
 const handled = (status: BatchStatus): number => status.processed + status.failed;
-const isDone = (status: BatchStatus): boolean => status.finished || handled(status) >= status.total;
 
-const done = computed(() => (batch.value ? isDone(batch.value) : false));
+const done = computed(() => batch.value?.finished ?? false);
 const succeeded = computed(() => batch.value?.processed ?? 0);
-const percent = computed(() =>
-    batch.value && batch.value.total > 0 ? Math.round((handled(batch.value) / batch.value.total) * 100) : 0,
-);
+const percent = computed(() => batch.value?.progress ?? 0);
 
 /** Une URL d'aperçu vit autant que sa vignette : on la libère dès que la vignette disparaît. */
 const revokeAll = (): void => {
@@ -120,7 +113,7 @@ const poll = async (id: string): Promise<void> => {
         batch.value = data;
         pollError.value = null;
 
-        if (isDone(data)) {
+        if (data.finished) {
             return;
         }
     } catch (error) {
