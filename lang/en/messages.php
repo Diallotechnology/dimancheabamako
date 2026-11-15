@@ -138,6 +138,18 @@ return [
         'description_1' => 'Our :name collection offers an exclusive selection of clothing and accessories, crafted with high-quality Bazin fabric.',
         'description_2' => 'Perfect for any occasion, our creations combine elegance and comfort.',
     ],
+    // Error pages (errors/minimal): title and message per HTTP code.
+    'error_pages' => [
+        '401' => ['title' => 'Sign-in required', 'text' => 'You need to sign in to access this page.'],
+        '402' => ['title' => 'Payment required', 'text' => 'This page requires a prior payment.'],
+        '403' => ['title' => 'Access denied', 'text' => 'You are not allowed to access this page.'],
+        '404' => ['title' => 'Page not found', 'text' => 'The link you clicked may be broken or the page may have been removed.'],
+        '419' => ['title' => 'Page expired', 'text' => 'Your session has expired. Reload the page and try again.'],
+        '429' => ['title' => 'Too many requests', 'text' => 'Please wait a moment before trying again.'],
+        '500' => ['title' => 'Server error', 'text' => 'Something went wrong on our side. Please try again in a few moments.'],
+        '503' => ['title' => 'Service temporarily unavailable', 'text' => 'The site is under maintenance. Please try again later.'],
+        'default' => ['title' => 'Something went wrong', 'text' => 'The requested page could not be displayed.'],
+    ],
     // Redesigned storefront (`shop` layout).
     'shop' => [
         'skip_to_content' => 'Skip to content',

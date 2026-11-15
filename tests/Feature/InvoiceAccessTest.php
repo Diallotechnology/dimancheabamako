@@ -40,6 +40,16 @@ it('serves the invoice through a valid signed link', function () {
         ->assertSee($order->reference);
 });
 
+it('styles the invoice with its own stylesheet, not the retired Evara theme', function () {
+    $order = purchasedOrder();
+
+    $this->get(URL::signedRoute('order.invoice.signed', ['id' => $order->trans_ref]))
+        ->assertOk()
+        ->assertSee('css/invoice.css', false)
+        ->assertDontSee('admin/assets', false);
+    expect(public_path('css/invoice.css'))->toBeFile();
+});
+
 it('refuses the signed invoice route without a signature', function () {
     $order = purchasedOrder();
 

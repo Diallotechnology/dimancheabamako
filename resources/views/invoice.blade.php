@@ -5,7 +5,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Invoice</title>
-    <link href="{{ asset('admin/assets/css/main.css') }}" rel="stylesheet" type="text/css" />
+    <link href="{{ asset('css/invoice.css') }}" rel="stylesheet" type="text/css" />
 </head>
 
 <body>
@@ -20,7 +20,7 @@
                                     <div class="payment-info">
                                         <div class="row">
                                             <div class="col-sm-6">
-                                                <img src="{{ asset('assets/imgs/theme/logo.svg') }}" alt="logo"
+                                                <img src="{{ asset('images/logo.svg') }}" alt="logo"
                                                     width="70" />
                                                 <h5>Dimanche à Bamako</h5>
                                                 <h5>ACI 2000 près de la place CAN</h5>
@@ -29,7 +29,7 @@
 
                                             <div class="col-sm-6 text-end">
                                                 <strong>
-                                                    <i class="material-icons md-calendar_today"></i> <b>Date: {{
+                                                    <svg class="invoice-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 3h-1V1h-2v2H7V1H5v2H4c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 18H4V8h16v13z"/></svg> <b>Date: {{
                                                         $order->created_at }}</b>
                                                 </strong>
                                                 <strong class="">Facture N°: #{{ $order->reference }}</strong>

@@ -137,6 +137,18 @@ return [
         'description_1' => 'Notre collection :name propose une sélection exclusive de vêtements et accessoires, confectionnés à partir de Bazin de qualité supérieure.',
         'description_2' => 'Idéale pour toutes les occasions, nos créations allient élégance et confort.',
     ],
+    // Pages d'erreur (errors/minimal) : titre et message par code HTTP.
+    'error_pages' => [
+        '401' => ['title' => 'Connexion requise', 'text' => 'Vous devez vous connecter pour accéder à cette page.'],
+        '402' => ['title' => 'Paiement requis', 'text' => 'Cette page nécessite un paiement préalable.'],
+        '403' => ['title' => 'Accès refusé', 'text' => 'Vous n\'avez pas l\'autorisation d\'accéder à cette page.'],
+        '404' => ['title' => 'Page introuvable', 'text' => 'Le lien sur lequel vous avez cliqué est peut-être rompu ou la page a peut-être été supprimée.'],
+        '419' => ['title' => 'Page expirée', 'text' => 'Votre session a expiré. Rechargez la page et réessayez.'],
+        '429' => ['title' => 'Trop de requêtes', 'text' => 'Merci de patienter un instant avant de réessayer.'],
+        '500' => ['title' => 'Erreur du serveur', 'text' => 'Une erreur est survenue de notre côté. Réessayez dans quelques instants.'],
+        '503' => ['title' => 'Service temporairement indisponible', 'text' => 'Le site est en cours de maintenance. Veuillez réessayer ultérieurement.'],
+        'default' => ['title' => 'Une erreur est survenue', 'text' => 'La page demandée n\'a pas pu être affichée.'],
+    ],
     // Vitrine refondue (layout `shop`).
     'shop' => [
         'skip_to_content' => 'Aller au contenu',

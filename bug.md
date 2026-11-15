@@ -444,3 +444,9 @@ Relevés pendant l'audit de la vitrine (plan : refonte page par page). Non corri
 ### Mise à jour 2026-11-14 (phase 5 : pages éditoriales)
 
 - ✅ RÉSOLU — **Formulaire de contact inopérant** : `ContactController::sendEmail` exigeait un `captcha` sans paquet ni champ, aucun message ne partait. Remplacé par un champ piège (`website`, invisible) + `throttle:5,1` sur la route ; limites de longueur ajoutées. Tests : `tests/Feature/ContactFormTest.php` (RED écrit avant). Le texte `messages.captcha` des fichiers de langue n'est plus utilisé.
+
+### Mise à jour 2026-11-15 (phase 6 : purge d'Evara)
+
+- **Facture : devise affichée deux fois et montant de ligne douteux** (`resources/views/invoice.blade.php`, lignes d'articles) : `Product::getMontant()` ajoute déjà « € » / « CFA », puis la vue en rajoute un (« 43,80 € € » constaté en euros). En CFA, la vue appelle `$order->getMontant()` (montant de la commande ?) au lieu de `$item->getMontant()` : à vérifier, chaque ligne pourrait afficher le montant de toute la commande. Logique d'affichage financière : RED test d'abord, correction hors phase 6.
+- **Slide d'accueil sans image** : `/storage/slide/image/slider-2.png` répond 404 sur la base de dev (fichier absent du disque ; donnée de seed, sans rapport avec Evara). À contrôler en production.
+- ✅ RÉSOLU — **Pages d'erreur dépendantes de la base** : le view composer `*` lisait les catégories (cache puis base) pour toute vue, y compris les pages d'erreur : un 500/503 d'origine DB aurait cassé sa propre page. Composer limité aux vues qui utilisent `$categories` ; `ErrorPagesTest` vérifie zéro requête.

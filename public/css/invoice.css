@@ -1,0 +1,462 @@
+/*
+ * Facture client (resources/views/invoice.blade.php).
+ * Feuille autonome : volontairement découplée du build Vite et de la vitrine pour que ce document
+ * (lien signé des e-mails, impression) ne change jamais avec le thème du site.
+ * Extraite du thème Evara retiré (normalize, sous-ensemble de Bootstrap 5 : grille/utilitaires, règles .receipt-content).
+ * Polices : « Lato » (texte) et « Spartan » (titres) viennent de Google Fonts, importées ci-dessous comme avant.
+ */
+@import url("https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,400;0,700;0,900;1,300;1,400;1,700;1,900&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Spartan:wght@300;400;500;600;700&display=swap");
+
+/* ---- public/admin/assets/css/vendors/normalize.css ---- */
+html {
+  line-height: 1.15;
+  -webkit-text-size-adjust: 100%;
+}
+body {
+  margin: 0;
+}
+a {
+  background-color: transparent;
+}
+b, strong {
+  font-weight: bolder;
+}
+small {
+  font-size: 80%;
+}
+img {
+  border-style: none;
+}
+
+/* ---- public/admin/assets/css/vendors/bootstrap.css ---- */
+:root {
+  --bs-blue: #3167EB;
+  --bs-indigo: #6610f2;
+  --bs-purple: #6f42c1;
+  --bs-pink: #d63384;
+  --bs-red: #F30000;
+  --bs-orange: #fd8a14;
+  --bs-yellow: #ffc107;
+  --bs-green: #00B517;
+  --bs-teal: #20c997;
+  --bs-cyan: #0dcaf0;
+  --bs-white: #fff;
+  --bs-gray: #6c757d;
+  --bs-gray-dark: #1D1D42;
+  --bs-primary: #3167EB;
+  --bs-primary-light: rgba(49, 103, 235, 0.2);
+  --bs-secondary: #6c757d;
+  --bs-success: #00B517;
+  --bs-success-light: rgba(0, 181, 23, 0.2);
+  --bs-info: #0dcaf0;
+  --bs-warning: #fd8a14;
+  --bs-warning-light: rgba(253, 138, 20, 0.2);
+  --bs-danger: #F30000;
+  --bs-light: #f8f9fa;
+  --bs-dark: #141432;
+  --bs-font-sans-serif: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", "Liberation Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+  --bs-font-monospace: SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+  --bs-gradient: linear-gradient(180deg, rgba(255, 255, 255, 0.15), rgba(255, 255, 255, 0));
+}
+*, *::before, *::after {
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+}
+@media (prefers-reduced-motion: no-preference) {
+  :root {
+    scroll-behavior: smooth;
+  }
+}
+body {
+  margin: 0;
+  font-family: var(--bs-font-sans-serif);
+  font-size: 1rem;
+  font-weight: 400;
+  line-height: 1.5;
+  color: #141432;
+  background-color: #f8f9fa;
+  -webkit-text-size-adjust: 100%;
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+}
+h5, .h5 {
+  margin-top: 0;
+  margin-bottom: 0.5rem;
+  font-weight: 600;
+  line-height: 1.2;
+}
+h5, .h5 {
+  font-size: 1.25rem;
+}
+p {
+  margin-top: 0;
+  margin-bottom: 1rem;
+}
+b, strong {
+  font-weight: 600;
+}
+small, .small {
+  font-size: 0.875em;
+  line-height: 1.25;
+}
+a {
+  color: #3167EB;
+  text-decoration: underline;
+}
+img {
+  vertical-align: middle;
+}
+.container {
+  width: 100%;
+  padding-right: var(--bs-gutter-x, 0.75rem);
+  padding-left: var(--bs-gutter-x, 0.75rem);
+  margin-right: auto;
+  margin-left: auto;
+}
+@media (min-width: 576px) {
+  .container {
+    max-width: 540px;
+  }
+}
+@media (min-width: 768px) {
+  .container {
+    max-width: 720px;
+  }
+}
+@media (min-width: 992px) {
+  .container {
+    max-width: 960px;
+  }
+}
+@media (min-width: 1200px) {
+  .container {
+    max-width: 1140px;
+  }
+}
+@media (min-width: 1400px) {
+  .container {
+    max-width: 1320px;
+  }
+}
+.row {
+  --bs-gutter-x: 1.5rem;
+  --bs-gutter-y: 0;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex-wrap: wrap;
+  flex-wrap: wrap;
+  margin-top: calc(var(--bs-gutter-y) * -1);
+  margin-right: calc(var(--bs-gutter-x) / -2);
+  margin-left: calc(var(--bs-gutter-x) / -2);
+}
+.row > * {
+  -ms-flex-negative: 0;
+  flex-shrink: 0;
+  width: 100%;
+  max-width: 100%;
+  padding-right: calc(var(--bs-gutter-x) / 2);
+  padding-left: calc(var(--bs-gutter-x) / 2);
+  margin-top: var(--bs-gutter-y);
+}
+@media (min-width: 576px) {
+  .col-sm-6 {
+    -webkit-box-flex: 0;
+    -ms-flex: 0 0 auto;
+    flex: 0 0 auto;
+    width: 50%;
+  }
+  .col-sm-12 {
+    -webkit-box-flex: 0;
+    -ms-flex: 0 0 auto;
+    flex: 0 0 auto;
+    width: 100%;
+  }
+}
+@media (min-width: 768px) {
+  .col-md-3 {
+    -webkit-box-flex: 0;
+    -ms-flex: 0 0 auto;
+    flex: 0 0 auto;
+    width: 25%;
+  }
+  .col-md-12 {
+    -webkit-box-flex: 0;
+    -ms-flex: 0 0 auto;
+    flex: 0 0 auto;
+    width: 100%;
+  }
+}
+.clearfix::after {
+  display: block;
+  clear: both;
+  content: "";
+}
+.mb-0 {
+  margin-bottom: 0 !important;
+}
+.text-end {
+  text-align: right !important;
+}
+.text-center {
+  text-align: center !important;
+}
+
+/* ---- public/admin/assets/css/main.css ---- */
+body, div, span, h5, p, a, img, small, strong, b, i {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  font-size: 100%;
+  font: inherit;
+  vertical-align: baseline;
+}
+body {
+  line-height: 1;
+}
+img {
+  max-width: 100%;
+}
+a {
+  color: #d79f01;
+}
+body {
+  font-family: "Lato", sans-serif;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 1.5;
+  color: #4f5d77;
+}
+h5 {
+  font-family: "Spartan", sans-serif;
+  color: #495057;
+  font-weight: 600;
+  line-height: 1.5;
+}
+h5 {
+  font-size: 15px;
+}
+p {
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 24px;
+  margin-bottom: 5px;
+}
+p:last-child {
+  margin-bottom: 0;
+}
+a {
+  text-decoration: none;
+  cursor: pointer;
+}
+b {
+  font-weight: 500;
+}
+.receipt-content .logo a:hover {
+  text-decoration: none;
+  color: #7793c4;
+}
+.receipt-content .invoice-wrapper {
+  background: #fff;
+  border: 1px solid #cdd3e2;
+  -webkit-box-shadow: 0px 0px 1px #ccc;
+  box-shadow: 0px 0px 1px #ccc;
+  padding: 40px 40px 60px;
+  margin-top: 40px;
+  border-radius: 4px;
+}
+.receipt-content .invoice-wrapper .payment-details span {
+  color: #a9b0bb;
+  display: block;
+}
+.receipt-content .invoice-wrapper .payment-details a {
+  display: inline-block;
+  margin-top: 5px;
+}
+.receipt-content .invoice-wrapper .line-items .print a {
+  display: inline-block;
+  border: 1px solid #9cb5d6;
+  padding: 13px 13px;
+  border-radius: 5px;
+  color: #708dc0;
+  font-size: 13px;
+  -webkit-transition: all 0.2s linear;
+  transition: all 0.2s linear;
+}
+.receipt-content .invoice-wrapper .line-items .print a:hover {
+  text-decoration: none;
+  border-color: #333;
+  color: #333;
+}
+.receipt-content {
+  background: #eceef4;
+}
+@media (min-width: 1200px) {
+  .receipt-content .container {
+    width: 900px;
+  }
+}
+.receipt-content .logo {
+  text-align: center;
+  margin-top: 50px;
+}
+.receipt-content .logo a {
+  font-family: Myriad Pro, Lato, Helvetica Neue, Arial;
+  font-size: 36px;
+  letter-spacing: 0.1px;
+  color: #555;
+  font-weight: 300;
+  -webkit-transition: all 0.2s linear;
+  transition: all 0.2s linear;
+}
+.receipt-content .invoice-wrapper .intro {
+  line-height: 25px;
+  color: #444;
+}
+.receipt-content .invoice-wrapper .payment-info {
+  margin-top: 25px;
+  padding-top: 15px;
+}
+.receipt-content .invoice-wrapper .payment-info span {
+  color: #a9b0bb;
+}
+.receipt-content .invoice-wrapper .payment-info strong {
+  display: block;
+  color: #444;
+  margin-top: 3px;
+}
+@media (max-width: 767px) {
+  .receipt-content .invoice-wrapper .payment-info .text-right {
+    text-align: left;
+    margin-top: 20px;
+  }
+}
+.receipt-content .invoice-wrapper .payment-details {
+  border-top: 2px solid #ebecee;
+  margin-top: 30px;
+  padding-top: 20px;
+  line-height: 22px;
+}
+@media (max-width: 767px) {
+  .receipt-content .invoice-wrapper .payment-details .text-right {
+    text-align: left;
+    margin-top: 20px;
+  }
+}
+.receipt-content .invoice-wrapper .line-items {
+  margin-top: 40px;
+}
+.receipt-content .invoice-wrapper .line-items .headers {
+  color: #a9b0bb;
+  font-size: 13px;
+  letter-spacing: 0.3px;
+  border-bottom: 2px solid #ebecee;
+  padding-bottom: 4px;
+}
+.receipt-content .invoice-wrapper .line-items .items {
+  margin-top: 8px;
+  border-bottom: 2px solid #ebecee;
+  padding-bottom: 8px;
+}
+.receipt-content .invoice-wrapper .line-items .items .item {
+  padding: 10px 0;
+  color: #696969;
+  font-size: 15px;
+}
+@media (max-width: 767px) {
+  .receipt-content .invoice-wrapper .line-items .items .item {
+    font-size: 13px;
+  }
+}
+.receipt-content .invoice-wrapper .line-items .items .item .amount {
+  letter-spacing: 0.1px;
+  color: #84868a;
+  font-size: 16px;
+}
+@media (max-width: 767px) {
+  .receipt-content .invoice-wrapper .line-items .items .item .amount {
+    font-size: 13px;
+  }
+}
+.receipt-content .invoice-wrapper .line-items .total {
+  margin-top: 30px;
+}
+.receipt-content .invoice-wrapper .line-items .total .extra-notes {
+  float: left;
+  width: 40%;
+  text-align: left;
+  font-size: 13px;
+  color: #7a7a7a;
+  line-height: 20px;
+}
+@media (max-width: 767px) {
+  .receipt-content .invoice-wrapper .line-items .total .extra-notes {
+    width: 100%;
+    margin-bottom: 30px;
+    float: none;
+  }
+}
+.receipt-content .invoice-wrapper .line-items .total .extra-notes strong {
+  display: block;
+  margin-bottom: 5px;
+  color: #454545;
+}
+.receipt-content .invoice-wrapper .line-items .total .field {
+  margin-bottom: 7px;
+  font-size: 14px;
+  color: #555;
+}
+.receipt-content .invoice-wrapper .line-items .total .field.grand-total {
+  margin-top: 10px;
+  font-size: 16px;
+  font-weight: 500;
+}
+.receipt-content .invoice-wrapper .line-items .total .field.grand-total span {
+  color: #20a720;
+  font-size: 16px;
+}
+.receipt-content .invoice-wrapper .line-items .total .field span {
+  display: inline-block;
+  margin-left: 20px;
+  min-width: 85px;
+  color: #84868a;
+  font-size: 15px;
+}
+.receipt-content .invoice-wrapper .line-items .print {
+  margin-top: 50px;
+  text-align: center;
+}
+.receipt-content .invoice-wrapper .line-items .print a i {
+  margin-right: 3px;
+  font-size: 14px;
+}
+.receipt-content .footer {
+  margin-top: 40px;
+  margin-bottom: 110px;
+  text-align: center;
+  font-size: 12px;
+  color: #969cad;
+}
+body {
+  position: relative;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+.content-main {
+  padding: 30px 3%;
+  margin-left: auto;
+  margin-right: auto;
+  background-color: #f8f9fa;
+}
+
+
+/* Icône calendrier : SVG en ligne à la place de la police Material Icons. */
+.invoice-icon {
+  display: inline-block;
+  width: 22px;
+  height: 22px;
+  margin-top: 1px;
+  vertical-align: middle;
+  fill: currentColor;
+}

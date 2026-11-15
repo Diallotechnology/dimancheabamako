@@ -86,7 +86,11 @@ final class AppServiceProvider extends ServiceProvider
         View::share('taux_eur', $taux);
 
         // Évalué au rendu de la vue (pas au boot) : aucune requête tant qu'aucune vue n'est rendue.
-        View::composer('*', fn ($view) => $view->with('categories', app(CategoryService::class)->all()));
+        // Liste explicite et non '*' : les pages d'erreur ne doivent jamais dépendre de la base ni du cache.
+        View::composer(
+            ['category', 'components.shop.header', 'livewire.product-list'],
+            fn ($view) => $view->with('categories', app(CategoryService::class)->all()),
+        );
 
         Collection::macro('forView', function () {
             $pricing = app(PriceService::class);
