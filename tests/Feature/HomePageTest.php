@@ -27,7 +27,6 @@ it('renders the home page on the shop layout, without the Evara theme', function
     $this->get('/')
         ->assertOk()
         ->assertSee('id="contenu"', false)
-        ->assertDontSee('assets/css/main.css')
         ->assertDontSee('bootstrap')
         ->assertDontSee('jquery', false);
 });

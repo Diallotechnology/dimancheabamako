@@ -5,7 +5,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title data-inertia>{{ config('app.name') }}</title>
-    <link rel="icon" href="{{ asset('assets/imgs/theme/favicon.svg') }}" type="image/svg+xml">
+    <link rel="icon" href="{{ asset('images/favicon.svg') }}" type="image/svg+xml">
     @fonts
     @vite(['resources/js/app.ts', "resources/js/Pages/{$page['component']}.vue"])
     @inertiaHead

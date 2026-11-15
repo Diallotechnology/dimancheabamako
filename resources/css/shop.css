@@ -1,7 +1,6 @@
 /*
  * Vitrine publique (Blade + Livewire), layout `layouts/shop.blade.php`.
- * Ne jamais charger cette feuille sur une page qui utilise encore l'ancien thème Evara
- * (public/assets/css/main.css) : le preflight Tailwind casserait Bootstrap.
+ * Le thème Evara (Bootstrap) a été retiré : cette feuille est la seule de la vitrine.
  * Sources limitées aux vues Blade : le front Vue de l'admin a sa propre feuille (admin.css).
  */
 @import 'tailwindcss' source(none);

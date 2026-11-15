@@ -25,7 +25,7 @@ function migratedStorefrontViews(): array
         ->push(
             'layouts/shop.blade.php',
             'livewire/counter.blade.php',
-            'livewire/quick-add-modal-shop.blade.php',
+            'livewire/quick-add-modal.blade.php',
             'index.blade.php',
             'category.blade.php',
             'product-show.blade.php',
@@ -100,27 +100,18 @@ test('migrated storefront views carry no Bootstrap, jQuery or Evara markup', fun
         '/class="[^"]*(?<=["\s])(?:col-(?:xs|sm|md|lg|xl)-\d+|row|btn|btn-[a-z-]+|form-control|form-select|d-none|d-flex|wow|fi-rs-[a-z-]+|mini-cart-icon|pro-count)(?=["\s])[^"]*"/',
     ]);
 
-    // Exception transitoire : la variante `legacy` du compteur garde le balisage Evara jusqu'à la purge.
-    unset($hits['livewire/counter.blade.php']);
-
     expect($hits)->toBe([], 'Balisage Evara/Bootstrap dans une vue migrée : '.json_encode($hits, JSON_UNESCAPED_SLASHES));
 });
 
-test('the legacy Evara layout never pulls the new storefront assets or components', function () {
-    $hits = scanViews(['layouts/app.blade.php', 'layouts/nav.blade.php'], [
-        '/<x-shop[.-]/',
-        '/resources\/css\/shop\.css|resources\/js\/shop\.ts/',
-        '/@vite/',
-    ]);
-
-    expect($hits)->toBe([], 'Le layout Evara charge du code de la vitrine refondue : '.json_encode($hits, JSON_UNESCAPED_SLASHES));
+test('the retired Evara layouts and components stay deleted', function () {
+    foreach (['layouts/app.blade.php', 'layouts/nav.blade.php', 'layouts/guest.blade.php', 'dashboard.blade.php'] as $view) {
+        expect(resource_path('views/'.$view))->not->toBeFile();
+    }
 });
 
 test('storefront views do not hardcode application links', function () {
     // Vues pas encore migrées qui contiennent des liens en dur (à corriger lors de leur migration).
-    $legacy = [
-        'layouts/nav.blade.php',
-    ];
+    $legacy = [];
 
     // href/action vers un chemin absolu de l'application ; les assets statiques passent par asset().
     $pattern = '/\b(?:href|action)=(["\'])\/(?!\/)[^"\']*\1/';
@@ -163,4 +154,26 @@ test('Livewire views have a single HTML root element, not a Blade directive at t
         ->all();
 
     expect($offenders)->toBe([], 'Vue(s) Livewire dont la racine n\'est pas un élément HTML : '.implode(', ', $offenders));
+});
+
+test('every static file referenced through asset() exists in public/, and Evara folders are gone', function () {
+    $sources = collect([
+        ...File::allFiles(resource_path('views')),
+        ...File::allFiles(app_path()),
+    ])->map(fn (SplFileInfo $file): string => $file->getPathname());
+
+    $missing = [];
+    foreach ($sources as $path) {
+        preg_match_all('/asset\(\s*[\'"]([^\'"]+)[\'"]\s*\)/', File::get($path), $matches);
+        foreach ($matches[1] as $relative) {
+            if (! File::exists(public_path($relative))) {
+                $missing[] = str_replace(base_path().DIRECTORY_SEPARATOR, '', $path).' → '.$relative;
+            }
+        }
+    }
+
+    expect($missing)->toBe([], 'Fichier(s) référencé(s) par asset() absent(s) de public/ : '.json_encode($missing, JSON_UNESCAPED_SLASHES))
+        ->and(public_path('assets'))->not->toBeDirectory()
+        ->and(public_path('admin'))->not->toBeDirectory()
+        ->and(resource_path('css/app.css'))->not->toBeFile();
 });

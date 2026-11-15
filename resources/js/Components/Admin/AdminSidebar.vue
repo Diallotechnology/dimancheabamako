@@ -92,7 +92,7 @@ const logout = (): void => {
                 @click="closeOnMobile"
             >
                 <img
-                    src="/assets/imgs/theme/logo.svg"
+                    src="/images/logo.svg"
                     alt=""
                     class="size-9 shrink-0"
                 />

@@ -205,7 +205,7 @@ final class Product extends Model
     public function getCoverAttribute(): string
     {
         if (! app()->isProduction()) {
-            return asset('admin/assets/imgs/theme/logo.svg');
+            return asset('images/product-placeholder.svg');
         }
 
         return Storage::url($this->attributes['cover']);

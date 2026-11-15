@@ -3,7 +3,7 @@
     <div class="container-shop grid gap-10 py-12 sm:grid-cols-2 lg:grid-cols-4">
         <div class="sm:col-span-2 lg:col-span-1">
             <a href="{{ route('home') }}" class="inline-block">
-                <img src="{{ asset('assets/imgs/theme/logo.svg') }}" alt="Dimanche à Bamako" class="h-10 w-auto"
+                <img src="{{ asset('images/logo.svg') }}" alt="Dimanche à Bamako" class="h-10 w-auto"
                     width="150" height="40" loading="lazy">
             </a>
             <p class="mt-4 max-w-xs leading-relaxed">{{ __('messages.bazin_sale') }}</p>
@@ -41,14 +41,14 @@
             <div class="flex gap-3">
                 <a href="https://www.facebook.com/share/16vqoDjtmp/" target="_blank" rel="noopener"
                     class="grid size-10 place-items-center rounded-full border border-sage bg-white transition-colors hover:border-brand">
-                    <img src="{{ asset('assets/imgs/theme/icons/icon-facebook.svg') }}" alt="Facebook" class="size-4" loading="lazy">
+                    <img src="{{ asset('images/icon-facebook.svg') }}" alt="Facebook" class="size-4" loading="lazy">
                 </a>
             </div>
 
             <h2 class="mt-8 mb-3 flex items-center gap-2 text-base text-ink">
                 <x-shop.icon name="lock" class="size-4" /> {{ __('messages.shop.secure_payment') }}
             </h2>
-            <img src="{{ asset('assets/imgs/theme/payment-method.png') }}" alt="{{ __('messages.shop.secure_payment') }}"
+            <img src="{{ asset('images/payment-method.png') }}" alt="{{ __('messages.shop.secure_payment') }}"
                 class="h-auto max-w-[220px]" loading="lazy">
         </div>
     </div>

@@ -12,7 +12,7 @@
 ])
 
 @php
-    $image ??= asset('assets/imgs/theme/logo_meta_tag.png');
+    $image ??= asset('images/logo_meta_tag.png');
     $canonical ??= url()->current();
 @endphp
 

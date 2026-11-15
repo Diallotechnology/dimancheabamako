@@ -1,5 +1,5 @@
 /*
- * Back-office admin (Inertia). La vitrine Livewire a sa propre feuille (public/assets/css/main.css).
+ * Back-office admin (Inertia). La vitrine Livewire a sa propre feuille (shop.css).
  * Sources limitées au front Vue : les vues Blade de la vitrine ne doivent pas gonfler ce bundle.
  */
 @import 'tailwindcss' source(none);

@@ -17,7 +17,7 @@
             <p>{{ __('messages.purchase_instruction') }}</p>
             <p>{{ __('messages.showroom_description') }}</p>
         </div>
-        <img src="{{ asset('assets/imgs/theme/about.jpg') }}" alt="" loading="lazy" width="800" height="600"
+        <img src="{{ asset('images/about.jpg') }}" alt="" loading="lazy" width="800" height="600"
             class="w-full rounded-2xl bg-sage-soft object-cover">
     </section>
 </x-shop-layout>

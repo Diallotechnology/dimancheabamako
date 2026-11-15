@@ -22,7 +22,7 @@
                 <a href="tel:+22366035154" class="font-semibold hover:text-brand-strong">+223 66 03 51 54</a>
             </address>
         </div>
-        <img src="{{ asset('assets/imgs/theme/DHL.jpg') }}" alt="DHL" loading="lazy" width="600" height="400"
+        <img src="{{ asset('images/DHL.jpg') }}" alt="DHL" loading="lazy" width="600" height="400"
             class="w-full rounded-2xl bg-sage-soft object-contain md:col-span-2">
     </section>
 </x-shop-layout>
