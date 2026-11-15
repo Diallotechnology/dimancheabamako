@@ -12,7 +12,6 @@ Index des entrées encore ouvertes, regroupées ici pour être visibles sans tou
 
 **Finance / paiement**
 - Déploiement de la réservation de stock : vérifier `reference IS NULL AND trans_ref IS NOT NULL` = 0 ligne avant la bascule en production.
-- Tarifs `shippings` existants dont la zone n'est pas desservie par leur transporteur.
 - Vitrine : double remise affichée dans la modale d'ajout au panier (`QuickAddModal`), fix prévu en phase 4 de la refonte.
 
 **Données / règles métier**
