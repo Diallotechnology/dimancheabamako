@@ -108,3 +108,32 @@ it('shows a neutral page and keeps the cart when the gateway errors or the state
     'no payment yet' => [null, 200],
     'unknown state' => ['STARTED', 200],
 ]);
+
+// Acheteur invité (sans compte connecté) : la clé de panier `cart_guest_<id>` change pendant la requête en test
+// (nouvel id de session sans cookie), le vidage du panier invité n'est donc pas observable ici ; il passe par
+// le même CartService::clear() que l'acheteur connecté (cas couvert plus haut).
+it('lets a guest buyer see success, the account confirmation notice and forgets the session flags', function () {
+    fakeNgeniusPayment('PURCHASED');
+
+    $this->withSession(['pending_order_ref' => VALIDATE_REF, 'account_confirmation_pending' => true])
+        ->get('/order/validate?ref='.VALIDATE_REF)
+        ->assertOk()
+        ->assertSee(__('messages.order_success'))
+        ->assertSee(__('messages.account_confirmation_pending'))
+        ->assertSessionMissing('pending_order_ref')
+        ->assertSessionMissing('account_confirmation_pending');
+
+    expect(statusCalls())->toBe(1);
+});
+
+it('shows a failure to a guest buyer without the account notice and forgets the pending ref', function () {
+    fakeNgeniusPayment('FAILED');
+
+    $this->withSession(['pending_order_ref' => VALIDATE_REF, 'account_confirmation_pending' => true])
+        ->get('/order/validate?ref='.VALIDATE_REF)
+        ->assertOk()
+        ->assertDontSee(__('messages.order_success'))
+        ->assertDontSee(__('messages.account_confirmation_pending'))
+        ->assertSee(__('messages.payment_failed'))
+        ->assertSessionMissing('pending_order_ref');
+});

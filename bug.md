@@ -16,12 +16,12 @@ Index des entrées encore ouvertes, regroupées ici pour être visibles sans tou
 **Données / règles métier**
 
 **Tests / outillage / environnement local**
-- `order.validate` non couvert pour un invité (non bloquant).
 - `queue:work` manuel rejoue des `RegisterMailJob` en attente : préférer `MAIL_MAILER=log` en local.
 - Données de test conservées (lot d'import, produits `REF-IA-1` / `REF-IA-2`) : ne pas supprimer.
 - Vitrine (audit 2026-11-14) : Pest 5 / PHPUnit 13 à planifier.
 
 **Résolu depuis la rédaction de l'entrée (entrée conservée telle quelle)**
+- `order.validate` pour un invité (2026-11-15) : 2 tests ajoutés dans `OrderValidateTest.php` (succès invité : page, avis de confirmation de compte, drapeaux de session oubliés, un appel N-Genius ; échec invité : pas de succès, ni avis de compte). Limite : le vidage du panier invité n'est pas observable en test (l'id de session, donc la clé `cart_guest_<id>`, change pendant la requête, et les événements de cache ne sont pas émis) ; il passe par le même `CartService::clear()` que l'acheteur connecté, couvert.
 - A8 : jeton `PendingRegistration` haché (sha256), `email_verified_at` renseigné et `change_password = true` à la confirmation, `confirm-registration` en GET (page + bouton) puis POST (`throttle:10,1`) : un scanner de liens ne consomme plus le jeton (vérifié dans `routes/web.php` et `PendingRegistrationController`). Reste seulement `regenerateToken()` au logout, jugé inoffensif (tests : `ConfirmRegistrationPostTest.php`).
 - Migration Poids/Devise/User : route `DELETE devise` retirée, `role` requis sur `UpdateUserRequest`, garde-fous suppression/rétrogradation de soi-même et du dernier administrateur (2026-11-11, `tests/Feature/AdminGuardrailsTest.php`).
 - Transport/Show morte et `TransportController::show` : supprimées avec `Order/Update` et `AuthenticatedLayout` (commit `45fd877`, nettoyage de la migration shadcn-vue).
