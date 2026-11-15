@@ -344,12 +344,14 @@ Avant de déployer : vérifier que `Order` avec `reference IS NULL AND trans_ref
 - **Piste** : utiliser `$request->safe()->except('product_id')` (ou `only([...])`) avant `create`/`update`, + test Feature (création + `products` attachés).
 - **Résolution** : `$request->safe()->except([champ de relation])` dans `store`/`update` des 3 contrôleurs. Pas d'ajout à `$fillable` : ce ne sont pas des colonnes. Les relations étaient déjà persistées explicitement (`attach`/`sync`/`saveMany`), donc en production seule la création du modèle ignorait ces clés (aucune donnée perdue). Tests : `tests/Feature/AdminRelationFieldsTest.php`.
 
-## 2026-11-11 — Tarifs `shippings` existants avec une zone non desservie par leur transporteur
+## 2026-11-11 — Tarifs `shippings` existants avec une zone non desservie par leur transporteur — ✅ RÉSOLU (2026-11-15)
+
+> Résolution : `ShippingFactory` crée le transporteur, tire la zone parmi `transport->zones` (à défaut, crée une zone et la rattache) et, via `afterCreating`, garde le pivot `transport_zone` cohérent même quand l'appelant impose transport et zone ; `poids_id` passe aussi par `Poids::factory()` (plus de `rand(1, 2)`). Nouvelle commande en lecture seule `php artisan app:check-shippings-coherence` (`Shipping::whereNotExists(... transport_zone ...)`) à lancer à la main en production : liste les tarifs incohérents, code retour 1 si trouvés, ne modifie rien (correction/suppression restent manuelles). Tests : `tests/Feature/ShippingCoherenceTest.php`.
 
 - **Où** : table `shippings` (local : ids 1, 2, 4, 7, 9), `database/factories/ShippingFactory.php` (`transport_id`/`zone_id` tirés au hasard par `rand(1, 2)`, sans tenir compte de la table pivot `transport_zone`).
 - **Constat** : ces tarifs ne seront jamais retenus par `ShippingService::resolve` (filtre transport + zone). Depuis la règle ajoutée à `StoreShippingRequest`, leur édition exige de choisir une zone desservie par le transporteur ; la création/édition de nouveaux tarifs incohérents est refusée.
 - **Piste** : revoir la factory (zone choisie parmi `transport->zones`) ; en production, lister les lignes incohérentes avec `Shipping::whereNotExists(... transport_zone ...)` et les corriger ou les supprimer à la main.
-- **Statut** : non corrigé, hors périmètre.
+- **Statut** : factory corrigée ; nettoyage des lignes existantes en production à faire manuellement via la commande.
 
 ## 2026-11-11 — Messages de validation « Le champ zone id est obligatoire »
 
