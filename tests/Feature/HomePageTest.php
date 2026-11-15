@@ -91,3 +91,14 @@ it('renders the slides from the back-office when there are some', function () {
 
     $this->get('/')->assertOk()->assertSee('Nouvelle collection')->assertSee('Bazin riche');
 });
+
+it('renders unique element ids on the shop layout for a logged-in user (header desktop + mobile)', function () {
+    homeProduct();
+
+    $html = $this->actingAs(App\Models\User::factory()->create())->get('/')->assertOk()->getContent();
+
+    preg_match_all('/\sid="([^"]+)"/', $html, $matches);
+    $duplicates = array_keys(array_filter(array_count_values($matches[1]), fn (int $n): bool => $n > 1));
+
+    expect($duplicates)->toBe([], 'id dupliqué(s) dans le DOM rendu : '.implode(', ', $duplicates));
+});

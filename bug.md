@@ -19,7 +19,7 @@ Index des entrées encore ouvertes, regroupées ici pour être visibles sans tou
 - `order.validate` non couvert pour un invité (non bloquant).
 - `queue:work` manuel rejoue des `RegisterMailJob` en attente : préférer `MAIL_MAILER=log` en local.
 - Données de test conservées (lot d'import, produits `REF-IA-1` / `REF-IA-2`) : ne pas supprimer.
-- Vitrine (audit 2026-11-14) : unité de précommande mal affichée (`cart-item`), `id="logout-form"` dupliqué, `resources/css/app.css` mort, Pest 5 / PHPUnit 13 à planifier.
+- Vitrine (audit 2026-11-14) : Pest 5 / PHPUnit 13 à planifier.
 
 **Résolu depuis la rédaction de l'entrée (entrée conservée telle quelle)**
 - A8 : jeton `PendingRegistration` haché (sha256), `email_verified_at` renseigné et `change_password = true` à la confirmation, `confirm-registration` en GET (page + bouton) puis POST (`throttle:10,1`) : un scanner de liens ne consomme plus le jeton (vérifié dans `routes/web.php` et `PendingRegistrationController`). Reste seulement `regenerateToken()` au logout, jugé inoffensif (tests : `ConfirmRegistrationPostTest.php`).
@@ -423,10 +423,10 @@ Avant de déployer : vérifier que `Order` avec `reference IS NULL AND trans_ref
 Relevés pendant l'audit de la vitrine (plan : refonte page par page). Non corrigés ici.
 
 - **Double remise affichée dans la modale d'ajout au panier** (finance, affichage) : `App\Helper\CartAction::store` met `price = $product->prix_final_base`, déjà remisé (`Product::getPrixFinalBaseAttribute`). `resources/views/livewire/quick-add-modal.blade.php` ré-applique `reduction` (`$price - $price * $reduction / 100`) : prix et total de la modale trop bas, et l'« ancien prix » barré est en réalité le prix remisé. Le total du panier reste juste (il lit `price`). → corriger en phase 4 de la refonte, RED test d'abord.
-- **Unité de précommande** : `resources/views/livewire/cart-item.blade.php`, prix barré : `{{ $item['is_preorder'] ?? __('messages.product_status.unit') }}` affiche `1` ou rien au lieu de « /unité ». Disparaît avec la carte produit unique (phase 1).
-- **`id="logout-form"` dupliqué** dans `resources/views/layouts/nav.blade.php` (header desktop + mobile) : HTML invalide, `getElementById` prend toujours le premier formulaire. Disparaît avec le nouveau header (phase 0/1).
+- ✅ RÉSOLU (2026-11-15) — **Unité de précommande** : `cart-item.blade.php` n'existe plus ; l'unité est affichée par `components/shop/product-card.blade.php` (`'/ '.__('messages.product_status.unit')` si précommande) et `product-show.blade.php`. Ancien constat : `resources/views/livewire/cart-item.blade.php`, prix barré : `{{ $item['is_preorder'] ?? __('messages.product_status.unit') }}` affiche `1` ou rien au lieu de « /unité ». Disparaît avec la carte produit unique (phase 1).
+- ✅ RÉSOLU (2026-11-15) — **`id="logout-form"` dupliqué** : `layouts/nav.blade.php` supprimé, plus aucun `id="logout-form"` dans `resources/views` (les formulaires de `components/shop/header.blade.php` n'ont pas d'id). Garde-fou : test d'unicité des `id` du DOM rendu dans `tests/Feature/HomePageTest.php`. Ancien constat : **`id="logout-form"` dupliqué** dans `resources/views/layouts/nav.blade.php` (header desktop + mobile) : HTML invalide, `getElementById` prend toujours le premier formulaire. Disparaît avec le nouveau header (phase 0/1).
 - **Pest 5 / PHPUnit 13 disponibles** (installés : Pest 4.7.8, PHPUnit 12.5.33) : montée de version majeure à planifier séparément.
-- **`resources/css/app.css`** ne fait qu'importer `assets/css/main.css` et n'est référencé nulle part : à supprimer avec la purge Evara (phase 6).
+- ✅ RÉSOLU (2026-11-15) — **`resources/css/app.css`** supprimé avec la purge Evara (phase 6, `6cb1e38`) ; `StorefrontArchTest` vérifie qu'il n'existe plus. Ancien constat : **`resources/css/app.css`** ne faisait qu'importer `assets/css/main.css` et n'est référencé nulle part : à supprimer avec la purge Evara (phase 6).
 
 ### Mise à jour 2026-11-14 (phase 1 de la refonte vitrine)
 
