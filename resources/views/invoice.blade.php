@@ -1,7 +1,8 @@
 @php
     use App\Service\PriceService;
 
-    $money = fn (int|float|string|null $amount): string => PriceService::format((float) $amount);
+    // Facture = montant réellement prélevé (XOF) : toujours en CFA, jamais selon la devise de la session.
+    $money = fn (int|float|string|null $amount): string => PriceService::formatCfa((float) $amount);
     $shipping = (float) $order->shipping;
     $subtotal = (float) $order->totaux;
 @endphp

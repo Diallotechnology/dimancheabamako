@@ -117,15 +117,16 @@ it('shows each line with its own amount, the subtotal, the shipping and the tota
         ->assertSee('35 000 CFA');  // total
 });
 
-it('shows each amount once in euros, without a doubled currency sign', function () {
+it('always shows the invoice in CFA, the currency actually charged, whatever the visitor session uses', function () {
+    // Le paiement N-Genius est toujours en XOF : l'euro n'est qu'un affichage converti du site.
     session(['devise' => 'EUR', 'taux_eur' => 500]);
 
     $this->get(invoiceWithLines(50000, [500000, 250000]))
         ->assertOk()
-        ->assertSee('1 000,00 €')   // ligne 1
-        ->assertSee('500,00 €')     // ligne 2
-        ->assertSee('1 500,00 €')   // sous-total
-        ->assertSee('100,00 €')     // livraison
-        ->assertSee('1 600,00 €')   // total : au-delà de 1 000 €, le séparateur de milliers ne doit pas fausser la somme
-        ->assertDontSee('€ €');
+        ->assertSee('500 000 CFA')   // ligne 1
+        ->assertSee('250 000 CFA')   // ligne 2
+        ->assertSee('750 000 CFA')   // sous-total
+        ->assertSee('50 000 CFA')    // livraison
+        ->assertSee('800 000 CFA')   // total
+        ->assertDontSee('€');
 });

@@ -43,6 +43,15 @@ final class PriceService
             return number_format($amountCfa / $rate, 2, ',', ' ').' €';
         }
 
+        return self::formatCfa($amountCfa);
+    }
+
+    /**
+     * Formate un montant en CFA, quelle que soit la devise de la session. Pour les documents qui doivent refléter
+     * ce qui a réellement été prélevé (le paiement N-Genius est toujours en XOF), comme la facture.
+     */
+    public static function formatCfa(int|float $amountCfa): string
+    {
         return number_format($amountCfa, 0, ',', ' ').' CFA';
     }
 
