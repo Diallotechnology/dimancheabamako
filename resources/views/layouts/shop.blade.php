@@ -15,7 +15,7 @@
     <meta name="theme-color" content="#ffffff">
     <title>{{ isset($title) && trim((string) $title) !== '' ? trim((string) $title).' · Dimanche à Bamako' : __('messages.home').' '.__('messages.sunday_sale') }}</title>
     {{ $metadata ?? '' }}
-    <link rel="icon" href="{{ asset('assets/imgs/theme/favicon.svg') }}" type="image/svg+xml">
+    <link rel="icon" href="{{ asset('images/favicon.svg') }}" type="image/svg+xml">
     @fonts(['lato', 'league-spartan'])
     @vite(['resources/css/shop.css', 'resources/js/shop.ts'])
 
@@ -51,7 +51,7 @@
     <x-shop.footer />
 
     {{-- Modale « produit ajouté » : une instance par page, écoute l'événement `add-to-cart` des cartes produit. --}}
-    <livewire:quick-add-modal variant="shop" />
+    <livewire:quick-add-modal />
 
     @stack('scripts')
 </body>

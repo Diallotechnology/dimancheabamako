@@ -6,20 +6,12 @@ namespace App\Livewire;
 
 use App\Helper\CartAction;
 use Illuminate\Contracts\View\View;
-use Livewire\Attributes\Locked;
 use Livewire\Attributes\On;
 use Livewire\Component;
 
 final class Counter extends Component
 {
     use CartAction;
-
-    /**
-     * Balisage à rendre : `legacy` (en-tête Evara) ou `shop` (layout vitrine Tailwind).
-     * Transitoire : la variante `legacy` disparaît avec la purge d'Evara.
-     */
-    #[Locked]
-    public string $variant = 'legacy';
 
     /**
      * Écouteur vide : recevoir l'événement suffit à déclencher un nouveau rendu (donc un nouveau compte).

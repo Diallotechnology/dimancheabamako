@@ -36,32 +36,32 @@ function modalProduct(int $prix = 20000, int $reduction = 0, bool $preorder = fa
     return $product;
 }
 
-it('adds the product to the cart when the add-to-cart event is received', function (string $variant) {
+it('adds the product to the cart when the add-to-cart event is received', function () {
     $product = modalProduct();
 
-    Livewire::test(QuickAddModal::class, ['variant' => $variant])
+    Livewire::test(QuickAddModal::class)
         ->dispatch('add-to-cart', id: $product->id)
         ->assertDispatched('productCount')
         ->assertSee($product->nom);
 
     expect(app(CartService::class)->has($product->id))->toBeTrue();
-})->with(['legacy', 'shop']);
+});
 
-it('does not discount the already discounted cart price a second time', function (string $variant) {
+it('does not discount the already discounted cart price a second time', function () {
     // 20 000 CFA - 10 % = 18 000 CFA : le panier stocke déjà 18 000, la modale ne doit pas retomber à 16 200.
     $product = modalProduct(20000, 10);
 
-    Livewire::test(QuickAddModal::class, ['variant' => $variant])
+    Livewire::test(QuickAddModal::class)
         ->dispatch('add-to-cart', id: $product->id)
         ->assertSee('18 000 CFA')
         ->assertSee('20 000 CFA')
         ->assertDontSee('16 200');
-})->with(['legacy', 'shop']);
+});
 
 it('shows the cart line total as unit price times quantity', function () {
     $product = modalProduct(20000, 10, preorder: true);
 
-    $component = Livewire::test(QuickAddModal::class, ['variant' => 'shop'])
+    $component = Livewire::test(QuickAddModal::class)
         ->dispatch('add-to-cart', id: $product->id)
         ->call('setQuickQuantity', 5);
 
@@ -72,14 +72,14 @@ it('shows the cart line total as unit price times quantity', function () {
 it('refuses to go to the cart before a preorder quantity is chosen', function () {
     $product = modalProduct(20000, 0, preorder: true);
 
-    Livewire::test(QuickAddModal::class, ['variant' => 'shop'])
+    Livewire::test(QuickAddModal::class)
         ->dispatch('add-to-cart', id: $product->id)
         ->call('goToCart')
         ->assertNoRedirect();
 });
 
 it('adds nothing to the cart for an unknown product', function () {
-    Livewire::test(QuickAddModal::class, ['variant' => 'shop'])
+    Livewire::test(QuickAddModal::class)
         ->dispatch('add-to-cart', id: 999999)
         ->assertNotDispatched('productCount');
 
@@ -89,9 +89,9 @@ it('adds nothing to the cart for an unknown product', function () {
 it('keeps the counter component in sync after an add', function () {
     $product = modalProduct();
 
-    Livewire::test(QuickAddModal::class, ['variant' => 'shop'])
+    Livewire::test(QuickAddModal::class)
         ->dispatch('add-to-cart', id: $product->id)
         ->assertDispatched('productCount', fn ($event, $params) => true);
 
-    Livewire::test(Counter::class, ['variant' => 'shop'])->assertSee('1');
+    Livewire::test(Counter::class)->assertSee('1');
 });

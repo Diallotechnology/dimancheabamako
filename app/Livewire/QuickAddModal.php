@@ -7,20 +7,12 @@ namespace App\Livewire;
 use App\Helper\CartAction;
 use App\Models\Product;
 use Illuminate\Contracts\View\View;
-use Livewire\Attributes\Locked;
 use Livewire\Attributes\On;
 use Livewire\Component;
 
 final class QuickAddModal extends Component
 {
     use CartAction;
-
-    /**
-     * Balisage à rendre : `legacy` (modale Bootstrap, layout Evara) ou `shop` (dialog Alpine, layout vitrine).
-     * Transitoire : la variante `legacy` disparaît avec la purge d'Evara.
-     */
-    #[Locked]
-    public string $variant = 'legacy';
 
     /** @var array<string, mixed> */
     public array $addedItem = [];
@@ -87,7 +79,7 @@ final class QuickAddModal extends Component
 
     public function render(): View
     {
-        return view($this->variant === 'shop' ? 'livewire.quick-add-modal-shop' : 'livewire.quick-add-modal', [
+        return view('livewire.quick-add-modal', [
             'pricing' => $this->pricing(),
         ]);
     }

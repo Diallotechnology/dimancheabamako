@@ -57,7 +57,7 @@
         </button>
 
         <a href="{{ route('home') }}" class="shrink-0">
-            <img src="{{ asset('assets/imgs/theme/logo.svg') }}" alt="Dimanche à Bamako" class="h-9 w-auto lg:h-11"
+            <img src="{{ asset('images/logo.svg') }}" alt="Dimanche à Bamako" class="h-9 w-auto lg:h-11"
                 width="160" height="44">
         </a>
 
@@ -105,7 +105,7 @@
                 </a>
             @endauth
 
-            @livewire('counter', ['variant' => 'shop'])
+            @livewire('counter')
         </div>
     </div>
 
@@ -120,7 +120,7 @@
             x-transition:leave="transition duration-150 ease-in" x-transition:leave-end="-translate-x-full"
             class="absolute inset-y-0 left-0 flex w-[min(20rem,85vw)] flex-col overflow-y-auto bg-white shadow-pop">
             <div class="flex h-16 items-center justify-between border-b border-sage px-4">
-                <img src="{{ asset('assets/imgs/theme/logo-sm.svg') }}" alt="Dimanche à Bamako" class="h-8 w-auto">
+                <img src="{{ asset('images/logo-sm.svg') }}" alt="Dimanche à Bamako" class="h-8 w-auto">
                 <button type="button" @click="drawer = false" class="rounded-md p-2">
                     <x-shop.icon name="x" class="size-6" />
                     <span class="sr-only">{{ __('messages.shop.close_menu') }}</span>

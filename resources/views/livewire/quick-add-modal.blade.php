@@ -1,274 +1,81 @@
-<div>
-    <div wire:ignore.self class="modal fade" id="quickViewModal" tabindex="-1" aria-hidden="true"
-        data-bs-backdrop="static">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content apple-modal p-4">
+{{-- Modale « produit ajouté » de la vitrine (variante `shop` de QuickAddModal). Ouverte par window.showQuick() (CartAction::store). --}}
+<div x-data="{ open: false }" x-on:quick-modal-open.window="open = true" x-on:keydown.escape.window="open = false">
+    <div x-cloak x-show="open" class="fixed inset-0 z-[70] grid place-items-center p-4" role="dialog" aria-modal="true"
+        aria-labelledby="quick-add-title">
+        <div x-show="open" x-transition.opacity class="absolute inset-0 bg-ink/50" @click="open = false"></div>
 
-                <button type="button" class="btn-close apple-close" data-bs-dismiss="modal"></button>
+        <div x-show="open" x-trap.noscroll="open" x-transition:enter="transition duration-200 ease-out"
+            x-transition:enter-start="translate-y-4 scale-95 opacity-0" x-transition:leave="transition duration-100 ease-in"
+            x-transition:leave-end="scale-95 opacity-0"
+            class="relative w-full max-w-md rounded-2xl bg-white p-6 shadow-pop">
+            <button type="button" @click="open = false"
+                class="absolute top-3 right-3 rounded-full p-2 text-ink-muted hover:bg-sage-soft hover:text-ink">
+                <x-shop.icon name="x" />
+                <span class="sr-only">{{ __('messages.shop.close_menu') }}</span>
+            </button>
 
-                <div class="modal-body text-center">
-                    <div wire:loading class="py-5">
-                        <div class="spinner-border text-dark" style="width: 3rem; height: 3rem;"></div>
+            @if ($addedItem !== [])
+                <p class="mb-4 text-sm font-semibold text-success">{{ __('messages.shop.added_to_cart') }}</p>
+
+                <div class="flex items-center gap-4">
+                    <img src="{{ $addedItem['attributes']['cover'] ?? '' }}" alt="" class="size-20 shrink-0 rounded-xl bg-sage-soft object-cover">
+                    <div class="min-w-0">
+                        <h2 id="quick-add-title" class="truncate text-lg">{{ $addedItem['name'] ?? '' }}</h2>
+                        <x-shop.price :amount="$pricing['unit']" :compare-at="$pricing['original']" class="mt-1" />
+                        @if ($pricing['reduction'] > 0)
+                            <span class="mt-1 inline-block rounded-full bg-brand px-2 py-0.5 text-xs font-bold text-ink">-{{ $pricing['reduction'] }}%</span>
+                        @endif
+                        @if (! empty($addedItem['poids']))
+                            <p class="mt-1 text-sm text-ink-muted">{{ __('messages.shop.weight', ['kg' => $addedItem['poids']]) }}</p>
+                        @endif
                     </div>
-                    <div wire:loading.remove>
-                        <!-- PRODUCT INFO BLOCK -->
-                        <div class="d-flex align-items-center justify-content-center mb-4">
-                            <!-- Image -->
-                            <img src="{{ $addedItem['attributes']['cover'] ?? '' }}" alt="Image produit"
-                                class="apple-product-img me-3">
-
-                            <div class="text-start">
-
-                                <!-- Name -->
-                                <div class="fw-semibold apple-text-strong">
-                                    {{ $addedItem['name'] ?? '' }}
-                                </div>
-
-                                <!-- Pricing -->
-                                <div class="apple-price-block">
-                                    @if($pricing['original'] !== null)
-                                    <span class="old-price">
-                                        {{ \App\Service\PriceService::format($pricing['original']) }}
-                                    </span>
-                                    <span class="new-price">
-                                        {{ \App\Service\PriceService::format($pricing['unit']) }}
-                                    </span>
-                                    <span class="discount-tag">-{{ $pricing['reduction'] }}%</span>
-                                    @else
-                                    <span class="new-price">
-                                        {{ \App\Service\PriceService::format($pricing['unit']) }}
-                                    </span>
-                                    @endif
-                                </div>
-
-                                <!-- Weight -->
-                                <div class="">
-                                    Poids : {{ $addedItem['poids'] ?? '' }} kg
-                                </div>
-
-                            </div>
-                        </div>
-
-                        <!-- TOTAL -->
-                        <div class="apple-total-value mb-3">
-                            Total :
-                            {{ \App\Service\PriceService::format($pricing['total']) }}
-                        </div>
-                    </div>
-                    @if (session()->has('warning'))
-                    <div class="apple-warning mb-3">
-                        {{ session('warning') }}
-                    </div>
-                    @endif
-                    <!-- Quantity controls -->
-                    @if(!empty($addedItem) and $addedItem['is_preorder'] ?? false)
-                    <div class="d-flex justify-content-center align-items-center mb-4 apple-qty-box">
-                        <select class="apple-select-qty" wire:change="setQuickQuantity($event.target.value)">
-                            <option value="" selected>
-                                Select {{ __('messages.product_status.unit') }}
-                            </option>
-                            <option value="5" @selected($addedItem['quantity']==5)>
-                                5 {{ __('messages.product_status.unit') }}
-                            </option>
-                            <option value="6" @selected($addedItem['quantity']==6)>
-                                6 {{ __('messages.product_status.unit') }}
-                            </option>
-                        </select>
-                    </div>
-                    @endif
-
-
-                    <!-- Actions -->
-                    <div class="mt-4">
-                        <button class="apple-btn-primary w-100 mb-3" wire:click="goToCart">
-                            {{ __('messages.finalize_order') }}
-                        </button>
-
-
-                        <button class="apple-btn-secondary w-100" data-bs-dismiss="modal">
-                            {{ __('messages.continue_shopping') }}
-                        </button>
-                    </div>
-
                 </div>
 
-            </div>
+                @if (session()->has('warning'))
+                    <p role="alert" class="mt-4 rounded-lg bg-danger/10 px-3 py-2 text-center text-sm font-medium text-danger">
+                        {{ session('warning') }}
+                    </p>
+                @endif
+
+                @if ($addedItem['is_preorder'] ?? false)
+                    <fieldset class="mt-5">
+                        <legend class="mb-2 text-sm font-semibold">{{ __('messages.shop.choose_length') }}</legend>
+                        <div class="grid grid-cols-2 gap-2">
+                            @foreach ([5, 6] as $length)
+                                <button type="button" wire:click="setQuickQuantity({{ $length }})"
+                                    aria-pressed="{{ ($addedItem['quantity'] ?? 0) === $length ? 'true' : 'false' }}"
+                                    @class([
+                                        'rounded-xl border px-3 py-2.5 text-center font-semibold transition-colors',
+                                        'border-brand bg-brand-soft' => ($addedItem['quantity'] ?? 0) === $length,
+                                        'border-sage hover:border-ink/40' => ($addedItem['quantity'] ?? 0) !== $length,
+                                    ])>
+                                    {{ $length }} {{ __('messages.product_status.unit') }}
+                                </button>
+                            @endforeach
+                        </div>
+                    </fieldset>
+                @endif
+
+                <p class="mt-5 flex items-baseline justify-between border-t border-sage pt-4">
+                    <span class="text-ink-muted">Total</span>
+                    <span class="font-display text-xl font-bold">{{ \App\Service\PriceService::format($pricing['total']) }}</span>
+                </p>
+
+                <div class="mt-5 grid gap-2">
+                    <x-shop.button wire:click="goToCart" wire:loading.attr="disabled" wire:target="goToCart" size="lg">
+                        {{ __('messages.finalize_order') }}
+                    </x-shop.button>
+                    <x-shop.button variant="outline" @click="open = false">
+                        {{ __('messages.continue_shopping') }}
+                    </x-shop.button>
+                </div>
+            @endif
         </div>
     </div>
-    <style>
-        .apple-select-qty {
-            padding: 8px 14px;
-            border-radius: 12px;
-            border: 1px solid #ddd;
-            background: #fff;
-            font-size: 0.95rem;
-            font-weight: 500;
-            color: #333;
-            outline: none;
-        }
-
-        .apple-select-qty:focus {
-            border-color: #999;
-        }
-
-        .apple-warning {
-            background: #ffe5e5;
-            /* rouge très pâle — premium */
-            color: #b30000;
-            /* rouge profond élégant */
-            padding: 8px 10px;
-            border-radius: 12px;
-            font-size: 0.92rem;
-            border: 1px solid #ffb3b3;
-            /* ligne subtile */
-            text-align: center;
-            font-weight: 500;
-            backdrop-filter: blur(4px);
-            /* léger flou façon Apple */
-        }
-
-        .apple-success {
-            background: #00b312;
-            /* rouge très pâle — premium */
-            color: #fff;
-            /* rouge profond élégant */
-            padding: 8px 10px;
-            border-radius: 12px;
-            font-size: 0.92rem;
-            text-align: center;
-            font-weight: 500;
-            backdrop-filter: blur(4px);
-        }
-
-
-        .apple-product-img {
-            width: 60px;
-            height: 60px;
-            object-fit: cover;
-            border-radius: 12px;
-        }
-
-        .apple-price-block {
-            margin-top: 4px;
-        }
-
-        .old-price {
-            text-decoration: line-through;
-            color: #999;
-            margin-right: 6px;
-        }
-
-        .new-price {
-            font-weight: 600;
-            color: #111;
-        }
-
-        .discount-tag {
-            background: #d79f01;
-            color: white;
-            padding: 2px 6px;
-            border-radius: 6px;
-            font-size: 0.75rem;
-        }
-
-        .apple-total-value {
-            font-size: 1.1rem;
-            font-weight: 600;
-            color: #111;
-        }
-
-        /* Apple Modal */
-        .apple-modal {
-            border-radius: 18px;
-            border: none;
-            background: #ffffff;
-            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.12);
-        }
-
-        /* Close button - Apple style */
-        .apple-close {
-            filter: grayscale(100%) brightness(50%);
-            opacity: 0.5;
-        }
-
-        .apple-close:hover {
-            opacity: 1;
-        }
-
-        /* Text color Apple */
-        .apple-text-strong {
-            font-size: 1.2rem;
-            color: #111111;
-        }
-
-        /* Quantity controls */
-        .apple-qty-box {
-            background: #f5f5f7;
-            padding: 12px 18px;
-            border-radius: 14px;
-        }
-
-        .apple-btn-qty {
-            background: transparent;
-            border: none;
-            font-size: 1.7rem;
-            padding: 0 10px;
-            font-weight: 300;
-            color: #111;
-            width: 36px;
-            height: 36px;
-            line-height: 0;
-        }
-
-        .apple-btn-qty:hover {
-            background: #e5e5e7;
-            border-radius: 8px;
-        }
-
-        .apple-qty-value {
-            font-size: 1.3rem;
-            color: #111;
-        }
-
-        /* Apple buttons */
-        .apple-btn-primary {
-            display: block;
-            text-align: center;
-            padding: 12px;
-            border-radius: 12px;
-            background: #d79f01;
-            color: #fff;
-            font-weight: 500;
-            text-decoration: none;
-        }
-
-        .apple-btn-primary:hover {
-            background: #d79f01;
-            color: #fff;
-        }
-
-        .apple-btn-secondary {
-            display: block;
-            text-align: center;
-            padding: 12px;
-            border-radius: 12px;
-            background: #f5f5f7;
-            color: #111;
-            border: none;
-            font-weight: 500;
-        }
-
-        .apple-btn-secondary:hover {
-            background: #e5e5e7;
-        }
-    </style>
 </div>
+
 @script
 <script>
-    window.showQuick = () => {
-        const modal = new bootstrap.Modal(document.getElementById('quickViewModal'));
-        modal.show();
-    }
+    window.showQuick = () => window.dispatchEvent(new CustomEvent('quick-modal-open'));
 </script>
-
 @endscript
