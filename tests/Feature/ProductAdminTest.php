@@ -170,3 +170,19 @@ it('deletes cover, video and gallery files when a product is destroyed', functio
     }
     expect(Product::find($product->id))->toBeNull();
 });
+
+it('lets a product created without color or size be updated without them', function () {
+    $this->actingAs($this->secretary)
+        ->post('/admin/product', productPayload(['color' => '', 'taille' => '']))
+        ->assertSessionHasNoErrors();
+    $product = Product::firstOrFail();
+
+    $this->actingAs($this->secretary)
+        ->put("/admin/product/{$product->id}", updatePayload($product, ['color' => '', 'taille' => '', 'nom' => 'Renommé']))
+        ->assertSessionHasNoErrors();
+
+    $fresh = $product->fresh();
+    expect($fresh->nom)->toBe('Renommé')
+        ->and($fresh->color)->toBeNull()
+        ->and($fresh->taille)->toBeNull();
+});

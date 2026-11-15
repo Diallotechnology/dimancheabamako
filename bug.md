@@ -15,7 +15,6 @@ Index des entrées encore ouvertes, regroupées ici pour être visibles sans tou
 - Vitrine : double remise affichée dans la modale d'ajout au panier (`QuickAddModal`), fix prévu en phase 4 de la refonte.
 
 **Données / règles métier**
-- Création produit : erreurs `image.*` et validation d'`image` incohérente entre Store et Update.
 - Lot d'import jamais « terminé » dès qu'un job échoue (`ProductImportController::show`, contournement côté Vue).
 - `Promotion/Show` : catégorie du produit jamais affichée.
 - `Product/Show` : colonne « Pays » toujours vide.
@@ -391,11 +390,13 @@ Avant de déployer : vérifier que `Order` avec `reference IS NULL AND trans_ref
 - **Piste** : `$product->load('images', 'orders.country')` puis réafficher `row.country?.nom`.
 - **Statut** : non corrigé côté serveur, hors périmètre.
 
-## 2026-11-11 — Création produit : les erreurs `image.*` et validation d'`image` sur Update
+## 2026-11-11 — Création produit : les erreurs `image.*` et validation d'`image` sur Update — ✅ RÉSOLU (2026-11-15)
+
+> Résolution : arbitrage = `color` et `taille` passent en `nullable|string` à l'Update, alignés sur `StoreProductRequest` et sur la base (colonnes nullable) ; un produit créé sans couleur/taille (dont les brouillons d'import IA, qui n'inventent pas ces champs) reste modifiable et publiable. Libellés Vue : `*` retiré sur Couleur/Taille. Côté image, aucune incohérence à corriger : `image` obligatoire à la création et optionnelle à l'Update est voulu (le formulaire l'assume : « à la création, cover et images obligatoires »), et les erreurs `image.*` sont déjà remontées par `ProductFormFields`. Tests : `ProductAdminTest` (nouveau cas) et `ProductImportTest` (la couleur vide n'est plus une erreur).
 
 - **Où** : `UpdateProductRequest` (`color`/`taille` `required` alors que `StoreProductRequest` les accepte `nullable`).
 - **Constat** : un produit créé sans couleur ni taille ne peut plus être modifié sans les renseigner.
-- **Statut** : non corrigé, à arbitrer (règles incohérentes entre Store et Update).
+- **Statut** : corrigé (voir résolution ci-dessus).
 
 ## 2026-11-11 — Lot d'import jamais « terminé » dès qu'un job échoue (`ProductImportController::show`)
 

@@ -67,7 +67,7 @@ const imageError = computed(() => {
                 :described-by="field.describedBy"
             />
         </FormField>
-        <FormField label="Couleur" :error="form.errors.color" :required="!creating" v-slot="field">
+        <FormField label="Couleur" :error="form.errors.color" v-slot="field">
             <Input
                 :id="field.id"
                 v-model="form.color"
@@ -76,7 +76,7 @@ const imageError = computed(() => {
                 :aria-describedby="field.describedBy"
             />
         </FormField>
-        <FormField label="Taille (en M)" :error="form.errors.taille" :required="!creating" v-slot="field">
+        <FormField label="Taille (en M)" :error="form.errors.taille" v-slot="field">
             <Input
                 :id="field.id"
                 v-model="form.taille"

@@ -162,10 +162,10 @@ it('publishes a reviewed draft through the normal update rules and rejects inval
         'status' => 'published',
     ];
 
-    // Mêmes règles que UpdateProductRequest : prix négatif, couleur absente, statut inconnu.
+    // Mêmes règles que UpdateProductRequest : prix négatif, statut inconnu (la couleur est facultative).
     $this->actingAs($this->secretary)
-        ->put("/admin/product/{$product->id}", array_merge($payload, ['prix' => -1, 'color' => '', 'status' => 'nope']))
-        ->assertSessionHasErrors(['prix', 'color', 'status']);
+        ->put("/admin/product/{$product->id}", array_merge($payload, ['prix' => -1, 'status' => 'nope']))
+        ->assertSessionHasErrors(['prix', 'status']);
     expect($product->fresh()->status)->toBe(ProductStatus::Draft);
 
     $this->actingAs($this->secretary)
