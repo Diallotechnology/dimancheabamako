@@ -8,7 +8,6 @@ Index des entrées encore ouvertes, regroupées ici pour être visibles sans tou
 
 **Sécurité / permissions**
 - A7 · Login : configurer `TrustProxies` selon l'infra réelle de production (manuel, à vérifier au déploiement).
-- A8 · Points faibles divers restants : `PendingRegistration.token` en clair, `email_verified_at` jamais renseigné après confirmation, `change_password = false` à arbitrer côté UX.
 
 **Finance / paiement**
 - Déploiement de la réservation de stock : vérifier `reference IS NULL AND trans_ref IS NOT NULL` = 0 ligne avant la bascule en production.
@@ -23,6 +22,7 @@ Index des entrées encore ouvertes, regroupées ici pour être visibles sans tou
 - Vitrine (audit 2026-11-14) : unité de précommande mal affichée (`cart-item`), `id="logout-form"` dupliqué, `resources/css/app.css` mort, Pest 5 / PHPUnit 13 à planifier.
 
 **Résolu depuis la rédaction de l'entrée (entrée conservée telle quelle)**
+- A8 : jeton `PendingRegistration` haché (sha256), `email_verified_at` renseigné et `change_password = true` à la confirmation, `confirm-registration` en GET (page + bouton) puis POST (`throttle:10,1`) : un scanner de liens ne consomme plus le jeton (vérifié dans `routes/web.php` et `PendingRegistrationController`). Reste seulement `regenerateToken()` au logout, jugé inoffensif (tests : `ConfirmRegistrationPostTest.php`).
 - Migration Poids/Devise/User : route `DELETE devise` retirée, `role` requis sur `UpdateUserRequest`, garde-fous suppression/rétrogradation de soi-même et du dernier administrateur (2026-11-11, `tests/Feature/AdminGuardrailsTest.php`).
 - Transport/Show morte et `TransportController::show` : supprimées avec `Order/Update` et `AuthenticatedLayout` (commit `45fd877`, nettoyage de la migration shadcn-vue).
 
@@ -270,7 +270,7 @@ Avant de déployer : vérifier que `Order` avec `reference IS NULL AND trans_ref
 - **Cause / symptôme** : (1) aucune limite par IP seule : 1 mot de passe sur N comptes (password spraying) n'atteint jamais 5 par clé ; (2) si la production est derrière un proxy/CDN non déclaré dans `$proxies`, `ip()` vaut l'IP du proxy : tous les clients partagent la clé par e-mail, donc 5 échecs volontaires verrouillent le compte de n'importe qui ; (3) si on déclare `'*'` sans proxy réel, `X-Forwarded-For` falsifiable contourne la limite.
 - **Piste** : seconde clé par IP (ex. 20/min) ; configurer `trustProxies` selon l'infra réelle de production (à vérifier au déploiement).
 
-## 2026-11-06 — A8 · Points faibles divers — ✅ partiellement traité (2026-11-06)
+## 2026-11-06 — A8 · Points faibles divers — ✅ RÉSOLU (2026-11-15, index mis à jour ; seul reste jugé inoffensif)
 > Fait : `Panier::login_submit` vide `password` après un échec ; `AuthenticatedSessionController::store` utilise `Auth::user()` au lieu de relire par e-mail. **Fait aussi** : `confirm-registration` en GET (page + bouton) puis POST (`confirm-registration.store`, `throttle:10,1`), tests `ConfirmRegistrationPostTest.php`. **Régression corrigée** : double hachage du mot de passe à la confirmation (introduit par A1/A3 dans `fb244b8`, corrigé en `dfa4b56`) ; les comptes confirmés entre les deux ont un mot de passe inutilisable, à vérifier en prod (passer par « mot de passe oublié »). **Jeton haché (fait)** : `pending_registrations.token` stocke `sha256` du jeton (`PendingRegistration::hashToken`), le clair ne vit que dans l'e-mail ; une nouvelle demande pour le même e-mail régénère le jeton (ancien lien invalidé) sans toucher au mot de passe ; la migration `2026_11_06_120000_hash_pending_registration_tokens` hache les jetons existants (liens déjà envoyés toujours valables, irréversible). **Fait aussi** : à la confirmation, `email_verified_at` est renseigné et `change_password = true` (pas de second changement forcé), test dans `ConfirmRegistrationPostTest.php`. **Reste** :  `regenerateToken()` au logout (inoffensif).
 
 - `confirm-registration/{token}` : action d'état + connexion en **GET** (cf. M1) ; un scanner de liens d'e-mail peut consommer le jeton avant l'utilisateur. Piste : page de confirmation + POST.
