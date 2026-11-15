@@ -47,7 +47,7 @@ Route::prefix('admin')->middleware(['auth', 'auth.session', 'verified'])->group(
         Route::resource('devise', DeviseController::class)->except('index', 'create', 'show', 'store', 'destroy');
         Route::get('transport/{transport}', [TransportController::class, 'get_trans_zone'])->name('transport.zone');
         Route::post('paylink/{paylink}/regenerate', [PayLinkController::class, 'regenerate'])->name('paylink.regenerate');
-        Route::resource('slide', SlideController::class)->except('index', 'create');
+        Route::resource('slide', SlideController::class)->only('edit', 'update', 'destroy');
 
         Route::controller(AdminController::class)->group(function () {
             Route::get('user', 'user')->name('user');

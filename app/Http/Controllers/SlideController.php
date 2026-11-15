@@ -9,6 +9,7 @@ use App\Http\Requests\UpdateSlideRequest;
 use App\Models\Slide;
 use App\Service\ImageUploadService;
 use Inertia\Inertia;
+use Throwable;
 
 final class SlideController extends Controller
 {
@@ -30,9 +31,19 @@ final class SlideController extends Controller
         $data = $request->validated();
 
         if ($request->hasFile('image')) {
-            $this->deleteStored($slide->getRawOriginal('image'));
+            $old = $slide->getRawOriginal('image');
+            // Nouveau fichier d'abord : un échec ne doit jamais faire perdre l'ancien.
             $data['image'] = $uploader->store($request->file('image'), 'slide/image');
-            $slide->update($data);
+
+            try {
+                $slide->update($data);
+            } catch (Throwable $e) {
+                $this->deleteStored($data['image']);
+
+                throw $e;
+            }
+
+            $this->deleteStored($old);
         } else {
             $slide->update(data_forget($data, 'image'));
         }

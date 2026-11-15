@@ -583,18 +583,6 @@ parameters:
 			path: app/Http/Controllers/ImageController.php
 
 		-
-			message: '#^Method App\\Http\\Controllers\\ImageController\:\:show\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/Http/Controllers/ImageController.php
-
-		-
-			message: '#^Method App\\Http\\Controllers\\ImageController\:\:store\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/Http/Controllers/ImageController.php
-
-		-
 			message: '#^Method App\\Http\\Controllers\\ImageController\:\:supp\(\) has no return type specified\.$#'
 			identifier: missingType.return
 			count: 1

@@ -15,7 +15,6 @@ Index des entrées encore ouvertes, regroupées ici pour être visibles sans tou
 - Vitrine : double remise affichée dans la modale d'ajout au panier (`QuickAddModal`), fix prévu en phase 4 de la refonte.
 
 **Données / règles métier**
-- Slide / Image : ancien fichier supprimé avant l'enregistrement du nouveau, routes sans méthode.
 - Création produit : erreurs `image.*` et validation d'`image` incohérente entre Store et Update.
 - Lot d'import jamais « terminé » dès qu'un job échoue (`ProductImportController::show`, contournement côté Vue).
 - `Promotion/Show` : catégorie du produit jamais affichée.
@@ -313,14 +312,16 @@ Avant de déployer : vérifier que `Order` avec `reference IS NULL AND trans_ref
 - **Piste** : renvoyer l'échec via `back()->withErrors([...])` (donc `onError`) ou une prop partagée `flash` ; même contrôle pour `update` (changement de montant sans nouveau lien = lien périmé avec l'ancien montant).
 - **Statut** : corrigé (voir résolution ci-dessus).
 
-## 2026-11-11 — Slide / Image : ancien fichier supprimé avant l'enregistrement du nouveau, routes sans méthode (non corrigé)
+## 2026-11-11 — Slide / Image : ancien fichier supprimé avant l'enregistrement du nouveau, routes sans méthode — ✅ RÉSOLU (2026-11-15)
+
+> Résolution : `SlideController::update` et `ImageController::update` stockent d'abord le nouveau fichier, mettent la ligne à jour, puis suppriment l'ancien ; si `store()` ou la mise à jour échoue, l'ancien fichier et la ligne restent intacts (et le nouveau fichier orphelin est supprimé en cas d'échec de la mise à jour). Routes : `slide` passe en `->only('edit', 'update', 'destroy')` (`POST /admin/slide` et `GET /admin/slide/{slide}` ne sont plus des 500) ; `ImageController::store/show` (corps vides, jamais routés) supprimés. Test : `tests/Feature/UploadReplaceTest.php` (échec simulé du décodage image ; routes sans méthode de contrôleur).
 
 - **Où** : `app/Http/Controllers/SlideController.php::update`, `ImageController::update` (`deleteStored()` avant `$uploader->store()`) ; `routes/web.php:50` (`Route::resource('slide', …)->except('index', 'create')`).
 - **Constat** :
   1. L'ancien fichier est supprimé du disque avant que le nouveau soit stocké et que la ligne soit mise à jour : si `store()` échoue (disque plein, image illisible), la base pointe vers un fichier effacé et le slide / l'image produit s'affiche cassé.
   2. La resource `slide` expose `store` et `show` alors que `SlideController` n'a pas ces méthodes : `POST /admin/slide` et `GET /admin/slide/{slide}` renvoient une 500 au lieu d'un 404/405 (aucune page n'y mène).
 - **Piste** : stocker le nouveau fichier, mettre à jour la ligne, puis supprimer l'ancien (après commit) ; `->only('edit', 'update', 'destroy')` pour `slide`.
-- **Statut** : non corrigé, hors périmètre front.
+- **Statut** : corrigé (voir résolution ci-dessus).
 
 ## 2026-11-11 — Transport/Show morte et `TransportController::show` sans route
 

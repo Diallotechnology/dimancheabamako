@@ -9,26 +9,11 @@ use App\Models\Image;
 use App\Service\ImageUploadService;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
+use Throwable;
 
 final class ImageController extends Controller
 {
     use DeleteAction;
-
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
-    {
-        //
-    }
-
-    /**
-     * Display the specified resource.
-     */
-    public function show(Image $image)
-    {
-        //
-    }
 
     /**
      * Show the form for editing the specified resource.
@@ -45,9 +30,19 @@ final class ImageController extends Controller
     {
         $data = $request->validate(['chemin' => ['required', 'image', 'mimes:jpg,jpeg,png,webp', 'max:5120']]);
         if ($request->hasFile('chemin')) {
-            $this->deleteStored($image->getRawOriginal('chemin'));
+            $old = $image->getRawOriginal('chemin');
+            // Nouveau fichier d'abord : un échec ne doit jamais faire perdre l'ancien.
             $data['chemin'] = $uploader->store($request->file('chemin'), 'product/image');
-            $image->update($data);
+
+            try {
+                $image->update($data);
+            } catch (Throwable $e) {
+                $this->deleteStored($data['chemin']);
+
+                throw $e;
+            }
+
+            $this->deleteStored($old);
         }
 
         return back();
